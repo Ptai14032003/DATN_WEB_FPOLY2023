@@ -2,15 +2,21 @@ import React, { useState } from 'react';
 import { Button, Form, Input, Modal, Upload } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
-const EditQlPhim: React.FC = () => {
+type Props = {
+    projects: string
+}
+const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
         console.log('Success:', values);
+        console.log(projects);
+
     };
 
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
+        console.log(projects);
     };
 
     type FieldType = {

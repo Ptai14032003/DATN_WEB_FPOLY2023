@@ -1,19 +1,35 @@
 import React, { useState } from 'react';
-import { Space, Table, Tag, Input, Button } from 'antd';
+import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import CreateQlPhim from './create';
 import EditQlPhim from './edit';
-
 const { Column } = Table;
 
 interface DataType {
-    key: React.Key;
+    key: string;
     firstName: string;
     lastName: string;
     age: number;
     address: string;
-    tags: string[];
 }
-
+const columns: ColumnsType<DataType> = [
+    {
+        title: 'firstName',
+        dataIndex: 'firstName',
+    },
+    {
+        title: 'lastName',
+        dataIndex: 'lastName',
+    },
+    {
+        title: 'Age',
+        dataIndex: 'age',
+    },
+    {
+        title: 'Address',
+        dataIndex: 'address',
+    },
+];
 const data: DataType[] = [
     {
         key: '1',
@@ -21,7 +37,6 @@ const data: DataType[] = [
         lastName: 'Brown',
         age: 32,
         address: 'New York No. 1 Lake Park',
-        tags: ['nice', 'developer'],
     },
     {
         key: '2',
@@ -29,7 +44,6 @@ const data: DataType[] = [
         lastName: 'Green',
         age: 42,
         address: 'London No. 1 Lake Park',
-        tags: ['loser'],
     },
     {
         key: '3',
@@ -37,55 +51,61 @@ const data: DataType[] = [
         lastName: 'Black',
         age: 32,
         address: 'Sydney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
     },
     {
-        key: '1',
+        key: '4',
         firstName: 'John',
         lastName: 'Brown',
         age: 32,
         address: 'New York No. 1 Lake Park',
-        tags: ['nice', 'developer'],
     },
     {
-        key: '2',
+        key: '5',
         firstName: 'Jim',
         lastName: 'Green',
         age: 42,
         address: 'London No. 1 Lake Park',
-        tags: ['loser'],
     },
     {
-        key: '3',
+        key: '6',
         firstName: 'Joe',
         lastName: 'Black',
         age: 32,
         address: 'Sydney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-    {
-        key: '1',
+    }, {
+        key: '7',
         firstName: 'John',
         lastName: 'Brown',
         age: 32,
         address: 'New York No. 1 Lake Park',
-        tags: ['nice', 'developer'],
     },
     {
-        key: '2',
+        key: '8',
         firstName: 'Jim',
         lastName: 'Green',
         age: 42,
         address: 'London No. 1 Lake Park',
-        tags: ['loser'],
     },
     {
-        key: '3',
+        key: '9',
         firstName: 'Joe',
         lastName: 'Black',
         age: 32,
         address: 'Sydney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
+    },
+    {
+        key: '10',
+        firstName: 'Joe',
+        lastName: 'Black',
+        age: 32,
+        address: 'Sydney No. 1 Lake Park',
+    },
+    {
+        key: '11',
+        firstName: 'Joe',
+        lastName: 'Black',
+        age: 32,
+        address: 'Sydney No. 1 Lake Park',
     },
 ];
 
@@ -98,7 +118,7 @@ const AdminQlPhim: React.FC = () => {
     };
     const DeleteAll = () => {
         console.log(selectedRowKeys);
-
+        message.success("Xóa thành công");
     }
     const rowSelection = {
         selectedRowKeys,
@@ -109,6 +129,11 @@ const AdminQlPhim: React.FC = () => {
         console.log(value);
         setSearchTerm(value);
     };
+    const deleteOne = (key: string) => {
+        console.log(key);
+        message.success("Xóa thành công");
+
+    }
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý Phim</div>
@@ -119,38 +144,52 @@ const AdminQlPhim: React.FC = () => {
                 <CreateQlPhim />
             </div>
             <span style={{ marginLeft: 8 }}>
-                {hasSelected ? (<Button onClick={DeleteAll}>
-                    {`Delete ${selectedRowKeys.length} items`}
-                </Button>) : (
+                {hasSelected ? (
+                    <Popconfirm
+                        title="Delete the task"
+                        description="Are you sure to delete this task?"
+                        onConfirm={() => {
+                            DeleteAll();
+                        }}
+                        okButtonProps={{
+                            style: { backgroundColor: "#007bff" },
+                        }}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <Button danger>
+                            {`Delete ${selectedRowKeys.length} items`}
+                        </Button>
+                    </Popconfirm>) : (
                     <div></div>
                 )}
             </span>
-            <Table dataSource={data} rowSelection={rowSelection} >
+            <Table dataSource={data} rowSelection={rowSelection} columns={columns} pagination={{ pageSize: 6, }}>
                 <Column title="First Name" dataIndex="firstName" key="firstName" />
                 <Column title="Last Name" dataIndex="lastName" key="lastName" />
                 <Column title="Age" dataIndex="age" key="age" />
                 <Column title="Address" dataIndex="address" key="address" />
                 <Column
-                    title="Tags"
-                    dataIndex="tags"
-                    key="tags"
-                    render={(tags: string[]) => (
-                        <>
-                            {tags.map((tag) => (
-                                <Tag color="blue" key={tag}>
-                                    {tag}
-                                </Tag>
-                            ))}
-                        </>
-                    )}
-                />
-                <Column
                     title="Action"
                     key="action"
                     render={(_: any, record: DataType) => (
                         <Space size="middle">
-                            <a><EditQlPhim /> </a>
-                            <a><Button>Delete</Button></a>
+                            <a><EditQlPhim key={record.key} projects={record.key} /> </a>
+                            <a>
+                                <Popconfirm
+                                    title="Delete the task"
+                                    description="Are you sure to delete this task?"
+                                    onConfirm={() => {
+                                        deleteOne(record.key);
+                                    }}
+                                    okButtonProps={{
+                                        style: { backgroundColor: "#007bff" },
+                                    }}
+                                    okText="Yes"
+                                    cancelText="No"
+                                >
+                                    <Button danger>Delete</Button>
+                                </Popconfirm></a>
                         </Space>
                     )}
                 />
