@@ -37,7 +37,7 @@ const data: DataType[] = [
     },
 ];
 
-const AdminQlSc: React.FC = () => {
+const AdminQlSp: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
@@ -63,7 +63,7 @@ const AdminQlSc: React.FC = () => {
     }
     return (
         <div>
-            <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý Suất Chiếu</div>
+            <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý Sản Phẩm</div>
             <div className='flex justify-between mb-[10px]'>
                 <Input style={{ width: '20%' }} placeholder='Tìm kiếm dự án'
                     value={searchTerm}
@@ -124,4 +124,4 @@ const AdminQlSc: React.FC = () => {
         </div>
     );
 }
-export default AdminQlSc;
+export default AdminQlSp;

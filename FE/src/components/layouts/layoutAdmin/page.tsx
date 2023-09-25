@@ -3,6 +3,7 @@ import type { MenuProps } from 'antd';
 import { Layout, Menu, theme } from 'antd';
 import { NavLink, Outlet } from 'react-router-dom';
 import HeaderAdmin from './headerAdmin';
+import { HomeOutlined } from '@ant-design/icons';
 
 const { Header, Content, Sider } = Layout;
 
@@ -23,15 +24,16 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-    getItem('Quản lý phim', '1', <NavLink to="/admin/"><img src="/qlphim.png" alt="" width={10} /> </NavLink>,),
-    getItem('Quản lý suất chiếu', '2', <NavLink to="/admin/qlSuatChieu"><img src="/qlsc.png" alt="" width={10} /> </NavLink>),
-    getItem('Quản lý sản phẩm', '3', <img src="/qlfood.png" alt="" width={10} />),
-    getItem('Quản lý nhân sự', '4', <img src="/qlnv.png" alt="" width={10} />),
-    getItem('Quản lý khách hàng', '5', <img src="/qlkh.png" alt="" width={10} />),
-    getItem('Thống kê', '6', <img src="/tke.png" alt="" width={10} />),
-    getItem('Lịch sử', '7', <img src="/ls.png" alt="" width={10} />),
-    getItem('Voucher', '8', <img src="/voucher.png" alt="" width={10} />),
-    getItem('Sự cố', '9', <img src="/error.png" alt="" width={10} />)
+    getItem('Trang chủ', '1', <NavLink to="/admin/"><HomeOutlined width={10} /> </NavLink>,),
+    getItem('Quản lý phim', '2', <NavLink to="/admin/qlPhim"><img src="/qlphim.png" alt="" width={10} /> </NavLink>,),
+    getItem('Quản lý suất chiếu', '3', <NavLink to="/admin/qlSuatChieu"><img src="/qlsc.png" alt="" width={10} /> </NavLink>),
+    getItem('Quản lý sản phẩm', '4', <NavLink to="/admin/qlSanPham"><img src="/qlfood.png" alt="" width={10} /></NavLink>),
+    getItem('Quản lý nhân sự', '5', <img src="/qlnv.png" alt="" width={10} />),
+    getItem('Quản lý khách hàng', '6', <img src="/qlkh.png" alt="" width={10} />),
+    getItem('Thống kê', '7', <img src="/tke.png" alt="" width={10} />),
+    getItem('Lịch sử', '8', <img src="/ls.png" alt="" width={10} />),
+    getItem('Voucher', '9', <img src="/voucher.png" alt="" width={10} />),
+    getItem('Sự cố', '10', <img src="/error.png" alt="" width={10} />)
 ];
 
 const AdminLayout: React.FC = () => {

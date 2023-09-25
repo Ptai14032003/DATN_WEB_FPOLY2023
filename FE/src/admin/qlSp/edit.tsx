@@ -5,7 +5,7 @@ import { UploadOutlined } from '@ant-design/icons';
 type Props = {
     projects: string
 }
-const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
+const EditQlSp: React.FC<Props> = ({ projects }: Props) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
@@ -81,4 +81,4 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
     )
 };
 
-export default EditQlPhim;
+export default EditQlSp;

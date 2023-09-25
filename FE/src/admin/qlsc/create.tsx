@@ -28,7 +28,7 @@ const CreateQlSc: React.FC = () => {
     };
     return (
         <>
-            <Button onClick={showModal}>Thêm mới phim</Button>
+            <Button onClick={showModal}>Thêm suất chiếu mới</Button>
             <Modal title="Tạo phim mới" open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
                 <Form className='mr-[60px]'
                     name='formLogin'

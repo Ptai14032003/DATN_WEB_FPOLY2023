@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
 import CreateQlPhim from './create';
 import EditQlPhim from './edit';
 const { Column } = Table;
@@ -12,24 +11,6 @@ interface DataType {
     age: number;
     address: string;
 }
-const columns: ColumnsType<DataType> = [
-    {
-        title: 'firstName',
-        dataIndex: 'firstName',
-    },
-    {
-        title: 'lastName',
-        dataIndex: 'lastName',
-    },
-    {
-        title: 'Age',
-        dataIndex: 'age',
-    },
-    {
-        title: 'Address',
-        dataIndex: 'address',
-    },
-];
 const data: DataType[] = [
     {
         key: '1',
@@ -164,7 +145,7 @@ const AdminQlPhim: React.FC = () => {
                     <div></div>
                 )}
             </span>
-            <Table dataSource={data} rowSelection={rowSelection} columns={columns} pagination={{ pageSize: 6, }}>
+            <Table dataSource={data} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
                 <Column title="First Name" dataIndex="firstName" key="firstName" />
                 <Column title="Last Name" dataIndex="lastName" key="lastName" />
                 <Column title="Age" dataIndex="age" key="age" />

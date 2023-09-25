@@ -2,10 +2,7 @@ import React, { useState } from 'react';
 import { Button, Form, Input, Modal, Upload } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
-type Props = {
-    projects: string
-}
-const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
+const CreateQlSp: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
@@ -30,11 +27,9 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
         formRef.current?.resetFields();
     };
     return (
-
         <>
-
-            <Button onClick={showModal}>Sửa</Button>
-            <Modal title="Sua phim " open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
+            <Button onClick={showModal}>Thêm sản phẩm mới</Button>
+            <Modal title="Tạo phim mới" open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
                 <Form className='mr-[60px]'
                     name='formLogin'
                     ref={formRef}
@@ -81,4 +76,4 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
     )
 };
 
-export default EditQlPhim;
+export default CreateQlSp;
