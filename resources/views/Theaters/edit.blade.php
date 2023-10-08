@@ -1,6 +1,6 @@
 @extends('layout.template')
 @section('content')
-    <form action="{{ route('edit-rooms',['id'=>request()->route('id')]) }}" enctype="multipart/form-data" method="POST">
+    <form action="{{ route('edit-room',['id'=>request()->route('id')]) }}" enctype="multipart/form-data" method="POST">
         @csrf
         <p>Ten phong</p>
         <input type="text" name="name" class="form-control" value="{{ $rooms->name }}">

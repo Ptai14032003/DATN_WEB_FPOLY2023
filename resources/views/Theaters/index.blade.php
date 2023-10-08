@@ -1,6 +1,5 @@
 @extends('layout.template')
 @section('content')
-
     <table class="table">
         <tr>
             <td>ID</td>
@@ -14,11 +13,11 @@
                 <td>{{ $rooms->name }}</td>
                 <td>{{ $rooms->total_seat }}</td>
                 <td>
-                    <a class="btn btn-success" href="{{ route('edit-rooms',['id'=>$rooms->id]) }}">Sua</a>
-                    <a class="btn btn-danger" onclick="return confirm('Are you sure?')" href="{{route('delete-rooms',['id'=>$rooms->id])}}">Xoa</a>
+                    <a class="btn btn-success" href="{{ route('edit-room',['id'=>$rooms->id]) }}">Sua</a>
+                    <a class="btn btn-danger" onclick="return confirm('Are you sure?')" href="{{route('delete-room',['id'=>$rooms->id])}}">Xoa</a>
                 </td>
             </tr>
         @endforeach
     </table>
-    <a class="btn btn-primary" href="{{ route('add-rooms') }}">Them</a>
+    <a class="btn btn-primary" href="{{ route('add-room') }}">Them</a>
 @endsection

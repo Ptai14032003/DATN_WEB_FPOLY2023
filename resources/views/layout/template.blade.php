@@ -8,8 +8,6 @@
 </head>
 <body>
 <div class="container">
-
-
     <div class="main">
         @include('layout.error')
         @yield('content')

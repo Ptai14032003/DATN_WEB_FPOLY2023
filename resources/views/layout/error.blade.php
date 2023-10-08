@@ -5,7 +5,6 @@
         @endforeach
     </ul>
 @endif
-
 @if(Session::has('success'))
     <strong style="color:green">{{ Session::get('success') }}</strong>
 @endif
