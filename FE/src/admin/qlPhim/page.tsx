@@ -1,99 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
 import CreateQlPhim from './create';
 import EditQlPhim from './edit';
+import { useFetchMoviesQuery } from '../../rtk/movies/movies';
 const { Column } = Table;
 
 interface DataType {
-    key: string;
+    id: string;
     firstName: string;
     lastName: string;
     age: number;
     address: string;
 }
-const data: DataType[] = [
-    {
-        key: '1',
-        firstName: 'John',
-        lastName: 'Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-    },
-    {
-        key: '2',
-        firstName: 'Jim',
-        lastName: 'Green',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-    },
-    {
-        key: '3',
-        firstName: 'Joe',
-        lastName: 'Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-    },
-    {
-        key: '4',
-        firstName: 'John',
-        lastName: 'Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-    },
-    {
-        key: '5',
-        firstName: 'Jim',
-        lastName: 'Green',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-    },
-    {
-        key: '6',
-        firstName: 'Joe',
-        lastName: 'Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-    }, {
-        key: '7',
-        firstName: 'John',
-        lastName: 'Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-    },
-    {
-        key: '8',
-        firstName: 'Jim',
-        lastName: 'Green',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-    },
-    {
-        key: '9',
-        firstName: 'Joe',
-        lastName: 'Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-    },
-    {
-        key: '10',
-        firstName: 'Joe',
-        lastName: 'Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-    },
-    {
-        key: '11',
-        firstName: 'Joe',
-        lastName: 'Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-    },
-];
-
 const AdminQlPhim: React.FC = () => {
+    const { data } = useFetchMoviesQuery()
+    const [dataTable, setDataTable] = useState<[]>([])
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
+    const onSelectChange = (newSelectedRowKeys: any[]) => {
         console.log('', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
     };
@@ -115,6 +39,21 @@ const AdminQlPhim: React.FC = () => {
         message.success("Xóa thành công");
 
     }
+    useEffect(() => {
+        if (data) {
+            const mapMovies = data.map((item: any) => ({
+                key: item.id,
+                movie_name: item.movie_name,
+                country_name: item.country_name,
+                producer_name: item.producer_name,
+                type_name: item.type_name,
+                genre: item.genre,
+                director: item.director,
+                trailer: item.trailer
+            }))
+            setDataTable(mapMovies)
+        }
+    }, [data])
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý Phim</div>
@@ -145,23 +84,27 @@ const AdminQlPhim: React.FC = () => {
                     <div></div>
                 )}
             </span>
-            <Table dataSource={data} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
-                <Column title="First Name" dataIndex="firstName" key="firstName" />
-                <Column title="Last Name" dataIndex="lastName" key="lastName" />
-                <Column title="Age" dataIndex="age" key="age" />
-                <Column title="Address" dataIndex="address" key="address" />
+            <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
+                <Column title="Tên phim " dataIndex="movie_name" key="movie_name" />
+                <Column title="Nước Sản Xuất " dataIndex="country_name" key="ountry_name" />
+                <Column title="Nhà Sản Xuất" dataIndex="producer_name" key="producer_name" />
+                <Column title="Dạng Phim" dataIndex="type_name" key="type_name" />
+                <Column title="Thể Loại" dataIndex="genre" key="genre" />
+                <Column title="Đạo Diễn" dataIndex="director" key="director" />
+                <Column title="Poster" dataIndex="poster" key="poster" />
+                <Column title="Trailer" dataIndex="trailer" key="trailer" />
                 <Column
                     title="Action"
                     key="action"
                     render={(_: any, record: DataType) => (
                         <Space size="middle">
-                            <a><EditQlPhim key={record.key} projects={record.key} /> </a>
+                            <a><EditQlPhim key={record.id} projects={record.id} /> </a>
                             <a>
                                 <Popconfirm
                                     title="Delete the task"
                                     description="Are you sure to delete this task?"
                                     onConfirm={() => {
-                                        deleteOne(record.key);
+                                        deleteOne(record.id);
                                     }}
                                     okButtonProps={{
                                         style: { backgroundColor: "#007bff" },
