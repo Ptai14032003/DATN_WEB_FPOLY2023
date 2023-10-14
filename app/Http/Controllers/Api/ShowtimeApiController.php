@@ -7,7 +7,7 @@ use App\Http\Resources\ShowtimeResource;
 use App\Models\Showtime;
 use Illuminate\Http\Request;
 
-class ScreenRateApiController extends Controller
+class ShowtimeApiController extends Controller
 {
     public function index(){
         $show_time = Showtime::all();
