@@ -2,7 +2,8 @@
 
 use App\Http\Controllers\Api\RoomApiController;
 use App\Http\Controllers\Api\ShowtimeApiController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\PersonnelController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('theater')->group(function (){
@@ -12,7 +13,6 @@ Route::prefix('theater')->group(function (){
     Route::put('/{id}',[RoomApiController::class,'update']);
     Route::delete('/{id}',[RoomApiController::class,'destroy']);
 });
-
 Route::prefix('showtimes')->group(function (){
     Route::get('/',[ShowtimeApiController::class,'index']);
     Route::post('/',[ShowtimeApiController::class,'store']);
@@ -20,3 +20,7 @@ Route::prefix('showtimes')->group(function (){
     Route::put('/{id}',[ShowtimeApiController::class,'update']);
     Route::delete('/{id}',[ShowtimeApiController::class,'destroy']);
 });
+
+Route::apiResource('/users', UserController::class);
+Route::apiResource('/personnels', PersonnelController::class);
+
