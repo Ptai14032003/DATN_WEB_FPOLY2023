@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
-import EditQlPhim from './edit';
 import { useFetchMoviesQuery } from '../../rtk/movies/movies';
-import CreateQlSc from './create';
+import CreateQlPhongChieu from './create';
+import EditQlPhongChieu from './edit';
+import { useFetchPhongChieuQuery } from '../../rtk/qlPhongChieu/qlPhongChieu';
 
 const { Column } = Table;
 
-export interface SuatChieu {
+export interface PhongChieu {
     id: string;
-    movie_id: string;
-    room_id: string;
-    show_date: string;
-    show_time: string;
-    total_ticket_sold: number;
-    total_money: number
+    name: string;
+    total_seat: number;
 }
 
-const AdminQlSc: React.FC = () => {
-    const { data } = useFetchMoviesQuery()
-    const [dataTable, setDataTable] = useState<SuatChieu[]>([])
+const AdminQlPhongChieu: React.FC = () => {
+    const { data } = useFetchPhongChieuQuery()
+    const [dataTable, setDataTable] = useState<PhongChieu[]>([])
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
@@ -44,26 +41,22 @@ const AdminQlSc: React.FC = () => {
     }
     useEffect(() => {
         if (data) {
-            const mapSuatChieu = data.map((item: SuatChieu) => ({
+            const mapPhongChieu = data.map((item: any) => ({
                 key: item.id,
-                movie_name: item.movie_id,
-                room_id: item.room_id,
-                show_date: item.show_date,
-                show_time: item.show_time,
-                total_ticket_sold: item.total_ticket_sold,
-                total_money: item.total_money
+                name: item.name,
+                total_seat: item.total_seat
             }))
-            setDataTable(mapSuatChieu)
+            setDataTable(mapPhongChieu)
         }
     }, [data])
     return (
         <div>
-            <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý Suất Chiếu</div>
+            <div className='mb-[25px] mt-[-30px] text-2xl' >Phòng chiếu</div>
             <div className='flex justify-between mb-[10px]'>
-                <Input style={{ width: '20%' }} placeholder='Tìm kiếm dự án'
+                <Input style={{ width: '20%' }} placeholder='Tìm kiếm phòng chiếu'
                     value={searchTerm}
                     onChange={(e) => searchProject(e.target.value)} />
-                <CreateQlSc />
+                <CreateQlPhongChieu />
             </div>
             <span style={{ marginLeft: 8 }}>
                 {hasSelected ? (
@@ -87,18 +80,14 @@ const AdminQlSc: React.FC = () => {
                 )}
             </span>
             <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
-                <Column title="Tên phim" dataIndex="movie_name" key="movie_name" />
-                <Column title="Tên phòng" dataIndex="room_id" key="room_id" />
-                <Column title="Ngày chiếu" dataIndex="show_date" key="show_date" />
-                <Column title="Thời gian chiếu" dataIndex="show_time" key="show_time" />
-                <Column title="Tổng số vé bán" dataIndex="total_ticket_sold" key="total_ticket_sold" />
-                <Column title="Tổng doanh thu" dataIndex="total_money" key="total_money" />
+                <Column title="Tên phòng" dataIndex="name" key="name" />
+                <Column title="Tổng số ghế" dataIndex="total_seat" key="total_seat" />
                 <Column
                     title="Action"
                     key="action"
                     render={(_: any, record: any) => (
                         <Space size="middle">
-                            <a><EditQlPhim key={record.key} projects={record.key} /> </a>
+                            <a><EditQlPhongChieu key={record.key} projects={record.key} /> </a>
                             <a>
                                 <Popconfirm
                                     title="Delete the task"
@@ -121,4 +110,4 @@ const AdminQlSc: React.FC = () => {
         </div>
     );
 }
-export default AdminQlSc;
+export default AdminQlPhongChieu;

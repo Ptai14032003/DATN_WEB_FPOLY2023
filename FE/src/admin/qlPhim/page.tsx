@@ -2,19 +2,25 @@ import React, { useEffect, useState } from 'react';
 import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
 import CreateQlPhim from './create';
 import EditQlPhim from './edit';
-import { useFetchMoviesQuery } from '../../rtk/movies/movies';
+import { useDeleteMoviesMutation, useFetchMoviesQuery } from '../../rtk/movies/movies';
+import TrailerPhim from '../../components/itemAdmin/Trailer/page';
 const { Column } = Table;
 
-interface DataType {
+export interface QlPhim {
     id: string;
-    firstName: string;
-    lastName: string;
-    age: number;
-    address: string;
+    movie_name: string;
+    country_name: string;
+    producer_name: string;
+    type_name: string;
+    genre: string;
+    director: string;
+    image: string;
+    trailer: string;
 }
 const AdminQlPhim: React.FC = () => {
     const { data } = useFetchMoviesQuery()
-    const [dataTable, setDataTable] = useState<[]>([])
+    const [deleteMovie] = useDeleteMoviesMutation()
+    const [dataTable, setDataTable] = useState<QlPhim[]>([])
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
     const onSelectChange = (newSelectedRowKeys: any[]) => {
@@ -35,13 +41,11 @@ const AdminQlPhim: React.FC = () => {
         setSearchTerm(value);
     };
     const deleteOne = (key: string) => {
-        console.log(key);
-        message.success("Xóa thành công");
-
+        deleteMovie(key).then(() => message.success("Xóa thành công"))
     }
     useEffect(() => {
         if (data) {
-            const mapMovies = data.map((item: any) => ({
+            const mapMovies = data.map((item: QlPhim) => ({
                 key: item.id,
                 movie_name: item.movie_name,
                 country_name: item.country_name,
@@ -49,6 +53,7 @@ const AdminQlPhim: React.FC = () => {
                 type_name: item.type_name,
                 genre: item.genre,
                 director: item.director,
+                image: item.image,
                 trailer: item.trailer
             }))
             setDataTable(mapMovies)
@@ -58,7 +63,7 @@ const AdminQlPhim: React.FC = () => {
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý Phim</div>
             <div className='flex justify-between mb-[10px]'>
-                <Input style={{ width: '20%' }} placeholder='Tìm kiếm dự án'
+                <Input style={{ width: '20%' }} placeholder='Tìm kiếm phim'
                     value={searchTerm}
                     onChange={(e) => searchProject(e.target.value)} />
                 <CreateQlPhim />
@@ -91,20 +96,22 @@ const AdminQlPhim: React.FC = () => {
                 <Column title="Dạng Phim" dataIndex="type_name" key="type_name" />
                 <Column title="Thể Loại" dataIndex="genre" key="genre" />
                 <Column title="Đạo Diễn" dataIndex="director" key="director" />
-                <Column title="Poster" dataIndex="poster" key="poster" />
-                <Column title="Trailer" dataIndex="trailer" key="trailer" />
+                <Column title="Poster" dataIndex="image" key="image" />
+                <Column title="Trailer" dataIndex="trailer" key="trailer" render={(_: any, record: QlPhim) => (
+                    <TrailerPhim data={`https://www.youtube.com/embed/XBczBMc4LPQ?si=oS0QKFixvq636T3Q&amp;start=103`} key={record.id} />
+                )} />
                 <Column
                     title="Action"
                     key="action"
-                    render={(_: any, record: DataType) => (
+                    render={(_: any, record: any) => (
                         <Space size="middle">
-                            <a><EditQlPhim key={record.id} projects={record.id} /> </a>
+                            <a><EditQlPhim key={record.key} projects={record.key} /></a>
                             <a>
                                 <Popconfirm
                                     title="Delete the task"
                                     description="Are you sure to delete this task?"
                                     onConfirm={() => {
-                                        deleteOne(record.id);
+                                        deleteOne(record.key);
                                     }}
                                     okButtonProps={{
                                         style: { backgroundColor: "#007bff" },

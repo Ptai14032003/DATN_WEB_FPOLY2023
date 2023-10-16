@@ -27,13 +27,14 @@ const items: MenuItem[] = [
     getItem('Trang chủ', '1', <NavLink to="/admin/"><HomeOutlined width={10} /> </NavLink>,),
     getItem('Quản lý phim', '2', <NavLink to="/admin/qlPhim"><img src="/qlphim.png" alt="" width={10} /> </NavLink>,),
     getItem('Quản lý suất chiếu', '3', <NavLink to="/admin/qlSuatChieu"><img src="/qlsc.png" alt="" width={10} /> </NavLink>),
-    getItem('Quản lý sản phẩm', '4', <NavLink to="/admin/qlSanPham"><img src="/qlfood.png" alt="" width={10} /></NavLink>),
-    getItem('Quản lý nhân sự', '5', <img src="/qlnv.png" alt="" width={10} />),
-    getItem('Quản lý khách hàng', '6', <img src="/qlkh.png" alt="" width={10} />),
-    getItem('Thống kê', '7', <img src="/tke.png" alt="" width={10} />),
-    getItem('Lịch sử', '8', <img src="/ls.png" alt="" width={10} />),
-    getItem('Voucher', '9', <img src="/voucher.png" alt="" width={10} />),
-    getItem('Sự cố', '10', <img src="/error.png" alt="" width={10} />)
+    getItem('Quản lý phòng chiếu', '4', <NavLink to="/admin/qlPhongChieu"><img src="/qlkh.png" alt="" width={10} /></NavLink >),
+    getItem('Quản lý sản phẩm', '5', <NavLink to="/admin/qlSanPham"><img src="/qlfood.png" alt="" width={10} /></NavLink>),
+    getItem('Quản lý nhân sự', '6', <NavLink to="/admin/qlNhanSu"><img src="/qlnv.png" alt="" width={10} /></NavLink>),
+    getItem('Quản lý khách hàng', '7', <NavLink to="/admin/qlGuest"><img src="/qlkh.png" alt="" width={10} /></NavLink >),
+    getItem('Thống kê', '8', <img src="/tke.png" alt="" width={10} />),
+    getItem('Lịch sử', '9', <img src="/ls.png" alt="" width={10} />),
+    getItem('Voucher', '10', <NavLink to="/admin/voucher" > <img src="/voucher.png" alt="" width={10} /></NavLink >),
+    getItem('Sự cố', '11', <img src="/error.png" alt="" width={10} />)
 ];
 
 const AdminLayout: React.FC = () => {

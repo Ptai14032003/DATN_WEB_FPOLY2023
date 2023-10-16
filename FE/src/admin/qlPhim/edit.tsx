@@ -1,26 +1,28 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, Modal, Upload } from 'antd';
+import { Button, Form, Input, Modal, Select, Upload, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
+import { QlPhim } from './page';
+import { useFetchMovieIdQuery, useUpdateMoviesMutation } from '../../rtk/movies/movies';
 type Props = {
     projects: string
 }
 const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
+    const { data } = useFetchMovieIdQuery(projects);
+    const [patchMovie] = useUpdateMoviesMutation();
+    const countryName = ["Hoa Kỳ", "Canada", "Việt Nam", "United States"];
+    const countryOptions = countryName.map((country) => ({
+        value: country,
+        label: country,
+    }));
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
-        console.log('Success:', values);
+        patchMovie({ body: values, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
     };
 
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
-    };
-
-    type FieldType = {
-        name?: string;
-        description?: string;
-        image?: string
-        linkGit?: string
     };
     const showModal = () => {
         setIsModalOpen(true);
@@ -30,52 +32,94 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
         formRef.current?.resetFields();
     };
     return (
-
         <>
 
             <Button onClick={showModal}>Sửa</Button>
-            <Modal title="Sua phim " open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
-                <Form className='mr-[60px]'
-                    name='formLogin'
-                    ref={formRef}
-                    labelCol={{ span: 8 }}
-                    wrapperCol={{ span: 16 }}
-                    style={{ maxWidth: 600 }}
-                    onFinish={onFinish}
-                    onFinishFailed={onFinishFailed}
-                    autoComplete="off"
-                >
-                    <Form.Item<FieldType>
-                        label="Tên phim"
-                        name="name"
-                        rules={[{ required: true, message: 'Vui lòng nhập tên !' }]}
+            <Modal title="Sửa phim " open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
+                {data ? (
+                    <Form className='mr-[60px]'
+                        name='formLogin'
+                        ref={formRef}
+                        labelCol={{ span: 8 }}
+                        wrapperCol={{ span: 16 }}
+                        style={{ maxWidth: 800 }}
+                        onFinish={onFinish}
+                        onFinishFailed={onFinishFailed}
+                        autoComplete="off"
+                        initialValues={data}
                     >
-                        <Input />
-                    </Form.Item>
-
-                    <Form.Item<FieldType>
-                        label="Mô tả"
-                        name="description"
-                        rules={[{ required: true, message: 'Vui lòng nhập mô tả !' }]}
-                    >
-                        <Input />
-                    </Form.Item>
-
-                    <Form.Item<FieldType>
-                        label="Ảnh"
-                        name="image"
-                        rules={[{ required: true, message: 'Vui lòng nhập ảnh !' }]}
-                    >
-                        <Upload>
-                            <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                        </Upload>
-                    </Form.Item>
-                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                        <Button htmlType="submit">
-                            Tạo mới
-                        </Button>
-                    </Form.Item>
-                </Form>
+                        <Form.Item<QlPhim>
+                            label="Tên phim"
+                            name="movie_name"
+                            rules={[{ required: true, message: 'Vui lòng nhập tên !' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item<QlPhim>
+                            label="Nước sản xuất"
+                            name="country_name"
+                            rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
+                        >
+                            <Select className='ml-[-72px]'
+                                defaultValue="Chọn nước sản xuất"
+                                style={{ width: 200 }}
+                                options={countryOptions}
+                            />
+                        </Form.Item>
+                        <Form.Item<QlPhim>
+                            label="Dạng phim"
+                            name="type_name"
+                            rules={[{ required: true, message: 'Vui lòng nhập dang phim !' }]}
+                        >
+                            <Select className='ml-[-72px]'
+                                defaultValue="Chọn dạng phim"
+                                style={{ width: 200 }}
+                                options={countryOptions}
+                            />
+                        </Form.Item>
+                        <Form.Item<QlPhim>
+                            label="Thể loại"
+                            name="genre"
+                            rules={[{ required: true, message: 'Vui lòng nhập thể loại!' }]}
+                        >
+                            <Select className='ml-[-72px]'
+                                defaultValue="Chọn dạng phim"
+                                style={{ width: 200 }}
+                                options={countryOptions}
+                            />
+                        </Form.Item>
+                        <Form.Item<QlPhim>
+                            label="Đạo diễn"
+                            name="director"
+                            rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item<QlPhim>
+                            label="Poster"
+                            name="director"
+                            rules={[{ required: true, message: 'Vui lòng nhập ảnh !' }]}
+                        >
+                            <Upload>
+                                <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                            </Upload>
+                        </Form.Item>
+                        <Form.Item<QlPhim>
+                            label="Trailer"
+                            name="trailer"
+                            rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                            <Button htmlType="submit" className='mr-[80px]'>
+                                Sửa
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                ) : (
+                    <div className="flex justify-center">Đang lấy dữ liệu</div>
+                )}
             </Modal>
         </>
     )

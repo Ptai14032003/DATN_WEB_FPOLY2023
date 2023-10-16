@@ -1,27 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
-import EditQlPhim from './edit';
-import { useFetchMoviesQuery } from '../../rtk/movies/movies';
-import CreateQlSc from './create';
-
+import CreateQlDiscount from './create';
+import EditQlDiscount from './edit';
+import { useDeleteDiscountMutation, useFetchDiscountsQuery } from '../../rtk/discount/discount';
 const { Column } = Table;
-
-export interface SuatChieu {
+export interface Discount {
     id: string;
-    movie_id: string;
-    room_id: string;
-    show_date: string;
-    show_time: string;
-    total_ticket_sold: number;
-    total_money: number
+    code: string;
+    event: string;
+    start: string;
+    end: string;
+    discount_percent: string;
 }
-
-const AdminQlSc: React.FC = () => {
-    const { data } = useFetchMoviesQuery()
-    const [dataTable, setDataTable] = useState<SuatChieu[]>([])
+const AdminQlDiscount: React.FC = () => {
+    const { data } = useFetchDiscountsQuery()
+    const [deleteDiscount] = useDeleteDiscountMutation()
+    const [dataTable, setDataTable] = useState<Discount[]>([])
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
+    const onSelectChange = (newSelectedRowKeys: any[]) => {
         console.log('', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
     };
@@ -39,37 +36,35 @@ const AdminQlSc: React.FC = () => {
         setSearchTerm(value);
     };
     const deleteOne = (key: string) => {
-        console.log(key);
-        message.success("Xóa thành công");
+        deleteDiscount(key).then(() => message.success("Xóa thành công"))
     }
     useEffect(() => {
         if (data) {
-            const mapSuatChieu = data.map((item: SuatChieu) => ({
+            const mapMovies = data.map((item: Discount) => ({
                 key: item.id,
-                movie_name: item.movie_id,
-                room_id: item.room_id,
-                show_date: item.show_date,
-                show_time: item.show_time,
-                total_ticket_sold: item.total_ticket_sold,
-                total_money: item.total_money
+                code: item.code,
+                event: item.event,
+                start: item.start,
+                end: item.end,
+                discount_percent: item.discount_percent,
             }))
-            setDataTable(mapSuatChieu)
+            setDataTable(mapMovies)
         }
     }, [data])
     return (
         <div>
-            <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý Suất Chiếu</div>
+            <div className='mb-[25px] mt-[-30px] text-2xl' >Khuyến mãi</div>
             <div className='flex justify-between mb-[10px]'>
                 <Input style={{ width: '20%' }} placeholder='Tìm kiếm dự án'
                     value={searchTerm}
                     onChange={(e) => searchProject(e.target.value)} />
-                <CreateQlSc />
+                <CreateQlDiscount />
             </div>
             <span style={{ marginLeft: 8 }}>
                 {hasSelected ? (
                     <Popconfirm
                         title="Delete the task"
-                        description={`Bạn có chắc muốn xóa ${selectedRowKeys.length} mục ?`}
+                        description="Are you sure to delete this task?"
                         onConfirm={() => {
                             DeleteAll();
                         }}
@@ -87,18 +82,17 @@ const AdminQlSc: React.FC = () => {
                 )}
             </span>
             <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
-                <Column title="Tên phim" dataIndex="movie_name" key="movie_name" />
-                <Column title="Tên phòng" dataIndex="room_id" key="room_id" />
-                <Column title="Ngày chiếu" dataIndex="show_date" key="show_date" />
-                <Column title="Thời gian chiếu" dataIndex="show_time" key="show_time" />
-                <Column title="Tổng số vé bán" dataIndex="total_ticket_sold" key="total_ticket_sold" />
-                <Column title="Tổng doanh thu" dataIndex="total_money" key="total_money" />
+                <Column title="Mã khuyến mãi" dataIndex="code" key="code" />
+                <Column title="Sự Kiện Áp Dụng" dataIndex="event" key="event" />
+                <Column title="Ngày Áp Dụng" dataIndex="start" key="start" />
+                <Column title="Ngày Kết Thúc" dataIndex="end" key="end" />
+                <Column title="Mức Giảm (%)" dataIndex="discount_percent" key="discount_percent" />
                 <Column
                     title="Action"
                     key="action"
                     render={(_: any, record: any) => (
                         <Space size="middle">
-                            <a><EditQlPhim key={record.key} projects={record.key} /> </a>
+                            <a><EditQlDiscount key={record.key} projects={record.key} /> </a>
                             <a>
                                 <Popconfirm
                                     title="Delete the task"
@@ -121,4 +115,4 @@ const AdminQlSc: React.FC = () => {
         </div>
     );
 }
-export default AdminQlSc;
+export default AdminQlDiscount;

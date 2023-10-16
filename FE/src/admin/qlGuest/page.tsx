@@ -1,46 +1,24 @@
-import React, { useState } from 'react';
-import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
-import CreateQlPhim from './create';
-import EditQlPhim from './edit';
-
+import React, { useEffect, useState } from 'react';
+import { Table, Input, Button, message, Popconfirm } from 'antd';
+import { useFetchGuestsQuery } from '../../rtk/qlGuest/qlGuest';
 const { Column } = Table;
-
-interface DataType {
-    key: string;
-    firstName: string;
-    lastName: string;
-    age: number;
+interface Guest {
+    id: string;
+    user_code: string;
+    name: string;
+    email: string;
+    phone_number: string;
+    password: string;
     address: string;
+    birthday: string;
+    gender: string;
 }
-
-const data: DataType[] = [
-    {
-        key: '1',
-        firstName: 'John',
-        lastName: 'Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-    },
-    {
-        key: '2',
-        firstName: 'Jim',
-        lastName: 'Green',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-    },
-    {
-        key: '3',
-        firstName: 'Joe',
-        lastName: 'Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-    },
-];
-
 const AdminQlGuest: React.FC = () => {
+    const { data } = useFetchGuestsQuery()
+    const [dataTable, setDataTable] = useState<Guest[]>([])
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
+    const onSelectChange = (newSelectedRowKeys: any[]) => {
         console.log('', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
     };
@@ -57,24 +35,35 @@ const AdminQlGuest: React.FC = () => {
         console.log(value);
         setSearchTerm(value);
     };
-    const deleteOne = (key: string) => {
-        console.log(key);
-        message.success("Xóa thành công");
-    }
+    useEffect(() => {
+        if (data) {
+            const mapMovies = data.map((item: Guest) => ({
+                key: item.id,
+                user_code: item.user_code,
+                name: item.name,
+                email: item.email,
+                phone_number: item.phone_number,
+                password: item.password,
+                address: item.address,
+                birthday: item.birthday,
+                gender: item.gender,
+            }))
+            setDataTable(mapMovies)
+        }
+    }, [data])
     return (
         <div>
-            <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý Suất Chiếu</div>
+            <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý khách hàng</div>
             <div className='flex justify-between mb-[10px]'>
                 <Input style={{ width: '20%' }} placeholder='Tìm kiếm dự án'
                     value={searchTerm}
                     onChange={(e) => searchProject(e.target.value)} />
-                <CreateQlPhim />
             </div>
             <span style={{ marginLeft: 8 }}>
                 {hasSelected ? (
                     <Popconfirm
                         title="Delete the task"
-                        description={`Bạn có chắc muốn xóa ${selectedRowKeys.length} mục ?`}
+                        description="Are you sure to delete this task?"
                         onConfirm={() => {
                             DeleteAll();
                         }}
@@ -91,35 +80,15 @@ const AdminQlGuest: React.FC = () => {
                     <div></div>
                 )}
             </span>
-            <Table dataSource={data} rowSelection={rowSelection} >
-                <Column title="First Name" dataIndex="firstName" key="firstName" />
-                <Column title="Last Name" dataIndex="lastName" key="lastName" />
-                <Column title="Age" dataIndex="age" key="age" />
-                <Column title="Address" dataIndex="address" key="address" />
-                <Column
-                    title="Action"
-                    key="action"
-                    render={(_: any, record: DataType) => (
-                        <Space size="middle">
-                            <a><EditQlPhim key={record.key} projects={record.key} /> </a>
-                            <a>
-                                <Popconfirm
-                                    title="Delete the task"
-                                    description="Are you sure to delete this task?"
-                                    onConfirm={() => {
-                                        deleteOne(record.key);
-                                    }}
-                                    okButtonProps={{
-                                        style: { backgroundColor: "#007bff" },
-                                    }}
-                                    okText="Yes"
-                                    cancelText="No"
-                                >
-                                    <Button danger>Delete</Button>
-                                </Popconfirm></a>
-                        </Space>
-                    )}
-                />
+            <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
+                <Column title="Mã khách hàng" dataIndex="user_code" key="user_code" />
+                <Column title="Tên khách hàng" dataIndex="name" key="name" />
+                <Column title="Email" dataIndex="email" key="email" />
+                <Column title="Số điện thoại" dataIndex="phone_number" key="phone_number" />
+                <Column title="Mật khẩu" dataIndex="password" key="password" render={(_: any) => (`***********`)} />
+                <Column title="Địa chỉ" dataIndex="address" key="address" />
+                <Column title="Ngày sinh" dataIndex="birthday" key="birthday" />
+                <Column title="Giới tính" dataIndex="gender" key="gender" />
             </Table>
         </div>
     );

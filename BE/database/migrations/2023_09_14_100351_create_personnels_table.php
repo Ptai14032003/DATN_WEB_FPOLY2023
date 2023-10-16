@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('phone_number')->unique();
             $table->string('password');
             $table->string('address');
-            $table->string('birthday');
+            $table->date('birthday');
             $table->tinyInteger('gender');
             $table->tinyInteger('role');
             $table->date('date_start');

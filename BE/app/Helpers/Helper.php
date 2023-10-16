@@ -3,10 +3,10 @@ namespace App\Helpers;
 
 class Helper{
 
-    public static function IDGenerator($model, $column, $length=6,$prefix){
+    public static function IDGenerator($model, $column, $length, $prefix){
         $data = $model::orderBy('id', 'desc')->first();
         if(!$data){
-            $og_length = $length;
+            $og_length = $length-1;
             $last_number = '1';
         }else{
             $code = substr($data->$column, strlen($prefix) + 1);//vd: KH-001->lấy phần 001

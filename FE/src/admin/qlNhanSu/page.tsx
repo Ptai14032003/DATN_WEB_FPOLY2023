@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
-import { useFetchMoviesQuery } from '../../rtk/movies/movies';
-import TrailerPhim from '../../components/itemAdmin/Trailer/page';
 import EditQlNhanSu from './edit';
 import CreateQlNhanSu from './create';
+import { useDeleteNhanSuMutation, useFetchNhanSuQuery } from '../../rtk/qlNhanSu/qlNhanSu';
 const { Column } = Table;
-const selectGender = ["Nam", "Nữ", "Không muốn trả lời"]
-const GenderOptions = selectGender.map((gender) => ({
-    value: gender,
-    label: gender,
-}));
-interface DataType {
+export interface QlNhanSu {
     id: string;
-    user_code: string;
+    personnel_code: string;
     name: string;
     email: string;
     phone_number: string;
@@ -20,12 +14,14 @@ interface DataType {
     address: string;
     birthday: string;
     gender: string;
+    role: string
 }
 const AdminQlNhanSu: React.FC = () => {
-    const { data } = useFetchMoviesQuery()
-    const [dataTable, setDataTable] = useState<[]>([])
+    const { data } = useFetchNhanSuQuery()
+    const [dataTable, setDataTable] = useState<QlNhanSu[]>([])
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
+    const [deleteNhanSu] = useDeleteNhanSuMutation()
     const onSelectChange = (newSelectedRowKeys: any[]) => {
         console.log('', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
@@ -44,15 +40,15 @@ const AdminQlNhanSu: React.FC = () => {
         setSearchTerm(value);
     };
     const deleteOne = (key: string) => {
-        console.log(key);
+        deleteNhanSu(key)
         message.success("Xóa thành công");
 
     }
     useEffect(() => {
         if (data) {
-            const mapMovies = data.map((item: any) => ({
+            const mapMovies = data.map((item: QlNhanSu) => ({
                 key: item.id,
-                user_code: item.user_code,
+                personnel_code: item.personnel_code,
                 name: item.name,
                 email: item.email,
                 phone_number: item.phone_number,
@@ -60,6 +56,7 @@ const AdminQlNhanSu: React.FC = () => {
                 address: item.address,
                 birthday: item.birthday,
                 gender: item.gender,
+                role: item.role,
             }))
             setDataTable(mapMovies)
         }
@@ -95,26 +92,27 @@ const AdminQlNhanSu: React.FC = () => {
                 )}
             </span>
             <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
-                <Column title="Tên phim " dataIndex="user_code" key="user_code" />
-                <Column title="Nước Sản Xuất " dataIndex="name" key="name" />
-                <Column title="Nhà Sản Xuất" dataIndex="email" key="email" />
-                <Column title="Dạng Phim" dataIndex="phone_number" key="phone_number" />
-                <Column title="Thể Loại" dataIndex="password" key="password" />
-                <Column title="Đạo Diễn" dataIndex="birthday" key="birthday" />
-                <Column title="Poster" dataIndex="poster" key="poster" />
-                <Column title="Trailer" dataIndex="gender" key="gender" />
+                <Column title="Mã nhân viên" dataIndex="personnel_code" key="personnel_code" />
+                <Column title="Tên nhân viên" dataIndex="name" key="name" />
+                <Column title="Email" dataIndex="email" key="email" />
+                <Column title="Số điện thoại" dataIndex="phone_number" key="phone_number" />
+                <Column title="Mật khẩu" dataIndex="password" key="password" />
+                <Column title="Địa chỉ" dataIndex="address" key="address" />
+                <Column title="Ngày sinh" dataIndex="birthday" key="birthday" />
+                <Column title="Giới tính" dataIndex="gender" key="gender" />
+                <Column title="Chức vụ" dataIndex="role" key="role" />
                 <Column
                     title="Action"
                     key="action"
-                    render={(_: any, record: DataType) => (
+                    render={(_: any, record: any) => (
                         <Space size="middle">
-                            <a><EditQlNhanSu key={record.id} projects={record.id} /> </a>
+                            <a><EditQlNhanSu key={record.key} projects={record.key} /> </a>
                             <a>
                                 <Popconfirm
                                     title="Delete the task"
                                     description="Are you sure to delete this task?"
                                     onConfirm={() => {
-                                        deleteOne(record.id);
+                                        deleteOne(record.key);
                                     }}
                                     okButtonProps={{
                                         style: { backgroundColor: "#007bff" },
