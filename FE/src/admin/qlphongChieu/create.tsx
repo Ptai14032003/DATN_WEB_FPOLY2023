@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, InputNumber, Modal, Upload } from 'antd';
+import { Button, Form, Input, InputNumber, Modal } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { PhongChieu } from './page';
 import { useAddPhongChieuMutation } from '../../rtk/qlPhongChieu/qlPhongChieu';
@@ -10,7 +10,6 @@ const CreateQlPhongChieu: React.FC = () => {
     const onFinish = (values: any) => {
         addPhongChieu(values).then(() => setIsModalOpen(false))
     };
-
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
     };
@@ -20,6 +19,16 @@ const CreateQlPhongChieu: React.FC = () => {
     const handleCancel = () => {
         setIsModalOpen(false);
         formRef.current?.resetFields();
+    };
+    const validateMessages = {
+        required: 'Vui lòng nhập ${label}!',
+        types: {
+            integer: 'Tổng số ghế phải là số nguyên!',
+        },
+        number: {
+            range: '${label} phải nằm trong khoảng từ ${min} đến ${max}',
+            min: '${label} không được nhỏ hơn 1',
+        },
     };
     return (
         <>
@@ -34,6 +43,7 @@ const CreateQlPhongChieu: React.FC = () => {
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
+                    validateMessages={validateMessages}
                 >
                     <Form.Item<PhongChieu>
                         label="Tên phòng"
@@ -45,12 +55,12 @@ const CreateQlPhongChieu: React.FC = () => {
                     <Form.Item<PhongChieu>
                         label="Tổng số ghế"
                         name="total_seat"
-                        rules={[{ required: true, message: 'Vui lòng nhập tổng số ghế !' }]}
+                        rules={[{ required: true, type: "integer", min: 0 }]}
                     >
                         <InputNumber />
                     </Form.Item>
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                        <Button htmlType="submit">
+                        <Button htmlType="submit" className='mr-[80px]'>
                             Tạo mới
                         </Button>
                     </Form.Item>

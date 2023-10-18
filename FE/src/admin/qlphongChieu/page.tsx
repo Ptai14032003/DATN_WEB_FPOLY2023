@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
-import { useFetchMoviesQuery } from '../../rtk/movies/movies';
 import CreateQlPhongChieu from './create';
 import EditQlPhongChieu from './edit';
-import { useFetchPhongChieuQuery } from '../../rtk/qlPhongChieu/qlPhongChieu';
+import { useDeletePhongChieuMutation, useFetchPhongChieuQuery } from '../../rtk/qlPhongChieu/qlPhongChieu';
 
 const { Column } = Table;
 
@@ -15,6 +14,7 @@ export interface PhongChieu {
 
 const AdminQlPhongChieu: React.FC = () => {
     const { data } = useFetchPhongChieuQuery()
+    const [deletePhongChieu] = useDeletePhongChieuMutation()
     const [dataTable, setDataTable] = useState<PhongChieu[]>([])
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -36,8 +36,7 @@ const AdminQlPhongChieu: React.FC = () => {
         setSearchTerm(value);
     };
     const deleteOne = (key: string) => {
-        console.log(key);
-        message.success("Xóa thành công");
+        deletePhongChieu(key).then(() => message.success("Xóa thành công"))
     }
     useEffect(() => {
         if (data) {

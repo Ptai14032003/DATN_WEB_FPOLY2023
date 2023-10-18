@@ -4,6 +4,7 @@ import CreateQlPhim from './create';
 import EditQlPhim from './edit';
 import { useDeleteMoviesMutation, useFetchMoviesQuery } from '../../rtk/movies/movies';
 import TrailerPhim from '../../components/itemAdmin/Trailer/page';
+import PosterPhim from '../../components/itemAdmin/Poster/page';
 const { Column } = Table;
 
 export interface QlPhim {
@@ -96,7 +97,10 @@ const AdminQlPhim: React.FC = () => {
                 <Column title="Dạng Phim" dataIndex="type_name" key="type_name" />
                 <Column title="Thể Loại" dataIndex="genre" key="genre" />
                 <Column title="Đạo Diễn" dataIndex="director" key="director" />
-                <Column title="Poster" dataIndex="image" key="image" />
+                <Column title="Poster" dataIndex="image" key="image"
+                    render={(_: any, record: QlPhim) => (
+                        <PosterPhim data={`https://www.theindianwire.com/wp-content/uploads/2019/02/Avengers-Endgame.jpg`} key={record.id} />
+                    )} />
                 <Column title="Trailer" dataIndex="trailer" key="trailer" render={(_: any, record: QlPhim) => (
                     <TrailerPhim data={`https://www.youtube.com/embed/XBczBMc4LPQ?si=oS0QKFixvq636T3Q&amp;start=103`} key={record.id} />
                 )} />

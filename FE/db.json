@@ -239,18 +239,7 @@
       "trailer": "https://example.com/incredibles-2-trailermp4"
     }
   ],
-  "phongChieu": [
-    {
-      "id": "1",
-      "name": "Phòng 1",
-      "total_seat": 50
-    },
-    {
-      "name": "123",
-      "total_seat": 23,
-      "id": "pYK_CBv"
-    }
-  ],
+  "phongChieu": [],
   "discount": [
     {
       "code": "312",
@@ -285,31 +274,48 @@
       "gender": "Nữ",
       "role": "Nhân viên",
       "id": 2
-    },
-    {
-      "personnel_code": "12312",
-      "name": "3123",
-      "email": "213123",
-      "phone_number": "12312",
-      "password": "3123",
-      "address": "123123",
-      "birthday": "2023-10-16T03:20:44.184Z",
-      "gender": "Nữ",
-      "role": "Nhân viên",
-      "id": 3
     }
   ],
-  "guest":[
+  "guest": [
     {
-      "id":1,
-      "user_code":"34sd",
-      "name":"hiếu",
-      "email":"tai@gmail.com",
-      "phone_number":"210123712",
-      "password":"213asda",
-      "address":"số 2 hàng không",
-      "birthday":"2023-10-16T03:20:44.184Z",
-      "gender":"Nam"
+      "id": 1,
+      "user_code": "34sd",
+      "name": "hiếu",
+      "email": "tai@gmail.com",
+      "phone_number": "210123712",
+      "password": "213asda",
+      "address": "số 2 hàng không",
+      "birthday": "2023-10-16T03:20:44.184Z",
+      "gender": "Nam"
+    }
+  ],
+  "suatChieu": [
+    {
+      "movie_id": "Hoa Kỳ",
+      "room_id": "Hoa Kỳ",
+      "show_date": "2023-10-20T07:58:57.920Z",
+      "show_time": "2023-10-05T07:58:59.325Z",
+      "total_ticket_sold": 1323,
+      "total_money": 12312312,
+      "id": 1
+    },
+    {
+      "movie_id": "Canada",
+      "room_id": "Canada",
+      "show_date": "2023-10-12",
+      "show_time": "2023-10-14",
+      "total_ticket_sold": 213,
+      "total_money": 123213,
+      "id": 2
+    },
+    {
+      "movie_id": "Canada",
+      "room_id": "Hoa Kỳ",
+      "show_date": "2023-10-04",
+      "show_time": "2023-10-13",
+      "total_ticket_sold": 3123,
+      "total_money": 123123,
+      "id": 3
     }
   ]
 }

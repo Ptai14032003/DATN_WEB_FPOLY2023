@@ -65,7 +65,7 @@ const AdminQlNhanSu: React.FC = () => {
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý Nhân Sự</div>
             <div className='flex justify-between mb-[10px]'>
-                <Input style={{ width: '20%' }} placeholder='Tìm kiếm dự án'
+                <Input style={{ width: '20%' }} placeholder='Tìm kiếm nhân sự'
                     value={searchTerm}
                     onChange={(e) => searchProject(e.target.value)} />
                 <CreateQlNhanSu />

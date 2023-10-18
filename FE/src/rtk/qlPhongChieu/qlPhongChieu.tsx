@@ -30,8 +30,8 @@ const phongChieuApi = createApi({
             }),
             invalidatesTags: ["phongChieu"]
         }),
-        deletePhongChieu: builder.mutation<void, { id: string }>({
-            query: ({ id }) => ({
+        deletePhongChieu: builder.mutation<void, string>({
+            query: (id) => ({
                 url: `/phongChieu/${id}`,
                 method: "DELETE",
             }),
@@ -39,5 +39,5 @@ const phongChieuApi = createApi({
         }),
     })
 })
-export const { useFetchPhongChieuQuery, useFetchPhongChieuIDQuery, useAddPhongChieuMutation, usePatchPhongChieuMutation } = phongChieuApi
+export const { useFetchPhongChieuQuery, useFetchPhongChieuIDQuery, useAddPhongChieuMutation, usePatchPhongChieuMutation, useDeletePhongChieuMutation } = phongChieuApi
 export default phongChieuApi

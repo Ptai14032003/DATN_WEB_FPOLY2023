@@ -57,7 +57,7 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
                             <InputNumber />
                         </Form.Item>
                         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                            <Button htmlType="submit">
+                            <Button htmlType="submit" className='mr-[80px]'>
                                 Sửa
                             </Button>
                         </Form.Item>

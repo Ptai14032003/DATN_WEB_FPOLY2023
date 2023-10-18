@@ -1,23 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
 import EditQlPhim from './edit';
-import { useFetchMoviesQuery } from '../../rtk/movies/movies';
 import CreateQlSc from './create';
-
+import { useDeleteSuatChieuMutation, useFetchSuatChieuQuery } from '../../rtk/qlSc/qlSc';
 const { Column } = Table;
 
 export interface SuatChieu {
     id: string;
-    movie_id: string;
-    room_id: string;
+    movie_id: MovieId;
+    room_id: RoomId;
     show_date: string;
     show_time: string;
     total_ticket_sold: number;
     total_money: number
 }
+interface MovieId {
+    movie_id: string,
+    movie_name: string
+}
+interface RoomId {
+    room_id: string,
+    room_name: string
+}
 
 const AdminQlSc: React.FC = () => {
-    const { data } = useFetchMoviesQuery()
+    const { data } = useFetchSuatChieuQuery()
+    const [deleteSuatChieu] = useDeleteSuatChieuMutation()
     const [dataTable, setDataTable] = useState<SuatChieu[]>([])
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -39,15 +47,14 @@ const AdminQlSc: React.FC = () => {
         setSearchTerm(value);
     };
     const deleteOne = (key: string) => {
-        console.log(key);
-        message.success("Xóa thành công");
+        deleteSuatChieu(key).then(() => message.success("Xóa thành công"))
     }
     useEffect(() => {
         if (data) {
             const mapSuatChieu = data.map((item: SuatChieu) => ({
                 key: item.id,
-                movie_name: item.movie_id,
-                room_id: item.room_id,
+                movie_name: item.movie_id.movie_name,
+                room_id: item.room_id.room_name,
                 show_date: item.show_date,
                 show_time: item.show_time,
                 total_ticket_sold: item.total_ticket_sold,
@@ -60,7 +67,7 @@ const AdminQlSc: React.FC = () => {
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý Suất Chiếu</div>
             <div className='flex justify-between mb-[10px]'>
-                <Input style={{ width: '20%' }} placeholder='Tìm kiếm dự án'
+                <Input style={{ width: '20%' }} placeholder='Tìm kiếm suất chiếu'
                     value={searchTerm}
                     onChange={(e) => searchProject(e.target.value)} />
                 <CreateQlSc />

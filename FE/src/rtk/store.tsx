@@ -5,14 +5,16 @@ import guestApi from './qlGuest/qlGuest'
 import phongChieuApi from './qlPhongChieu/qlPhongChieu'
 import discountApi from './discount/discount'
 import nhanSuApi from './qlNhanSu/qlNhanSu'
+import suatChieuApi from './qlSc/qlSc'
 
 export const store = configureStore({
     reducer: {
-        movies: moviesApi.reducer,
         guest: guestApi.reducer,
         phongChieu: phongChieuApi.reducer,
         discount: discountApi.reducer,
-        nhanSu: nhanSuApi.reducer
+        nhanSu: nhanSuApi.reducer,
+        suatChieu: suatChieuApi.reducer,
+        movies: moviesApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
@@ -20,6 +22,7 @@ export const store = configureStore({
             .concat(guestApi.middleware)
             .concat(phongChieuApi.middleware)
             .concat(nhanSuApi.middleware)
+            .concat(suatChieuApi.middleware)
             .concat(discountApi.middleware),
 })
 
