@@ -1,9 +1,7 @@
 <?php
 
-use App\Http\Controllers\TheaterController;
-use App\Http\Controllers\SuatChieuController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ScreenRateController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,4 +16,3 @@ use App\Http\Controllers\ScreenRateController;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('list',[SuatChieuController::class,'show_suat_chieu'])->name('list-suatchieu');
