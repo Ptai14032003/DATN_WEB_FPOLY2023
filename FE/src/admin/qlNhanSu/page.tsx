@@ -40,14 +40,12 @@ const AdminQlNhanSu: React.FC = () => {
         setSearchTerm(value);
     };
     const deleteOne = (key: string) => {
-        deleteNhanSu(key)
-        message.success("Xóa thành công");
-
+        deleteNhanSu(key).then(() => { message.success("Xóa thành công") })
     }
     useEffect(() => {
         if (data) {
             const mapMovies = data.map((item: QlNhanSu) => ({
-                key: item.id,
+                id: item.id,
                 personnel_code: item.personnel_code,
                 name: item.name,
                 email: item.email,
@@ -104,15 +102,15 @@ const AdminQlNhanSu: React.FC = () => {
                 <Column
                     title="Action"
                     key="action"
-                    render={(_: any, record: any) => (
+                    render={(_: any, record: QlNhanSu) => (
                         <Space size="middle">
-                            <a><EditQlNhanSu key={record.key} projects={record.key} /> </a>
+                            <a><EditQlNhanSu key={record.id} projects={record.id} /> </a>
                             <a>
                                 <Popconfirm
                                     title="Delete the task"
                                     description="Are you sure to delete this task?"
                                     onConfirm={() => {
-                                        deleteOne(record.key);
+                                        deleteOne(record.id);
                                     }}
                                     okButtonProps={{
                                         style: { backgroundColor: "#007bff" },

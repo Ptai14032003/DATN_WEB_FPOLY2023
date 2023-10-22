@@ -17,10 +17,15 @@ const CreateQlPhim: React.FC = () => {
         value: type,
         label: type,
     }));
+    const genreMovies = ["Hành động", "Hoạt hình", "Hài hước"]
+    const genreOptions = genreMovies.map((genre) => ({
+        value: genre,
+        label: genre,
+    }))
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
-        console.log('Success:', values);
+        addMovies(values).then(() => setIsModalOpen(false))
     };
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
@@ -49,7 +54,7 @@ const CreateQlPhim: React.FC = () => {
                     <Form.Item<QlPhim>
                         label="Tên phim"
                         name="movie_name"
-                        rules={[{ required: true, message: 'Vui lòng nhập tên !' }, { max: 6, message: "ngu" }]}
+                        rules={[{ required: true, message: 'Vui lòng nhập tên !' }]}
                     >
                         <Input />
                     </Form.Item>
@@ -81,10 +86,11 @@ const CreateQlPhim: React.FC = () => {
                     <Form.Item<QlPhim>
                         label="Dạng phim"
                         name="type_name"
-                        rules={[{ required: true, message: 'Vui lòng nhập dang phim !' }]}
+                        rules={[{ required: true, message: 'Vui lòng nhập dạng phim !' }]}
                     >
                         <Select className='ml-[-72px]'
-                            defaultValue="Chọn dạng phim"
+                            mode='multiple'
+                            placeholder={"Chọn dạng phim"}
                             style={{ width: 200 }}
                             options={typeOptions}
                         />
@@ -94,7 +100,12 @@ const CreateQlPhim: React.FC = () => {
                         name="genre"
                         rules={[{ required: true, message: 'Vui lòng nhập thể loại!' }]}
                     >
-                        <Input />
+                        <Select className='ml-[-72px]'
+                            mode='multiple'
+                            placeholder={"Chọn thể loại phim"}
+                            style={{ width: 200 }}
+                            options={genreOptions}
+                        />
                     </Form.Item>
                     <Form.Item<QlPhim>
                         label="Đạo diễn"

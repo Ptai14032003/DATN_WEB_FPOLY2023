@@ -1,4 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
+import { QlSuatChieu } from "../../admin/qlSc/page"
+import { SuatChieu } from "../../type"
 const suatChieuApi = createApi({
     reducerPath: "suatChieu",
     baseQuery: fetchBaseQuery({
@@ -6,11 +8,11 @@ const suatChieuApi = createApi({
     }),
     tagTypes: ["suatChieu"],
     endpoints: builder => ({
-        fetchSuatChieu: builder.query<any[], void>({
+        fetchSuatChieu: builder.query<SuatChieu[], void>({
             query: () => "/suatChieu/",
             providesTags: ["suatChieu"]
         }),
-        addSuatChieu: builder.mutation<void, { body: any }>({
+        addSuatChieu: builder.mutation<void,QlSuatChieu>({
             query: (body) => ({
                 url: "/suatChieu/",
                 method: "POST",

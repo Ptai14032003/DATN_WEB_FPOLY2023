@@ -38,7 +38,7 @@ const AdminQlGuest: React.FC = () => {
     useEffect(() => {
         if (data) {
             const mapMovies = data.map((item: Guest) => ({
-                key: item.id,
+                id: item.id,
                 user_code: item.user_code,
                 name: item.name,
                 email: item.email,
