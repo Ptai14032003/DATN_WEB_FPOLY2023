@@ -22,6 +22,14 @@ const discountApi = createApi({
             query: (id) => `/discount/${id}`,
             providesTags: ["discount"]
         }),
+        updateDiscount: builder.mutation<void, { id: string, body: any }>({
+            query: ({ id, body }) => ({
+                url: `/discount/${id}`,
+                method: "PATCH",
+                body
+            }),
+            invalidatesTags: ["discount"]
+        }),
         deleteDiscount: builder.mutation<void, string>({
             query: (id) => ({
                 url: `/discount/${id}`,
@@ -31,5 +39,5 @@ const discountApi = createApi({
         }),
     })
 })
-export const { useFetchDiscountsQuery, useFetchDiscountIDQuery, useAddDiscountMutation, useDeleteDiscountMutation } = discountApi
+export const { useFetchDiscountsQuery, useFetchDiscountIDQuery, useAddDiscountMutation, useDeleteDiscountMutation,useUpdateDiscountMutation } = discountApi
 export default discountApi

@@ -7,11 +7,12 @@ import TrailerPhim from '../../components/itemAdmin/Trailer/page';
 import PosterPhim from '../../components/itemAdmin/Poster/page';
 const { Column } = Table;
 
-export interface QlPhim {
+export type QlPhim = {
     id: string;
     movie_name: string;
     country_name: string;
     producer_name: string;
+    actor_name: string;
     type_name: string;
     genre: string;
     director: string;
@@ -47,10 +48,11 @@ const AdminQlPhim: React.FC = () => {
     useEffect(() => {
         if (data) {
             const mapMovies = data.map((item: QlPhim) => ({
-                key: item.id,
+                id: item.id,
                 movie_name: item.movie_name,
                 country_name: item.country_name,
                 producer_name: item.producer_name,
+                actor_name: item.actor_name,
                 type_name: item.type_name,
                 genre: item.genre,
                 director: item.director,
@@ -94,6 +96,7 @@ const AdminQlPhim: React.FC = () => {
                 <Column title="Tên phim " dataIndex="movie_name" key="movie_name" />
                 <Column title="Nước Sản Xuất " dataIndex="country_name" key="ountry_name" />
                 <Column title="Nhà Sản Xuất" dataIndex="producer_name" key="producer_name" />
+                <Column title="Diễn viên" dataIndex="actor_name" key="actor_name" />
                 <Column title="Dạng Phim" dataIndex="type_name" key="type_name" />
                 <Column title="Thể Loại" dataIndex="genre" key="genre" />
                 <Column title="Đạo Diễn" dataIndex="director" key="director" />
@@ -107,15 +110,15 @@ const AdminQlPhim: React.FC = () => {
                 <Column
                     title="Action"
                     key="action"
-                    render={(_: any, record: any) => (
+                    render={(_: any, record: QlPhim) => (
                         <Space size="middle">
-                            <a><EditQlPhim key={record.key} projects={record.key} /></a>
+                            <a><EditQlPhim key={record.id} projects={record.id} /></a>
                             <a>
                                 <Popconfirm
                                     title="Delete the task"
                                     description="Are you sure to delete this task?"
                                     onConfirm={() => {
-                                        deleteOne(record.key);
+                                        deleteOne(record.id);
                                     }}
                                     okButtonProps={{
                                         style: { backgroundColor: "#007bff" },

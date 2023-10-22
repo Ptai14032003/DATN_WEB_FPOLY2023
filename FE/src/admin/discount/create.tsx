@@ -38,7 +38,7 @@ const CreateQlDiscount: React.FC = () => {
                     <Form.Item<Discount>
                         label="Mã khuyến mãi"
                         name="code"
-                        rules={[{ required: true, message: 'Vui lòng nhập tên !' }]}
+                        rules={[{ required: true, message: 'Vui lòng nhập mã khuyến mãi !' }]}
                     >
                         <Input />
                     </Form.Item>
@@ -70,7 +70,7 @@ const CreateQlDiscount: React.FC = () => {
                             { required: true, message: 'Vui lòng nhập mức giảm giá !' },
                         ]}
                     >
-                        <InputNumber />
+                        <InputNumber min={1} max={100} />
                     </Form.Item>
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button htmlType="submit" className='mr-[80px]'>

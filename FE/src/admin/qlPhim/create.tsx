@@ -3,8 +3,20 @@ import { Button, Form, Input, Modal, Select, Upload } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
 import { QlPhim } from './page';
+import { useAddMoviesMutation } from '../../rtk/movies/movies';
+
 const CreateQlPhim: React.FC = () => {
+    const [addMovies] = useAddMoviesMutation()
     const countryName = ["Hoa Kỳ", "Canada", "Việt Nam", "United States"]
+    const countryOptions = countryName.map((country) => ({
+        value: country,
+        label: country,
+    }));
+    const typeMovies = ["2D", "3D", "United States"];
+    const typeOptions = typeMovies.map((type) => ({
+        value: type,
+        label: type,
+    }));
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
@@ -13,10 +25,6 @@ const CreateQlPhim: React.FC = () => {
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
     };
-    const countryOptions = countryName.map((country) => ({
-        value: country,
-        label: country,
-    }));
     const showModal = () => {
         setIsModalOpen(true);
     };
@@ -57,26 +65,47 @@ const CreateQlPhim: React.FC = () => {
                         />
                     </Form.Item>
                     <Form.Item<QlPhim>
+                        label="Nhà sản xuất"
+                        name="producer_name"
+                        rules={[{ required: true, message: 'Vui lòng nhập nhà sản xuất !' }]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item<QlPhim>
+                        label="Diễn viên"
+                        name="actor_name"
+                        rules={[{ required: true, message: 'Vui lòng nhập tên các diễn viên !' }]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item<QlPhim>
                         label="Dạng phim"
-                        name="country_name"
-                        rules={[{ required: true, message: 'Vui lòng nhập dạng phim !' }]}
+                        name="type_name"
+                        rules={[{ required: true, message: 'Vui lòng nhập dang phim !' }]}
                     >
                         <Select className='ml-[-72px]'
                             defaultValue="Chọn dạng phim"
                             style={{ width: 200 }}
-                            options={countryOptions}
+                            options={typeOptions}
                         />
                     </Form.Item>
                     <Form.Item<QlPhim>
+                        label="Thể loại"
+                        name="genre"
+                        rules={[{ required: true, message: 'Vui lòng nhập thể loại!' }]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item<QlPhim>
                         label="Đạo diễn"
-                        name="country_name"
-                        rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
+                        name="director"
+                        rules={[{ required: true, message: 'Vui lòng nhập tên đạo diễn !' }]}
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item<QlPhim>
                         label="Poster"
-                        name="director"
+                        name="image"
                         rules={[{ required: true, message: 'Vui lòng nhập ảnh !' }]}
                     >
                         <Upload>
@@ -85,8 +114,8 @@ const CreateQlPhim: React.FC = () => {
                     </Form.Item>
                     <Form.Item<QlPhim>
                         label="Trailer"
-                        name="country_name"
-                        rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
+                        name="trailer"
+                        rules={[{ required: true, message: 'Vui lòng nhập trailer !' }, { type: "url", message: 'Vui lòng nhập đúng định dạng !' }]}
                     >
                         <Input />
                     </Form.Item>

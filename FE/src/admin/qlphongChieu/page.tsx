@@ -6,7 +6,7 @@ import { useDeletePhongChieuMutation, useFetchPhongChieuQuery } from '../../rtk/
 
 const { Column } = Table;
 
-export interface PhongChieu {
+export type PhongChieu = {
     id: string;
     name: string;
     total_seat: number;
@@ -40,8 +40,8 @@ const AdminQlPhongChieu: React.FC = () => {
     }
     useEffect(() => {
         if (data) {
-            const mapPhongChieu = data.map((item: any) => ({
-                key: item.id,
+            const mapPhongChieu = data.map((item: PhongChieu) => ({
+                id: item.id,
                 name: item.name,
                 total_seat: item.total_seat
             }))
@@ -50,7 +50,7 @@ const AdminQlPhongChieu: React.FC = () => {
     }, [data])
     return (
         <div>
-            <div className='mb-[25px] mt-[-30px] text-2xl' >Phòng chiếu</div>
+            <div className='mb-[25px] mt-[-30px] text-2xl' >Phòng Chiếu</div>
             <div className='flex justify-between mb-[10px]'>
                 <Input style={{ width: '20%' }} placeholder='Tìm kiếm phòng chiếu'
                     value={searchTerm}
@@ -84,15 +84,15 @@ const AdminQlPhongChieu: React.FC = () => {
                 <Column
                     title="Action"
                     key="action"
-                    render={(_: any, record: any) => (
+                    render={(_: any, record: PhongChieu) => (
                         <Space size="middle">
-                            <a><EditQlPhongChieu key={record.key} projects={record.key} /> </a>
+                            <a><EditQlPhongChieu key={record.id} projects={record.id} /> </a>
                             <a>
                                 <Popconfirm
                                     title="Delete the task"
                                     description="Are you sure to delete this task?"
                                     onConfirm={() => {
-                                        deleteOne(record.key);
+                                        deleteOne(record.id);
                                     }}
                                     okButtonProps={{
                                         style: { backgroundColor: "#007bff" },

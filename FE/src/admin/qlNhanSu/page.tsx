@@ -96,7 +96,7 @@ const AdminQlNhanSu: React.FC = () => {
                 <Column title="Tên nhân viên" dataIndex="name" key="name" />
                 <Column title="Email" dataIndex="email" key="email" />
                 <Column title="Số điện thoại" dataIndex="phone_number" key="phone_number" />
-                <Column title="Mật khẩu" dataIndex="password" key="password" />
+                <Column title="Mật khẩu" dataIndex="password" key="password" render={(_: any) => (`***********`)} />
                 <Column title="Địa chỉ" dataIndex="address" key="address" />
                 <Column title="Ngày sinh" dataIndex="birthday" key="birthday" />
                 <Column title="Giới tính" dataIndex="gender" key="gender" />

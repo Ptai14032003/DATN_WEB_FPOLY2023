@@ -5,7 +5,7 @@ import CreateQlSc from './create';
 import { useDeleteSuatChieuMutation, useFetchSuatChieuQuery } from '../../rtk/qlSc/qlSc';
 const { Column } = Table;
 
-export interface SuatChieu {
+export type SuatChieu = {
     id: string;
     movie_id: MovieId;
     room_id: RoomId;
@@ -14,11 +14,11 @@ export interface SuatChieu {
     total_ticket_sold: number;
     total_money: number
 }
-interface MovieId {
+type MovieId = {
     movie_id: string,
     movie_name: string
 }
-interface RoomId {
+type RoomId = {
     room_id: string,
     room_name: string
 }
@@ -52,17 +52,17 @@ const AdminQlSc: React.FC = () => {
     useEffect(() => {
         if (data) {
             const mapSuatChieu = data.map((item: SuatChieu) => ({
-                key: item.id,
-                movie_name: item.movie_id.movie_name,
-                room_id: item.room_id.room_name,
+                id: item.id,
+                movie_id: { movie_id: item.movie_id.movie_id, movie_name: item.movie_id.movie_name },
+                room_id: { room_id: item.room_id.room_id, room_name: item.room_id.room_name },
                 show_date: item.show_date,
                 show_time: item.show_time,
                 total_ticket_sold: item.total_ticket_sold,
-                total_money: item.total_money
-            }))
-            setDataTable(mapSuatChieu)
+                total_money: item.total_money,
+            }));
+            setDataTable(mapSuatChieu);
         }
-    }, [data])
+    }, [data]);
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý Suất Chiếu</div>
@@ -94,7 +94,7 @@ const AdminQlSc: React.FC = () => {
                 )}
             </span>
             <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
-                <Column title="Tên phim" dataIndex="movie_name" key="movie_name" />
+                <Column title="Tên phim" dataIndex="movie_id" key="movie_name" />
                 <Column title="Tên phòng" dataIndex="room_id" key="room_id" />
                 <Column title="Ngày chiếu" dataIndex="show_date" key="show_date" />
                 <Column title="Thời gian chiếu" dataIndex="show_time" key="show_time" />

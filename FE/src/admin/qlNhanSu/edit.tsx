@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, DatePicker, Form, Input, Modal, Select } from 'antd';
+import { Button, Form, Input, Modal, Select } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { QlNhanSu } from './page';
 import { useFetchNhanSuIdQuery } from '../../rtk/qlNhanSu/qlNhanSu';
@@ -68,37 +68,39 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
                         <Form.Item<QlNhanSu>
                             label="Email"
                             name="email"
-                            rules={[{ required: true, message: 'Vui lòng nhập mô tả !' }]}
+                            rules={[{ required: true, message: 'Vui lòng nhập email !' }, { type: 'email', message: "Vui lòng nhập đúng định dạng !" }]}
                         >
                             <Input />
                         </Form.Item>
                         <Form.Item<QlNhanSu>
                             label="Số điện thoại"
                             name="phone_number"
-                            rules={[{ required: true, message: 'Vui lòng nhập mô tả !' }]}
+                            rules={[{ required: true, message: 'Vui lòng nhập số điện thoại !' }, {
+                                pattern: /^(?:\d[ -]?){9,14}\d$/,
+                                message: 'Vui lòng nhập số điện thoại hợp lệ!', }]}
                         >
                             <Input />
                         </Form.Item>
                         <Form.Item<QlNhanSu>
                             label="Mật khẩu"
                             name="password"
-                            rules={[{ required: true, message: 'Vui lòng nhập mô tả !' }]}
+                            rules={[{ required: true, message: 'Vui lòng nhập mật khẩu !' }]}
                         >
-                            <Input />
+                            <Input type="password" />
                         </Form.Item>
                         <Form.Item<QlNhanSu>
                             label="Địa chỉ"
                             name="address"
-                            rules={[{ required: true, message: 'Vui lòng nhập mô tả !' }]}
+                            rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}
                         >
                             <Input />
                         </Form.Item>
                         <Form.Item<QlNhanSu>
                             label="Ngày sinh"
                             name="birthday"
-                            rules={[{ required: true, message: 'Vui lòng nhập mô tả !' }]}
+                            rules={[{ required: true, message: 'Vui lòng nhập ngày sinh!' }]}
                         >
-                            <DatePicker />
+                            <Input type='date' style={{ width: 200 }} />
                         </Form.Item>
                         <Form.Item<QlNhanSu>
                             label="Giới tính"

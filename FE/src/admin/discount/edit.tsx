@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-import { Button, ConfigProvider, DatePicker, Form, Input, InputNumber, Modal } from 'antd';
+import { Button, ConfigProvider, DatePicker, Form, Input, InputNumber, Modal, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { Discount } from './page';
-import { useFetchDiscountIDQuery } from '../../rtk/discount/discount';
+import { useFetchDiscountIDQuery, useUpdateDiscountMutation } from '../../rtk/discount/discount';
 import viVN from 'antd/lib/locale/vi_VN';
 type Props = {
     projects: string
 }
 const EditQlDiscount: React.FC<Props> = ({ projects }: Props) => {
     const { data } = useFetchDiscountIDQuery(projects);
+    const [update] = useUpdateDiscountMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
-        console.log('Success:', values);
+        update({ body: values, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
     };
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
@@ -79,7 +80,7 @@ const EditQlDiscount: React.FC<Props> = ({ projects }: Props) => {
                                 { required: true, message: 'Vui lòng nhập mức giảm giá !' },
                             ]}
                         >
-                            <InputNumber />
+                            <InputNumber min={1} max={100} />
                         </Form.Item>
                         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                             <Button htmlType="submit" className='mr-[80px]'>

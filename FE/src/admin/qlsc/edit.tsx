@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, DatePicker, Form, Input, InputNumber, Modal, Select } from 'antd';
+import { Button, Form, Input, InputNumber, Modal, Select } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { useFetchSuatChieuIDQuery } from '../../rtk/qlSc/qlSc';
 import { SuatChieu } from './page';
@@ -75,14 +75,14 @@ const EditQlSc: React.FC<Props> = ({ projects }: Props) => {
                             name="show_date"
                             rules={[{ required: true, message: 'Vui lòng nhập mô tả !' }]}
                         >
-                            <DatePicker />
+                            <Input type='date' style={{ width: 200 }} />
                         </Form.Item>
                         <Form.Item<SuatChieu>
                             label="Thời gian chiếu"
                             name="show_time"
                             rules={[{ required: true, message: 'Vui lòng nhập mô tả !' }]}
                         >
-                            <DatePicker />
+                            <Input type='date' style={{ width: 200 }} />
                         </Form.Item>
                         <Form.Item<SuatChieu>
                             label="Tổng số vé bán"

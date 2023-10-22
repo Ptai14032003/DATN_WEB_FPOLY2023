@@ -10,10 +10,15 @@ type Props = {
 const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
     const { data } = useFetchMovieIdQuery(projects);
     const [patchMovie] = useUpdateMoviesMutation();
-    const countryName = ["Hoa Kỳ", "Canada", "Việt Nam", "United States"];
+    const countryName = ["Hoa Kỳ", "Canada", "Việt Nam", "United States"]
     const countryOptions = countryName.map((country) => ({
         value: country,
         label: country,
+    }));
+    const typeMovies = ["2D", "3D", "United States"];
+    const typeOptions = typeMovies.map((type) => ({
+        value: type,
+        label: type,
     }));
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
@@ -67,6 +72,20 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                             />
                         </Form.Item>
                         <Form.Item<QlPhim>
+                            label="Nhà sản xuất"
+                            name="producer_name"
+                            rules={[{ required: true, message: 'Vui lòng nhập nhà sản xuất !' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item<QlPhim>
+                            label="Diễn viên"
+                            name="actor_name"
+                            rules={[{ required: true, message: 'Vui lòng nhập tên các diễn viên !' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item<QlPhim>
                             label="Dạng phim"
                             name="type_name"
                             rules={[{ required: true, message: 'Vui lòng nhập dang phim !' }]}
@@ -74,7 +93,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                             <Select className='ml-[-72px]'
                                 defaultValue="Chọn dạng phim"
                                 style={{ width: 200 }}
-                                options={countryOptions}
+                                options={typeOptions}
                             />
                         </Form.Item>
                         <Form.Item<QlPhim>
@@ -82,11 +101,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                             name="genre"
                             rules={[{ required: true, message: 'Vui lòng nhập thể loại!' }]}
                         >
-                            <Select className='ml-[-72px]'
-                                defaultValue="Chọn dạng phim"
-                                style={{ width: 200 }}
-                                options={countryOptions}
-                            />
+                            <Input />
                         </Form.Item>
                         <Form.Item<QlPhim>
                             label="Đạo diễn"
@@ -107,20 +122,20 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                         <Form.Item<QlPhim>
                             label="Trailer"
                             name="trailer"
-                            rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
+                            rules={[{ required: true, message: 'Vui lòng nhập trailer !' }, { type: "url", message: 'Vui lòng nhập đúng định dạng !' }]}
                         >
                             <Input />
                         </Form.Item>
                         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                             <Button htmlType="submit" className='mr-[80px]'>
-                                Sửa
+                                Update
                             </Button>
                         </Form.Item>
                     </Form>
                 ) : (
                     <div className="flex justify-center">Đang lấy dữ liệu</div>
                 )}
-            </Modal>
+            </Modal >
         </>
     )
 };

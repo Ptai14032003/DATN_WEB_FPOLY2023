@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, InputNumber, Modal, Upload } from 'antd';
+import { Button, Form, Input, InputNumber, Modal, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { PhongChieu } from './page';
-import { useFetchPhongChieuIDQuery } from '../../rtk/qlPhongChieu/qlPhongChieu';
+import { useFetchPhongChieuIDQuery, usePatchPhongChieuMutation } from '../../rtk/qlPhongChieu/qlPhongChieu';
 type Props = {
     projects: string
 }
 const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
     const { data } = useFetchPhongChieuIDQuery(projects);
+    const [updatePhongChieu] = usePatchPhongChieuMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
-        console.log('Success:', values);
+        updatePhongChieu({ body: values, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -54,7 +55,7 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
                             name="total_seat"
                             rules={[{ required: true, message: 'Vui lòng nhập tổng số ghế !' }]}
                         >
-                            <InputNumber />
+                            <InputNumber min="1" />
                         </Form.Item>
                         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                             <Button htmlType="submit" className='mr-[80px]'>

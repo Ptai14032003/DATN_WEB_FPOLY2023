@@ -20,16 +20,6 @@ const CreateQlPhongChieu: React.FC = () => {
         setIsModalOpen(false);
         formRef.current?.resetFields();
     };
-    const validateMessages = {
-        required: 'Vui lòng nhập ${label}!',
-        types: {
-            integer: 'Tổng số ghế phải là số nguyên!',
-        },
-        number: {
-            range: '${label} phải nằm trong khoảng từ ${min} đến ${max}',
-            min: '${label} không được nhỏ hơn 1',
-        },
-    };
     return (
         <>
             <Button onClick={showModal}>Thêm phòng chiếu mới</Button>
@@ -43,7 +33,6 @@ const CreateQlPhongChieu: React.FC = () => {
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
-                    validateMessages={validateMessages}
                 >
                     <Form.Item<PhongChieu>
                         label="Tên phòng"
@@ -55,9 +44,9 @@ const CreateQlPhongChieu: React.FC = () => {
                     <Form.Item<PhongChieu>
                         label="Tổng số ghế"
                         name="total_seat"
-                        rules={[{ required: true, type: "integer", min: 0 }]}
+                        rules={[{ required: true, message: 'Vui lòng nhập tổng số ghế !' }]}
                     >
-                        <InputNumber />
+                        <InputNumber min="1" />
                     </Form.Item>
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button htmlType="submit" className='mr-[80px]'>

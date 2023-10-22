@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, DatePicker, Form, InputNumber, Modal, Select, Input } from 'antd';
+import { Button, Form, InputNumber, Modal, Select, Input } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { SuatChieu } from './page';
 import { useAddSuatChieuMutation } from '../../rtk/qlSc/qlSc';
