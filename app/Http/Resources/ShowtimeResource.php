@@ -16,8 +16,14 @@ class ShowtimeResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "movie_id" => $this->movie_id,
-            "room_id" => $this->room_id,
+            "movie_id" => [
+                'movie_id' => $this->movie_id,
+                'movie_name'=>$this->movie_name
+            ],
+            "room_id" => [
+                'room_id' => $this->room_id,
+                'name' => $this->name
+            ],
             "show_date" => $this->show_date,
             "show_time" => $this->show_time,
             "total_ticket_sold" => $this->total_ticket_sold,

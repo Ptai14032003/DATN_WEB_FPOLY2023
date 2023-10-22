@@ -10,7 +10,12 @@ use Illuminate\Http\Request;
 class ShowtimeApiController extends Controller
 {
     public function index(){
-        $show_time = Showtime::all();
+        $show_time = Showtime::
+        join('movies','showtimes.movie_id','=','movies.id')
+        ->join('rooms','showtimes.room_id','=','rooms.id')
+        ->select('showtimes.*','movies.movie_name','rooms.name')
+        ->orderby('id','desc')
+        ->get();
         return ShowtimeResource::collection($show_time);
     }
     public function store(Request $request){
@@ -19,7 +24,11 @@ class ShowtimeApiController extends Controller
     }
 
     public function show(string $id){
-        $show_time = Showtime::find($id);
+        $show_time = Showtime::
+        join('movies','showtimes.movie_id','=','movies.id')
+        ->join('rooms','showtimes.room_id','=','rooms.id')
+        ->select('showtimes.*','movies.movie_name','rooms.name')
+        ->find($id);
         if($show_time){
             return new ShowtimeResource($show_time);
         }else{
@@ -37,7 +46,11 @@ class ShowtimeApiController extends Controller
     }
 
     public function destroy(string $id){
-        $show_time = Showtime::find($id);
+        $show_time = Showtime::
+        join('movies','showtimes.movie_id','=','movies.id')
+        ->join('rooms','showtimes.room_id','=','rooms.id')
+        ->select('showtimes.*','movies.movie_name','rooms.name')
+        ->find($id);
         if($show_time){
             $show_time->delete();
             return response()->json(['messages'=>'Xóa xuất chiếu thành công'],202);
