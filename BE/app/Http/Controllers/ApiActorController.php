@@ -14,7 +14,7 @@ class ApiActorController extends Controller
     public function index()
     {
         // lấy ra toàn bộ danh danh sách
-        $actor = Actor::all();
+        $actor = Actor::join('movies', 'actors.movie_id', '=', 'movies.id')->get();;
 //        Trả về danh sách dưới dạng json
         return ActorResource::collection($actor);
 
@@ -37,7 +37,7 @@ class ApiActorController extends Controller
     public function show(string $id)
     {
         //
-        $actor = Actor::find($id);
+        $actor = Actor::join('movies', 'actor.movie_id', '=', 'movies.id')->find($id);
         if($actor){
             return new ActorResource($actor);
         }else{

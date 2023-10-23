@@ -77,7 +77,7 @@ Route::prefix('promotions')->group(function (){
     Route::delete('/{id}',[ApiPromotionController::class,'destroy']);
 });
 //
-Route::prefix('theater')->group(function (){
+Route::prefix('rooms')->group(function (){
     Route::get('/',[RoomApiController::class,'index']);
     Route::post('/',[RoomApiController::class,'store']);
     Route::get('/{id}',[RoomApiController::class,'show']);
