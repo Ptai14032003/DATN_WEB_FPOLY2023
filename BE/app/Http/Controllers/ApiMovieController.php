@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Resources\MovieResource;
 use App\Models\Movie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 class ApiMovieController extends Controller
 {
@@ -14,11 +17,17 @@ class ApiMovieController extends Controller
     public function index()
     {
         // lấy ra toàn bộ danh danh sách
-        $movie = Movie::all();
+        $movie = Movie::
+        join('countries', 'movies.country_id', '=', 'countries.id')
+        ->join('producers', 'movies.producer_id', '=', 'producers.id')
+        ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+        ->get();
 //        Trả về danh sách dưới dạng json
         return MovieResource::collection($movie);
 
     }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -37,7 +46,11 @@ class ApiMovieController extends Controller
     public function show(string $id)
     {
         //
-        $movie = Movie::find($id);
+        $movie = Movie::
+        join('countries', 'movies.country_id', '=', 'countries.id')
+        ->join('producers', 'movies.producer_id', '=', 'producers.id')
+        ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+        ->find($id);;
         if($movie){
             return new MovieResource($movie);
         }else{

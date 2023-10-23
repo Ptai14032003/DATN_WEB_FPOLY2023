@@ -14,7 +14,10 @@ class ApiMovieGenreController extends Controller
     public function index()
     {
         // lấy ra toàn bộ danh danh sách
-        $movieGenre = Movie_Genre::all();
+        $movieGenre = Movie_Genre::
+        join('movies', 'movie_genres.movie_id', '=', 'movies.id')
+        ->join('list_genres', 'movie_genres.list_genre_id', '=', 'list_genres.id')
+        ->get();
 //        Trả về danh sách dưới dạng json
         return MovieGenreResource::collection($movieGenre);
 
@@ -37,7 +40,10 @@ class ApiMovieGenreController extends Controller
     public function show(string $id)
     {
         //
-        $movieGenre = Movie_Genre::find($id);
+        $movieGenre = Movie_Genre:: 
+        join('movies', 'movie_genres.movie_id', '=', 'movies.id')
+        ->join('list_genres', 'movie_genres.list_genre_id', '=', 'list_genres.id')
+        ->find($id);
         if($movieGenre){
             return new MovieGenreResource($movieGenre);
         }else{

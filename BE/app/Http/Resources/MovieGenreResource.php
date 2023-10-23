@@ -14,6 +14,18 @@ class MovieGenreResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            "id" => $this->id,
+
+            "movie_id" => [
+                'movie_id' => $this->movie_id,
+                'movie_name'=>$this->movie_name
+            ],
+            "list_genre_id" => [
+                'list_genre_id' => $this->list_genre_id,
+                "genre" => $this->genre
+            ],
+
+            ];
     }
 }
