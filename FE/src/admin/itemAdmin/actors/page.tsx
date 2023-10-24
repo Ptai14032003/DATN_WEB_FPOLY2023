@@ -1,26 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
-import CreateQlSc from './create';
-import { useDeleteSuatChieuMutation, useFetchSuatChieuQuery } from '../../rtk/qlSc/qlSc';
-import { SuatChieu } from '../../type';
+import EditDienVien from './edit';
+import CreateDienVien from './create';
+import { useDeleteActorMutation, useFetchActorsQuery } from '../../../rtk/actors/actors';
 const { Column } = Table;
-
-export type QlSuatChieu = {
+export interface DsDienVien {
     key: string;
+    actor_name: string;
     movie_id: string;
-    room_id: string;
-    show_date: string;
-    show_time: string;
-    total_ticket_sold?: number;
-    total_money?: number
+    gender: string;
+    role: string;
+    movie_role: string;
 }
-const AdminQlSc: React.FC = () => {
-    const { data: dataSuatChieu } = useFetchSuatChieuQuery()
-    const [deleteSuatChieu] = useDeleteSuatChieuMutation()
-    const [dataTable, setDataTable] = useState<SuatChieu[]>([])
+const AdminQlActors: React.FC = () => {
+    const { data: dataActors } = useFetchActorsQuery()
+    const [dataTable, setDataTable] = useState<DsDienVien[]>([])
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
+    const [deleteNhanSu] = useDeleteActorMutation()
+    const onSelectChange = (newSelectedRowKeys: any[]) => {
         console.log('', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
     };
@@ -38,37 +36,36 @@ const AdminQlSc: React.FC = () => {
         setSearchTerm(value);
     };
     const deleteOne = (key: string) => {
-        deleteSuatChieu(key).then(() => message.success("Xóa thành công"))
+        deleteNhanSu(key).then(() => { message.success("Xóa thành công") })
     }
     useEffect(() => {
-        const dataMap = dataSuatChieu?.data
+        const dataMap = dataActors?.data
         if (Array.isArray(dataMap)) {
-            const mapSuatChieu = dataMap?.map((item: any) => ({
+            const mapNhanSu = dataMap.map((item: any) => ({
                 key: item.id,
-                movie_id: item.movie_id?.movie_name,
-                room_id: item.room_id?.name,
-                show_date: item.show_date,
-                show_time: item.show_time,
-                total_ticket_sold: item.total_ticket_sold,
-                total_money: item.total_money,
-            }));
-            setDataTable(mapSuatChieu);
+                actor_name: item.actor_name,
+                movie_id: item.movie_id.movie_name,
+                gender: item.gender === 0 ? "Nam" : "Nữ",
+                role: item.role === 0 ? "Diễn viên chính" : "Diễn viên phụ",
+                movie_role: item.movie_role
+            }))
+            setDataTable(mapNhanSu)
         }
-    }, [dataSuatChieu]);
+    }, [dataActors])
     return (
         <div>
-            <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý Suất Chiếu</div>
+            <div className='mb-[25px] mt-[-30px] text-2xl' >Danh sách diễn viên</div>
             <div className='flex justify-between mb-[10px]'>
-                <Input style={{ width: '20%' }} placeholder='Tìm kiếm suất chiếu'
+                <Input style={{ width: '20%' }} placeholder='Tìm kiếm nhân sự'
                     value={searchTerm}
                     onChange={(e) => searchProject(e.target.value)} />
-                <CreateQlSc />
+                <CreateDienVien />
             </div>
             <span style={{ marginLeft: 8 }}>
                 {hasSelected ? (
                     <Popconfirm
                         title="Delete the task"
-                        description={`Bạn có chắc muốn xóa ${selectedRowKeys.length} mục ?`}
+                        description="Are you sure to delete this task?"
                         onConfirm={() => {
                             DeleteAll();
                         }}
@@ -86,16 +83,17 @@ const AdminQlSc: React.FC = () => {
                 )}
             </span>
             <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
-                <Column title="Tên phim" dataIndex="movie_id" key="movie_name" />
-                <Column title="Tên phòng" dataIndex="room_id" key="room_id" />
-                <Column title="Ngày chiếu" dataIndex="show_date" key="show_date" />
-                <Column title="Thời gian chiếu" dataIndex="show_time" key="show_time" />
-                <Column title="Tổng doanh thu" dataIndex="total_money" key="total_money" />
+                <Column title="Diễn viên" dataIndex="actor_name" key="actor_name" />
+                <Column title="Phim" dataIndex="movie_id" key="movie_id" />
+                <Column title="Giới tính" dataIndex="gender" key="gender" />
+                <Column title="Chức vụ" dataIndex="role" key="role" />
+                <Column title="Vai diễn" dataIndex="movie_role" key="movie_role" />
                 <Column
                     title="Action"
                     key="action"
-                    render={(_: any, record: QlSuatChieu) => (
+                    render={(_: any, record: DsDienVien) => (
                         <Space size="middle">
+                            <a><EditDienVien key={record.key} projects={record.key} /> </a>
                             <a>
                                 <Popconfirm
                                     title="Delete the task"
@@ -118,4 +116,4 @@ const AdminQlSc: React.FC = () => {
         </div>
     );
 }
-export default AdminQlSc;
+export default AdminQlActors;

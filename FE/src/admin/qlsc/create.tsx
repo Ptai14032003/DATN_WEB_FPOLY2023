@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Form, InputNumber, Modal, Select, Input } from 'antd';
+import { Button, Form, Modal, Select, Input } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { useAddSuatChieuMutation } from '../../rtk/qlSc/qlSc';
 import { useFetchMoviesQuery } from '../../rtk/movies/movies';
@@ -12,15 +12,19 @@ const CreateQlSc: React.FC = () => {
     const { data: dataRoom } = useFetchPhongChieuQuery()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
-    const movieOptions = dataMovie?.map((movie) => ({
+    const dataMapMovie = dataMovie?.data
+    const movieOptions = dataMapMovie?.map((movie: any) => ({
         value: movie.id,
         label: movie.movie_name,
     })) || [];
-    const roomOptions = dataRoom?.map((room) => ({
+    const dataMapRoom = dataRoom?.data
+    const roomOptions = dataMapRoom?.map((room: any) => ({
         value: room.id,
         label: room.name,
     })) || [];
     const onFinish = (values: QlSuatChieu) => {
+        console.log(values);
+
         addSc(values).then(() => { setIsModalOpen(false); formRef.current?.resetFields(); })
     };
 
@@ -74,23 +78,16 @@ const CreateQlSc: React.FC = () => {
                     <Form.Item<SuatChieu>
                         label="Ngày chiếu"
                         name="show_date"
-                        rules={[{ required: true, message: 'Vui lòng nhập mô tả !' }]}
+                        rules={[{ required: true, message: 'Vui lòng nhập ngày !' }]}
                     >
                         <Input type='date' style={{ width: 200 }} />
                     </Form.Item>
                     <Form.Item<SuatChieu>
                         label="Thời gian chiếu"
                         name="show_time"
-                        rules={[{ required: true, message: 'Vui lòng nhập mô tả !' }]}
+                        rules={[{ required: true, message: 'Vui lòng nhập thời gian!' }]}
                     >
-                        <Input type='date' style={{ width: 200 }} />
-                    </Form.Item>
-                    <Form.Item<SuatChieu>
-                        label="Tổng số vé bán"
-                        name="total_ticket_sold"
-                        rules={[{ required: true, message: 'Vui lòng nhập tổng số ghế !' }]}
-                    >
-                        <InputNumber style={{ width: 200 }} />
+                        <Input type='time' style={{ width: 200 }} />
                     </Form.Item>
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button htmlType="submit" className='mr-[80px]'>

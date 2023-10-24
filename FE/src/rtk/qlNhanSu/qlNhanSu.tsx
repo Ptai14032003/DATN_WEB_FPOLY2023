@@ -1,36 +1,36 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 const nhanSuApi = createApi({
-    reducerPath: "nhanSu",
+    reducerPath: "personnels",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:3001"
+        baseUrl: "http://localhost:8000/api"
     }),
-    tagTypes: ["nhanSu"],
+    tagTypes: ["personnels"],
     endpoints: builder => ({
         fetchNhanSu: builder.query<any[], void>({
-            query: () => "/nhanSu/",
-            providesTags: ["nhanSu"]
+            query: () => "/personnels/",
+            providesTags: ["personnels"]
         }),
         fetchNhanSuId: builder.query<any, string>({
-            query: (id) => `/nhanSu/${id}`,
-            providesTags: ["nhanSu"]
+            query: (id) => `/personnels/${id}`,
+            providesTags: ["personnels"]
         }),
         addNhanSu: builder.mutation<void, { body: any, id: string }>({
             query: (body) => ({
-                url: "/nhanSu/",
+                url: "/personnels/",
                 method: "POST",
                 body
             }),
-            invalidatesTags: ["nhanSu"]
+            invalidatesTags: ["personnels"]
         }),
         deleteNhanSu: builder.mutation<any, string>({
             query: (id: string) => ({
-                url: "/nhanSu/" + id,
+                url: "/personnels/" + id,
                 method: "DELETE",
             }),
-            invalidatesTags: ['nhanSu']
+            invalidatesTags: ['personnels']
         }),
 
     })
 })
-export const { useFetchNhanSuIdQuery, useFetchNhanSuQuery, useAddNhanSuMutation,useDeleteNhanSuMutation } = nhanSuApi
+export const { useFetchNhanSuIdQuery, useFetchNhanSuQuery, useAddNhanSuMutation, useDeleteNhanSuMutation } = nhanSuApi
 export default nhanSuApi

@@ -6,15 +6,16 @@ import phongChieuApi from './qlPhongChieu/qlPhongChieu'
 import discountApi from './discount/discount'
 import nhanSuApi from './qlNhanSu/qlNhanSu'
 import suatChieuApi from './qlSc/qlSc'
-
+import actorApi from './actors/actors'
 export const store = configureStore({
     reducer: {
-        guest: guestApi.reducer,
         phongChieu: phongChieuApi.reducer,
         discount: discountApi.reducer,
-        nhanSu: nhanSuApi.reducer,
-        suatChieu: suatChieuApi.reducer,
+        personnels: nhanSuApi.reducer,
+        showtimes: suatChieuApi.reducer,
         movies: moviesApi.reducer,
+        users: guestApi.reducer,
+        actor: actorApi.reducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
@@ -23,8 +24,8 @@ export const store = configureStore({
             .concat(phongChieuApi.middleware)
             .concat(nhanSuApi.middleware)
             .concat(suatChieuApi.middleware)
-            .concat(discountApi.middleware),
-})
+            .concat(actorApi.middleware)
+});
 
 setupListeners(store.dispatch)
 // Infer the `RootState` and `AppDispatch` types from the store itself

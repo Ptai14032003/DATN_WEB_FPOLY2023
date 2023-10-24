@@ -3,7 +3,7 @@ import { Table, Input, Button, message, Popconfirm } from 'antd';
 import { useFetchGuestsQuery } from '../../rtk/qlGuest/qlGuest';
 const { Column } = Table;
 interface Guest {
-    id: string;
+    key: string;
     user_code: string;
     name: string;
     email: string;
@@ -14,7 +14,9 @@ interface Guest {
     gender: string;
 }
 const AdminQlGuest: React.FC = () => {
-    const { data } = useFetchGuestsQuery()
+    const { data: dataGuest } = useFetchGuestsQuery()
+    console.log(dataGuest);
+
     const [dataTable, setDataTable] = useState<Guest[]>([])
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
@@ -36,9 +38,10 @@ const AdminQlGuest: React.FC = () => {
         setSearchTerm(value);
     };
     useEffect(() => {
-        if (data) {
-            const mapMovies = data.map((item: Guest) => ({
-                id: item.id,
+        const dataMap = dataGuest?.data
+        if (Array.isArray(dataMap)) {
+            const mapMovies = dataMap.map((item: any) => ({
+                key: item.id,
                 user_code: item.user_code,
                 name: item.name,
                 email: item.email,
@@ -50,7 +53,7 @@ const AdminQlGuest: React.FC = () => {
             }))
             setDataTable(mapMovies)
         }
-    }, [data])
+    }, [dataGuest])
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý khách hàng</div>
