@@ -14,10 +14,18 @@ const nhanSuApi = createApi({
             query: (id) => `/personnels/${id}`,
             providesTags: ["personnels"]
         }),
-        addNhanSu: builder.mutation<void, { body: any, id: string }>({
+        addNhanSu: builder.mutation<void, any>({
             query: (body) => ({
                 url: "/personnels/",
                 method: "POST",
+                body
+            }),
+            invalidatesTags: ["personnels"]
+        }),
+        updateNhanSu: builder.mutation<void, { id: string, body: any }>({
+            query: ({ id, body }) => ({
+                url: `/personnels/${id}`,
+                method: "PATCH",
                 body
             }),
             invalidatesTags: ["personnels"]
@@ -32,5 +40,5 @@ const nhanSuApi = createApi({
 
     })
 })
-export const { useFetchNhanSuIdQuery, useFetchNhanSuQuery, useAddNhanSuMutation, useDeleteNhanSuMutation } = nhanSuApi
+export const { useFetchNhanSuIdQuery, useFetchNhanSuQuery, useAddNhanSuMutation, useDeleteNhanSuMutation, useUpdateNhanSuMutation } = nhanSuApi
 export default nhanSuApi

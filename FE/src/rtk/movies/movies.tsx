@@ -10,7 +10,7 @@ const moviesApi = createApi({
             query: () => "/movies/",
             providesTags: ["movies"]
         }),
-        addMovies: builder.mutation<void, { body: any }>({
+        addMovies: builder.mutation<void, any>({
             query: (body) => ({
                 url: "/movies/",
                 method: "POST",

@@ -8,7 +8,6 @@ type Props = {
 }
 const EditDsDienVien: React.FC<Props> = ({ projects }: Props) => {
     const { data } = useFetchActorIDQuery(projects);
-    
     const selectGender = ["Nam", "Nữ", "Không muốn trả lời"]
     const GenderOptions = selectGender.map((gender) => ({
         value: gender,

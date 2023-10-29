@@ -8,7 +8,7 @@ const suatChieuApi = createApi({
     }),
     tagTypes: ["showtimes"],
     endpoints: builder => ({
-        fetchSuatChieu: builder.query<SuatChieu[], void>({
+        fetchSuatChieu: builder.query<any[], void>({
             query: () => "/showtimes/",
             providesTags: ["showtimes"]
         }),

@@ -10,7 +10,7 @@ const actorApi = createApi({
             query: () => "/actors/",
             providesTags: ["actor"]
         }),
-        addActor: builder.mutation<void, { body: any }>({
+        addActor: builder.mutation<void, any>({
             query: (body) => ({
                 url: "/actor/",
                 method: "POST",

@@ -7,6 +7,8 @@ import discountApi from './discount/discount'
 import nhanSuApi from './qlNhanSu/qlNhanSu'
 import suatChieuApi from './qlSc/qlSc'
 import actorApi from './actors/actors'
+import countryApi from './countries/countries'
+import genresApi from './genres/genres'
 export const store = configureStore({
     reducer: {
         phongChieu: phongChieuApi.reducer,
@@ -15,7 +17,9 @@ export const store = configureStore({
         showtimes: suatChieuApi.reducer,
         movies: moviesApi.reducer,
         users: guestApi.reducer,
-        actor: actorApi.reducer
+        actor: actorApi.reducer,
+        countries: countryApi.reducer,
+        list_genres: genresApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
@@ -25,6 +29,8 @@ export const store = configureStore({
             .concat(nhanSuApi.middleware)
             .concat(suatChieuApi.middleware)
             .concat(actorApi.middleware)
+            .concat(countryApi.middleware)
+            .concat(genresApi.middleware)
 });
 
 setupListeners(store.dispatch)

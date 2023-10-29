@@ -8,6 +8,8 @@ import AdminQlDiscount from './admin/discount/page'
 import AdminQlPhongChieu from './admin/qlphongChieu/page'
 import AdminQlPhim from './admin/qlPhim/page'
 import AdminQlActors from './admin/itemAdmin/actors/page'
+import DsCountry from './admin/itemAdmin/countries/page'
+import DsGenres from './admin/itemAdmin/listGenres/page'
 function App() {
   return <BrowserRouter>
     <Routes>
@@ -22,6 +24,8 @@ function App() {
         <Route path='qlPhongChieu' element={<AdminQlPhongChieu />}></Route>
         <Route path='voucher' element={<AdminQlDiscount />}></Route>
         <Route path='actors' element={<AdminQlActors />}></Route>
+        <Route path='country' element={<DsCountry />}></Route>
+        <Route path='listGenres' element={<DsGenres />}></Route>
       </Route>
     </Routes>
   </BrowserRouter>

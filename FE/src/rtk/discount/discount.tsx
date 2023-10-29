@@ -10,7 +10,7 @@ const discountApi = createApi({
             query: () => "/discount/",
             providesTags: ["discount"]
         }),
-        addDiscount: builder.mutation<void, { body: any }>({
+        addDiscount: builder.mutation<void, any>({
             query: (body) => ({
                 url: "/discount/",
                 method: "POST",

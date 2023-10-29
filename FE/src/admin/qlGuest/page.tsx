@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Input, Button, message, Popconfirm } from 'antd';
 import { useFetchGuestsQuery } from '../../rtk/qlGuest/qlGuest';
+import { Waveform } from '@uiball/loaders';
 const { Column } = Table;
 interface Guest {
     key: string;
@@ -14,7 +15,7 @@ interface Guest {
     gender: string;
 }
 const AdminQlGuest: React.FC = () => {
-    const { data: dataGuest } = useFetchGuestsQuery()
+    const { data: dataGuest, isLoading } = useFetchGuestsQuery()
     console.log(dataGuest);
 
     const [dataTable, setDataTable] = useState<Guest[]>([])
@@ -83,16 +84,25 @@ const AdminQlGuest: React.FC = () => {
                     <div></div>
                 )}
             </span>
-            <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
-                <Column title="Mã khách hàng" dataIndex="user_code" key="user_code" />
-                <Column title="Tên khách hàng" dataIndex="name" key="name" />
-                <Column title="Email" dataIndex="email" key="email" />
-                <Column title="Số điện thoại" dataIndex="phone_number" key="phone_number" />
-                <Column title="Mật khẩu" dataIndex="password" key="password" render={(_: any) => (`***********`)} />
-                <Column title="Địa chỉ" dataIndex="address" key="address" />
-                <Column title="Ngày sinh" dataIndex="birthday" key="birthday" />
-                <Column title="Giới tính" dataIndex="gender" key="gender" />
-            </Table>
+            {isLoading ? (
+                <Waveform
+                    size={40}
+                    lineWeight={3.5}
+                    speed={1}
+                    color="black"
+                />
+            ) : (
+                <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
+                    <Column title="Mã khách hàng" dataIndex="user_code" key="user_code" />
+                    <Column title="Tên khách hàng" dataIndex="name" key="name" />
+                    <Column title="Email" dataIndex="email" key="email" />
+                    <Column title="Số điện thoại" dataIndex="phone_number" key="phone_number" />
+                    <Column title="Mật khẩu" dataIndex="password" key="password" render={(_: any) => (`***********`)} />
+                    <Column title="Địa chỉ" dataIndex="address" key="address" />
+                    <Column title="Ngày sinh" dataIndex="birthday" key="birthday" />
+                    <Column title="Giới tính" dataIndex="gender" key="gender" />
+                </Table>
+            )}
         </div>
     );
 }

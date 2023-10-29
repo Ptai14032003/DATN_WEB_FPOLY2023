@@ -3,6 +3,7 @@ import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
 import CreateQlSc from './create';
 import { useDeleteSuatChieuMutation, useFetchSuatChieuQuery } from '../../rtk/qlSc/qlSc';
 import { SuatChieu } from '../../type';
+import { Waveform } from '@uiball/loaders';
 const { Column } = Table;
 
 export type QlSuatChieu = {
@@ -15,9 +16,9 @@ export type QlSuatChieu = {
     total_money?: number
 }
 const AdminQlSc: React.FC = () => {
-    const { data: dataSuatChieu } = useFetchSuatChieuQuery()
+    const { data: dataSuatChieu, isLoading } = useFetchSuatChieuQuery()
     const [deleteSuatChieu] = useDeleteSuatChieuMutation()
-    const [dataTable, setDataTable] = useState<SuatChieu[]>([])
+    const [dataTable, setDataTable] = useState<QlSuatChieu[]>([])
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
@@ -85,36 +86,45 @@ const AdminQlSc: React.FC = () => {
                     <div></div>
                 )}
             </span>
-            <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
-                <Column title="Tên phim" dataIndex="movie_id" key="movie_name" />
-                <Column title="Tên phòng" dataIndex="room_id" key="room_id" />
-                <Column title="Ngày chiếu" dataIndex="show_date" key="show_date" />
-                <Column title="Thời gian chiếu" dataIndex="show_time" key="show_time" />
-                <Column title="Tổng doanh thu" dataIndex="total_money" key="total_money" />
-                <Column
-                    title="Action"
-                    key="action"
-                    render={(_: any, record: QlSuatChieu) => (
-                        <Space size="middle">
-                            <a>
-                                <Popconfirm
-                                    title="Delete the task"
-                                    description="Are you sure to delete this task?"
-                                    onConfirm={() => {
-                                        deleteOne(record.key);
-                                    }}
-                                    okButtonProps={{
-                                        style: { backgroundColor: "#007bff" },
-                                    }}
-                                    okText="Yes"
-                                    cancelText="No"
-                                >
-                                    <Button danger>Delete</Button>
-                                </Popconfirm></a>
-                        </Space>
-                    )}
+            {isLoading ? (
+                <Waveform
+                    size={40}
+                    lineWeight={3.5}
+                    speed={1}
+                    color="black"
                 />
-            </Table>
+            ) : (
+                <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
+                    <Column title="Tên phim" dataIndex="movie_id" key="movie_name" />
+                    <Column title="Tên phòng" dataIndex="room_id" key="room_id" />
+                    <Column title="Ngày chiếu" dataIndex="show_date" key="show_date" />
+                    <Column title="Thời gian chiếu" dataIndex="show_time" key="show_time" />
+                    <Column title="Tổng doanh thu" dataIndex="total_money" key="total_money" />
+                    <Column
+                        title="Action"
+                        key="action"
+                        render={(_: any, record: QlSuatChieu) => (
+                            <Space size="middle">
+                                <a>
+                                    <Popconfirm
+                                        title="Delete the task"
+                                        description="Are you sure to delete this task?"
+                                        onConfirm={() => {
+                                            deleteOne(record.key);
+                                        }}
+                                        okButtonProps={{
+                                            style: { backgroundColor: "#007bff" },
+                                        }}
+                                        okText="Yes"
+                                        cancelText="No"
+                                    >
+                                        <Button danger>Delete</Button>
+                                    </Popconfirm></a>
+                            </Space>
+                        )}
+                    />
+                </Table>
+            )}
         </div>
     );
 }
