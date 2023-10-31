@@ -10,6 +10,7 @@ import AdminQlPhim from './admin/qlPhim/page'
 import AdminQlActors from './admin/itemAdmin/actors/page'
 import DsCountry from './admin/itemAdmin/countries/page'
 import DsGenres from './admin/itemAdmin/listGenres/page'
+import ThongKe from './admin/thongKe/page'
 function App() {
   return <BrowserRouter>
     <Routes>
@@ -26,6 +27,7 @@ function App() {
         <Route path='actors' element={<AdminQlActors />}></Route>
         <Route path='country' element={<DsCountry />}></Route>
         <Route path='listGenres' element={<DsGenres />}></Route>
+        <Route path='thongKe' element={<ThongKe />}></Route>
       </Route>
     </Routes>
   </BrowserRouter>

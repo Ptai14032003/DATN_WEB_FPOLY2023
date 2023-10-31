@@ -48,6 +48,8 @@ const AdminQlPhim: React.FC = () => {
     }
     useEffect(() => {
         const dataMap = dataMovies?.data
+        console.log(dataMap);
+        
         // chưa có kiểu dữ liệu cho data
         if (Array.isArray(dataMap)) {
             const mapMovies = dataMap.map((item: any) => ({
