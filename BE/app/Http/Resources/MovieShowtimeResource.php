@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ShowtimeResource extends JsonResource
+class MovieShowtimeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,18 +17,10 @@ class ShowtimeResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "movie_id" => [
-                'movie_id' => $this->movie_id,
-                'movie_name'=>$this->movie_name
-            ],
-            "room_id" => [
-                'room_id' => $this->room_id,
-                'name' => $this->name
-            ],
+            "movie_name" => $this->movie_name,
             "show_date" => Carbon::parse($this->show_date)->format('d-m-Y'),
             "show_time" => Carbon::parse($this->show_time)->format('H:i'),
-            "total_ticket_sold" => $this->total_ticket_sold,
-            "total_money" => $this->total_money
+            "room_name" => $this->name
         ];
     }
 }

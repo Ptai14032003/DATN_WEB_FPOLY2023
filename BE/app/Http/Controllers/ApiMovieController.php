@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Resources\MovieResource;
 use App\Models\Movie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 class ApiMovieController extends Controller
 {
@@ -14,8 +17,12 @@ class ApiMovieController extends Controller
     public function index()
     {
         // lấy ra toàn bộ danh danh sách
-        $movie = Movie::all();
-//        Trả về danh sách dưới dạng json
+        $movie = Movie::join('countries', 'movies.country_id', '=', 'countries.id')
+            ->join('producers', 'movies.producer_id', '=', 'producers.id')
+            ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+            ->select('movies.*', 'producers.producer_name', 'countries.country_name', 'movie_types.type_name')
+            ->get();
+        //        Trả về danh sách dưới dạng json
         return MovieResource::collection($movie);
 
     }
@@ -26,22 +33,27 @@ class ApiMovieController extends Controller
     public function store(Request $request)
     {
         $movie = Movie::create($request->all());
-//        trả về thông vừa thêm
+        //        trả về thông vừa thêm
         return new MovieResource($movie);
     }
 
     /**
      * Display the specified resource.
      */
-//    Hiển thị sửa
+    //    Hiển thị sửa
     public function show(string $id)
     {
         //
-        $movie = Movie::find($id);
-        if($movie){
+
+        $movie = Movie::join('countries', 'movies.country_id', '=', 'countries.id')
+            ->join('producers', 'movies.producer_id', '=', 'producers.id')
+            ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+            ->find($id);;
+        if ($movie) {
+
             return new MovieResource($movie);
-        }else{
-            return  response()->json(['message'=>'Không tồn tại'], 404);
+        } else {
+            return  response()->json(['message' => 'Không tồn tại'], 404);
         }
     }
 

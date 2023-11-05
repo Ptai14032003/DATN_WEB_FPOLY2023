@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\MovieShowtimeResource;
 use App\Http\Resources\ShowtimeResource;
+use App\Models\Movie;
 use App\Models\Showtime;
 use Illuminate\Http\Request;
 
@@ -14,7 +16,7 @@ class ShowtimeApiController extends Controller
         join('movies','showtimes.movie_id','=','movies.id')
         ->join('rooms','showtimes.room_id','=','rooms.id')
         ->select('showtimes.*','movies.movie_name','rooms.name')
-        ->orderby('id','desc')
+        ->orderby('showtimes.id','desc')
         ->get();
         return ShowtimeResource::collection($show_time);
     }
@@ -56,6 +58,18 @@ class ShowtimeApiController extends Controller
             return response()->json(['messages'=>'Xóa xuất chiếu thành công'],202);
         }else{
             return response()->json(['messages'=>'Suất chiếu không tồn tại'],404);
+        }
+    }
+
+    public function show_time_movie(string $id){
+        $st_movie = Movie::join('showtimes','showtimes.movie_id','=','movies.id')
+        ->join('rooms','showtimes.room_id','=','rooms.id')
+        ->select('movies.id','movies.movie_name','showtimes.show_date','showtimes.show_time','rooms.name')
+        ->find($id);
+        if($st_movie){
+            return new MovieShowtimeResource($st_movie);
+        }else{
+            return response()->json(['messages'=>'Không tồn tại suất chiếu theo phim này'],404);
         }
     }
 }
