@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ShowtimeResource extends JsonResource
@@ -24,8 +25,8 @@ class ShowtimeResource extends JsonResource
                 'room_id' => $this->room_id,
                 'name' => $this->name
             ],
-            "show_date" => $this->show_date,
-            "show_time" => $this->show_time,
+            "show_date" => Carbon::parse($this->show_date)->format('d-m-Y'),
+            "show_time" => Carbon::parse($this->show_time)->format('H:i'),
             "total_ticket_sold" => $this->total_ticket_sold,
             "total_money" => $this->total_money
         ];

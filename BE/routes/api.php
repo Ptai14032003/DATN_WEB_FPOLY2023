@@ -95,3 +95,4 @@ Route::prefix('showtimes')->group(function (){
 Route::apiResource('/users', UserController::class);
 Route::apiResource('/personnels', PersonnelController::class);
 
+Route::get('/movie_showtime/{id}',[ShowtimeApiController::class,'show_time_movie']);
