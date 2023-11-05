@@ -17,15 +17,13 @@ class ApiMovieController extends Controller
     public function index()
     {
         // lấy ra toàn bộ danh danh sách
-        $movie = Movie::join('countries', 'movies.country_id', '=', 'countries.id')
-            ->join('producers', 'movies.producer_id', '=', 'producers.id')
-            ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
-            ->select('movies.*', 'producers.producer_name', 'countries.country_name', 'movie_types.type_name')
-            ->get();
-        //        Trả về danh sách dưới dạng json
+        $movie = Movie::all();
+//        Trả về danh sách dưới dạng json
         return MovieResource::collection($movie);
 
     }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -44,13 +42,8 @@ class ApiMovieController extends Controller
     public function show(string $id)
     {
         //
-
-        $movie = Movie::join('countries', 'movies.country_id', '=', 'countries.id')
-            ->join('producers', 'movies.producer_id', '=', 'producers.id')
-            ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
-            ->find($id);;
-        if ($movie) {
-
+        $movie = Movie::find($id);
+        if($movie){
             return new MovieResource($movie);
         } else {
             return  response()->json(['message' => 'Không tồn tại'], 404);
