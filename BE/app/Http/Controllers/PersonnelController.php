@@ -16,13 +16,13 @@ class PersonnelController extends Controller
     public function index()
     {
         //
-        return PersonnelResource::collection(Personnel::query()->orderBy('id', 'desc')->paginate(15));
+        return PersonnelResource::collection(Personnel::all()->sortByDesc("id"));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-   
+
     /**
      * Store a newly created resource in storage.
      */
@@ -49,7 +49,7 @@ class PersonnelController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
- 
+
 
     /**
      * Update the specified resource in storage.
@@ -59,12 +59,12 @@ class PersonnelController extends Controller
         //
         $data = $request->validated();
         $personnel = Personnel::find($id);
-        if(isset($data['password'])){
-            $data['password'] = bcrypt($data['password']);
-        }
+
+        $data['password'] = bcrypt($data['password']);
+
         $data['personnel_code'] = $personnel->personnel_code;
         $personnel->update($data);
-        return response(new PersonnelResource($personnel),200);
+        return response(new PersonnelResource($personnel), 200);
     }
 
     /**
@@ -75,6 +75,6 @@ class PersonnelController extends Controller
         //
         $personnel = Personnel::find($id);
         $personnel->delete();
-        return response()->json(['message' => 'Xóa nhân viên thành công'],204);
+        return response()->json(['message' => 'Xóa nhân viên thành công'], 204);
     }
 }

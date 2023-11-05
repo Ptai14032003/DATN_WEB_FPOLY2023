@@ -16,7 +16,7 @@ class UserController extends Controller
     public function index()
     {
         //
-        return UserResource::collection(User::query()->orderBy('id', 'desc')->paginate(15));
+        return UserResource::collection(User::all()->sortByDesc("id"));
     }
 
     /**
@@ -64,6 +64,6 @@ class UserController extends Controller
         //
         $user = User::find($id);
         $user->delete();
-        return response()->json(['mesage' => 'Xóa User thành công'],204);
+        return response()->json(['mesage' => 'Xóa User thành công'], 204);
     }
 }

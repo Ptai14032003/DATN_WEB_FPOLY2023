@@ -36,10 +36,30 @@ return [
     */
 
     'guards' => [
+        'users' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'personnels' => [
+            'driver' => 'session',
+            'provider' => 'personnels',
+        ],
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        // 'users' => [
+        //     'driver' => 'sanctum',
+        //     'provider' => 'users',
+        //     'hash' => false,
+        // ],
+
+        // 'personnels' => [
+        //     'driver' => 'sanctum',
+        //     'provider' => 'personnels',
+        //     'hash' => false,
+        // ],
     ],
 
     /*
@@ -64,11 +84,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'personnels' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Personnel::class,
+        ],
     ],
 
     /*
@@ -97,6 +116,12 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+        'personnels' => [
+            'provider' => 'personnels',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ]
     ],
 
     /*

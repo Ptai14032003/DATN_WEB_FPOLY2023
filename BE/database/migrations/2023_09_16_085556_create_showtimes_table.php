@@ -17,8 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('room_id');
             $table->date('show_date');
             $table->dateTime('show_time')->format('d-m-Y H:i:s');
-            $table->integer('total_ticket_sold');
-            $table->integer('total_money');
+            $table->integer('total_ticket_sold')->default(0);
+            $table->integer('total_money')->default(0);
             $table->timestamps();
             $table->foreign('movie_id')->references('id')->on('movies');
             $table->foreign('room_id')->references('id')->on('rooms');
