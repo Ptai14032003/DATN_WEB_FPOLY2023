@@ -10,7 +10,9 @@ use App\Http\Controllers\ApiMovieGenreController;
 use App\Http\Controllers\ApiMovieTypeController;
 use App\Http\Controllers\ApiProducerController;
 use App\Http\Controllers\ApiPromotionController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PersonnelController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 Route::prefix('movies')->group(function (){
@@ -77,7 +79,7 @@ Route::prefix('promotions')->group(function (){
     Route::delete('/{id}',[ApiPromotionController::class,'destroy']);
 });
 //
-Route::prefix('rooms')->group(function (){
+Route::prefix('theater')->group(function (){
     Route::get('/',[RoomApiController::class,'index']);
     Route::post('/',[RoomApiController::class,'store']);
     Route::get('/{id}',[RoomApiController::class,'show']);

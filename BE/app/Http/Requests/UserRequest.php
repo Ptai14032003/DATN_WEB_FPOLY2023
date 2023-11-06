@@ -27,11 +27,12 @@ class UserRequest extends FormRequest
             case 'POST':
                 $rule = [
                     'name' => 'required',
-                    'email' => 'required|email|unique:users,email',
+                    'email' => 'required|email|unique:users,email|unique:personnels,email',
                     'phone_number' => [
                         'required',
                         'regex:/^(0|\+84)(\s|\.)?((3[2-9])|(5[689])|(7[06-9])|(8[1-689])|(9[0-46-9]))(\d)(\s|\.)?(\d{3})(\s|\.)?(\d{3})$/',
-                        'unique:users,phone_number'
+                        'unique:users,phone_number',
+                        'unique:personnels,phone_number'
                     ],
                     'password' => [
                         'required',

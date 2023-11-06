@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
 
-class Personnel extends Model
+class Personnel extends Authenticatable
 {
-    use HasFactory,SoftDeletes;
+    use HasApiTokens,HasFactory,SoftDeletes;
     protected $table = 'personnels';
     protected $fillable = [
         'personnel_code',
