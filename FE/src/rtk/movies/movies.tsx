@@ -18,7 +18,7 @@ const moviesApi = createApi({
             }),
             invalidatesTags: ["movies"]
         }),
-        fetchMovieId: builder.query<any, string>({
+        fetchMovieId: builder.query<any, any>({
             query: (id) => `/movies/${id}`,
             providesTags: ["movies"]
         }),

@@ -14,7 +14,17 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PersonnelController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BillController;
+use App\Http\Controllers\FoodController;
+use App\Http\Controllers\MovieController;
+use App\Http\Controllers\TypeFoodController;
 use Illuminate\Support\Facades\Route;
+
+Route::resource('bill', BillController::class);
+Route::resource('food', FoodController::class);
+Route::resource('food_type', TypeFoodController::class);
+Route::resource('movie', MovieController::class);
+
 Route::prefix('movies')->group(function (){
     Route::get('/',[ApiMovieController::class,'index']);
     Route::post('/',[ApiMovieController::class,'store']);

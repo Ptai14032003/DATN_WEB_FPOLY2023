@@ -11,10 +11,28 @@ import AdminQlActors from './admin/itemAdmin/actors/page'
 import DsCountry from './admin/itemAdmin/countries/page'
 import DsGenres from './admin/itemAdmin/listGenres/page'
 import ThongKe from './admin/thongKe/page'
+import LayoutPerson from './components/layouts/layoutGuest/LayoutPerson'
+import NewFilm from './personPage/newFilm'
+import HomePage from './personPage/Homepage'
+import Signin from './personPage/Signin'
+import Signup from './personPage/Signup'
+import Booking from './personPage/Booking'
+import SeatBooking from './personPage/SeatBooking'
+import Detail from './personPage/detail'
 function App() {
+
+
   return <BrowserRouter>
     <Routes>
-      <Route path='/'>
+      <Route path='/' element={<LayoutPerson />}>
+        <Route index element={<HomePage  />} />
+        <Route path="new" element={<NewFilm />} />
+      </Route>
+      <Route path="signin" element={<Signin />} />
+      <Route path="signup" element={<Signup />} />
+      <Route path='movies/:id' element={<Detail />}></Route>
+      <Route path='booking/:id' element={<Booking />}>
+        <Route index element={<SeatBooking />} />
       </Route>
       <Route path='/admin' element={<LayoutAdmin />}>
         <Route path='qlPhim' element={<AdminQlPhim />}></Route>
