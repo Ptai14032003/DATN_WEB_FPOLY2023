@@ -1,19 +1,31 @@
 import React, { useState } from 'react';
-import { Button, Form, InputNumber, Modal, Select, Input } from 'antd';
+import { Button, Form, Modal, Select, Input } from 'antd';
 import type { FormInstance } from 'antd/es/form';
-import { SuatChieu } from './page';
 import { useAddSuatChieuMutation } from '../../rtk/qlSc/qlSc';
+import { useFetchMoviesQuery } from '../../rtk/movies/movies';
+import { useFetchPhongChieuQuery } from '../../rtk/qlPhongChieu/qlPhongChieu';
+import { SuatChieu } from '../../type';
+import { QlSuatChieu } from './page';
 const CreateQlSc: React.FC = () => {
     const [addSc] = useAddSuatChieuMutation()
+    const { data: dataMovie } = useFetchMoviesQuery()
+    const { data: dataRoom } = useFetchPhongChieuQuery()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
-    const countryName = ["Hoa Kỳ", "Canada", "Việt Nam", "United States"];
-    const countryOptions = countryName.map((country) => ({
-        value: country,
-        label: country,
-    }));
-    const onFinish = (values: any) => {
-        addSc(values).then(() => setIsModalOpen(false))
+    const dataMapMovie = dataMovie?.data
+    const movieOptions = dataMapMovie?.map((movie: any) => ({
+        value: movie.id,
+        label: movie.movie_name,
+    })) || [];
+    const dataMapRoom = dataRoom?.data
+    const roomOptions = dataMapRoom?.map((room: any) => ({
+        value: room.id,
+        label: room.name,
+    })) || [];
+    const onFinish = (values: QlSuatChieu) => {
+        console.log(values);
+
+        addSc(values).then(() => { setIsModalOpen(false); formRef.current?.resetFields(); })
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -48,7 +60,7 @@ const CreateQlSc: React.FC = () => {
                         <Select
                             defaultValue="Chọn tên phim"
                             style={{ width: 200 }}
-                            options={countryOptions}
+                            options={movieOptions}
                         />
                     </Form.Item>
 
@@ -60,36 +72,22 @@ const CreateQlSc: React.FC = () => {
                         <Select
                             defaultValue="Chọn tên phòng"
                             style={{ width: 200 }}
-                            options={countryOptions}
+                            options={roomOptions}
                         />
                     </Form.Item>
                     <Form.Item<SuatChieu>
                         label="Ngày chiếu"
                         name="show_date"
-                        rules={[{ required: true, message: 'Vui lòng nhập mô tả !' }]}
+                        rules={[{ required: true, message: 'Vui lòng nhập ngày !' }]}
                     >
                         <Input type='date' style={{ width: 200 }} />
                     </Form.Item>
                     <Form.Item<SuatChieu>
                         label="Thời gian chiếu"
                         name="show_time"
-                        rules={[{ required: true, message: 'Vui lòng nhập mô tả !' }]}
+                        rules={[{ required: true, message: 'Vui lòng nhập thời gian!' }]}
                     >
-                        <Input type='date' style={{ width: 200 }} />
-                    </Form.Item>
-                    <Form.Item<SuatChieu>
-                        label="Tổng số vé bán"
-                        name="total_ticket_sold"
-                        rules={[{ required: true, message: 'Vui lòng nhập tổng số ghế !' }]}
-                    >
-                        <InputNumber style={{ width: 200 }} />
-                    </Form.Item>
-                    <Form.Item<SuatChieu>
-                        label="Tổng doanh thu"
-                        name="total_money"
-                        rules={[{ required: true, message: 'Vui lòng nhập tổng số ghế !' }]}
-                    >
-                        <InputNumber style={{ width: 200 }} />
+                        <Input type='time' style={{ width: 200 }} />
                     </Form.Item>
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button htmlType="submit" className='mr-[80px]'>

@@ -241,24 +241,9 @@
   ],
   "phongChieu": [
     {
-      "name": "2",
-      "total_seat": 43,
+      "name": "ROOM1",
+      "total_seat": 21,
       "id": 1
-    },
-    {
-      "name": "21312",
-      "total_seat": 3,
-      "id": 2
-    },
-    {
-      "name": "212",
-      "total_seat": 1,
-      "id": 3
-    },
-    {
-      "name": "212",
-      "total_seat": 1,
-      "id": 4
     }
   ],
   "discount": [
@@ -287,22 +272,82 @@
   ],
   "suatChieu": [
     {
-      "movie_id": "Canada",
-      "room_id": "Hoa Kỳ",
-      "show_date": "2023-10-04",
-      "show_time": "2023-10-13",
-      "total_ticket_sold": 3123,
-      "total_money": 123123,
-      "id": 3
+      "movie_id": {
+        "movie_name": "Avengers: Endgame"
+      },
+      "room_id": {
+        "name": "ROOM1"
+      },
+      "show_date": "2023-09-28",
+      "show_time": "2023-10-05",
+      "total_ticket_sold": 213,
+      "id": 6
     },
     {
-      "movie_id": "Hoa Kỳ",
-      "room_id": "Hoa Kỳ",
-      "show_date": "2023-09-27",
-      "show_time": "2023-09-28",
+      "movie_id": "Avengers: Endgame",
+      "room_id": "ROOM1",
+      "show_date": "2023-10-12",
+      "show_time": "2023-10-05",
+      "total_ticket_sold": 21,
+      "id": 7
+    },
+    {
+      "movie_id": "Titanic",
+      "room_id": "ROOM1",
+      "show_date": "2023-10-12",
+      "show_time": "2023-10-05",
+      "total_ticket_sold": 21,
+      "id": 8
+    },
+    {
+      "movie_id": "Titanic",
+      "room_id": "ROOM1",
+      "show_date": "2023-10-12",
+      "show_time": "2023-10-05",
+      "total_ticket_sold": 21,
+      "id": 9
+    },
+    {
+      "movie_id": "5",
+      "room_id": 1,
+      "show_date": "2023-10-05",
+      "show_time": "2023-10-04",
+      "total_ticket_sold": 21,
+      "id": 10
+    },
+    {
+      "movie_id": "4",
+      "room_id": 1,
+      "show_date": "2023-10-12",
+      "show_time": "2023-10-19",
       "total_ticket_sold": 12,
-      "total_money": 123,
-      "id": 4
+      "id": 11
+    },
+    {
+      "movie_id": "4",
+      "room_id": 1,
+      "show_date": "2023-10-12",
+      "show_time": "2023-10-04",
+      "total_ticket_sold": 213,
+      "id": 12
+    },
+    {
+      "body": {
+        "movie_id": "4",
+        "room_id": 1,
+        "show_date": "2023-10-04",
+        "show_time": "2023-10-05",
+        "total_ticket_sold": 21
+      },
+      "id": 13
+    },
+    {
+      "movie_id": "4",
+      "room_id": 1,
+      "show_date": "2023-10-04",
+      "show_time": "2023-10-11",
+      "total_ticket_sold": 123,
+      "id": 14
     }
   ]
 }

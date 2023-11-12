@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, InputNumber, Modal } from 'antd';
+import { Button, Form, Input, InputNumber, Modal, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { PhongChieu } from './page';
 import { useAddPhongChieuMutation } from '../../rtk/qlPhongChieu/qlPhongChieu';
@@ -8,7 +8,7 @@ const CreateQlPhongChieu: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
-        addPhongChieu(values).then(() => setIsModalOpen(false))
+        addPhongChieu(values).then(() => { setIsModalOpen(false); message.success("Tạo mới thành công"); formRef.current?.resetFields() })
     };
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
