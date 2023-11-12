@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
-import CreateQlDiscount from './create';
-import EditQlDiscount from './edit';
-import { useDeleteDiscountMutation, useFetchDiscountsQuery } from '../../rtk/discount/discount';
+import EditDienVien from './edit';
+import CreateDienVien from './create';
+import { useDeleteActorMutation, useFetchActorsQuery } from '../../../rtk/actors/actors';
 const { Column } = Table;
-export interface Discount {
-    id: string;
-    code: string;
-    event: string;
-    start: string;
-    end: string;
-    discount_percent: string;
+export interface DsDienVien {
+    key: string;
+    actor_name: string;
+    movie_id: string;
+    gender: string;
+    role: string;
+    movie_role: string;
 }
-const AdminQlDiscount: React.FC = () => {
-    const { data } = useFetchDiscountsQuery()
-    const [deleteDiscount] = useDeleteDiscountMutation()
-    const [dataTable, setDataTable] = useState<Discount[]>([])
+const AdminQlActors: React.FC = () => {
+    const { data: dataActors } = useFetchActorsQuery()
+    const [dataTable, setDataTable] = useState<DsDienVien[]>([])
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
+    const [deleteNhanSu] = useDeleteActorMutation()
     const onSelectChange = (newSelectedRowKeys: any[]) => {
         console.log('', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
@@ -36,29 +36,30 @@ const AdminQlDiscount: React.FC = () => {
         setSearchTerm(value);
     };
     const deleteOne = (key: string) => {
-        deleteDiscount(key).then(() => message.success("Xóa thành công"))
+        deleteNhanSu(key).then(() => { message.success("Xóa thành công") })
     }
     useEffect(() => {
-        if (data) {
-            const mapMovies = data.map((item: Discount) => ({
-                id: item.id,
-                code: item.code,
-                event: item.event,
-                start: item.start,
-                end: item.end,
-                discount_percent: item.discount_percent,
+        const dataMap = dataActors?.data
+        if (Array.isArray(dataMap)) {
+            const mapNhanSu = dataMap.map((item: any) => ({
+                key: item.id,
+                actor_name: item.actor_name,
+                movie_id: item.movie_id.movie_name,
+                gender: item.gender === 0 ? "Nam" : "Nữ",
+                role: item.role === 0 ? "Diễn viên chính" : "Diễn viên phụ",
+                movie_role: item.movie_role
             }))
-            setDataTable(mapMovies)
+            setDataTable(mapNhanSu)
         }
-    }, [data])
+    }, [dataActors])
     return (
         <div>
-            <div className='mb-[25px] mt-[-30px] text-2xl' >Khuyến mãi</div>
+            <div className='mb-[25px] mt-[-30px] text-2xl' >Danh sách diễn viên</div>
             <div className='flex justify-between mb-[10px]'>
-                <Input style={{ width: '20%' }} placeholder='Tìm kiếm dự án'
+                <Input style={{ width: '20%' }} placeholder='Tìm kiếm nhân sự'
                     value={searchTerm}
                     onChange={(e) => searchProject(e.target.value)} />
-                <CreateQlDiscount />
+                <CreateDienVien />
             </div>
             <span style={{ marginLeft: 8 }}>
                 {hasSelected ? (
@@ -82,23 +83,23 @@ const AdminQlDiscount: React.FC = () => {
                 )}
             </span>
             <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
-                <Column title="Mã khuyến mãi" dataIndex="code" key="code" />
-                <Column title="Sự Kiện Áp Dụng" dataIndex="event" key="event" />
-                <Column title="Ngày Áp Dụng" dataIndex="start" key="start" />
-                <Column title="Ngày Kết Thúc" dataIndex="end" key="end" />
-                <Column title="Mức Giảm (%)" dataIndex="discount_percent" key="discount_percent" />
+                <Column title="Diễn viên" dataIndex="actor_name" key="actor_name" />
+                <Column title="Phim" dataIndex="movie_id" key="movie_id" />
+                <Column title="Giới tính" dataIndex="gender" key="gender" />
+                <Column title="Chức vụ" dataIndex="role" key="role" />
+                <Column title="Vai diễn" dataIndex="movie_role" key="movie_role" />
                 <Column
                     title="Action"
                     key="action"
-                    render={(_: any, record: Discount) => (
+                    render={(_: any, record: DsDienVien) => (
                         <Space size="middle">
-                            <a><EditQlDiscount key={record.id} projects={record.id} /> </a>
+                            <a><EditDienVien key={record.key} projects={record.key} /> </a>
                             <a>
                                 <Popconfirm
                                     title="Delete the task"
                                     description="Are you sure to delete this task?"
                                     onConfirm={() => {
-                                        deleteOne(record.id);
+                                        deleteOne(record.key);
                                     }}
                                     okButtonProps={{
                                         style: { backgroundColor: "#007bff" },
@@ -115,4 +116,4 @@ const AdminQlDiscount: React.FC = () => {
         </div>
     );
 }
-export default AdminQlDiscount;
+export default AdminQlActors;

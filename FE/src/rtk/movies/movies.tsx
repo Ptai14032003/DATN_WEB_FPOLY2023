@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 const moviesApi = createApi({
     reducerPath: "movies",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:3001"
+        baseUrl: "http://localhost:8000/api"
     }),
     tagTypes: ["movies"],
     endpoints: builder => ({
@@ -10,7 +10,7 @@ const moviesApi = createApi({
             query: () => "/movies/",
             providesTags: ["movies"]
         }),
-        addMovies: builder.mutation<void, { body: any }>({
+        addMovies: builder.mutation<void, any>({
             query: (body) => ({
                 url: "/movies/",
                 method: "POST",

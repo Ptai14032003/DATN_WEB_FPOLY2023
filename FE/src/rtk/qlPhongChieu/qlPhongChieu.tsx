@@ -2,40 +2,40 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 const phongChieuApi = createApi({
     reducerPath: "phongChieu",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:3001"
+        baseUrl: " http://localhost:8000/api/"
     }),
-    tagTypes: ["phongChieu"],
+    tagTypes: ["rooms"],
     endpoints: builder => ({
         fetchPhongChieu: builder.query<any[], void>({
-            query: () => "/phongChieu/",
-            providesTags: ["phongChieu"]
+            query: () => "/rooms/",
+            providesTags: ["rooms"]
         }),
         addPhongChieu: builder.mutation<void, { body: any }>({
             query: (body) => ({
-                url: "/phongChieu/",
+                url: "/rooms/",
                 method: "POST",
                 body
             }),
-            invalidatesTags: ["phongChieu"]
+            invalidatesTags: ["rooms"]
         }),
         fetchPhongChieuID: builder.query<any[], string>({
-            query: (id) => `/phongChieu/${id}`,
-            providesTags: ["phongChieu"]
+            query: (id) => `/rooms/${id}`,
+            providesTags: ["rooms"]
         }),
         patchPhongChieu: builder.mutation<void, { body: any, id: string }>({
             query: ({ body, id }) => ({
-                url: `/phongChieu/${id}`,
+                url: `/rooms/${id}`,
                 method: "PATCH",
                 body
             }),
-            invalidatesTags: ["phongChieu"]
+            invalidatesTags: ["rooms"]
         }),
         deletePhongChieu: builder.mutation<void, string>({
             query: (id) => ({
-                url: `/phongChieu/${id}`,
+                url: `/rooms/${id}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["phongChieu"]
+            invalidatesTags: ["rooms"]
         }),
     })
 })

@@ -1,21 +1,19 @@
 import React, { useState } from 'react';
 import { Button, Form, Input, Modal, Select } from 'antd';
 import type { FormInstance } from 'antd/es/form';
-import { QlNhanSu } from './page';
-import { useFetchNhanSuIdQuery, useUpdateNhanSuMutation } from '../../rtk/qlNhanSu/qlNhanSu';
+import { DsDienVien } from './page';
+import { useFetchActorIDQuery } from '../../../rtk/actors/actors';
 type Props = {
     projects: string
 }
-const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
-    const { data } = useFetchNhanSuIdQuery(projects);
-    const [updateNhanSu] = useUpdateNhanSuMutation()
-    const dataNhanSu = data?.data
+const EditDsDienVien: React.FC<Props> = ({ projects }: Props) => {
+    const { data } = useFetchActorIDQuery(projects);
     const selectGender = ["Nam", "Nữ", "Không muốn trả lời"]
     const GenderOptions = selectGender.map((gender) => ({
         value: gender,
         label: gender,
     }));
-    const selectRole = ["Admin", "Nhân viên"]
+    const selectRole = ["Sếp", "Nhân viên"]
     const RoleOptions = selectRole.map((role) => ({
         value: role,
         label: role,
@@ -23,7 +21,7 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
-        updateNhanSu({ body: values,id: projects })
+        console.log('Success:', values);
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -40,7 +38,7 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
         <>
             <Button onClick={showModal}>Sửa</Button>
             <Modal title="Sửa thông tin nhân sự" open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
-                {dataNhanSu ? (
+                {data ? (
                     <Form className='mr-[60px]'
                         name='formLogin'
                         ref={formRef}
@@ -50,31 +48,31 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
                         onFinish={onFinish}
                         onFinishFailed={onFinishFailed}
                         autoComplete="off"
-                        initialValues={dataNhanSu}
+                        initialValues={data}
                     >
-                        <Form.Item<QlNhanSu>
-                            label="Mã nhân viên"
-                            name="personnel_code"
+                        <Form.Item<DsDienVien>
+                            label="Tên diễn viên"
+                            name="actor_name"
                             rules={[{ required: true, message: 'Vui lòng nhập tên !' }]}
                         >
                             <Input />
                         </Form.Item>
 
-                        <Form.Item<QlNhanSu>
+                        <Form.Item<DsDienVien>
                             label="Tên nhân viên"
                             name="name"
                             rules={[{ required: true, message: 'Vui lòng nhập mô tả !' }]}
                         >
                             <Input />
                         </Form.Item>
-                        <Form.Item<QlNhanSu>
+                        <Form.Item<DsDienVien>
                             label="Email"
                             name="email"
                             rules={[{ required: true, message: 'Vui lòng nhập email !' }, { type: 'email', message: "Vui lòng nhập đúng định dạng !" }]}
                         >
                             <Input />
                         </Form.Item>
-                        <Form.Item<QlNhanSu>
+                        <Form.Item<DsDienVien>
                             label="Số điện thoại"
                             name="phone_number"
                             rules={[{ required: true, message: 'Vui lòng nhập số điện thoại !' }, {
@@ -84,28 +82,28 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
                         >
                             <Input />
                         </Form.Item>
-                        <Form.Item<QlNhanSu>
+                        <Form.Item<DsDienVien>
                             label="Mật khẩu"
                             name="password"
                             rules={[{ required: true, message: 'Vui lòng nhập mật khẩu !' }]}
                         >
                             <Input type="password" />
                         </Form.Item>
-                        <Form.Item<QlNhanSu>
+                        <Form.Item<DsDienVien>
                             label="Địa chỉ"
                             name="address"
                             rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}
                         >
                             <Input />
                         </Form.Item>
-                        <Form.Item<QlNhanSu>
+                        <Form.Item<DsDienVien>
                             label="Ngày sinh"
                             name="birthday"
                             rules={[{ required: true, message: 'Vui lòng nhập ngày sinh!' }]}
                         >
                             <Input type='date' style={{ width: 200 }} />
                         </Form.Item>
-                        <Form.Item<QlNhanSu>
+                        <Form.Item<DsDienVien>
                             label="Giới tính"
                             name="gender"
                             rules={[{ required: true, message: 'Vui lòng nhập giới tính !' }]}
@@ -116,7 +114,7 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
                                 options={GenderOptions}
                             />
                         </Form.Item>
-                        <Form.Item<QlNhanSu>
+                        <Form.Item<DsDienVien>
                             label="Chức vụ"
                             name="role"
                             rules={[{ required: true, message: 'Vui lòng nhập mô tả !' }]}
@@ -141,4 +139,4 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
     )
 };
 
-export default EditQlNhanSu;
+export default EditDsDienVien;
