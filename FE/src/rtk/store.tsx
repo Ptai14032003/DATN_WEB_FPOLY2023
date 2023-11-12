@@ -6,6 +6,7 @@ import phongChieuApi from './qlPhongChieu/qlPhongChieu'
 import discountApi from './discount/discount'
 import nhanSuApi from './qlNhanSu/qlNhanSu'
 import suatChieuApi from './qlSc/qlSc'
+import authApi from './auth/auth'
 
 export const store = configureStore({
     reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
         nhanSu: nhanSuApi.reducer,
         suatChieu: suatChieuApi.reducer,
         movies: moviesApi.reducer,
+        auth: authApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
@@ -23,7 +25,8 @@ export const store = configureStore({
             .concat(phongChieuApi.middleware)
             .concat(nhanSuApi.middleware)
             .concat(suatChieuApi.middleware)
-            .concat(discountApi.middleware),
+            .concat(discountApi.middleware)
+            .concat(authApi.middleware),
 })
 
 setupListeners(store.dispatch)

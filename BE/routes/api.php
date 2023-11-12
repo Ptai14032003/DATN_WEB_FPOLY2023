@@ -20,90 +20,97 @@ use App\Http\Controllers\MovieController;
 use App\Http\Controllers\TypeFoodController;
 use Illuminate\Support\Facades\Route;
 
-Route::resource('bill', BillController::class);
-Route::resource('food', FoodController::class);
-Route::resource('food_type', TypeFoodController::class);
-Route::resource('movie', MovieController::class);
+Route::match(['GET', 'POST'], '/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
 
-Route::prefix('movies')->group(function (){
-    Route::get('/',[ApiMovieController::class,'index']);
-    Route::post('/',[ApiMovieController::class,'store']);
-    Route::get('/{id}',[ApiMovieController::class,'show']);
-    Route::put('/{id}',[ApiMovieController::class,'update']);
-    Route::delete('/{id}',[ApiMovieController::class,'destroy']);
-});
+Route::post('/book_ticket', [TicketController::class, 'book_ticket'])->name('book_ticket')->middleware('auth:sanctum');
 
-Route::prefix('movie_genres')->group(function (){
-    Route::get('/',[ApiMovieGenreController::class,'index']);
-    Route::post('/',[ApiMovieGenreController::class,'store']);
-    Route::get('/{id}',[ApiMovieGenreController::class,'show']);
-    Route::put('/{id}',[ApiMovieGenreController::class,'update']);
-    Route::delete('/{id}',[ApiMovieGenreController::class,'destroy']);
-});
+Route::prefix('admin')->middleware('checkrole')->group(function () {
+    Route::resource('bill', BillController::class);
+    Route::resource('food', FoodController::class);
+    Route::resource('food_type', TypeFoodController::class);
+    Route::resource('movie', MovieController::class);
 
-Route::prefix('movie_type')->group(function (){
-    Route::get('/',[ApiMovieTypeController::class,'index']);
-    Route::post('/',[ApiMovieTypeController::class,'store']);
-    Route::get('/{id}',[ApiMovieTypeController::class,'show']);
-    Route::put('/{id}',[ApiMovieTypeController::class,'update']);
-    Route::delete('/{id}',[ApiMovieTypeController::class,'destroy']);
-});
+    Route::prefix('movies')->group(function () {
+        Route::get('/', [ApiMovieController::class, 'index']);
+        Route::post('/', [ApiMovieController::class, 'store']);
+        Route::get('/{id}', [ApiMovieController::class, 'show']);
+        Route::put('/{id}', [ApiMovieController::class, 'update']);
+        Route::delete('/{id}', [ApiMovieController::class, 'destroy']);
+    });
 
-Route::prefix('list_genres')->group(function (){
-    Route::get('/',[ApiListGenreController::class,'index']);
-    Route::post('/',[ApiListGenreController::class,'store']);
-    Route::get('/{id}',[ApiListGenreController::class,'show']);
-    Route::put('/{id}',[ApiListGenreController::class,'update']);
-    Route::delete('/{id}',[ApiListGenreController::class,'destroy']);
-});
+    Route::prefix('movie_genres')->group(function () {
+        Route::get('/', [ApiMovieGenreController::class, 'index']);
+        Route::post('/', [ApiMovieGenreController::class, 'store']);
+        Route::get('/{id}', [ApiMovieGenreController::class, 'show']);
+        Route::put('/{id}', [ApiMovieGenreController::class, 'update']);
+        Route::delete('/{id}', [ApiMovieGenreController::class, 'destroy']);
+    });
 
-Route::prefix('actors')->group(function (){
-    Route::get('/',[ApiActorController::class,'index']);
-    Route::post('/',[ApiActorController::class,'store']);
-    Route::get('/{id}',[ApiActorController::class,'show']);
-    Route::put('/{id}',[ApiActorController::class,'update']);
-    Route::delete('/{id}',[ApiActorController::class,'destroy']);
-});
+    Route::prefix('movie_type')->group(function () {
+        Route::get('/', [ApiMovieTypeController::class, 'index']);
+        Route::post('/', [ApiMovieTypeController::class, 'store']);
+        Route::get('/{id}', [ApiMovieTypeController::class, 'show']);
+        Route::put('/{id}', [ApiMovieTypeController::class, 'update']);
+        Route::delete('/{id}', [ApiMovieTypeController::class, 'destroy']);
+    });
 
-Route::prefix('countries')->group(function (){
-    Route::get('/',[ApiCountryController::class,'index']);
-    Route::post('/',[ApiCountryController::class,'store']);
-    Route::get('/{id}',[ApiCountryController::class,'show']);
-    Route::put('/{id}',[ApiCountryController::class,'update']);
-    Route::delete('/{id}',[ApiCountryController::class,'destroy']);
-});
+    Route::prefix('list_genres')->group(function () {
+        Route::get('/', [ApiListGenreController::class, 'index']);
+        Route::post('/', [ApiListGenreController::class, 'store']);
+        Route::get('/{id}', [ApiListGenreController::class, 'show']);
+        Route::put('/{id}', [ApiListGenreController::class, 'update']);
+        Route::delete('/{id}', [ApiListGenreController::class, 'destroy']);
+    });
 
-Route::prefix('producers')->group(function (){
-    Route::get('/',[ApiProducerController::class,'index']);
-    Route::post('/',[ApiProducerController::class,'store']);
-    Route::get('/{id}',[ApiProducerController::class,'show']);
-    Route::put('/{id}',[ApiProducerController::class,'update']);
-    Route::delete('/{id}',[ApiProducerController::class,'destroy']);
-});
+    Route::prefix('actors')->group(function () {
+        Route::get('/', [ApiActorController::class, 'index']);
+        Route::post('/', [ApiActorController::class, 'store']);
+        Route::get('/{id}', [ApiActorController::class, 'show']);
+        Route::put('/{id}', [ApiActorController::class, 'update']);
+        Route::delete('/{id}', [ApiActorController::class, 'destroy']);
+    });
 
-Route::prefix('promotions')->group(function (){
-    Route::get('/',[ApiPromotionController::class,'index']);
-    Route::post('/',[ApiPromotionController::class,'store']);
-    Route::get('/{id}',[ApiPromotionController::class,'show']);
-    Route::put('/{id}',[ApiPromotionController::class,'update']);
-    Route::delete('/{id}',[ApiPromotionController::class,'destroy']);
-});
-//
-Route::prefix('theater')->group(function (){
-    Route::get('/',[RoomApiController::class,'index']);
-    Route::post('/',[RoomApiController::class,'store']);
-    Route::get('/{id}',[RoomApiController::class,'show']);
-    Route::put('/{id}',[RoomApiController::class,'update']);
-    Route::delete('/{id}',[RoomApiController::class,'destroy']);
-});
-Route::prefix('showtimes')->group(function (){
-    Route::get('/',[ShowtimeApiController::class,'index']);
-    Route::post('/',[ShowtimeApiController::class,'store']);
-    Route::get('/{id}',[ShowtimeApiController::class,'show']);
-    Route::put('/{id}',[ShowtimeApiController::class,'update']);
-    Route::delete('/{id}',[ShowtimeApiController::class,'destroy']);
-});
+    Route::prefix('countries')->group(function () {
+        Route::get('/', [ApiCountryController::class, 'index']);
+        Route::post('/', [ApiCountryController::class, 'store']);
+        Route::get('/{id}', [ApiCountryController::class, 'show']);
+        Route::put('/{id}', [ApiCountryController::class, 'update']);
+        Route::delete('/{id}', [ApiCountryController::class, 'destroy']);
+    });
 
-Route::apiResource('/users', UserController::class);
-Route::apiResource('/personnels', PersonnelController::class);
+    Route::prefix('producers')->group(function () {
+        Route::get('/', [ApiProducerController::class, 'index']);
+        Route::post('/', [ApiProducerController::class, 'store']);
+        Route::get('/{id}', [ApiProducerController::class, 'show']);
+        Route::put('/{id}', [ApiProducerController::class, 'update']);
+        Route::delete('/{id}', [ApiProducerController::class, 'destroy']);
+    });
 
+    Route::prefix('promotions')->group(function () {
+        Route::get('/', [ApiPromotionController::class, 'index']);
+        Route::post('/', [ApiPromotionController::class, 'store']);
+        Route::get('/{id}', [ApiPromotionController::class, 'show']);
+        Route::put('/{id}', [ApiPromotionController::class, 'update']);
+        Route::delete('/{id}', [ApiPromotionController::class, 'destroy']);
+    });
+    //
+    Route::prefix('theater')->group(function () {
+        Route::get('/', [RoomApiController::class, 'index']);
+        Route::post('/', [RoomApiController::class, 'store']);
+        Route::get('/{id}', [RoomApiController::class, 'show']);
+        Route::put('/{id}', [RoomApiController::class, 'update']);
+        Route::delete('/{id}', [RoomApiController::class, 'destroy']);
+    });
+    Route::prefix('showtimes')->group(function () {
+        Route::get('/', [ShowtimeApiController::class, 'index']);
+        Route::post('/', [ShowtimeApiController::class, 'store']);
+        Route::get('/{id}', [ShowtimeApiController::class, 'show']);
+        Route::put('/{id}', [ShowtimeApiController::class, 'update']);
+        Route::delete('/{id}', [ShowtimeApiController::class, 'destroy']);
+    });
+
+    Route::apiResource('/users', UserController::class);
+    Route::apiResource('/personnels', PersonnelController::class);
+});

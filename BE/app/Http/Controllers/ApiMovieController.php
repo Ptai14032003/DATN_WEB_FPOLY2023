@@ -49,7 +49,7 @@ class ApiMovieController extends Controller
         join('countries', 'movies.country_id', '=', 'countries.id')
         ->join('producers', 'movies.producer_id', '=', 'producers.id')
         ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
-        ->find($id);;
+        ->find($id);
         if($movie){
             return new MovieResource($movie);
         }else{

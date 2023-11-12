@@ -17,7 +17,6 @@ import SeatBooking from './personPage/SeatBooking'
 import Detail from './personPage/detail'
 function App() {
 
-
   return <BrowserRouter>
     <Routes>
       <Route path='/' element={<LayoutPerson />}>
@@ -35,7 +34,7 @@ function App() {
 
 
 
-
+    
       <Route path='/admin' element={<LayoutAdmin />}>
         <Route path='qlPhim' element={<AdminQlPhim />}></Route>
         <Route path='qlSuatChieu' element={<AdminQlSc />}></Route>
