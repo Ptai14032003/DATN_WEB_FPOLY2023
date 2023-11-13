@@ -26,6 +26,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 
 Route::post('/book_ticket', [TicketController::class, 'book_ticket'])->name('book_ticket')->middleware('auth:sanctum');
 
+// Route::prefix('admin')->middleware('checkrole')->group(function () {
 Route::prefix('admin')->middleware('checkrole')->group(function () {
     Route::resource('bill', BillController::class);
     Route::resource('food', FoodController::class);
@@ -96,7 +97,7 @@ Route::prefix('admin')->middleware('checkrole')->group(function () {
         Route::delete('/{id}', [ApiPromotionController::class, 'destroy']);
     });
     //
-    Route::prefix('theater')->group(function () {
+    Route::prefix('rooms')->group(function () {
         Route::get('/', [RoomApiController::class, 'index']);
         Route::post('/', [RoomApiController::class, 'store']);
         Route::get('/{id}', [RoomApiController::class, 'show']);

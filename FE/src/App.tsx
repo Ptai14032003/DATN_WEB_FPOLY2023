@@ -19,6 +19,8 @@ import Signup from './personPage/Signup'
 import Booking from './personPage/Booking'
 import SeatBooking from './personPage/SeatBooking'
 import Detail from './personPage/detail'
+
+
 function App() {
 
   return <BrowserRouter>

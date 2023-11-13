@@ -16,7 +16,7 @@ const Menu = () => {
     
 
        const Logout = async () => {
-        localStorage.removeItem("token");
+        localStorage.removeItem("accessToken");
         localStorage.removeItem("user");
         navigate('/')
       }
@@ -48,7 +48,7 @@ const Menu = () => {
                   {dropDown ?
                 <ul className="dropdown-content absolute translate-y-[4.8rem] right-6 w-[160px] text-center">
                     {user.role === 'Admin' && (
-                      <li><a href="/admin">Admin</a></li>
+                      <li><a href="admin">Admin</a></li>
                     )}
                       <li><a href="signin" className='block'>Profile</a></li>
                       <li><a href="signup" className='block' onClick={()=>Logout()}>Logout</a></li>

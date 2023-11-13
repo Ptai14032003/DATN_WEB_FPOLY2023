@@ -19,25 +19,27 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         if (Auth::guard('users')->attempt(['email' => $request->email, 'password' => $request->password], false)) {
-            $personnel = Auth::guard('users')->user();
-            $token = $personnel->createToken('User Access Token')->plainTextToken;
-            return response(['user' => new PersonnelResource(Auth::guard('users')->user())], 200);
+            $users = Auth::guard('users')->user();
+            $token = $users->createToken($users->email . 'token')->plainTextToken;
+            $user = new UserResource(Auth::guard('users')->user());
+            $cookie = cookie('jwt', $token, 60);
+            return response([
+                'user' => $user,
+                'accessToken' => $token,
+            ],200)->withCookie($cookie);
         } elseif (Auth::guard('personnels')->attempt(['email' => $request->email, 'password' => $request->password], false)) {
-            $personnel = DB::table('personnels')->where('email', $request->email)->first();
-            if ($personnel->role == 0) {
-                $personnel = Auth::guard('personnels')->user();
-                $token = $personnel->createToken('Personal Access Token')->plainTextToken;
-                // return response(['message' => "Đăng nhập thành công"], 200);
-                return response(['user' => new PersonnelResource(Auth::guard('personnels')->user())], 200);
-            } else {
-                $personnel = Auth::guard('personnels')->user();
-                $token = $personnel->createToken('Personal Access Token')->plainTextToken;
-                return response(['user' => new PersonnelResource(Auth::guard('personnels')->user())], 200);
-            }
+            $personnel = Auth::guard('personnels')->user();
+            $token = $personnel->createToken($personnel->email . 'token')->plainTextToken;
+            $user = new PersonnelResource(Auth::guard('personnels')->user());
+            $cookie = cookie('jwt', $token, 60);
+            return response([
+                'user' => $user,
+                'accessToken' => $token,
+            ],200)->withCookie($cookie);
         } else {
             // $error = "Thông tin tài khoản hoặc mật khẩu không chính xác";
             return response([
-                'error'=> "Thông tin tài khoản hoặc mật khẩu không chính xác"
+                'error' => "Thông tin tài khoản hoặc mật khẩu không chính xác"
             ], 422);
         }
     }

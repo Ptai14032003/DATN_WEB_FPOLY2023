@@ -2,7 +2,18 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 const actorApi = createApi({
     reducerPath: "actor",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:8000/api"
+        baseUrl: "http://localhost:8000/api/admin",
+        prepareHeaders: (headers, { getState }) => {
+            // Lấy token từ localstorage
+            const token = localStorage.getItem("accessToken");
+            // Nếu có token thì gán vào header Authorization
+            if (token) {
+                headers.set("Authorization", `Bearer ${token}`);
+            }
+            // Thêm header Content-Type
+            headers.set("Content-Type", "application/json");
+            return headers;
+        }
     }),
     tagTypes: ["actor"],
     endpoints: builder => ({
