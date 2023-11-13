@@ -25,9 +25,14 @@ class ApiListGenreController extends Controller
      */
     public function store(Request $request)
     {
-        $listGenre = List_Genre::create($request->all());
+       
+        $listGenres = $request->get('list_genres');
+
+        $movieGenre = List_Genre::create($request->all());
+        $movieGenre->list_genres = $listGenres;
+        $movieGenre->save();
 //        trả về thông vừa thêm
-        return new ListGenreResource($listGenre);
+        return new ListGenreResource($movieGenre);
     }
 
     /**

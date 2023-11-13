@@ -29,6 +29,20 @@ class ApiMovieGenreController extends Controller
     public function store(Request $request)
     {
         $movieGenre = Movie_Genre::create($request->all());
+
+
+       
+
+        // Lưu trữ các thể loại đã chọn
+        // $genres = $request->input('genres');
+    
+        // // Thêm từng thể loại vào bảng movie_genre
+        // foreach ($genres as $genre) {
+        //     Movie_Genre::create([
+        //         'movie_id' => $movieGenre->id,
+        //         'genre_id' => $genre,
+        //     ]);
+        // }
 //        trả về thông vừa thêm
         return new MovieGenreResource($movieGenre);
     }
