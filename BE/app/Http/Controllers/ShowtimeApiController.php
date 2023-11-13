@@ -20,6 +20,7 @@ class ShowtimeApiController extends Controller
         ->get();
         return ShowtimeResource::collection($show_time);
     }
+
     public function store(Request $request){
         $show_time = Showtime::create($request->all());
         return new ShowtimeResource($show_time);
@@ -37,6 +38,7 @@ class ShowtimeApiController extends Controller
             return response()->json(['messages'=>'Suất chiếu không tồn tại'],404);
         }
     }
+    
     public function update(Request $request, string $id){
         $show_time = Showtime::find($id);
         if($show_time){

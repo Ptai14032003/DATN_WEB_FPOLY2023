@@ -23,8 +23,9 @@ use Illuminate\Support\Facades\Route;
 Route::match(['GET', 'POST'], '/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
-
+Route::post('/movie_home',[ HomeController::class, 'movie_home'])->name('movie_home');
 Route::post('/book_ticket', [TicketController::class, 'book_ticket'])->name('book_ticket')->middleware('auth:sanctum');
+Route::get('/movie_show_time/{id}',[HomeController::class,'show_time_movie']);
 
 // Route::prefix('admin')->middleware('checkrole')->group(function () {
 Route::prefix('admin')->middleware('checkrole')->group(function () {
