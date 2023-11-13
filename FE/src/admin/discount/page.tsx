@@ -41,7 +41,7 @@ const AdminQlDiscount: React.FC = () => {
     useEffect(() => {
         if (data) {
             const mapMovies = data.map((item: Discount) => ({
-                key: item.id,
+                id: item.id,
                 code: item.code,
                 event: item.event,
                 start: item.start,
@@ -90,15 +90,15 @@ const AdminQlDiscount: React.FC = () => {
                 <Column
                     title="Action"
                     key="action"
-                    render={(_: any, record: any) => (
+                    render={(_: any, record: Discount) => (
                         <Space size="middle">
-                            <a><EditQlDiscount key={record.key} projects={record.key} /> </a>
+                            <a><EditQlDiscount key={record.id} projects={record.id} /> </a>
                             <a>
                                 <Popconfirm
                                     title="Delete the task"
                                     description="Are you sure to delete this task?"
                                     onConfirm={() => {
-                                        deleteOne(record.key);
+                                        deleteOne(record.id);
                                     }}
                                     okButtonProps={{
                                         style: { backgroundColor: "#007bff" },

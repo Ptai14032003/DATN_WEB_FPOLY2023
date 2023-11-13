@@ -125,5 +125,4 @@ const CreateQlNhanSu: React.FC = () => {
         </>
     )
 };
-
 export default CreateQlNhanSu;

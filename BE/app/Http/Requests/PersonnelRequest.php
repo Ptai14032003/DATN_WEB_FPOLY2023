@@ -64,7 +64,6 @@ class PersonnelRequest extends FormRequest
                     ],
                     'password' => [
                         'required',
-                        'confirmed',
                         'min:8',
                         'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).+$/'
                     ],

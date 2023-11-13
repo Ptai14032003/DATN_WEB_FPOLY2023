@@ -2,18 +2,20 @@ import React, { useState } from 'react';
 import { Button, Form, Input, Modal, Select } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { QlNhanSu } from './page';
-import { useFetchNhanSuIdQuery } from '../../rtk/qlNhanSu/qlNhanSu';
+import { useFetchNhanSuIdQuery, useUpdateNhanSuMutation } from '../../rtk/qlNhanSu/qlNhanSu';
 type Props = {
     projects: string
 }
 const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
     const { data } = useFetchNhanSuIdQuery(projects);
+    const [updateNhanSu] = useUpdateNhanSuMutation()
+    const dataNhanSu = data?.data
     const selectGender = ["Nam", "Nữ", "Không muốn trả lời"]
     const GenderOptions = selectGender.map((gender) => ({
         value: gender,
         label: gender,
     }));
-    const selectRole = ["Sếp", "Nhân viên"]
+    const selectRole = ["Admin", "Nhân viên"]
     const RoleOptions = selectRole.map((role) => ({
         value: role,
         label: role,
@@ -21,7 +23,7 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
-        console.log('Success:', values);
+        updateNhanSu({ body: values,id: projects })
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -38,7 +40,7 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
         <>
             <Button onClick={showModal}>Sửa</Button>
             <Modal title="Sửa thông tin nhân sự" open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
-                {data ? (
+                {dataNhanSu ? (
                     <Form className='mr-[60px]'
                         name='formLogin'
                         ref={formRef}
@@ -48,7 +50,7 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
                         onFinish={onFinish}
                         onFinishFailed={onFinishFailed}
                         autoComplete="off"
-                        initialValues={data}
+                        initialValues={dataNhanSu}
                     >
                         <Form.Item<QlNhanSu>
                             label="Mã nhân viên"
@@ -77,7 +79,8 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
                             name="phone_number"
                             rules={[{ required: true, message: 'Vui lòng nhập số điện thoại !' }, {
                                 pattern: /^(?:\d[ -]?){9,14}\d$/,
-                                message: 'Vui lòng nhập số điện thoại hợp lệ!', }]}
+                                message: 'Vui lòng nhập số điện thoại hợp lệ!',
+                            }]}
                         >
                             <Input />
                         </Form.Item>

@@ -7,6 +7,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\PersonalAccessToken;
+use Laravel\Sanctum\Sanctum;
 use Symfony\Component\HttpFoundation\Response;
 
 class CheckRole
@@ -18,13 +19,9 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next): Response
     {
-
         // Lấy token bearer từ header Authorization
-        // $token = $request->bearerToken();
-
         $token = $request->bearerToken();
         $entropy = PersonalAccessToken::findToken($token);
-
         if (!$token || !$entropy) {
             return response()->json(['error' => 'Phải đăng nhập mới có thể thực hiện hành động này'], 401);
         } else {
@@ -35,25 +32,11 @@ class CheckRole
                 if ($personnel->role == 1) {
                     return $next($request);
                 } else {
-                    return response(['mesage' => "Chỉ có admin mới truy cập được vào đây"], 203);
+                    return response(['mesage' => "Chỉ có admin mới truy cập được vào đây"], 403);
                 }
             } else {
-                return response(['mesage' => "Chỉ có admin mới truy cập được vào đây"], 203);
+                return response(['mesage' => "Chỉ có admin mới truy cập được vào đây"], 403);
             }
         }
-
-        // if (Auth::guard('personnels')->check()){
-        //     if (Auth::guard('personnels')->user ()->role == 1) {
-        //         return $next($request);
-        //     } else {
-        //         // return redirect()->route('home');
-        //         return response(['mesage' => "Bạn cần đăng nhập và là admin để truy cập vào địa chỉ này "], 200);
-        //         // return response(new PersonnelResource(Auth::guard('personnels')->user()), 201);
-        //     }
-        // } else {
-        //     // return redirect()->route('login')->with('error','Chỉ có admin mới có thể truy cập vào trang admin');
-        //     // return response(['mesage' => "Bạn cần đăng nhập và là admin để truy cập vào địa chỉ này ok"], 200);
-        //     return response(new PersonnelResource(Auth::guard('personnels')->user()), 201);
-        // }
     }
 }

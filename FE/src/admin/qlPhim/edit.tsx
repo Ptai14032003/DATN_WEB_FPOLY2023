@@ -91,6 +91,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                             rules={[{ required: true, message: 'Vui lòng nhập dang phim !' }]}
                         >
                             <Select className='ml-[-72px]'
+                                mode='multiple'
                                 defaultValue="Chọn dạng phim"
                                 style={{ width: 200 }}
                                 options={typeOptions}

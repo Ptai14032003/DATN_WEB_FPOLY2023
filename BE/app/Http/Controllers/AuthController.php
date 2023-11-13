@@ -18,41 +18,29 @@ class AuthController extends Controller
     //
     public function login(Request $request)
     {
-        if ($request->isMethod('POST')) {
-            if (Auth::guard('users')->attempt(['email' => $request->email, 'password' => $request->password], false, false)) {
-
-                $personnel = Auth::guard('users')->user();
-                $token = $personnel->createToken('User Access Token')->plainTextToken;
-                return response()->json([
-                    'accessToken' => $token,
-                    'token_type' => 'Bearer',
-                ]);
-            } elseif (Auth::guard('personnels')->attempt(['email' => $request->email, 'password' => $request->password], false, false)) {
-                $personnel = DB::table('personnels')->where('email', $request->email)->first();
-                if ($personnel->role == 0) {
-                    $personnel = Auth::guard('personnels')->user();
-                    $token = $personnel->createToken('Personal Access Token')->plainTextToken;
-
-                    return response()->json([
-                        'accessToken' => $token,
-                        'token_type' => 'Bearer',
-                    ]);
-                } else {
-
-                    $personnel = Auth::guard('personnels')->user();
-                    $token = $personnel->createToken('Personal Access Token')->plainTextToken;
-
-                    return response()->json([
-                        'accessToken' => $token,
-                        'token_type' => 'Bearer',
-                    ]);
-                    //   return response(new PersonnelResource(Auth::guard('personnels')->user()), 201);
-                }
-            } else {
-                return response([
-                    'message' => 'Tài khoản hoặc mật khẩu không chính xác'
-                ], 422);
-            }
+        if (Auth::guard('users')->attempt(['email' => $request->email, 'password' => $request->password], false)) {
+            $users = Auth::guard('users')->user();
+            $token = $users->createToken($users->email . 'token')->plainTextToken;
+            $user = new UserResource(Auth::guard('users')->user());
+            $cookie = cookie('jwt', $token, 60);
+            return response([
+                'user' => $user,
+                'accessToken' => $token,
+            ],200)->withCookie($cookie);
+        } elseif (Auth::guard('personnels')->attempt(['email' => $request->email, 'password' => $request->password], false)) {
+            $personnel = Auth::guard('personnels')->user();
+            $token = $personnel->createToken($personnel->email . 'token')->plainTextToken;
+            $user = new PersonnelResource(Auth::guard('personnels')->user());
+            $cookie = cookie('jwt', $token, 60);
+            return response([
+                'user' => $user,
+                'accessToken' => $token,
+            ],200)->withCookie($cookie);
+        } else {
+            // $error = "Thông tin tài khoản hoặc mật khẩu không chính xác";
+            return response([
+                'error' => "Thông tin tài khoản hoặc mật khẩu không chính xác"
+            ], 422);
         }
     }
 

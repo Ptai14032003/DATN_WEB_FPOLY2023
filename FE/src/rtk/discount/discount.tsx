@@ -2,7 +2,18 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 const discountApi = createApi({
     reducerPath: "discount",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:3001"
+        baseUrl: "http://localhost:8000/api/admin",
+        prepareHeaders: (headers, { getState }) => {
+            // Lấy token từ localstorage
+            const token = localStorage.getItem("accessToken");
+            // Nếu có token thì gán vào header Authorization
+            if (token) {
+                headers.set("Authorization", `Bearer ${token}`);
+            }
+            // Thêm header Content-Type
+            headers.set("Content-Type", "application/json");
+            return headers;
+        }
     }),
     tagTypes: ["discount"],
     endpoints: builder => ({
@@ -10,7 +21,7 @@ const discountApi = createApi({
             query: () => "/discount/",
             providesTags: ["discount"]
         }),
-        addDiscount: builder.mutation<void, { body: any }>({
+        addDiscount: builder.mutation<void, any>({
             query: (body) => ({
                 url: "/discount/",
                 method: "POST",
