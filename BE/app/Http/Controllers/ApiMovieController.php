@@ -22,10 +22,10 @@ class ApiMovieController extends Controller
         ->join('producers', 'movies.producer_id', '=', 'producers.id')
         ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
         ->select('movies.*', 'countries.country_name','producers.producer_name', 'movie_types.type_name')
+        ->whereNull('movies.deleted_at')
         ->get();
-//        Trả về danh sách dưới dạng json
+//Trả về danh sách dưới dạng json
         return MovieResource::collection($movie);
-
     }
 
     /**

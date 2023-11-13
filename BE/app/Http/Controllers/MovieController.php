@@ -19,30 +19,18 @@ class MovieController extends Controller
     // $movie_type = Movie_type::all();
     // return view('movie', ['produ'=>$producer,'country' => $country , 'movie_type' => $movie_type]);
 
-        $movie = DB::select(' SELECT movies.id, movies.movie_name, producers.producer_name ,countries.country_name,movie_types.type_name , movies.director, movies.total_revenue, movies.image
-        FROM movies
-        INNER JOIN producers ON movies.producer_id = producers.id 
-        INNER JOIN countries ON movies.country_id = countries.id
-        INNER JOIN movie_types ON movies.movie_type_id = movie_types.id
-  ');
+        $movie =  Movie::
+        join('countries', 'movies.country_id', '=', 'countries.id')
+        ->join('producers', 'movies.producer_id', '=', 'producers.id')
+        ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+        ->select('movies.*', 'countries.country_name','producers.producer_name', 'movie_types.type_name')
+        ->whereNull('movies.deleted_at')
+        ->get();
 
      return response()->json($movie);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        
         $name = $request->get('name');
         $producer = $request->get('produce');
         $country = $request->get('country');
@@ -78,7 +66,6 @@ class MovieController extends Controller
                 'role' => $role,
                 'movie_role' => $movie_role,
             ];
-
             Actor::create($newdata);
         }
     }
