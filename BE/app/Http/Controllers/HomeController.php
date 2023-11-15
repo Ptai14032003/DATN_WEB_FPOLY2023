@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MovieShowtimeResource;
 use App\Models\Actor;
 use App\Models\Movie;
+use App\Models\Movie_Genre;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\Movie_Genre;
 use Carbon\Carbon;
 
 class HomeController extends Controller
@@ -83,5 +84,6 @@ class HomeController extends Controller
         return response()->json(['messages' => 'Không tồn tại suất chiếu theo phim này'], 404);
     }
         // return response()->json([$st_movie]);
+
     }
 }
