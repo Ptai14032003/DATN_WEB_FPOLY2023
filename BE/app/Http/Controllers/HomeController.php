@@ -6,7 +6,7 @@ use App\Models\Movie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class MovieController extends Controller
+class HomeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -30,12 +30,21 @@ class MovieController extends Controller
         ->find($id);
 
         if($st_movie){
+            $movie =  Movie::
+            join('countries', 'movies.country_id', '=', 'countries.id')
+            ->join('producers', 'movies.producer_id', '=', 'producers.id')
+            ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+            ->select('movies.*', 'countries.country_name','producers.producer_name', 'movie_types.type_name')
+            ->whereNull('movies.deleted_at')
+            ->get();
+            
             $actor = Actor::join('movies', 'actors.movie_id', '=', 'movies.id')->get();
+
             $movieGenre = Movie_Genre::
             join('movies', 'movie_genres.movie_id', '=', 'movies.id')
             ->join('list_genres', 'movie_genres.list_genre_id', '=', 'list_genres.id')
             ->get();
-            return new MovieShowtimeResource(['movie'=> $st_movie, 'actor'=>$actor, 'movieGenre'=>$movieGenre]);
+            return new MovieShowtimeResource(['movie'=> $st_movie, 'actor'=>$actor, 'movieGenre'=>$movieGenre, 'movieDetails'=>$movie]);
         }else{
             return response()->json(['messages'=>'Không tồn tại suất chiếu theo phim này'],404);
         }
