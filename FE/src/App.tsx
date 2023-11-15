@@ -31,7 +31,7 @@ function App() {
       </Route>
       <Route path="signin" element={<Signin />} />
       <Route path="signup" element={<Signup />} />
-      <Route path='movies/:id' element={<Detail />}></Route>
+      <Route path='movie_show_time/:id' element={<Detail />}></Route>
       <Route path='booking/:id' element={<Booking />}>
         <Route index element={<SeatBooking />} />
       </Route>

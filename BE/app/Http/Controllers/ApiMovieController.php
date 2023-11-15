@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Http\Resources\MovieResource;
 use App\Models\Actor;
 use App\Models\Movie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class MovieController extends Controller
+class ApiMovieController extends Controller
 {
     /**
      * Display a listing of the resource.
