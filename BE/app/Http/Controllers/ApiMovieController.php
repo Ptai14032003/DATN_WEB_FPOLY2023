@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Http\Resources\MovieResource;
 use App\Models\Actor;
 use App\Models\Movie;
 use Illuminate\Http\Request;
