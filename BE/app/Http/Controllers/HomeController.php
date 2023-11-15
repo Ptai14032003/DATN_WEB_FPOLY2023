@@ -28,10 +28,16 @@ class MovieController extends Controller
         ->join('rooms','showtimes.room_id','=','rooms.id')
         ->select('movies.id','movies.movie_name','showtimes.show_date','showtimes.show_time','rooms.name')
         ->find($id);
+
         if($st_movie){
-            return new MovieShowtimeResource($st_movie);
+            $actor = Actor::join('movies', 'actors.movie_id', '=', 'movies.id')->get();
+            $movieGenre = Movie_Genre::
+            join('movies', 'movie_genres.movie_id', '=', 'movies.id')
+            ->join('list_genres', 'movie_genres.list_genre_id', '=', 'list_genres.id')
+            ->get();
+            return new MovieShowtimeResource(['movie'=> $st_movie, 'actor'=>$actor, 'movieGenre'=>$movieGenre]);
         }else{
             return response()->json(['messages'=>'Không tồn tại suất chiếu theo phim này'],404);
         }
-    }
+    }   
 }
