@@ -26,8 +26,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 
 Route::post('/book_ticket', [TicketController::class, 'book_ticket'])->name('book_ticket')->middleware('auth:sanctum');
 
-// Route::prefix('admin')->middleware('checkrole')->group(function () {
-Route::prefix('admin')->middleware('checkrole')->group(function () {
+Route::prefix('admin')->group(function () {
     Route::resource('bill', BillController::class);
     Route::resource('food', FoodController::class);
     Route::resource('food_type', TypeFoodController::class);

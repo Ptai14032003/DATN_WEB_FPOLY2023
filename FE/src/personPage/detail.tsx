@@ -3,14 +3,13 @@ import "./page.css"
 import { useState } from "react"
 import { useFetchMovieIdQuery } from "../rtk/movies/movies"
 const dateClick = ["20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"]
-const mhPhim = ["2D", "3D", "IMAX"]
 export default function Detail() {
     const [datenow, setDate] = useState(dateClick[0])
-    const [buttonClasses, setButtonClasses] = useState(mhPhim[0]);
     const { id } = useParams()
-    const {data:movieBooking} =  useFetchMovieIdQuery(id);
-
-
+    const { data: movieBooking } = useFetchMovieIdQuery(id);
+    const movies = movieBooking?.data
+    console.log(movieBooking);
+    
     const navigate = useNavigate();
 
     const redirectToLink = (link:any) => {
@@ -28,12 +27,6 @@ export default function Detail() {
                     <div className="block w-[190px]">
                         <div className="mb-[25px]"><span className="text-left">{movieBooking?.movie_name}</span></div>
                         <div className="w-[190px]"><img width="190" height="240" src="/phim.png" alt="" /></div>
-                        <div className="w-[72px] flex flex-col justify-center text-xs text-left">
-                            {mhPhim.map((item, index) => (
-                                <button key={index} className={`item-btn detail-time w-[190px] h-[50px] ${buttonClasses === item ? "bg-teal-400" : ""}`}
-                                    onClick={() => setButtonClasses(item)}>{item}</button>
-                            ))}
-                        </div>
                     </div>
                     <div className="w-[100%] mt-[3%]">
                         <div className="border-b-2 flex">
@@ -75,7 +68,7 @@ export default function Detail() {
                     <div className="w-[65%] mr-[50px]">
                         <div className="detail-content">
                             <div>Đạo diễn</div>
-                            <div>Daniel Espinosa</div>
+                            <div>{movies.director}</div>
                         </div>
                         <div className="detail-content">
                             <div>Thể loại</div>

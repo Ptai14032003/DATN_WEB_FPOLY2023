@@ -6,12 +6,12 @@ import { useFetchMoviesQuery } from '../rtk/movies/movies';
 
 
 const HomePage = () => {
-  const { data: movies } = [];
-  // const {data: movies=[]} = useFetchMoviesQuery()
+  const {data: movies} = useFetchMoviesQuery()
+  const dataMap = movies?.data
   return (
     <div>
       <div className='max-w-[1420px] mx-auto p-5 grid grid-cols-4 gap-10'>
-        {(movies)?.map((item: any) => (
+        {dataMap?.map((item: any) => (
 
           <div key={item.id} className="movie-item hover:border  bg-[#0E0E0E]">
             <img src={item.image} alt="" className='h-[420px] w-full' />

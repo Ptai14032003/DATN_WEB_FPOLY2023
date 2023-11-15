@@ -36,7 +36,6 @@ class PersonnelRequest extends FormRequest
                     ],
                     'password' => [
                         'required',
-                        'confirmed',
                         'min:8',
                         'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).+$/'
                     ],
@@ -88,7 +87,6 @@ class PersonnelRequest extends FormRequest
             'phone_number.regex' => "Số điện thoại không đúng định dạng",
             'phone_number.unique' > "Số điện thoại đã được đăng ký",
             'password.required' => "Mật khẩu không được để trống",
-            'password.confirmed' => "Mật khẩu không trùng khớp",
             'password.min' | 'password.regex' => "Yêu cầu mật khẩu có ít nhất 8 ký tự, chứa các chữ cái và bao gồm các ký tự đặc biệt(*@!#...).",
             'address.required' => "Địa chỉ không được để trống",
             'birthday.required' => "Ngày sinh không được để trống",
