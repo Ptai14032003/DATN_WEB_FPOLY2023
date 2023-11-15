@@ -1,14 +1,18 @@
 import { useNavigate, useParams } from "react-router-dom"
 import "./page.css"
 import { useState } from "react"
-import { useFetchMovieIdQuery } from "../rtk/movies/movies"
+import { useFetchMovieIdPersonQuery } from "../rtk/moviesPerson/moviesPerson"
 const dateClick = ["20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"]
 export default function Detail() {
     const [datenow, setDate] = useState(dateClick[0])
     const { id } = useParams()
-    const { data: movieBooking } = useFetchMovieIdQuery(id);
-    const movies = movieBooking?.data
-    console.log(movieBooking);
+    const { data: movieBooking } = useFetchMovieIdPersonQuery(id);
+    
+    const movies = movieBooking?.movies
+    console.log(movies);
+    
+    const genres = movieBooking?.movie_genres
+    const actor = movieBooking?.actor    
     
     const navigate = useNavigate();
 
@@ -19,7 +23,10 @@ export default function Detail() {
 
     return (
         <div className="container-detail text-white">
-            <div>
+            {movies?.map((item:any)=>(
+                
+                <>
+                <div>
                 <iframe width="100%" height="700" src="https://www.youtube.com/embed/L_YG4_68TZc?si=9qbXRoqx6uEkdwwG" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
             </div>
             <div className="mx-[5%]">
@@ -34,14 +41,14 @@ export default function Detail() {
                                 <button key={index} className={`btn-date ${datenow === date ? "btn-date-action" : ""}`} onClick={() => setDate(date)}>
                                     <div className="w-[90px] h-full flex flex-col items-center justify-center text-xs transition-colors">
                                         <span>Thứ năm</span>
-                                        <span className="text-3xl font-bold">{date}</span>
+                                        <span className="text-xl font-bold">{item.show_date}</span>
                                     </div>
                                 </button>
                             ))}
                         </div>
                         <div className="w-[70%] grid grid-cols-5 gap-5 mt-[20px] text-black">
                             <button className="detail-time w-[100px] h-[40px] bg-white rounded-sm" onClick={() => redirectToLink('/booking/' + movieBooking?.id)}>
-                                <p className="font-bold text-sm">18:20</p>
+                                {/* <p className="font-bold text-sm">{movies.show_time}</p>  */}
                             </button>
                             <button className="detail-time w-[100px] h-[40px] bg-white rounded-sm" onClick={() => redirectToLink('/booking/' + movieBooking?.id)}>
                                 <p className="font-bold text-sm">19:20</p>
@@ -68,15 +75,19 @@ export default function Detail() {
                     <div className="w-[65%] mr-[50px]">
                         <div className="detail-content">
                             <div>Đạo diễn</div>
-                            <div>{movies.director}</div>
+                            {/* <div>{movies?.director}</div> */}
+                        </div>
+                        <div className="detail-content">
+                            <div>Actor</div>
+                            {/* <div>{actor[0]?.actor_name}</div> */}
                         </div>
                         <div className="detail-content">
                             <div>Thể loại</div>
-                            <div>Hành Động, Phiêu Lưu</div>
+                            {/* <div>{genres[0]?.genre}</div> */}
                         </div>
                         <div className="detail-content">
                             <div>Khởi chiếu</div>
-                            <div>01/07/2023</div>
+                            {/* <div>{movies?.start_date}</div> */}
                         </div>
                         <div className="detail-content">
                             <div>Thời lượng</div>
@@ -130,6 +141,9 @@ export default function Detail() {
                     </div>
                 </div>
             </div>
+            </>
+            ))}
+            
         </div >
     );
 }
