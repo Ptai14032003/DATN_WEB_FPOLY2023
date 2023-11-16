@@ -32,7 +32,7 @@ export default function Detail() {
                         {movies?.map((item: any) => (
                             <div className="w-[100%] mt-[3%]">
                                 <div className="border-b-2 flex">
-                                    <button key={item.id} className={`btn-date ${item.show_date ? "btn-date-action" : ""}`} onClick={() => setDate(date)}>
+                                    <button key={item.id} className={`btn-date ${item.show_date ? "btn-date-action" : ""}`}>
                                         <div className="w-[90px] h-full flex flex-col items-center justify-center text-xs transition-colors">
                                             <span>Thứ năm</span>
                                             <span className="text-xl font-bold">{item.show_date}</span>
