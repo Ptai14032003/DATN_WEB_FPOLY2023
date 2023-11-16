@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\MovieShowtimeResource;
+use App\Http\Resources\ShowtimeResource;
 use App\Models\Actor;
 use App\Models\Movie;
 use App\Models\Movie_Genre;
+use App\Models\Seat;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -17,14 +20,17 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $movie =  Movie::join('countries', 'movies.country_id', '=', 'countries.id')
-            ->join('producers', 'movies.producer_id', '=', 'producers.id')
-            ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
-            ->select('movies.*', 'countries.country_name', 'producers.producer_name', 'movie_types.type_name')
-            ->whereNull('movies.deleted_at')
-            ->get();
-        return response()->json($movie);
-    }
+
+        $movie =  Movie::
+        join('countries', 'movies.country_id', '=', 'countries.id')
+        ->join('producers', 'movies.producer_id', '=', 'producers.id')
+        ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+        ->select('movies.*', 'countries.country_name','producers.producer_name', 'movie_types.type_name')
+        ->whereNull('movies.deleted_at')
+        ->get();
+     return response()->json($movie);
+    }  
+    
 
     public function show_time_movie(string $id)
     {
@@ -64,8 +70,8 @@ class HomeController extends Controller
             default:
                 $weekday = 'Chủ nhật';
                 break;
-        }
 
+        }
         $movie->weekday = $weekday;
     }
     $st_movie = $st_movie->toArray();
@@ -85,5 +91,15 @@ class HomeController extends Controller
     }
         // return response()->json([$st_movie]);
 
+    }
+
+    public function show_seat_room($id){
+        $seats = Seat::join('type_seats', 'type_seats.id', '=', 'seats.type_seat_id')
+            ->join('rooms', 'rooms.id', '=', 'seats.room_id')
+            ->join('showtimes', 'showtimes.room_id', '=', 'rooms.id')
+            ->where('showtimes.id', $id)
+            ->select('seats.*')
+            ->get();
+        return response()->json($seats);
     }
 }

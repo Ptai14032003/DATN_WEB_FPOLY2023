@@ -32,7 +32,7 @@ export default function Detail() {
                         {movies?.map((item: any) => (
                             <div className="w-[100%] mt-[3%]">
                                 <div className="border-b-2 flex">
-                                    <button key={item.id} className={`btn-date ${item.show_date ? "btn-date-action" : ""}`}>
+                                    <button key={item.id} className={`btn-date ${item.show_date ? "btn-date-action" : ""}`} onClick={() => setDate(date)}>
                                         <div className="w-[90px] h-full flex flex-col items-center justify-center text-xs transition-colors">
                                             <span>Thứ năm</span>
                                             <span className="text-xl font-bold">{item.show_date}</span>
@@ -40,7 +40,7 @@ export default function Detail() {
                                     </button>
                                 </div>
                                 <div className="w-[70%] grid grid-cols-5 gap-5 mt-[20px] text-black">
-                                    <button className="detail-time w-[100px] h-[40px] bg-white rounded-sm" onClick={() => redirectToLink('/booking/' + item?.id)}>
+                                    <button className="detail-time w-[100px] h-[40px] bg-white rounded-sm" onClick={() => redirectToLink('/booking/' + movieBooking?.id)}>
                                         <p className="font-bold text-sm">{item.show_time}</p>
                                     </button>
                                 </div>
