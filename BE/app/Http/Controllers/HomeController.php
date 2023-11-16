@@ -7,6 +7,7 @@ use App\Http\Resources\ShowtimeResource;
 use App\Models\Actor;
 use App\Models\Movie;
 use App\Models\Movie_Genre;
+use App\Models\Seat;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -86,5 +87,15 @@ class HomeController extends Controller
     }
         // return response()->json([$st_movie]);
 
+    }
+
+    public function show_seat_room($id){
+        $seats = Seat::join('type_seats', 'type_seats.id', '=', 'seats.type_seat_id')
+            ->join('rooms', 'rooms.id', '=', 'seats.room_id')
+            ->join('showtimes', 'showtimes.room_id', '=', 'rooms.id')
+            ->where('showtimes.id', $id)
+            ->select('seats.*')
+            ->get();
+        return response()->json($seats);
     }
 }

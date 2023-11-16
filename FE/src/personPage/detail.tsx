@@ -2,15 +2,11 @@ import { useNavigate, useParams } from "react-router-dom"
 import "./page.css"
 import { useState } from "react"
 import { useFetchMovieIdPersonQuery } from "../rtk/moviesPerson/moviesPerson"
-const dateClick = ["20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"]
 export default function Detail() {
-    const [datenow, setDate] = useState(dateClick[0])
     const { id } = useParams()
     const { data: movieBooking } = useFetchMovieIdPersonQuery(id);
     
     const movies = movieBooking?.movies
-    console.log(movies);
-    
     const genres = movieBooking?.movie_genres
     const actor = movieBooking?.actor    
     
@@ -23,10 +19,8 @@ export default function Detail() {
 
     return (
         <div className="container-detail text-white">
-            {movies?.map((item:any)=>(
-                
-                <>
-                <div>
+           <>
+            <div>
                 <iframe width="100%" height="700" src="https://www.youtube.com/embed/L_YG4_68TZc?si=9qbXRoqx6uEkdwwG" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
             </div>
             <div className="mx-[5%]">
@@ -35,35 +29,23 @@ export default function Detail() {
                         <div className="mb-[25px]"><span className="text-left">{movieBooking?.movie_name}</span></div>
                         <div className="w-[190px]"><img width="190" height="240" src="/phim.png" alt="" /></div>
                     </div>
-                    <div className="w-[100%] mt-[3%]">
-                        <div className="border-b-2 flex">
-                            {dateClick.map((date, index) => (
-                                <button key={index} className={`btn-date ${datenow === date ? "btn-date-action" : ""}`} onClick={() => setDate(date)}>
-                                    <div className="w-[90px] h-full flex flex-col items-center justify-center text-xs transition-colors">
-                                        <span>Thứ năm</span>
-                                        <span className="text-xl font-bold">{item.show_date}</span>
-                                    </div>
+                    {movies?.map((item:any)=>(
+                        <div className="w-[100%] mt-[3%]">
+                            <div className="border-b-2 flex">
+                                    <button key={item.id} className={`btn-date ${ item.show_date ? "btn-date-action" : ""}`} onClick={() => setDate(date)}>
+                                        <div className="w-[90px] h-full flex flex-col items-center justify-center text-xs transition-colors">
+                                            <span>Thứ năm</span>
+                                            <span className="text-xl font-bold">{item.show_date}</span>
+                                        </div>
+                                    </button>
+                            </div>
+                            <div className="w-[70%] grid grid-cols-5 gap-5 mt-[20px] text-black">
+                                <button className="detail-time w-[100px] h-[40px] bg-white rounded-sm" onClick={() => redirectToLink('/booking/' + movieBooking?.id)}>
+                                    <p className="font-bold text-sm">{item.show_time}</p> 
                                 </button>
-                            ))}
+                            </div>
                         </div>
-                        <div className="w-[70%] grid grid-cols-5 gap-5 mt-[20px] text-black">
-                            <button className="detail-time w-[100px] h-[40px] bg-white rounded-sm" onClick={() => redirectToLink('/booking/' + movieBooking?.id)}>
-                                {/* <p className="font-bold text-sm">{movies.show_time}</p>  */}
-                            </button>
-                            <button className="detail-time w-[100px] h-[40px] bg-white rounded-sm" onClick={() => redirectToLink('/booking/' + movieBooking?.id)}>
-                                <p className="font-bold text-sm">19:20</p>
-                            </button>
-                            <button className="detail-time w-[100px] h-[40px] bg-white rounded-sm" onClick={() => redirectToLink('/booking/' + movieBooking?.id)}>
-                                <p className="font-bold text-sm">20:20</p>
-                            </button>
-                            <button className="detail-time w-[100px] h-[40px] bg-white rounded-sm" onClick={() => redirectToLink('/booking/' + movieBooking?.id)}>
-                                <p className="font-bold text-sm">22:20</p>
-                            </button>
-                            <button className="detail-time w-[100px] h-[40px] bg-white rounded-sm" onClick={() => redirectToLink('/booking/' + movieBooking?.id)}>
-                                <p className="font-bold text-sm">22:20</p>
-                            </button>
-                        </div>
-                    </div>
+                    ))}
                 </div>
                 <div className="border-b-2 pb-[15px] text-xl ">
                     <div className="flex">
@@ -142,7 +124,7 @@ export default function Detail() {
                 </div>
             </div>
             </>
-            ))}
+           
             
         </div >
     );
