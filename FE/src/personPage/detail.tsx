@@ -10,6 +10,9 @@ export default function Detail() {
     const genres = movieBooking?.movie_genres
     const actor = movieBooking?.actor
 
+    console.log(movies);
+    
+
     const navigate = useNavigate();
 
     const redirectToLink = (link: any) => {
@@ -40,7 +43,7 @@ export default function Detail() {
                                     </button>
                                 </div>
                                 <div className="w-[70%] grid grid-cols-5 gap-5 mt-[20px] text-black">
-                                    <button className="detail-time w-[100px] h-[40px] bg-white rounded-sm" onClick={() => redirectToLink('/booking/' + movieBooking?.id)}>
+                                    <button className="detail-time w-[100px] h-[40px] bg-white rounded-sm" onClick={() => redirectToLink('/booking/' + item?.showtime_id)}>
                                         <p className="font-bold text-sm">{item.show_time}</p>
                                     </button>
                                 </div>
