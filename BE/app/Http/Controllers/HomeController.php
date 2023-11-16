@@ -36,9 +36,27 @@ class HomeController extends Controller
     {
         $st_movie = Movie::join('showtimes', 'showtimes.movie_id', '=', 'movies.id')
         ->join('rooms', 'showtimes.room_id', '=', 'rooms.id')
-        ->select('movies.*', 'showtimes.show_date', 'showtimes.show_time', 'rooms.name as room')
+        ->join('producers', 'producers.id', '=', 'movies.producer_id')
+        ->join('countries', 'countries.id', '=', 'movies.country_id')
+        ->join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
+        ->select(
+            'movies.id',
+            'movies.movie_name',
+            'producers.producer_name',
+            'countries.country_name',
+            'movie_types.type_name',
+            'movies.director',
+            'movies.total_revenue',
+            'movies.image',
+            'movies.trailer',
+            'showtimes.show_date',
+            'showtimes.show_time',
+            'rooms.name as room',
+            'showtimes.id as showtime_id'
+        )
         ->where('movies.id', $id)
         ->get();
+
     foreach ($st_movie as $movie) {
         $movie->show_date = Carbon::parse($movie->show_date)->format('d-m');
         $movie->show_time = Carbon::parse($movie->show_time)->format('h:i');
@@ -98,7 +116,7 @@ class HomeController extends Controller
             ->join('rooms', 'rooms.id', '=', 'seats.room_id')
             ->join('showtimes', 'showtimes.room_id', '=', 'rooms.id')
             ->where('showtimes.id', $id)
-            ->select('seats.id', 'seats.seat_code', 'seats.type_seat_id', 'type_seats.type_name', 'rooms.name as room_name')
+            ->select('seats.*')
             ->get();
         return response()->json($seats);
     }

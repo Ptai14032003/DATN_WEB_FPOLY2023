@@ -11,6 +11,7 @@ import actorApi from './actors/actors'
 import countryApi from './countries/countries'
 import genresApi from './genres/genres'
 import moviesApiPerson from './moviesPerson/moviesPerson'
+import bookingApi from './booking/booking'
 export const store = configureStore({
     reducer: {
         phongChieu: phongChieuApi.reducer,
@@ -24,6 +25,7 @@ export const store = configureStore({
         countries: countryApi.reducer,
         list_genres: genresApi.reducer,
         moviesPerson: moviesApiPerson.reducer,
+        booking: bookingApi.reducer,
 
     },
     middleware: (getDefaultMiddleware) =>
@@ -39,6 +41,7 @@ export const store = configureStore({
             .concat(countryApi.middleware)
             .concat(genresApi.middleware)
             .concat(moviesApiPerson.middleware)
+            .concat(bookingApi.middleware)
 });
 
 

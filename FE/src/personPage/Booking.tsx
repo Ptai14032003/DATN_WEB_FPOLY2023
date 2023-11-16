@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import { Link, Outlet, useParams } from "react-router-dom"
 import Menu from '../components/layouts/layoutGuest/menu';
-import { Movie } from '../types/movie';
-import { useFetchMovieIdQuery } from '../rtk/movies/movies';
+import { useFetchSeatRoomIdQuery } from '../rtk/booking/booking';
 
 const Booking = () => {
-    const { id } = useParams()
-    const{data:movieBooking} =  useFetchMovieIdQuery(id)
-    console.log(movieBooking);
+    const {id} = useParams();
+    const {data: seatBooking} = useFetchSeatRoomIdQuery(id);
+    
+    console.log(seatBooking?.movie);
+    
+    
     
     const [activeTab, setActiveTab] = useState(1);
 
@@ -20,16 +22,16 @@ const Booking = () => {
         <div className='bg-black text-white'>
             <Menu />
             <div className="backdrop">
-                <img src={movieBooking?.image} className='backdrop-img w-full h-[550px] relative'></img>
+                <img src={seatBooking?.movie?.image} className='backdrop-img w-full h-[550px] relative'></img>
             </div>
             <div className="movies-detail absolute">
                 {/* <img src={movieBooking?.trailer} className='w-[350px] border'></img> */}
             </div>
             <div className="movies-title absolute flex justify-between items-center translate-x-[28rem] -translate-y-[4rem] text-white w-[63.875rem]">
-                <h3 className='text-3xl'>{movieBooking?.movie_name}</h3>
+                <h3 className='text-3xl'>{seatBooking?.movie?.movie_name}</h3>
                 <div className="time flex text-lg items-center space-x-10">
-                    <p>{movieBooking?.time}</p>
-                    <p className='border-2 border-[#1ACAAC] rounded-full px-7 py-2'>{movieBooking?.age}</p>
+                    <p>{seatBooking?.movie?.time}</p>
+                    <p className='border-2 border-[#1ACAAC] rounded-full px-7 py-2'>{seatBooking?.movie?.age}</p>
                 </div>
             </div>
             <div className="booking h-full max-w-[1420px] mx-auto ">

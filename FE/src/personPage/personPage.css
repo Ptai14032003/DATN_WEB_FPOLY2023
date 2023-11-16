@@ -90,10 +90,10 @@
   text-align: center;
 }
 .all-seat .seat{
-    width: 35px;
-    height: 35px;
+    padding: 10px;
     border-radius: 5px;
     cursor: pointer;
+    background-color: gray;
 }
 .normal .seat{
     background-color: #797373;
