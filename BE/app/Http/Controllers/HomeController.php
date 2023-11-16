@@ -98,7 +98,7 @@ class HomeController extends Controller
             ->join('rooms', 'rooms.id', '=', 'seats.room_id')
             ->join('showtimes', 'showtimes.room_id', '=', 'rooms.id')
             ->where('showtimes.id', $id)
-            ->select('seats.*')
+            ->select('seats.id', 'seats.seat_code', 'seats.type_seat_id', 'type_seats.type_name', 'rooms.name as room_name')
             ->get();
         return response()->json($seats);
     }

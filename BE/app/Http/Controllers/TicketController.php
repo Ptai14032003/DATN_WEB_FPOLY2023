@@ -32,9 +32,10 @@ class TicketController extends Controller
             ->first();
         // thông tin phim
         $movie = Movie::join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
-            ->select('movies.*', 'movie_types.type_name')
-            ->first();
-
+        ->join('showtimes', 'showtimes.movie_id', '=', 'movies.id')
+        ->where('showtimes.id', $showtime_id)
+        ->select('movies.*','movie_types.type_name')
+        ->first();
         // thông tin loại ghế
         $id_seat = $request->id_seat;
         
@@ -63,7 +64,6 @@ class TicketController extends Controller
                 $price_ticket_film[$i] = ($price_ticket_film[$i] + 5000) * 2;
             }
         }
-
         return response()->json($price_ticket_film, 200);
     }
 }
