@@ -6,6 +6,7 @@ import { useDeleteMoviesMutation, useFetchMoviesQuery } from '../../rtk/movies/m
 import TrailerPhim from '../../components/itemAdmin/Trailer/page';
 import PosterPhim from '../../components/itemAdmin/Poster/page';
 import { Waveform } from '@uiball/loaders';
+import { checkApiStatus }  from "../checkApiStatus"; // Import hàm trợ giúp
 const { Column } = Table;
 
 export type QlPhim = {
@@ -21,7 +22,9 @@ export type QlPhim = {
     trailer: string;
 }
 const AdminQlPhim: React.FC = () => {
-    const { data: dataMovies, isLoading } = useFetchMoviesQuery()
+    const { data: dataMovies, isLoading,error } = useFetchMoviesQuery()
+    const status = error?.status;
+    checkApiStatus(status);
     const [deleteMovie] = useDeleteMoviesMutation()
     const [dataTable, setDataTable] = useState<QlPhim[]>([])
     const [searchTerm, setSearchTerm] = useState('');

@@ -32,20 +32,20 @@ class TicketController extends Controller
             ->first();
         // thông tin phim
         $movie = Movie::join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
-        ->join('showtimes', 'showtimes.movie_id', '=', 'movies.id')
-        ->where('showtimes.id', $showtime_id)
-        ->select('movies.*','movie_types.type_name')
-        ->first();
+            ->join('showtimes', 'showtimes.movie_id', '=', 'movies.id')
+            ->where('showtimes.id', $showtime_id)
+            ->select('movies.*', 'movie_types.type_name')
+            ->first();
         // thông tin loại ghế
         $id_seat = $request->id_seat;
-        
+
         $price_ticket_film = [];
         for ($i = 0; $i < count($id_seat); $i++) {
             // thông tin loại ghế
             $type_seat = Seat::join('type_seats', 'type_seats.id', '=', 'seats.type_seat_id')
-            ->select('type_seats.type_name')
-            ->where('type_seats.id', '=', $id_seat[$i])
-            ->first();
+                ->select('type_seats.type_name')
+                ->where('type_seats.id', '=', $id_seat[$i])
+                ->first();
             //nếu phim 2d thì vé thường 45k 3d thì ghế thường 60k
             if ($movie->type_name == '2D') {
                 $price_ticket_film[$i] = 45000; //mặc định ghế thường là 45k - phòng 2D
@@ -56,7 +56,6 @@ class TicketController extends Controller
             if ($show_date->format('N') == '7' || $show_date->format('N') == '6') { //nếu thứ 7 hoặc chủ nhật thì tăng giá vé lên 10k
                 $price_ticket_film[$i] += 10000;
             }
-
             // nếu ghế thường thì giữ nguyên ghế vip thì tăng 5k/ vé ghế đôi =2 ghế vip
             if (strcasecmp($type_seat->type_name, 'VIP') == 0) {
                 $price_ticket_film[$i] += 5000;
