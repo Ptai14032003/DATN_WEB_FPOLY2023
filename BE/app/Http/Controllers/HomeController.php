@@ -113,6 +113,7 @@ class HomeController extends Controller
     public function show_seat_room($id)
     {
         $seats = Seat::join('type_seats', 'type_seats.id', '=', 'seats.type_seat_id')
+
             ->join('rooms', 'rooms.id', '=', 'seats.room_id')
             ->join('showtimes', 'showtimes.room_id', '=', 'rooms.id')
             ->where('showtimes.id', $id)

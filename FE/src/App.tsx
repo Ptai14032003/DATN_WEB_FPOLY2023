@@ -17,8 +17,7 @@ import HomePage from './personPage/Homepage'
 import Signin from './personPage/Signin'
 import Signup from './personPage/Signup'
 import Booking from './personPage/Booking'
-import SeatBooking from './personPage/SeatBooking'
-import Detail from './personPage/detail'
+import Detail from './personPage/detail.tsx'
 
 
 function App() {
@@ -32,9 +31,7 @@ function App() {
       <Route path="signin" element={<Signin />} />
       <Route path="signup" element={<Signup />} />
       <Route path='movie_show_time/:id' element={<Detail />}></Route>
-      <Route path='booking/:id' element={<Booking />}>
-        <Route index element={<SeatBooking />} />
-      </Route>
+      <Route path='booking/:id' element={<Booking />}/>
 
 
 
