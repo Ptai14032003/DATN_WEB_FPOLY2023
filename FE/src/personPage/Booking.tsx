@@ -16,15 +16,11 @@ const Booking = () => {
         setActiveTab(tabNumber);
     };
 
-    const autoSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const seatId = e.target.value;
-
+    const autoSubmit = async (seatId: any) => {
         if (selectedSeats.includes(seatId)) {
             setSelectedSeats(selectedSeats.filter((id) => id !== seatId));
         } else {
-            if (selectedSeats.length < 2) {
-                setSelectedSeats([...selectedSeats, seatId]);
-            }
+            setSelectedSeats([...selectedSeats, seatId]);
         }
 
         // setIsSaving(true); // Bắt đầu quá trình lưu
@@ -82,18 +78,19 @@ const Booking = () => {
                                     </div>
                                     <div className="all-seat max-w-4xl mx-auto space-x-3 mt-[3rem]">
                                         {seats?.map((item: any) => (
-                                            <React.Fragment key={item?.id}>
-                                                <input
-                                                    type="checkbox"
-                                                    value={item?.id}
-                                                    id={item?.id}
-                                                    onChange={autoSubmit}
-                                                    checked={selectedSeats.includes(item?.id)}
-                                                    className='form-control'
-                                                    name={item?.seat_code}
-                                                />
-                                                <label htmlFor={item?.id} className='seat'>{item?.seat_code}</label>
-                                            </React.Fragment>
+                                                <p className={`seat ${selectedSeats.includes(item?.seat_code) === true ? "" : ""}`} onClick={() => autoSubmit(item?.seat_code)}>{item?.seat_code}</p>
+                                            // <React.Fragment key={item?.id}>
+                                            //     <input
+                                            //         type="checkbox"
+                                            //         value={item?.seat_code}
+                                            //         id={item?.id}
+                                            //         onChange={autoSubmit}
+                                            //         checked={selectedSeats.includes(item?.seat_code)}
+                                            //         className='form-control'
+                                            //         name={item?.seat_code}
+                                            //     />
+                                            //     <label htmlFor={item?.id} className='seat'>{item?.seat_code}</label>
+                                            // </React.Fragment>
                                         ))}
                                         <h1 className='mt-3 text-xl'>Số ghế đã chọn: {selectedSeats.map(seatId => seatId + ' ').join('')}</h1>
                                         {isSaving && <p>Đang lưu...</p>}
