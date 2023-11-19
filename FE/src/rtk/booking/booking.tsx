@@ -9,7 +9,8 @@ const bookingApi = createApi({
         fetchSeatRoomId: builder.query<any, any>({
             query: (id) => `/show_seat_room/${id}`,
             providesTags: ["booking"]
-        })
+        }),
+        
     })
 })
 export const { useFetchSeatRoomIdQuery} = bookingApi

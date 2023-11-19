@@ -1,20 +1,42 @@
-import React, { useState } from 'react'
-import { Link, Outlet, useParams } from "react-router-dom"
+import React, { useEffect, useState } from 'react';
+import { Link, Outlet, useParams } from "react-router-dom";
 import Menu from '../components/layouts/layoutGuest/menu';
 import { useFetchSeatRoomIdQuery } from '../rtk/booking/booking';
 
 const Booking = () => {
-    const {id} = useParams();
-    const {data: seatBooking} = useFetchSeatRoomIdQuery(id);
-    
-    console.log(seatBooking?.movie);
-    
-    
-    
+    const { id } = useParams();
+    const { data: seatBooking } = useFetchSeatRoomIdQuery(id);
     const [activeTab, setActiveTab] = useState(1);
+    const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+    const [isSaving, setIsSaving] = useState(false);
+    const [saveError, setSaveError] = useState(null);
+    const seats = seatBooking?.seats;
 
     const handleClick = (tabNumber: number) => {
         setActiveTab(tabNumber);
+    };
+
+    const autoSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const seatId = e.target.value;
+
+        if (selectedSeats.includes(seatId)) {
+            setSelectedSeats(selectedSeats.filter((id) => id !== seatId));
+        } else {
+            if (selectedSeats.length < 2) {
+                setSelectedSeats([...selectedSeats, seatId]);
+            }
+        }
+
+        // setIsSaving(true); // Bắt đầu quá trình lưu
+
+        // try {
+        //     const response = await bookingMovie(selectedSeats).unwrap();
+        //     setSelectedSeats(response); // Cập nhật selectedSeats với dữ liệu trả về từ server
+        //     setIsSaving(false); // Kết thúc quá trình lưu
+        // } catch (error) {
+        //     setSaveError(error); // Xử lý lỗi nếu có
+        //     setIsSaving(false); // Kết thúc quá trình lưu
+        // }
     };
 
 
@@ -40,12 +62,82 @@ const Booking = () => {
                     <div className="content-right">
                         <div className="taskbar">
                             <ul>
-                                <Link to={''}><li className={activeTab === 1 ? 'active' : ''} onClick={() => handleClick(1)}><span>1</span> Chọn ghế</li></Link>
-                                <Link to={'combo'}><li className={activeTab === 2 ? 'active' : ''} onClick={() => handleClick(2)}><span>2</span> Combo</li></Link>
-                                <li className={activeTab === 3 ? 'active' : ''} onClick={() => handleClick(3)}><span>3</span> Thanh toán</li>
+                                <li className={activeTab === 1 ? 'active' : ''} onClick={() => handleClick(1)}>
+                                    <span>1</span> Chọn ghế
+                                </li>
+                                <li className={activeTab === 2 ? 'active' : ''} onClick={() => handleClick(2)}>
+                                    <span>2</span> Combo
+                                </li>
+                                <li className={activeTab === 3 ? 'active' : ''} onClick={() => handleClick(3)}>
+                                    <span>3</span> Thanh toán
+                                </li>
                             </ul>
                         </div>
-                        <Outlet />
+                        <form action="" method='POST'>
+                            <div className={`Booking-content ${activeTab === 2 ? "hidden" : ""}`}>
+                                <input type="text" hidden id={id} name='showtime_id' />
+                                <div className="choose-seat mt-[7rem]">
+                                    <div className="screen">
+                                        <img src="/screen.png" alt="" className='w-full' />
+                                    </div>
+                                    <div className="all-seat max-w-4xl mx-auto space-x-3 mt-[3rem]">
+                                        {seats?.map((item: any) => (
+                                            <React.Fragment key={item?.id}>
+                                                <input
+                                                    type="checkbox"
+                                                    value={item?.id}
+                                                    id={item?.id}
+                                                    onChange={autoSubmit}
+                                                    checked={selectedSeats.includes(item?.id)}
+                                                    className='form-control'
+                                                    name={item?.seat_code}
+                                                />
+                                                <label htmlFor={item?.id} className='seat'>{item?.seat_code}</label>
+                                            </React.Fragment>
+                                        ))}
+                                        <h1 className='mt-3 text-xl'>Số ghế đã chọn: {selectedSeats.map(seatId => seatId + ' ').join('')}</h1>
+                                        {isSaving && <p>Đang lưu...</p>}
+                                        {saveError && <p>Lỗi khi lưu: {saveError.message}</p>}
+                                    </div>
+                                    <div className="classify max-w-3xl mx-auto my-[5rem]">
+                                        <div className="seat">
+                                            <div className="normal-seat"></div>
+                                            <p>Thường</p>
+                                        </div>
+                                        <div className="seat">
+                                            <div className="vip-seat"></div>
+                                            <p>Vip</p>
+                                        </div>
+                                        <div className="seat">
+                                            <div className="sweet-box-seat"></div>
+                                            <p>Sweet-box</p>
+                                        </div>
+                                        <div className="seat">
+                                            <div className="select-seat"></div>
+                                            <p>Đang chọn</p>
+                                        </div>
+                                        <div className="seat">
+                                            <div className="sold-seat"></div>
+                                            <p>Đã bán</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div className={`Booking-combo ${activeTab === 2 ? "" : "hidden"}`}>
+                                <div className='grid grid-cols-2 gap-12 my-[7rem] mx-[4rem]'>
+                                    <div className='grid grid-cols-3 border-2 border-white rounded-md bg-[#1B3F47] p-3' >
+                                        <img src="" alt="" className='col-span-1 h-[140px] w-full' />
+                                        <div className="col-span-2 space-y-2">
+                                            <h1 className=''></h1>
+                                            <p></p>
+                                            <p></p>
+                                            <span className=''></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

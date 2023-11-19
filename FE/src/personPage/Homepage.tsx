@@ -26,7 +26,7 @@ const HomePage = () => {
               </div>
               <span className='font-semibold text-[#B6B4B4] block my-2'>{item.genre}</span>
               <div className="button">
-                   <Link to={'/movies/' + item?.id}><button className='border-[1px] border-[#1ACAAC] rounded-md bg-[#1ACAAC] py-3 w-full hover:bg-gray-500'>Đặt vé ngay</button></Link>
+                   <Link to={'/movie_show_time/' + item?.id}><button className='border-[1px] border-[#1ACAAC] rounded-md bg-[#1ACAAC] py-3 w-full hover:bg-gray-500'>Đặt vé ngay</button></Link>
                </div>
             </div>
             </Link>

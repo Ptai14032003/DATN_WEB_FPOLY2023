@@ -8,6 +8,7 @@ use App\Models\Actor;
 use App\Models\Movie;
 use App\Models\Movie_Genre;
 use App\Models\Seat;
+use App\Models\Showtime;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -113,11 +114,39 @@ class HomeController extends Controller
 
     public function show_seat_room($id){
         $seats = Seat::join('type_seats', 'type_seats.id', '=', 'seats.type_seat_id')
-            ->join('rooms', 'rooms.id', '=', 'seats.room_id')
-            ->join('showtimes', 'showtimes.room_id', '=', 'rooms.id')
-            ->where('showtimes.id', $id)
-            ->select('seats.*')
-            ->get();
-        return response()->json($seats);
+        ->join('rooms', 'rooms.id', '=', 'seats.room_id')
+        ->join('showtimes', 'showtimes.room_id', '=', 'rooms.id')
+        ->where('showtimes.id', $id)
+        ->select('seats.id', 'seats.seat_code', 'seats.type_seat_id', 'type_seats.type_name', 'rooms.name as room_name')
+        ->get();
+    $movie = Movie::join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
+        ->join('showtimes', 'showtimes.movie_id', '=', 'movies.id')
+        ->where('showtimes.id', $id)
+        ->select('movies.id', 'movies.movie_name', 'movies.image', 'movies.trailer', 'movie_types.type_name as movie_type')
+        ->first();
+    $showtime = Showtime::join('movies', 'showtimes.movie_id', '=', 'movies.id')
+        ->join('rooms', 'showtimes.room_id', '=', 'rooms.id')
+        ->select('showtimes.*', 'movies.movie_name', 'rooms.name')
+        ->where('showtimes.id', '=', $id)
+        ->first();
+    foreach ($seats as $seat) {
+        //nếu phim 2d thì vé thường 45k 3d thì ghế thường 60k
+        if ($movie->movie_type == '2D') {
+            $seat->price = 45000; //mặc định ghế thường là 45k - phòng 2D
+        } else {
+            $seat->price = 60000; //mặc định ghế thường là 45k - phòng 2D
+        }
+        $show_date = new DateTime($showtime->show_date); //lấy ra ngày chiếu
+        if ($show_date->format('N') == '7' || $show_date->format('N') == '6') { //nếu thứ 7 hoặc chủ nhật thì tăng giá vé lên 10k
+            $seat->price += 10000;
+        }
+        // nếu ghế thường thì giữ nguyên ghế vip thì tăng 5k/ vé ghế đôi =2 ghế vip
+        if (strcasecmp($seat->type_name, 'VIP') == 0) {
+            $seat->price += 5000;
+        } elseif (strcasecmp($seat->type_name, 'Đôi') == 0) {
+            $seat->price = ($seat->price + 5000) * 2;
+        }
+    }
+        return response()->json(['seats' => $seats, 'movie' => $movie]);
     }
 }
