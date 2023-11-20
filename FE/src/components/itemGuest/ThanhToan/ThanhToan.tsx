@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
-import { Button, Modal, QRCode, } from 'antd';
-import type { FormInstance } from 'antd/es/form';
+import { Button } from 'antd';
 import "./page.css"
-const ThanhToan: React.FC = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const formRef = React.useRef<FormInstance>(null);
-    type FieldType = {
-        name?: string;
-        description?: string;
-        image?: string
-        linkGit?: string
-    };
+type Props = {
+    data: {
+        selectedSeats: string[]
+        money: number
+    }
+}
+const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, money } }: Props) => {
     return (
         <>
             <div className='my-[25px] flex gap-[30px] justify-center'>
@@ -28,7 +25,10 @@ const ThanhToan: React.FC = () => {
                             <dt className="text-xs text-gray-500">Số vé</dt>
                         </div>
                         <div className='flex flex-col-reverse w-[125px]'>
-                            <dd className="text-sm text-white">F7,F8,F9,F10,F20</dd>
+                            <dd className="text-sm text-white flex gap-1">{selectedSeats.map((item: any) => (
+                                <div>{item}</div>
+                            ))
+                            }</dd>
                             <dt className="text-xs text-gray-500">Số ghế</dt>
                         </div>
                     </div>
@@ -53,7 +53,7 @@ const ThanhToan: React.FC = () => {
                     <div className='block'>
                         <div className='info-card'>
                             <div>Tổng tiền</div>
-                            <div className='item-info-card'>500.000 đ</div>
+                            <div className='item-info-card'>{money}</div>
                         </div>
                         <div className='info-card'>
                             <div>Mã giao dịch</div>
@@ -64,8 +64,8 @@ const ThanhToan: React.FC = () => {
                             <div className='item-info-card'>16:00 - 01/09/2023</div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </div >
+            </div >
             <div className='flex justify-center'>
                 <Button className="w-[80%] rounded bg-teal-400 text-white text-base h-[42px] border-0" >Thanh toán</Button>
             </div>

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Link, Outlet, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Menu from '../components/layouts/layoutGuest/menu';
 import { useFetchSeatRoomIdQuery } from '../rtk/booking/booking';
-import { string } from 'prop-types';
 import ThanhToan from '../components/itemGuest/ThanhToan/ThanhToan';
+import { useFetchMovieIdQuery } from '../rtk/movies/movies';
 
 const Booking = () => {
     const { id } = useParams();
     const { data: seatBooking } = useFetchSeatRoomIdQuery(id);
+    const { data: movieBooking } = useFetchMovieIdQuery(4);
     const [activeTab, setActiveTab] = useState(1);
     const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
     const [money, setMoney] = useState(0);
@@ -17,23 +18,13 @@ const Booking = () => {
     const handleClick = (tabNumber: number) => {
         setActiveTab(tabNumber);
     };
-console.log(seats);
-
     const autoSubmit = async (seatId: any) => {
         if (selectedSeats.includes(seatId)) {
             setSelectedSeats(selectedSeats.filter((id) => id !== seatId));
         } else {
             setSelectedSeats([...selectedSeats, seatId]);
         }
-        // setIsSaving(true); // Bắt đầu quá trình lưu
-        // try {
-        //     const response = await bookingMovie(selectedSeats).unwrap();
-        //     setSelectedSeats(response); // Cập nhật selectedSeats với dữ liệu trả về từ server
-        //     setIsSaving(false); // Kết thúc quá trình lưu
-        // } catch (error) {
-        //     setSaveError(error); // Xử lý lỗi nếu có
-        //     setIsSaving(false); // Kết thúc quá trình lưu
-        // }
+
     };
     const TongTien = async (seatId: any, price: any) => {
         if (selectedSeats.includes(seatId)) {
@@ -42,7 +33,6 @@ console.log(seats);
             setMoney(money + price);
         }
     }
-
 
     return (
         <div className='bg-black text-white'>
@@ -62,7 +52,19 @@ console.log(seats);
             </div>
             <div className="booking h-full max-w-[1420px] mx-auto ">
                 <div className="booking-seat">
-                    <div className="no-content"></div>
+                    <div className="no-content mt-5">
+                        <div className="block">
+                            <div className="w-[190px]"><img width="190" height="240" src={movieBooking?.image} alt="" /></div>
+                            <h3 className="mt-4 text-lg font-bold text-white sm:text-xl">
+                                {movieBooking?.movie_name}
+                            </h3>
+
+                            <p className="mt-2 max-w-sm text-white">
+                                <h1 className='mt-3 text-sm'>Số ghế đã chọn : {selectedSeats.map(seatId => seatId + ' ').join('')}</h1>
+                                <h1 className='mt-3 text-sm'>Tổng tiền : {money}</h1>
+                            </p>
+                        </div>
+                    </div>
                     <div className="content-right">
                         <div className="taskbar">
                             <ul>
@@ -89,7 +91,7 @@ console.log(seats);
                                         {seats?.map((item: any) => (
                                             <div
                                                 key={item?.seat_code}
-                                                className={`seat text-center ${(item?.type_name === 'Vip' && !selectedSeats.includes(item?.seat_code)) && 'bg-[#8f4747]' ||
+                                                className={`seat text-center ${(item?.type_name === 'VIP' && !selectedSeats.includes(item?.seat_code)) && 'bg-[#8f4747]' ||
                                                     (selectedSeats.includes(item?.seat_code)) && 'bg-[#00FFD1]' || (item?.type_name === 'Thường' && !selectedSeats.includes(item?.seat_code)) && 'bg-[#797373]'
                                                     }`}
                                                 onClick={() => { autoSubmit(item?.seat_code); TongTien(item?.seat_code, item?.price) }}
@@ -98,8 +100,6 @@ console.log(seats);
                                             </div>
                                         ))}
                                     </div>
-                                    <h1 className='mt-3 text-xl'>Số ghế đã chọn : {selectedSeats.map(seatId => seatId + ' ').join('')}</h1>
-                                    <h1 className='mt-3 text-xl'>Tổng tiền : {money}</h1>
                                     {isSaving && <p>Đang lưu...</p>}
                                     {saveError && <p>Lỗi khi lưu: {saveError.message}</p>}
                                     <div className="classify max-w-3xl mx-auto my-[5rem]">
@@ -143,7 +143,7 @@ console.log(seats);
                                 <a onClick={() => handleClick(3)}>Tiếp tục</a>
                             </div>
                             <div className={`${activeTab === 3 ? "" : "hidden"}`}>
-                                <ThanhToan />
+                                <ThanhToan data={{ selectedSeats, money }} key={`1`} />
                             </div>
                         </form>
                     </div>
