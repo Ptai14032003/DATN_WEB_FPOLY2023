@@ -18,6 +18,7 @@ import Signin from './personPage/Signin'
 import Signup from './personPage/Signup'
 import Booking from './personPage/Booking'
 import Detail from './personPage/detail.tsx'
+import Seat from './components/itemAdmin/Seat/page.tsx'
 
 
 function App() {
@@ -25,13 +26,14 @@ function App() {
   return <BrowserRouter>
     <Routes>
       <Route path='/' element={<LayoutPerson />}>
-        <Route index element={<HomePage  />} />
+        <Route index element={<HomePage />} />
         <Route path="new" element={<NewFilm />} />
+        <Route path="seat" element={<Seat />} />
       </Route>
       <Route path="signin" element={<Signin />} />
       <Route path="signup" element={<Signup />} />
       <Route path='movie_show_time/:id' element={<Detail />}></Route>
-      <Route path='booking/:id' element={<Booking />}/>
+      <Route path='booking/:id' element={<Booking />} />
 
 
 
