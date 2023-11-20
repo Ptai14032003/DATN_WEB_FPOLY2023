@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('total_revenue');
             $table->string('image');
             $table->string('trailer');
+            $table->integer('movie_time');
             $table->timestamps();
             $table->foreign('producer_id')->references('id')->on('producers');
             $table->foreign('country_id')->references('id')->on('countries');
