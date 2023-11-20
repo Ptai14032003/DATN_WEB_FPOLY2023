@@ -37,14 +37,14 @@ const items: MenuItem[] = [
     getItem('Sự cố', '11', <img src="/error.png" alt="" width={10} />)
 ];
 
-const AdminLayout: React.FC = async () => {
+const AdminLayout: React.FC = () => {
     const [collapsed, setCollapsed] = useState(false);
     const {
         token: { colorBgContainer },
     } = theme.useToken();
-    const userString = localStorage.getItem('user');
-    const user = userString ? JSON.parse(userString) : null;
-    console.log(user.role);
+    // const userString = localStorage.getItem('user');
+    // const user = userString ? JSON.parse(userString) : null;
+    // console.log(user.role);
     // if (user.role !== 'Admin') {
     //     redirect('/')
     // }

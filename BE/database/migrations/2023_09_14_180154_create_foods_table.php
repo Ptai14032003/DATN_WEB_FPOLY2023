@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('food_name');
             $table->integer('price');
+            $table->string('image');
             $table->unsignedBigInteger('food_type_id');
             $table->timestamps();
             $table->foreign('food_type_id')->references('id')->on('food_types');

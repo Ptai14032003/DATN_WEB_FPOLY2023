@@ -6,15 +6,13 @@ export default function Detail() {
     const { id } = useParams()
     const { data: movieBooking } = useFetchMovieIdPersonQuery(id);
 
-    const movies = movieBooking?.movies
+    const movie = movieBooking?.movie
+    const st_movie=movieBooking?.st_movie
     const genres = movieBooking?.movie_genres
-    const actor = movieBooking?.actor
-
-    console.log(movies);
-    
-
+    const actor = movieBooking?.actor    
     const navigate = useNavigate();
-
+    console.log(movie?.trailer);
+            
     const redirectToLink = (link: any) => {
         navigate(link);
     };
@@ -24,15 +22,15 @@ export default function Detail() {
         <div className="container-detail text-white">
             <>
                 <div>
-                    <iframe width="100%" height="700" src="https://www.youtube.com/embed/L_YG4_68TZc?si=9qbXRoqx6uEkdwwG" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
+                    <iframe width="100%" height="700" src={movie?.trailer} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
                 </div>
                 <div className="mx-[5%]">
                     <div className="flex gap-[8%] my-[3%]">
                         <div className="block w-[190px]">
-                            <div className="mb-[25px]"><span className="text-left">{movieBooking?.movie_name}</span></div>
-                            <div className="w-[190px]"><img width="190" height="240" src="/phim.png" alt="" /></div>
+                            <div className="mb-[25px]"><span className="text-left">{movie?.movie_name}</span></div>
+                            <div className="w-[190px]"><img width="190" height="240" src={movie?.image} alt="" /></div>
                         </div>
-                        {movies?.map((item: any) => (
+                        {st_movie?.map((item: any) => (
                             <div className="w-[100%] mt-[3%]">
                                 <div className="border-b-2 flex">
                                     <button key={item.id} className={`btn-date ${item.show_date ? "btn-date-action" : ""}`}>
@@ -60,19 +58,28 @@ export default function Detail() {
                         <div className="w-[65%] mr-[50px]">
                             <div className="detail-content">
                                 <div>Đạo diễn</div>
-                                {/* <div>{movies?.director}</div> */}
+                                <div>{movie?.director}</div>
                             </div>
                             <div className="detail-content">
-                                <div>Actor</div>
-                                {/* <div>{actor[0]?.actor_name}</div> */}
+                                <div>Diễn Viên</div>
+                                <div>
+                                    {actor?.map((item: any) => (
+                                        <span className="mx-[5px]">{ item.actor_name },</span>
+                                    ))}
+                                </div>
+                                
                             </div>
                             <div className="detail-content">
                                 <div>Thể loại</div>
-                                {/* <div>{genres[0]?.genre}</div> */}
+                                <div>
+                                    {genres?.map((item: any) => (
+                                        <span className="mx-[5px]">{ item.genre },</span>
+                                    ))}
+                                </div>
                             </div>
                             <div className="detail-content">
                                 <div>Khởi chiếu</div>
-                                {/* <div>{movies?.start_date}</div> */}
+                                <div>{movie?.start_date}</div>
                             </div>
                             <div className="detail-content">
                                 <div>Thời lượng</div>

@@ -17,6 +17,7 @@ const Booking = () => {
     const handleClick = (tabNumber: number) => {
         setActiveTab(tabNumber);
     };
+console.log(seats);
 
     const autoSubmit = async (seatId: any) => {
         if (selectedSeats.includes(seatId)) {
@@ -25,7 +26,6 @@ const Booking = () => {
             setSelectedSeats([...selectedSeats, seatId]);
         }
         // setIsSaving(true); // Bắt đầu quá trình lưu
-
         // try {
         //     const response = await bookingMovie(selectedSeats).unwrap();
         //     setSelectedSeats(response); // Cập nhật selectedSeats với dữ liệu trả về từ server

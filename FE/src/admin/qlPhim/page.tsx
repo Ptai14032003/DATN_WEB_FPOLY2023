@@ -22,9 +22,9 @@ export type QlPhim = {
     trailer: string;
 }
 const AdminQlPhim: React.FC = () => {
-    const { data: dataMovies, isLoading,error } = useFetchMoviesQuery()
-    const status = error?.status;
-    checkApiStatus(status);
+    const { data: dataMovies, isLoading} = useFetchMoviesQuery()
+    // const status = error?.status;
+    // checkApiStatus(status);
     const [deleteMovie] = useDeleteMoviesMutation()
     const [dataTable, setDataTable] = useState<QlPhim[]>([])
     const [searchTerm, setSearchTerm] = useState('');
@@ -50,7 +50,7 @@ const AdminQlPhim: React.FC = () => {
         deleteMovie(key).then(() => message.success("Xóa thành công"))
     }
     useEffect(() => {
-        const dataMap = dataMovies?.data
+        const dataMap = dataMovies
         console.log(dataMap);
         
         // chưa có kiểu dữ liệu cho data

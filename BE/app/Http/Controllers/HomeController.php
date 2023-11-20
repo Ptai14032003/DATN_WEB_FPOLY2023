@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\MovieShowtimeResource;
 use App\Http\Resources\ShowtimeResource;
 use App\Models\Actor;
+use App\Models\Food;
 use App\Models\Movie;
 use App\Models\Movie_Genre;
 use App\Models\Seat;
@@ -27,6 +28,7 @@ class HomeController extends Controller
             ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
             ->select('movies.*', 'countries.country_name', 'producers.producer_name', 'movie_types.type_name')
             ->whereNull('movies.deleted_at')
+            ->OrderBy('movies.id', 'asc')
             ->get();
         return response()->json($movie);
     }
@@ -40,15 +42,6 @@ class HomeController extends Controller
             ->join('countries', 'countries.id', '=', 'movies.country_id')
             ->join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
             ->select(
-                'movies.id',
-                'movies.movie_name',
-                'producers.producer_name',
-                'countries.country_name',
-                'movie_types.type_name',
-                'movies.director',
-                'movies.total_revenue',
-                'movies.image',
-                'movies.trailer',
                 'showtimes.show_date',
                 'showtimes.show_time',
                 'rooms.name as room',
@@ -56,6 +49,7 @@ class HomeController extends Controller
             )
             ->where('movies.id', $id)
             ->get();
+        $movies = Movie::where('movies.id', $id)->select('movies.*')->first();
 
         foreach ($st_movie as $movie) {
             $movie->show_date = Carbon::parse($movie->show_date)->format('d-m');
@@ -102,7 +96,7 @@ class HomeController extends Controller
                 ->where('movie_id', $id)
                 ->select('list_genres.genre')
                 ->get();
-            return response()->json(['movies' => $st_movie, 'actor' => $actor, 'movie_genres' => $movieGenre]);
+            return response()->json(['movie' => $movies, 'st_movie' => $st_movie, 'actor' => $actor, 'movie_genres' => $movieGenre]);
         } else {
             return response()->json(['messages' => 'Không tồn tại suất chiếu theo phim này'], 404);
         }
@@ -147,6 +141,7 @@ class HomeController extends Controller
                 $seat->price = ($seat->price + 5000) * 2;
             }
         }
-        return response()->json(['seats' => $seats, 'movie' => $movie]);
+        $combo = Food::all();
+        return response()->json(['seats' => $seats, 'movie' => $movie, 'combo' => $combo]);
     }
 }

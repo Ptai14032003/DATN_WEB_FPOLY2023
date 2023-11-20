@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('bills', function (Blueprint $table) {
             $table->id();
             $table->string('user_code')->nullable();
-            $table->unsignedBigInteger('personnel_id');
+            $table->string('personnel_code')->nullable();
             $table->integer('total_ticket');
             $table->integer('total_drink');
             $table->integer('total_popcorn');
@@ -25,7 +25,6 @@ return new class extends Migration
             $table->dateTime('payment_time');
             $table->tinyInteger('status');
             $table->timestamps();
-            $table->foreign('personnel_id')->references('id')->on('personnels');
             $table->softDeletes();
         });
     }
