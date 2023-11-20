@@ -2,17 +2,18 @@ import { useNavigate, useParams } from "react-router-dom"
 import "./page.css"
 import { useState } from "react"
 import { useFetchMovieIdPersonQuery } from "../rtk/moviesPerson/moviesPerson"
+import { useFetchMovieIdQuery } from "../rtk/movies/movies"
 export default function Detail() {
     const { id } = useParams()
-    const { data: movieBooking } = useFetchMovieIdPersonQuery(id);
+    const { data: movieBooking } = useFetchMovieIdQuery(id);
 
     const movies = movieBooking?.movies
     const genres = movieBooking?.movie_genres
     const actor = movieBooking?.actor
-
-    console.log(movies);
+    console.log(movieBooking);
     
-
+    console.log(movieBooking.trailer);
+    
     const navigate = useNavigate();
 
     const redirectToLink = (link: any) => {
@@ -24,7 +25,7 @@ export default function Detail() {
         <div className="container-detail text-white">
             <>
                 <div>
-                    <iframe width="100%" height="700" src="https://www.youtube.com/embed/L_YG4_68TZc?si=9qbXRoqx6uEkdwwG" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
+                    <iframe width="100%" height="700" src={movieBooking?.trailer} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
                 </div>
                 <div className="mx-[5%]">
                     <div className="flex gap-[8%] my-[3%]">

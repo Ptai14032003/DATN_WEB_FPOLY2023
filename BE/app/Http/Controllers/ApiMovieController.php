@@ -11,13 +11,9 @@ use Cloudinary\Cloudinary;
 
 class ApiMovieController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
-
-    
         $movie =  Movie::
         join('countries', 'movies.country_id', '=', 'countries.id')
         ->join('producers', 'movies.producer_id', '=', 'producers.id')
@@ -25,9 +21,10 @@ class ApiMovieController extends Controller
         ->select('movies.*', 'countries.country_name','producers.producer_name', 'movie_types.type_name')
         ->whereNull('movies.deleted_at')
         ->get();
-
      return response()->json($movie);
     }
+
+
     public function store(Request $request)
     {
         
@@ -62,8 +59,7 @@ class ApiMovieController extends Controller
                 'trailer' => $trailer
             ];
 
-            Movie::create($data);
-   
+            Movie::create($data); 
             $movie = DB::select(' SELECT * FROM movies WHERE movie_name = :movie_name ', ['movie_name' => $movie_name ]);
             foreach($movie as $movi) {
                 $id = $movi->id;
@@ -88,7 +84,6 @@ class ApiMovieController extends Controller
         return response()->json($movie);
     }
 
-
     public function edit(string $id)
 {
     $movie = Movie::join('countries', 'movies.country_id', '=', 'countries.id')
@@ -104,7 +99,6 @@ class ApiMovieController extends Controller
         return response()->json(['message' => 'Không tồn tại'], 404);
     }
 }
-
 
 public function update(Request $request, $id)
 {

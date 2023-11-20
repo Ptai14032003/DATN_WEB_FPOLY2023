@@ -13,6 +13,7 @@ class Food extends Model
     protected $fillable = [
         'food_name',
         'price',
-        'food_type_id'
+        'food_type_id',
+        'image'
     ];
 }

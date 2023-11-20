@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Food;
 use Illuminate\Http\Request;
+use Cloudinary\Cloudinary;
 
 class FoodController extends Controller
 {
@@ -29,21 +30,26 @@ class FoodController extends Controller
      */
     public function store(Request $request)
     {
-        $food_name = $request->get('food_name');
-        $price = $request->get('price');
-        $food_type_id = $request->get('food_type_id');
+        if($request->hasFile('image')){
+            $response = cloudinary()->upload($request->file('image')->getRealPath())->getSecurePath();
+            $image = $response;
+
+            $food_name = $request->get('food_name');
+            $price = $request->get('price');
+            $food_type_id = $request->get('food_type_id');
 
         $data = [
             'food_name' => $food_name,
             'price' => $price,
             'food_type_id' => $food_type_id,
+            'image' => $image,
         ];
 
         $newFood = Food::create($data);
-        return response()->json(
-            $newFood ,
-            ["message" => "created successfully"]
-        );
+        
+    }else{
+        return $this->returnError(202, 'file is required');
+    }
     }
 
     /**
