@@ -11,7 +11,6 @@ const Booking = () => {
     const [isSaving, setIsSaving] = useState(false);
     const [saveError, setSaveError] = useState(null);
     const seats = seatBooking?.seats;
-
     const handleClick = (tabNumber: number) => {
         setActiveTab(tabNumber);
     };
@@ -76,9 +75,16 @@ const Booking = () => {
                                     <div className="screen">
                                         <img src="/screen.png" alt="" className='w-full' />
                                     </div>
-                                    <div className="all-seat max-w-4xl mx-auto space-x-3 mt-[3rem]">
+                                    <div className="all-seat max-w-4xl mx-auto grid grid-cols-2 gap-2">
                                         {seats?.map((item: any) => (
-                                                <p className={`seat ${selectedSeats.includes(item?.seat_code) === true ? "" : ""}`} onClick={() => autoSubmit(item?.seat_code)}>{item?.seat_code}</p>
+                                            <div
+                                                className={`seat w-[50px] text-center ${(item?.type_name === 'Vip' && !selectedSeats.includes(item?.seat_code)) && 'bg-[#8f4747]' ||
+                                                    (selectedSeats.includes(item?.seat_code)) && 'bg-[#00FFD1]' || (item?.type_name === 'Thường' && !selectedSeats.includes(item?.seat_code)) && 'bg-[#797373]'
+                                                    }`}
+                                                onClick={() => autoSubmit(item?.seat_code)}
+                                            >
+                                                {item?.seat_code}
+                                            </div>
                                             // <React.Fragment key={item?.id}>
                                             //     <input
                                             //         type="checkbox"
@@ -92,10 +98,10 @@ const Booking = () => {
                                             //     <label htmlFor={item?.id} className='seat'>{item?.seat_code}</label>
                                             // </React.Fragment>
                                         ))}
-                                        <h1 className='mt-3 text-xl'>Số ghế đã chọn: {selectedSeats.map(seatId => seatId + ' ').join('')}</h1>
-                                        {isSaving && <p>Đang lưu...</p>}
-                                        {saveError && <p>Lỗi khi lưu: {saveError.message}</p>}
                                     </div>
+                                    <h1 className='mt-3 text-xl'>Số ghế đã chọn: {selectedSeats.map(seatId => seatId + ' ').join('')}</h1>
+                                    {isSaving && <p>Đang lưu...</p>}
+                                    {saveError && <p>Lỗi khi lưu: {saveError.message}</p>}
                                     <div className="classify max-w-3xl mx-auto my-[5rem]">
                                         <div className="seat">
                                             <div className="normal-seat"></div>
