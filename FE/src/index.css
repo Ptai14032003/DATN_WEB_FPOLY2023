@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+*{
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+.page{
+  background:#111827;
+}
+.header-admin{
+  background:#111827;
+}
+.sider-admin{
+  background:#111827;
+}
+.sider-admin:hover{
+  width: 20px;
+}

@@ -1,0 +1,260 @@
+/* Home */
+:where(.css-dev-only-do-not-override-1vr7spz).ant-carousel .slick-dots li.slick-active {
+    width: 32px;
+}
+:where(.css-dev-only-do-not-override-1vr7spz).ant-carousel .slick-dots li {
+    height: 20px;
+}
+:where(.css-dev-only-do-not-override-1vr7spz).ant-carousel .slick-dots li button {
+    height: 6px;
+    border-radius: 10px;
+}
+:where(.css-dev-only-do-not-override-1vr7spz).ant-carousel .slick-dots li.slick-active button {
+    background: #1ACAAC;
+}
+
+
+/* hover movie nổi lên */
+.Movie{
+    text-shadow: rgb(255, 255, 255) -1px -2px 0.7em;
+}
+
+.movie-item {
+    display: inline-block;
+    transition: transform 0.3s ease;
+  }
+  
+  .movie-item:hover {
+    transform: translateY(-2px) scale(1.1);
+  }
+
+
+  /* Booking */
+  .movies-detail{
+    transform: translateY(-17rem)!important;
+    left: 3.1rem;
+  }
+
+  .booking-seat{
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 3rem;
+  }
+ 
+  .taskbar{
+    margin-top: 1.5rem;
+  }
+  .taskbar ul{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    text-align: center;
+    font-size: 17px;
+  }
+  .taskbar ul li{
+    padding-top: 20px;
+    border-top: 4px solid #605a5a;
+  }
+  .taskbar ul li span{
+    background-color: #605a5a;
+    border: 1px solid rgb(155, 154, 154);
+    padding: 3px 10px;
+    margin-right: 8px;
+  }
+  .taskbar ul .active{
+    border-top: 4px solid #1ACAAC;
+    position: relative;
+  }
+  li.active::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    box-shadow: 0 0px 10px #00ffd5;
+  }
+
+
+  /* seat */
+.normal-a, .normal-b, .normal-c, .vip-d, .vip-e, .vip-f, .vip-g, .sweet-box{
+    display: grid;
+    grid-template-columns: 20px 77px 1fr 77px 20px;
+    gap: 50px;
+}
+.center, .left, .right{
+    display: flex;
+    justify-content: space-between;
+}
+.row p{
+  font-size: 20px;
+  text-align: center;
+}
+.all-seat .seat{
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.normal .seat{
+    background-color: #797373;
+}
+.vip .seat{
+    background-color: #8f4747;
+}
+.sweet-box .seat{
+    background-color: #8f355a;
+}
+
+/* classify */
+.classify{
+  display: flex;
+  justify-content: space-between;
+}
+.classify .seat{
+  display: flex;
+  align-items: center;
+}
+.classify .seat p{
+  font-size: 17px;
+}
+.normal-seat, .vip-seat, .sweet-box-seat, .select-seat, .sold-seat{
+    width: 35px;
+    height: 35px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+.normal-seat{
+  background-color: #797373;
+}
+.vip-seat{
+  background-color: #8f4747;
+}
+.sweet-box-seat{
+  background-color: #8f355a;
+}
+.select-seat{
+  background-color: #00FFD1;
+}
+.sold-seat{
+  background-color: #ff00f2;
+}
+
+
+
+/* combo */
+.booking-combo{
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 3rem;
+}
+
+
+/* sigin-signup */
+
+.User-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url(./background-cinema.jpg) no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.Form {
+  width: 420px;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(18px);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  color: #fff;
+  border-radius: 10px;
+  padding: 30px 40px;
+}
+
+.Form h1 {
+  font-size: 36px;
+  text-align: center;
+}
+
+.Form .input-box {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  margin: 30px 0px;
+}
+
+.input-box input {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  border: 2px solid rgb(255, 255, 255, 0.2);
+  border-radius: 5px;
+  font-size: 16px;
+  color: #fff;
+  padding: 20px 45px 20px 20px;
+}
+
+.input-box input::placeholder {
+  color: #fff;
+}
+
+.input-box i {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+}
+
+.Form .remember-forgot {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14.5px;
+  margin: -15px 0px 15px;
+}
+
+.remember-forgot label input {
+  color: #fff;
+  margin-right: 3px;
+}
+
+.remember-forgot a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.remember-forgot a:hover {
+  text-decoration: underline;
+}
+
+.Form .btn {
+  width: 100%;
+  height: 45px;
+  background: #fff;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  box-decoration-break: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.Form .register-link {
+  font-size: 14.5px;
+  text-align: center;
+  margin: 20px 0px 15px;
+}
+
+.register-link p a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.register-link p a:hover {
+  text-decoration: underline;
+}
