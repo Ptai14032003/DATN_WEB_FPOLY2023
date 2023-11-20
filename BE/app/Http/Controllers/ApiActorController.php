@@ -50,7 +50,6 @@ class ApiActorController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
         $actor = Actor::find($id);
         if($actor){
             $actor->update($request->all());

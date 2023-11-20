@@ -41,6 +41,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/{id}', [ApiMovieController::class, 'show']);
         Route::put('/{id}', [ApiMovieController::class, 'update']);
         Route::delete('/{id}', [ApiMovieController::class, 'destroy']);
+ 
     });
 
     Route::prefix('movie_genres')->group(function () {
