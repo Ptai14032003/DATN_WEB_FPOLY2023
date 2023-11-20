@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { MenuProps } from 'antd';
 import { Layout, Menu, theme } from 'antd';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, redirect } from 'react-router-dom';
 import HeaderAdmin from './headerAdmin';
 import { HomeOutlined } from '@ant-design/icons';
 
@@ -37,12 +37,17 @@ const items: MenuItem[] = [
     getItem('Sự cố', '11', <img src="/error.png" alt="" width={10} />)
 ];
 
-const AdminLayout: React.FC = () => {
+const AdminLayout: React.FC = async () => {
     const [collapsed, setCollapsed] = useState(false);
     const {
         token: { colorBgContainer },
     } = theme.useToken();
-
+    const userString = localStorage.getItem('user');
+    const user = userString ? JSON.parse(userString) : null;
+    console.log(user.role);
+    // if (user.role !== 'Admin') {
+    //     redirect('/')
+    // }
     return (
         <div>
             <HeaderAdmin />
