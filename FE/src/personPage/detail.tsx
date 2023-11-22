@@ -1,18 +1,15 @@
 import { useNavigate, useParams } from "react-router-dom"
 import "./page.css"
-import { useState } from "react"
 import { useFetchMovieIdPersonQuery } from "../rtk/moviesPerson/moviesPerson"
 export default function Detail() {
     const { id } = useParams()
     const { data: movieBooking } = useFetchMovieIdPersonQuery(id);
 
     const movie = movieBooking?.movie
-    const st_movie=movieBooking?.st_movie
+    const st_movie = movieBooking?.st_movie
     const genres = movieBooking?.movie_genres
-    const actor = movieBooking?.actor    
+    const actor = movieBooking?.actor
     const navigate = useNavigate();
-    console.log(movie?.trailer);
-            
     const redirectToLink = (link: any) => {
         navigate(link);
     };
@@ -64,16 +61,16 @@ export default function Detail() {
                                 <div>Diễn Viên</div>
                                 <div>
                                     {actor?.map((item: any) => (
-                                        <span className="mx-[5px]">{ item.actor_name },</span>
+                                        <span className="mx-[5px]">{item.actor_name},</span>
                                     ))}
                                 </div>
-                                
+
                             </div>
                             <div className="detail-content">
                                 <div>Thể loại</div>
                                 <div>
                                     {genres?.map((item: any) => (
-                                        <span className="mx-[5px]">{ item.genre },</span>
+                                        <span className="mx-[5px]" key={item.id}>{item.genre},</span>
                                     ))}
                                 </div>
                             </div>

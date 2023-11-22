@@ -12,7 +12,10 @@ class FoodController extends Controller
      */
     public function index()
     {
-        $food = Food::all();
+        $food = Food::join('food_types', 'foods.food_type_id', '=', 'food_types.id')
+        ->select('foods.*', 'food_types.name')
+        ->whereNull('foods.deleted_at')
+        ->get();
         return response()->json($food);
     }
 
