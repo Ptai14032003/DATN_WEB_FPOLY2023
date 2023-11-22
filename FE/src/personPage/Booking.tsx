@@ -1,16 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
 import Menu from '../components/layouts/layoutGuest/menu';
 import { useFetchSeatRoomIdQuery } from '../rtk/booking/booking';
 import ThanhToan from '../components/itemGuest/ThanhToan/ThanhToan';
 import { useFetchMovieIdQuery } from '../rtk/movies/movies';
-
+import { useFetchFoodsQuery } from '../rtk/qlSp/qlSp';
+import { set } from 'react-hook-form';
+const food = [
+    {
+        name: "Food",
+        soLuong: 5
+    },
+    {
+        name: "Food1",
+        soLuong: 5
+    },
+    {
+        name: "Food2",
+        soLuong: 5
+    },
+]
 const Booking = () => {
     const { id } = useParams();
+    const { data: Foods } = useFetchFoodsQuery()
     const { data: seatBooking } = useFetchSeatRoomIdQuery(id);
     const { data: movieBooking } = useFetchMovieIdQuery(4);
     const [activeTab, setActiveTab] = useState(1);
     const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+    const [combo, setCombo] = useState<[]>([]);
+    const [priceFood, setPriceFood] = useState(0)
     const [money, setMoney] = useState(0);
     const [isSaving, setIsSaving] = useState(false);
     const [saveError, setSaveError] = useState(null);
@@ -33,15 +51,52 @@ const Booking = () => {
             setMoney(money + price);
         }
     }
+    const getCombo = async (data: { target: { value: any } }, price: number, food_name: any) => {
+        if (data.target.value < 0 || data.target.value === null) {
+            data.target.value = 0;
+        }
+        const comboObject = {
+            soLuong: data.target.value,
+            price: price,
+            food_name: food_name,
+        };
+        setCombo((data: any) => {
+            const comboExists = combo.some((comboObjectInArray: any) => comboObjectInArray.food_name === comboObject.food_name);
+            if (!comboExists) {
+                return [...data, comboObject]
+            }
+            const newData = data.map((item: any) => {
+                if (item.food_name === comboObject.food_name) {
+                    item.soLuong = comboObject.soLuong;
+                }
+                return item;
+            });
 
+            return newData
+        });
+    };
+    useEffect(() => {
+        let priceCombo = 0;
+        let tongComboPrice = 0
+        combo.map((item: any) => {
+            priceCombo = item.price * (item.soLuong);
+            tongComboPrice += priceCombo
+        })
+        setPriceFood(tongComboPrice)
+        // combo.map((item: any) => {
+        //     if (item.soLuong = 0) {
+        //         const dataNew = combo.filter((check: any) => check.food_name !== item.food_name)
+        //         setCombo(dataNew)
+        //     }
+
+        // })
+
+    }, [combo])
     return (
         <div className='bg-black text-white'>
             <Menu />
             <div className="backdrop">
                 <img src={seatBooking?.movie?.image} className='backdrop-img w-full h-[550px] relative'></img>
-            </div>
-            <div className="movies-detail absolute">
-                {/* <img src={movieBooking?.trailer} className='w-[350px] border'></img> */}
             </div>
             <div className="movies-title absolute flex justify-between items-center translate-x-[28rem] -translate-y-[4rem] text-white w-[63.875rem]">
                 <h3 className='text-3xl'>{seatBooking?.movie?.movie_name}</h3>
@@ -52,6 +107,7 @@ const Booking = () => {
             </div>
             <div className="booking h-full max-w-[1420px] mx-auto ">
                 <div className="booking-seat">
+                    {/* Dữ liệu form */}
                     <div className="no-content mt-5">
                         <div className="block">
                             <div className="w-[190px]"><img width="190" height="240" src={movieBooking?.image} alt="" /></div>
@@ -59,10 +115,18 @@ const Booking = () => {
                                 {movieBooking?.movie_name}
                             </h3>
 
-                            <p className="mt-2 max-w-sm text-white">
+                            <div className="mt-2 max-w-sm text-white">
                                 <h1 className='mt-3 text-sm'>Số ghế đã chọn : {selectedSeats.map(seatId => seatId + ' ').join('')}</h1>
-                                <h1 className='mt-3 text-sm'>Tổng tiền : {money}</h1>
-                            </p>
+                                <h1 className='mt-3 text-sm'>Combo :</h1>
+                                {combo.map((item: any) => (
+                                    <div key={item.food_name} className='flex gap-[100px]'>
+                                        <div className='w-[80%]'>{item.food_name}</div>
+                                        <div>x{item.soLuong}</div>
+                                        {/* <div>{item.soLuong * item.price}</div> */}
+                                    </div>
+                                ))}
+                                <h1 className='mt-3 text-sm'>Tổng tiền : {priceFood + money}</h1>
+                            </div>
                         </div>
                     </div>
                     <div className="content-right">
@@ -127,25 +191,27 @@ const Booking = () => {
                                 </div>
                                 <a onClick={() => handleClick(2)}>Tiếp tục</a>
                             </div>
-                            <div className={`Booking-combo ${activeTab === 2 ? "" : "hidden"}`}>
-                                <div className='grid grid-cols-2 gap-12 my-[7rem] mx-[4rem]'>
-                                    <div className='grid grid-cols-3 border-2 border-white rounded-md bg-[#1B3F47] p-3' >
-                                        <img src="" alt="" className='col-span-1 h-[140px] w-full' />
-                                        <div className="col-span-2 space-y-2">
-                                            <h1 className=''></h1>
-                                            <p></p>
-                                            <p></p>
-                                            <span className=''></span>
+                        </form>
+                        <div className={`Booking-combo grid ${activeTab === 2 ? "" : "hidden"}`}>
+                            <div className='grid grid-cols-2 gap-12 my-[7rem] mx-[4rem]'>
+                                {Foods?.map((item) => (
+                                    <div className='grid grid-cols-3 border-2 border-white rounded-md bg-[#1B3F47] p-3' key={item?.id}>
+                                        <img src={`${item?.image}`} alt="" className='col-span-1 h-[140px] w-full' />
+                                        <div className="col-span-2 space-y-2 text-center">
+                                            <h1 className=''>{item?.food_name}</h1>
+                                            <div>{item?.price}</div>
+                                            <input className='text-black' type="number" defaultValue={0} min={0} onChange={(e) => getCombo(e, item?.price, item?.food_name)} />
+                                            <div className='cursor-pointer'>Thêm combo</div>
                                         </div>
                                     </div>
-                                </div>
-                                <a onClick={() => handleClick(1)}>Quay lại</a>
-                                <a onClick={() => handleClick(3)}>Tiếp tục</a>
+                                ))}
                             </div>
-                            <div className={`${activeTab === 3 ? "" : "hidden"}`}>
-                                <ThanhToan data={{ selectedSeats, money }} key={`1`} />
-                            </div>
-                        </form>
+                            <a onClick={() => handleClick(1)}>Quay lại</a>
+                            <a onClick={() => handleClick(3)}>Tiếp tục</a>
+                        </div>
+                        <div className={`${activeTab === 3 ? "" : "hidden"}`}>
+                            <ThanhToan data={{ selectedSeats, money }} key={`1`} />
+                        </div>
                     </div>
                 </div>
             </div >

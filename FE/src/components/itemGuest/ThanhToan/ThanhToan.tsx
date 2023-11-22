@@ -26,7 +26,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, money } }: Props) =
                         </div>
                         <div className='flex flex-col-reverse w-[125px]'>
                             <dd className="text-sm text-white flex gap-1">{selectedSeats.map((item: any) => (
-                                <div>{item}</div>
+                                <div key={item}>{item}</div>
                             ))
                             }</dd>
                             <dt className="text-xs text-gray-500">Số ghế</dt>
