@@ -5,21 +5,6 @@ import { useFetchSeatRoomIdQuery } from '../rtk/booking/booking';
 import ThanhToan from '../components/itemGuest/ThanhToan/ThanhToan';
 import { useFetchMovieIdQuery } from '../rtk/movies/movies';
 import { useFetchFoodsQuery } from '../rtk/qlSp/qlSp';
-import { set } from 'react-hook-form';
-const food = [
-    {
-        name: "Food",
-        soLuong: 5
-    },
-    {
-        name: "Food1",
-        soLuong: 5
-    },
-    {
-        name: "Food2",
-        soLuong: 5
-    },
-]
 const Booking = () => {
     const { id } = useParams();
     const { data: Foods } = useFetchFoodsQuery()
@@ -32,6 +17,7 @@ const Booking = () => {
     const [money, setMoney] = useState(0);
     const [isSaving, setIsSaving] = useState(false);
     const [saveError, setSaveError] = useState(null);
+    const priceTong = money + priceFood;
     const seats = seatBooking?.seats;
     const handleClick = (tabNumber: number) => {
         setActiveTab(tabNumber);
@@ -51,30 +37,42 @@ const Booking = () => {
             setMoney(money + price);
         }
     }
-    const getCombo = async (data: { target: { value: any } }, price: number, food_name: any) => {
-        if (data.target.value < 0 || data.target.value === null) {
-            data.target.value = 0;
-        }
+    const getCombo = async (data: { target: { value: any } }, price: number, foodName: any) => {
+        let soLuong = parseInt(data.target.value, 10);
+        soLuong = isNaN(soLuong) || soLuong < 0 ? 0 : soLuong;
+
         const comboObject = {
-            soLuong: data.target.value,
+            soLuong: soLuong,
             price: price,
-            food_name: food_name,
+            food_name: foodName,
         };
-        setCombo((data: any) => {
-            const comboExists = combo.some((comboObjectInArray: any) => comboObjectInArray.food_name === comboObject.food_name);
-            if (!comboExists) {
-                return [...data, comboObject]
+
+        setCombo((prevCombo: any) => {
+            const comboExists = prevCombo.some((comboObjectInArray: any) => comboObjectInArray.food_name === comboObject.food_name);
+
+            if (!comboExists && comboObject.soLuong !== 0) {
+                return [...prevCombo, comboObject];
             }
-            const newData = data.map((item: any) => {
+
+            const updatedCombo = prevCombo.map((item: any) => {
                 if (item.food_name === comboObject.food_name) {
                     item.soLuong = comboObject.soLuong;
                 }
                 return item;
             });
 
-            return newData
+            return updatedCombo.filter((item: any) => item.soLuong !== 0);
         });
     };
+
+    useEffect(() => {
+        const tongComboPrice = combo.reduce((totalPrice: number, item: any) => {
+            return totalPrice + item.price * item.soLuong;
+        }, 0);
+
+        setPriceFood(tongComboPrice);
+    }, [combo]);
+
     useEffect(() => {
         let priceCombo = 0;
         let tongComboPrice = 0
@@ -83,14 +81,6 @@ const Booking = () => {
             tongComboPrice += priceCombo
         })
         setPriceFood(tongComboPrice)
-        // combo.map((item: any) => {
-        //     if (item.soLuong = 0) {
-        //         const dataNew = combo.filter((check: any) => check.food_name !== item.food_name)
-        //         setCombo(dataNew)
-        //     }
-
-        // })
-
     }, [combo])
     return (
         <div className='bg-black text-white'>
@@ -210,7 +200,7 @@ const Booking = () => {
                             <a onClick={() => handleClick(3)}>Tiếp tục</a>
                         </div>
                         <div className={`${activeTab === 3 ? "" : "hidden"}`}>
-                            <ThanhToan data={{ selectedSeats, money }} key={`1`} />
+                            <ThanhToan data={{ selectedSeats, priceTong }} key={`1`} />
                         </div>
                     </div>
                 </div>

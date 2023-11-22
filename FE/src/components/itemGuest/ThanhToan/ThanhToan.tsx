@@ -4,10 +4,10 @@ import "./page.css"
 type Props = {
     data: {
         selectedSeats: string[]
-        money: number
+        priceTong: number
     }
 }
-const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, money } }: Props) => {
+const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong } }: Props) => {
     return (
         <>
             <div className='my-[25px] flex gap-[30px] justify-center'>
@@ -53,7 +53,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, money } }: Props) =
                     <div className='block'>
                         <div className='info-card'>
                             <div>Tổng tiền</div>
-                            <div className='item-info-card'>{money}</div>
+                            <div className='item-info-card'>{priceTong}</div>
                         </div>
                         <div className='info-card'>
                             <div>Mã giao dịch</div>
