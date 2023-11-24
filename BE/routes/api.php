@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Api\RoomApiController;
-use App\Http\Controllers\Api\ShowtimeApiController;
+use App\Http\Controllers\RoomApiController;
+use App\Http\Controllers\ShowtimeApiController;
 use App\Http\Controllers\ApiActorController;
 use App\Http\Controllers\ApiCountryController;
 use App\Http\Controllers\ApiListGenreController;
