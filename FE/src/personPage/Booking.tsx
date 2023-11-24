@@ -82,6 +82,14 @@ const Booking = () => {
         })
         setPriceFood(tongComboPrice)
     }, [combo])
+    const Continue = () => {
+        if (!selectedSeats || selectedSeats.length === 0) {
+            alert('Vui lòng chọn ghế');
+        }
+        else {
+            handleClick(2)
+        }
+    }
     return (
         <div className='bg-black text-white'>
             <Menu />
@@ -179,7 +187,7 @@ const Booking = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <a onClick={() => handleClick(2)}>Tiếp tục</a>
+                                <a className={`cursor-pointer ${!selectedSeats || selectedSeats.length === 0 ? "hidden" : ""}`} onClick={() => Continue()}>Tiếp tục</a>
                             </div>
                         </form>
                         <div className={`Booking-combo grid ${activeTab === 2 ? "" : "hidden"}`}>
@@ -200,7 +208,7 @@ const Booking = () => {
                             <a onClick={() => handleClick(3)}>Tiếp tục</a>
                         </div>
                         <div className={`${activeTab === 3 ? "" : "hidden"}`}>
-                            <ThanhToan data={{ selectedSeats, priceTong }} key={`1`} />
+                            <ThanhToan data={{ selectedSeats, priceTong, movieBooking, combo }} key={`1`} />
                         </div>
                     </div>
                 </div>
