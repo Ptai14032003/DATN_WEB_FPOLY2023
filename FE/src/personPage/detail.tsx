@@ -13,6 +13,7 @@ export default function Detail() {
     const redirectToLink = (link: any) => {
         navigate(link);
     };
+console.log(st_movie);
 
 
     return (
@@ -32,7 +33,7 @@ export default function Detail() {
                                 <div className="border-b-2 flex">
                                     <button key={item.id} className={`btn-date ${item.show_date ? "btn-date-action" : ""}`}>
                                         <div className="w-[90px] h-full flex flex-col items-center justify-center text-xs transition-colors">
-                                            <span>Thứ năm</span>
+                                            <span>{item.weekday}</span>
                                             <span className="text-xl font-bold">{item.show_date}</span>
                                         </div>
                                     </button>

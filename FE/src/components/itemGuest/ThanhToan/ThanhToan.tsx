@@ -29,7 +29,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, movieBoo
                             <dt className="text-xs text-gray-500">Phòng chiếu</dt>
                         </div>
                         <div className='flex flex-col-reverse'>
-                            <dd className="text-sm text-white w-[95px]">1</dd>
+                            <dd className="text-sm text-white w-[95px]">{ selectedSeats.length }</dd>
                             <dt className="text-xs text-gray-500">Số vé</dt>
                         </div>
                         <div className='flex flex-col-reverse w-[125px]'>
@@ -74,7 +74,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, movieBoo
                     </div>
                 </div >
             </div >
-            <div>Phường thức thanh toán</div>
+            <div>Phương thức thanh toán</div>
             <div className='flex justify-center'>
                 <Button className="w-[70%] rounded bg-teal-400 text-white text-base h-[42px] border-0" >Thanh toán</Button>
             </div>
