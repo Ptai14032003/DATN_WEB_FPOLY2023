@@ -20,6 +20,8 @@ class Movie extends Model
         'end_date',
         'total_revenue',
         'image',
-        'trailer'
+        'trailer',
+        'movie_time',
+        'movie_status'
     ];
 }

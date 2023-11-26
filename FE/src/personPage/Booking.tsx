@@ -44,7 +44,7 @@ const Booking = () => {
             setSelectedSeats([...selectedSeats, seatId]);
         }
 
-    };
+    };    
     const TongTien = async (seatId: any, price: any) => {
         if (selectedSeats.includes(seatId)) {
             setMoney(money - price);

@@ -13,6 +13,7 @@ export default function Detail() {
     const redirectToLink = (link: any) => {
         navigate(link);
     };
+console.log(st_movie);
 
 
     return (
@@ -43,6 +44,7 @@ export default function Detail() {
                                             <p className="font-bold text-sm">{item.show_time}</p>
                                         </button>
                                     </div>
+
                                 </div>
                             ))}
                         </div>

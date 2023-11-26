@@ -51,11 +51,10 @@ class HomeController extends Controller
             ->get();
         $movies = Movie::where('movies.id', $id)->select('movies.*')->first();
 
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
         foreach ($st_movie as $movie) {
-            $movie->show_date = Carbon::parse($movie->show_date)->format('d-m');
-            $movie->show_time = Carbon::parse($movie->show_time)->format('h:i');
+            
             //tính ra ngày trong tuần
-            date_default_timezone_set('Asia/Ho_Chi_Minh');
 
             $weekday = date('l', strtotime($movie->show_date));
 
@@ -84,6 +83,8 @@ class HomeController extends Controller
                     break;
             }
             $movie->weekday = $weekday;
+            $movie->show_date = Carbon::parse($movie->show_date)->format('d-m');
+            $movie->show_time = Carbon::parse($movie->show_time)->format('h:i');
         }
         $st_movie = $st_movie->toArray();
         if ($st_movie) {
@@ -123,12 +124,13 @@ class HomeController extends Controller
             ->select('showtimes.*', 'movies.movie_name', 'rooms.name')
             ->where('showtimes.id', '=', $id)
             ->first();
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
         foreach ($seats as $seat) {
             //nếu phim 2d thì vé thường 45k 3d thì ghế thường 60k
             if ($movie->movie_type == '2D') {
                 $seat->price = 45000; //mặc định ghế thường là 45k - phòng 2D
             } else {
-                $seat->price = 60000; //mặc định ghế thường là 45k - phòng 2D
+                $seat->price = 60000; //mặc định ghế thường là 60k - phòng 3D
             }
             $show_date = new DateTime($showtime->show_date); //lấy ra ngày chiếu
             if ($show_date->format('N') == '7' || $show_date->format('N') == '6') { //nếu thứ 7 hoặc chủ nhật thì tăng giá vé lên 10k
