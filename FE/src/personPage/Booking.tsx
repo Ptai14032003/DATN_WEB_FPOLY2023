@@ -1,26 +1,41 @@
 import { useEffect, useState } from 'react';
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Menu from '../components/layouts/layoutGuest/menu';
 import { useFetchSeatRoomIdQuery } from '../rtk/booking/booking';
 import ThanhToan from '../components/itemGuest/ThanhToan/ThanhToan';
-import { useFetchMovieIdQuery } from '../rtk/movies/movies';
 import { useFetchFoodsQuery } from '../rtk/qlSp/qlSp';
+import { useFetchMovieIdPersonQuery } from '../rtk/moviesPerson/moviesPerson';
 const Booking = () => {
+    const { search } = useLocation();
+    const show_time = new URLSearchParams(search).get('show_seat');
     const { id } = useParams();
     const { data: Foods } = useFetchFoodsQuery()
-    const { data: seatBooking } = useFetchSeatRoomIdQuery(id);
-    const { data: movieBooking } = useFetchMovieIdQuery(4);
+    const { data: seatBooking } = useFetchSeatRoomIdQuery(show_time);
+    const { data: movie } = useFetchMovieIdPersonQuery(id);
     const [activeTab, setActiveTab] = useState(1);
     const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+    const [idGhe, setidGhe] = useState<any[]>([])
     const [combo, setCombo] = useState<[]>([]);
     const [priceFood, setPriceFood] = useState(0)
     const [money, setMoney] = useState(0);
-    const [isSaving, setIsSaving] = useState(false);
-    const [saveError, setSaveError] = useState(null);
     const priceTong = money + priceFood;
     const seats = seatBooking?.seats;
+    const movieBooking = movie?.movie
     const handleClick = (tabNumber: number) => {
         setActiveTab(tabNumber);
+    };
+    const getIdGhe = (id: string, price: string) => {
+        const data = {
+            id: id,
+            price: price
+        };
+        const checkId = idGhe.some((item: any) => item.id === data.id);
+
+        if (checkId) {
+            setidGhe(() => idGhe.filter((item: any) => item.id !== data.id));
+        } else {
+            setidGhe([...idGhe, data]);
+        }
     };
     const autoSubmit = async (seatId: any) => {
         if (selectedSeats.includes(seatId)) {
@@ -156,14 +171,12 @@ const Booking = () => {
                                                 className={`seat text-center ${(item?.type_name === 'VIP' && !selectedSeats.includes(item?.seat_code)) && 'bg-[#8f4747]' ||
                                                     (selectedSeats.includes(item?.seat_code)) && 'bg-[#00FFD1]' || (item?.type_name === 'Thường' && !selectedSeats.includes(item?.seat_code)) && 'bg-[#797373]'
                                                     }`}
-                                                onClick={() => { autoSubmit(item?.seat_code); TongTien(item?.seat_code, item?.price) }}
+                                                onClick={() => { autoSubmit(item?.seat_code); TongTien(item?.seat_code, item?.price); getIdGhe(item?.id, item?.price) }}
                                             >
                                                 {item?.seat_code}
                                             </div>
                                         ))}
                                     </div>
-                                    {isSaving && <p>Đang lưu...</p>}
-                                    {saveError && <p>Lỗi khi lưu: {saveError.message}</p>}
                                     <div className="classify max-w-3xl mx-auto my-[5rem]">
                                         <div className="seat">
                                             <div className="normal-seat"></div>
@@ -208,7 +221,7 @@ const Booking = () => {
                             <a onClick={() => handleClick(3)}>Tiếp tục</a>
                         </div>
                         <div className={`${activeTab === 3 ? "" : "hidden"}`}>
-                            <ThanhToan data={{ selectedSeats, priceTong, movieBooking, combo }} key={`1`} />
+                            <ThanhToan data={{ selectedSeats, priceTong, movieBooking, combo, idGhe, show_time }} key={`1`} />
                         </div>
                     </div>
                 </div>
