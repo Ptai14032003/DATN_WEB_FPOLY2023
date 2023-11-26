@@ -7,15 +7,30 @@ type Props = {
         priceTong: number
         movieBooking: {
             image: string
-            name: string
+            movie_name: string
         }
         combo: {
             food_name: string;
             soLuong: number;
         }[];
+        seatBooking: {}[]
+        idGhe: string[]
+        show_time: string
     }
 }
-const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, movieBooking, combo } }: Props) => {
+const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, movieBooking, combo, seatBooking, idGhe, show_time } }: Props) => {
+    console.log(seatBooking);
+    const data = {
+        selectedSeats: selectedSeats,
+        priceTong: priceTong,
+        movieBooking: movieBooking,
+        combo: combo,
+        seatBooking: seatBooking,
+        idGhe: idGhe,
+        show_time: show_time
+    }
+    console.log(data);
+
     return (
         <>
             <div className='my-[25px] flex gap-[30px] justify-center'>
@@ -23,13 +38,19 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, movieBoo
                     <img src={movieBooking?.image} width={200} alt="" />
                 </div>
                 <div>
+                    <div className='item-card border-b-2'>
+                        <div className='flex flex-col-reverse'>
+                            <dd className="text-sm text-white text-left">{movieBooking?.movie_name}</dd>
+                            <dt className="text-xs text-gray-500 text-left">Tên phim</dt>
+                        </div>
+                    </div>
                     <div className='item-card flex order-b-2 gap-[30px] border-b-2'>
                         <div className='flex flex-col-reverse w-[95px]'>
                             <dd className="text-sm text-white">1</dd>
                             <dt className="text-xs text-gray-500">Phòng chiếu</dt>
                         </div>
                         <div className='flex flex-col-reverse'>
-                            <dd className="text-sm text-white w-[95px]">1</dd>
+                            <dd className="text-sm text-white w-[95px]">{selectedSeats?.length}</dd>
                             <dt className="text-xs text-gray-500">Số vé</dt>
                         </div>
                         <div className='flex flex-col-reverse w-[125px]'>
@@ -38,12 +59,6 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, movieBoo
                             ))
                             }</dd>
                             <dt className="text-xs text-gray-500">Số ghế</dt>
-                        </div>
-                    </div>
-                    <div className='item-card border-b-2'>
-                        <div className='flex flex-col-reverse'>
-                            <dd className="text-sm text-white text-left">{movieBooking?.movie_name}</dd>
-                            <dt className="text-xs text-gray-500 text-left">Tên phim</dt>
                         </div>
                     </div>
                     <div className='item-card border-b-2'>

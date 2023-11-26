@@ -27,23 +27,25 @@ export default function Detail() {
                             <div className="mb-[25px]"><span className="text-left">{movie?.movie_name}</span></div>
                             <div className="w-[190px]"><img width="190" height="240" src={movie?.image} alt="" /></div>
                         </div>
-                        {st_movie?.map((item: any) => (
-                            <div className="w-[100%] mt-[3%]">
-                                <div className="border-b-2 flex">
-                                    <button key={item.id} className={`btn-date ${item.show_date ? "btn-date-action" : ""}`}>
-                                        <div className="w-[90px] h-full flex flex-col items-center justify-center text-xs transition-colors">
-                                            <span>Thứ năm</span>
-                                            <span className="text-xl font-bold">{item.show_date}</span>
-                                        </div>
-                                    </button>
+                        <div className="w-[100%] mt-[3%] flex ">
+                            {st_movie?.map((item: any) => (
+                                <div className="w-[20%]">
+                                    <div className="flex border-b-2 border-red">
+                                        <button key={item.id} className={`btn-date`}>
+                                            <div className="w-[90px] h-full flex flex-col items-center justify-center text-xs transition-colors">
+                                                <span>Thứ năm</span>
+                                                <span className="text-xl font-bold">{item.show_date}</span>
+                                            </div>
+                                        </button>
+                                    </div>
+                                    <div className="w-[70%] grid grid-cols-5 gap-5 mt-[20px] text-black">
+                                        <button className="detail-time w-[100px] h-[40px] bg-white rounded-sm" onClick={() => redirectToLink('/booking/' + movie?.id + `?show_seat=${item?.showtime_id}`)}>
+                                            <p className="font-bold text-sm">{item.show_time}</p>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div className="w-[70%] grid grid-cols-5 gap-5 mt-[20px] text-black">
-                                    <button className="detail-time w-[100px] h-[40px] bg-white rounded-sm" onClick={() => redirectToLink('/booking/' + item?.showtime_id)}>
-                                        <p className="font-bold text-sm">{item.show_time}</p>
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
                     <div className="border-b-2 pb-[15px] text-xl ">
                         <div className="flex">
