@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 Route::match(['GET', 'POST'], '/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
-Route::get('/movie_home',[ HomeController::class, 'index'])->name('movie_home');
+Route::get('/movie_home', [HomeController::class, 'index'])->name('movie_home');
 
 Route::Post('Payment', [PaymentController::class, 'vnpay_payment']);
 Route::post('/book_ticket', [TicketController::class, 'book_ticket'])->name('book_ticket');
@@ -42,7 +42,6 @@ Route::prefix('admin')->group(function () {
         Route::get('/{id}', [ApiMovieController::class, 'show']);
         Route::put('/{id}', [ApiMovieController::class, 'update']);
         Route::delete('/{id}', [ApiMovieController::class, 'destroy']);
- 
     });
 
     Route::prefix('movie_genres')->group(function () {
