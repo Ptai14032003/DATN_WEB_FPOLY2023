@@ -14,7 +14,7 @@ const Booking = () => {
     const { data: movie } = useFetchMovieIdPersonQuery(id);
     const [activeTab, setActiveTab] = useState(1);
     const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
-    const [idGhe, setidGhe] = useState<string[]>([])
+    const [idGhe, setidGhe] = useState<any[]>([])
     const [combo, setCombo] = useState<[]>([]);
     const [priceFood, setPriceFood] = useState(0)
     const [money, setMoney] = useState(0);
@@ -24,13 +24,19 @@ const Booking = () => {
     const handleClick = (tabNumber: number) => {
         setActiveTab(tabNumber);
     };
-    const getIdGhe = (id: string) => {
-        if (idGhe.includes(id)) {
-            setidGhe(idGhe.filter((id) => id !== id));
+    const getIdGhe = (id: string, price: string) => {
+        const data = {
+            id: id,
+            price: price
+        };
+        const checkId = idGhe.some((item: any) => item.id === data.id);
+
+        if (checkId) {
+            setidGhe(() => idGhe.filter((item: any) => item.id !== data.id));
         } else {
-            setidGhe([...idGhe, id]);
+            setidGhe([...idGhe, data]);
         }
-    }
+    };
     const autoSubmit = async (seatId: any) => {
         if (selectedSeats.includes(seatId)) {
             setSelectedSeats(selectedSeats.filter((id) => id !== seatId));
@@ -165,7 +171,7 @@ const Booking = () => {
                                                 className={`seat text-center ${(item?.type_name === 'VIP' && !selectedSeats.includes(item?.seat_code)) && 'bg-[#8f4747]' ||
                                                     (selectedSeats.includes(item?.seat_code)) && 'bg-[#00FFD1]' || (item?.type_name === 'Thường' && !selectedSeats.includes(item?.seat_code)) && 'bg-[#797373]'
                                                     }`}
-                                                onClick={() => { autoSubmit(item?.seat_code); TongTien(item?.seat_code, item?.price); getIdGhe(item?.id) }}
+                                                onClick={() => { autoSubmit(item?.seat_code); TongTien(item?.seat_code, item?.price); getIdGhe(item?.id, item?.price) }}
                                             >
                                                 {item?.seat_code}
                                             </div>
@@ -215,7 +221,7 @@ const Booking = () => {
                             <a onClick={() => handleClick(3)}>Tiếp tục</a>
                         </div>
                         <div className={`${activeTab === 3 ? "" : "hidden"}`}>
-                            <ThanhToan data={{ selectedSeats, priceTong, movieBooking, combo, seatBooking, idGhe, show_time }} key={`1`} />
+                            <ThanhToan data={{ selectedSeats, priceTong, movieBooking, combo, idGhe, show_time }} key={`1`} />
                         </div>
                     </div>
                 </div>

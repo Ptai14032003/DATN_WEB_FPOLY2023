@@ -13,21 +13,33 @@ type Props = {
             food_name: string;
             soLuong: number;
         }[];
-        seatBooking: {}[]
-        idGhe: string[]
-        show_time: string
+        idGhe: {
+            id: string,
+            price: number
+        }[],
+        show_time: any
     }
 }
-const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, movieBooking, combo, seatBooking, idGhe, show_time } }: Props) => {
-    console.log(seatBooking);
+const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, show_time, movieBooking, idGhe } }: Props) => {
     const data = {
-        selectedSeats: selectedSeats,
-        priceTong: priceTong,
-        movieBooking: movieBooking,
-        combo: combo,
-        seatBooking: seatBooking,
-        idGhe: idGhe,
-        show_time: show_time
+        show_time: show_time,
+        seat: [
+            idGhe.map((item: any) => (
+                {
+                    id: item.id,
+                    price: item.price,
+                }
+            ))
+        ],
+        combo: [
+            combo.map((item) => (
+                {
+                    food_name: item.food_name,
+                    quantity: item.soLuong
+                }
+            ))
+        ],
+        total_money: priceTong
     }
     console.log(data);
 
