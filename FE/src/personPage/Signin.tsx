@@ -38,7 +38,7 @@ const Signin = () => {
   // }
   return (
     <div className='User-box'>
-      <div className="Form">
+      <div className="FormSignin">
         <form action="" onSubmit={handleSubmit(onFinish)}>
           <h1>Signin</h1>
           <div className="input-box">

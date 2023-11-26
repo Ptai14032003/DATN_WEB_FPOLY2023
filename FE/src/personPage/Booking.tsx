@@ -115,7 +115,6 @@ const Booking = () => {
                 <h3 className='text-3xl'>{seatBooking?.movie?.movie_name}</h3>
                 <div className="time flex text-lg items-center space-x-10">
                     <p>{seatBooking?.movie?.time}</p>
-                    <p className='border-2 border-[#1ACAAC] rounded-full px-7 py-2'>{seatBooking?.movie?.age}</p>
                 </div>
             </div>
             <div className="booking h-full max-w-[1420px] mx-auto ">
@@ -200,25 +199,33 @@ const Booking = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <a className={`cursor-pointer ${!selectedSeats || selectedSeats.length === 0 ? "hidden" : ""}`} onClick={() => Continue()}>Tiếp tục</a>
+                                <div className='max-w-4xl mx-auto my-6 flex justify-end'>
+                                    <a className={`cursor-pointer ${!selectedSeats || selectedSeats.length === 0 ? "hidden" : "border-2 border-[#1ACAAC] rounded-full px-7 py-2 hover:bg-[#1ACAAC]"}`} onClick={() => Continue()}>Tiếp tục</a>
+                                </div>
                             </div>
                         </form>
                         <div className={`Booking-combo grid ${activeTab === 2 ? "" : "hidden"}`}>
-                            <div className='grid grid-cols-2 gap-12 my-[7rem] mx-[4rem]'>
+                            <div className='mt-[7rem] mx-[4rem]'>
+                            <div className='grid grid-cols-2 gap-12'>
                                 {Foods?.map((item) => (
-                                    <div className='grid grid-cols-3 border-2 border-white rounded-md bg-[#1B3F47] p-3' key={item?.id}>
+                                    <div className='Combo grid grid-cols-3 border-2 border-white rounded-md bg-[#2f9c8a] p-3 gap-5' key={item?.id}>
                                         <img src={`${item?.image}`} alt="" className='col-span-1 h-[140px] w-full' />
-                                        <div className="col-span-2 space-y-2 text-center">
-                                            <h1 className=''>{item?.food_name}</h1>
-                                            <div>{item?.price}</div>
+                                        <div className="col-span-2 space-y-3">
+                                            <h1 className='text-xl'>{item?.food_name}</h1>
+                                            <p className='text-lg'>{item?.price}</p>
                                             <input className='text-black' type="number" defaultValue={0} min={0} onChange={(e) => getCombo(e, item?.price, item?.food_name)} />
-                                            <div className='cursor-pointer'>Thêm combo</div>
+                                            <div className='flex justify-end'>
+                                            <button className='cursor-pointer border rounded py-1 px-4 bg-black'>Chọn</button>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                            <a onClick={() => handleClick(1)}>Quay lại</a>
-                            <a onClick={() => handleClick(3)}>Tiếp tục</a>
+                            <div className='my-10 flex justify-end space-x-5'>
+                                    <a onClick={() => handleClick(1)} className='border-2 border-[#1ACAAC] rounded-full px-7 py-2 hover:bg-[#1ACAAC] cursor-pointer'>Quay lại</a>
+                                    <a onClick={() => handleClick(3)} className='border-2 border-[#1ACAAC] rounded-full px-7 py-2 hover:bg-[#1ACAAC] cursor-pointer'>Tiếp tục</a>
+                                </div>
+                            </div>
                         </div>
                         <div className={`${activeTab === 3 ? "" : "hidden"}`}>
                             <ThanhToan data={{ selectedSeats, priceTong, movieBooking, combo, idGhe, show_time }} key={`1`} />

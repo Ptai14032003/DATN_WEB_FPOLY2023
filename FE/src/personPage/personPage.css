@@ -146,6 +146,9 @@
   grid-template-columns: 350px 1fr;
   gap: 3rem;
 }
+.Combo{
+  box-shadow: 0px 2px 15px 0px rgb(184, 182, 182);
+}
 
 
 /* sigin-signup */
@@ -160,8 +163,7 @@
   background-position: center;
 }
 
-.Form {
-  width: 420px;
+.Form, .FormSignin {
   background: transparent;
   border: 2px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(18px);
@@ -170,13 +172,19 @@
   border-radius: 10px;
   padding: 30px 40px;
 }
+.Form {
+  width: 800px;
+}
+.FormSignin {
+  width: 400px;
+}
 
-.Form h1 {
+.Form h1, .FormSignin h1 {
   font-size: 36px;
   text-align: center;
 }
 
-.Form .input-box {
+.Form .input-box, .FormSignin .input-box{
   position: relative;
   width: 100%;
   height: 50px;
@@ -196,6 +204,19 @@
   padding: 20px 45px 20px 20px;
 }
 
+.input select {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  border: 2px solid rgb(255, 255, 255, 0.2);
+  border-radius: 5px;
+  font-size: 16px;
+  color: #fff;
+  padding: 11px 45px 11px 11px;
+}
+
 .input-box input::placeholder {
   color: #fff;
 }
@@ -208,7 +229,7 @@
   font-size: 20px;
 }
 
-.Form .remember-forgot {
+.Form .remember-forgot, .FormSignin .remember-forgot {
   display: flex;
   justify-content: space-between;
   font-size: 14.5px;
@@ -229,7 +250,7 @@
   text-decoration: underline;
 }
 
-.Form .btn {
+.Form .btn, .FormSignin .btn  {
   width: 100%;
   height: 45px;
   background: #fff;
@@ -243,7 +264,7 @@
   color: #333;
 }
 
-.Form .register-link {
+.Form .register-link, .FormSignin .register-link {
   font-size: 14.5px;
   text-align: center;
   margin: 20px 0px 15px;
@@ -257,4 +278,78 @@
 
 .register-link p a:hover {
   text-decoration: underline;
+}
+
+
+/* ticket-price */
+.ticket-price-content{
+  color: white;
+}
+.ticket-price-title{
+   text-align: center;
+   margin: 2rem 0;
+}
+.ticket-price-title h1{
+   font-weight: bold;
+   font-size: 30px;
+}
+.ticket-price-title p{
+   font-size: 20px;
+}
+.film2D, .film3D{
+  width: 75rem;
+  margin: 0 auto;
+}
+.film2D{
+  margin-bottom: 5rem;
+}
+.film2D h2, .film3D h2{
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 1rem;
+}
+.ticket-price-table{
+  width: 75rem;
+  table-layout: fixed;
+  border: solid rgb(76, 76, 76) 0.5px;
+  border-radius: 30px;
+}
+.ticket-price-table td{
+  border: solid rgb(76, 76, 76) 0.5px;
+}
+.ticket-price-table th{
+  border: solid rgb(76, 76, 76) 0.5px;
+  background-color: rgb(31, 30, 30);
+  font-size: 18px;
+}
+.ticket-price-table tr:hover{
+  background-color: rgb(31, 30, 30);
+}
+.ticket-price-table tr{
+  height: 70px;
+}
+.regular-chair, .vip-chair, .double-chair{
+  text-align: center;
+}
+.regular-chair-title, .vip-chair-title, .double-chair-title{
+  font-weight: bold;
+}
+.regular-chair{
+  color: rgb(205, 201, 201);
+}
+.vip-chair{
+  color: yellow;
+}
+.double-chair{
+  color: red;
+}
+.ticket-price-describe{
+  width: 75rem;
+  margin: 3rem auto 0 auto;
+}
+
+
+/* profile */
+.in4Active{
+  background-color: #00FFD1;
 }

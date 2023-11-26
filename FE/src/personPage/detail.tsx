@@ -34,7 +34,7 @@ console.log(st_movie);
                                     <div className="flex border-b-2 border-red">
                                         <button key={item.id} className={`btn-date`}>
                                             <div className="w-[90px] h-full flex flex-col items-center justify-center text-xs transition-colors">
-                                                <span>Thứ năm</span>
+                                                <span>{item.weekday}</span>
                                                 <span className="text-xl font-bold">{item.show_date}</span>
                                             </div>
                                         </button>
