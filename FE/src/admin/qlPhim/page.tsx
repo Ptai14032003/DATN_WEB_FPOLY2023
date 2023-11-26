@@ -58,10 +58,10 @@ const AdminQlPhim: React.FC = () => {
             const mapMovies = dataMap.map((item: any) => ({
                 key: item.id,
                 movie_name: item.movie_name,
-                country_name: item.country_id.country_name,
-                producer_name: item.producer_id.producer_name,
+                country_name: item.country_name,
+                producer_name: item.producer_name,
                 actor_name: item.actor_name,
-                type_name: item.movie_type_id.type_name,
+                type_name: item.type_name,
                 genre: item.genre,
                 director: item.director,
                 image: item.image,
