@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Button } from 'antd';
+import React, { useEffect, useState } from 'react';
 import "./page.css"
+import { useSetBillMutation } from '../../../rtk/bill/bill';
+import { Button } from 'antd';
 type Props = {
     data: {
         selectedSeats: string[]
@@ -21,28 +22,32 @@ type Props = {
     }
 }
 const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, show_time, movieBooking, idGhe } }: Props) => {
-    const data = {
+    const [data] = useSetBillMutation()
+    const dataBill = {
         show_time: show_time,
-        seat: [
+        seat:
             idGhe.map((item: any) => (
                 {
                     id: item.id,
                     price: item.price,
                 }
             ))
-        ],
-        combo: [
+        ,
+        combo:
             combo.map((item) => (
                 {
                     food_name: item.food_name,
                     quantity: item.soLuong
                 }
             ))
-        ],
+        ,
         total_money: priceTong
     }
-    console.log(data);
-
+    const setThanhToan = () => {
+        data(dataBill)
+    }
+    useEffect(() => {
+    })
     return (
         <>
             <div className='my-[25px] flex gap-[30px] justify-center'>
@@ -104,7 +109,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
             </div >
             <div>Phương thức thanh toán</div>
             <div className='flex justify-center'>
-                <Button className="w-[70%] rounded bg-teal-400 text-white text-base h-[42px] border-0" >Thanh toán</Button>
+                <Button className="w-[70%] rounded bg-teal-400 text-white text-base h-[42px] border-0" onClick={() => setThanhToan()} >Thanh toán</Button>
             </div>
         </>
     )
