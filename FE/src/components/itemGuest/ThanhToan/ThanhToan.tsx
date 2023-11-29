@@ -48,8 +48,10 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
     const setThanhToan = () => {
         data(dataBill)
             .then((response) => {
-                const thanhToanURL = response.data;
-                window.location.href = thanhToanURL;
+                if (('data' in response)) {
+                    const thanhToanURL = response.data;
+                    window.location.href = thanhToanURL;
+                }
             })
             .catch((error) => {
                 console.error('Lỗi truy vấn:', error);
