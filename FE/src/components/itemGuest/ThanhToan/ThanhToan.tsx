@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import "./page.css"
 import { useSetBillMutation } from '../../../rtk/bill/bill';
 import { Button } from 'antd';
+import { Link } from 'react-router-dom';
 type Props = {
     data: {
         selectedSeats: string[]
@@ -44,12 +45,15 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
         total_money: priceTong
     }
     const setThanhToan = () => {
-        data(dataBill)
+        data(dataBill).then((item) => console.log(item?.data)
+        )
     }
     useEffect(() => {
     })
+
     return (
         <>
+            <a href="https://www.youtube.com/watch?v=blZ9zKqQ_tU&t=13s">ngu</a>
             <div className='my-[25px] flex gap-[30px] justify-center'>
                 <div className='w-[25%]'>
                     <img src={movieBooking?.image} width={200} alt="" />
