@@ -63,7 +63,7 @@ class PaymentController extends Controller
         $vnp_TxnRef = $bill_add->id; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
         $vnp_OrderInfo = 'Thanh toán hóa đơn';
         $vnp_OrderType = 'billpayment';
-        $vnp_Amount = $bill_add->total_money;
+        $vnp_Amount = $bill_add->total_money * 100;
         $vnp_Locale = 'vn';
         $vnp_BankCode = '';
         $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
@@ -114,12 +114,18 @@ class PaymentController extends Controller
         $returnData = array(
             'code' => '00', 'message' => 'success', 'data' => $vnp_Url
         );
-        if (isset($_POST['redirect'])) {
-            header('Location: ' . $vnp_Url);
-            die();
-        } else {
-            return $returnData;
-        }
+        // if (isset($_POST['redirect'])) {
+        //     return response()->json(['url' => $vnp_Url]);
+        // } else {
+        //     return response()->json($returnData);
+        // }
+        return response()->json($vnp_Url);
+
         // vui lòng tham khảo thêm tại code demo
+    }
+
+    public  function check_payment(){
+
+        return response()->json('haha');
     }
 }
