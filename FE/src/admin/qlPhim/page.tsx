@@ -6,6 +6,7 @@ import { useDeleteMoviesMutation, useFetchMoviesQuery } from '../../rtk/movies/m
 import TrailerPhim from '../../components/itemAdmin/Trailer/page';
 import PosterPhim from '../../components/itemAdmin/Poster/page';
 import { Waveform } from '@uiball/loaders';
+import { checkApiStatus }  from "../checkApiStatus"; // Import hàm trợ giúp
 const { Column } = Table;
 
 export type QlPhim = {
@@ -21,7 +22,9 @@ export type QlPhim = {
     trailer: string;
 }
 const AdminQlPhim: React.FC = () => {
-    const { data: dataMovies, isLoading } = useFetchMoviesQuery()
+    const { data: dataMovies, isLoading} = useFetchMoviesQuery()
+    // const status = error?.status;
+    // checkApiStatus(status);
     const [deleteMovie] = useDeleteMoviesMutation()
     const [dataTable, setDataTable] = useState<QlPhim[]>([])
     const [searchTerm, setSearchTerm] = useState('');
@@ -47,7 +50,7 @@ const AdminQlPhim: React.FC = () => {
         deleteMovie(key).then(() => message.success("Xóa thành công"))
     }
     useEffect(() => {
-        const dataMap = dataMovies?.data
+        const dataMap = dataMovies
         console.log(dataMap);
         
         // chưa có kiểu dữ liệu cho data
@@ -55,10 +58,10 @@ const AdminQlPhim: React.FC = () => {
             const mapMovies = dataMap.map((item: any) => ({
                 key: item.id,
                 movie_name: item.movie_name,
-                country_name: item.country_id.country_name,
-                producer_name: item.producer_id.producer_name,
+                country_name: item.country_name,
+                producer_name: item.producer_name,
                 actor_name: item.actor_name,
-                type_name: item.movie_type_id.type_name,
+                type_name: item.type_name,
                 genre: item.genre,
                 director: item.director,
                 image: item.image,

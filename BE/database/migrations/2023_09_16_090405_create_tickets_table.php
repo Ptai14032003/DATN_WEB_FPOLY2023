@@ -17,7 +17,6 @@ return new class extends Migration
             $table->unsignedBigInteger('showtime_id');
             $table->unsignedBigInteger('bill_id');
             $table->integer('price');
-            $table->dateTime('time');
             $table->timestamps();
             $table->foreign('id_seat')->references('id')->on('seats');
             $table->foreign('showtime_id')->references('id')->on('showtimes');
