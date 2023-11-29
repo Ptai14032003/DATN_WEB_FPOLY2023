@@ -13,9 +13,6 @@ export default function Detail() {
     const redirectToLink = (link: any) => {
         navigate(link);
     };
-console.log(st_movie);
-
-
     return (
         <div className="container-detail text-white">
             <>

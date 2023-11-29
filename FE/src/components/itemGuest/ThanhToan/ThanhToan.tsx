@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import "./page.css"
 import { useSetBillMutation } from '../../../rtk/bill/bill';
 import { Button } from 'antd';
+import { useNavigate } from 'react-router-dom';
 type Props = {
     data: {
         selectedSeats: string[]
@@ -23,6 +24,7 @@ type Props = {
 }
 const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, show_time, movieBooking, idGhe } }: Props) => {
     const [data] = useSetBillMutation()
+    const navigate = useNavigate()
     const dataBill = {
         show_time: show_time,
         seat:
@@ -43,13 +45,17 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
         ,
         total_money: priceTong
     }
+    
     const setThanhToan = () => {
-        data(dataBill)
+        data(dataBill).then((data)=> navigate(data.data)
+        )
     }
     useEffect(() => {
     })
+    
     return (
         <>
+            <a href=""></a>
             <div className='my-[25px] flex gap-[30px] justify-center'>
                 <div className='w-[25%]'>
                     <img src={movieBooking?.image} width={200} alt="" />
@@ -110,7 +116,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
             <div>Phương thức thanh toán</div>
             <div className='flex justify-center'>
                 <Button className="w-[70%] rounded bg-teal-400 text-white text-base h-[42px] border-0" onClick={() => setThanhToan()} >Thanh toán</Button>
-            </div>
+            </div>    
         </>
     )
 };

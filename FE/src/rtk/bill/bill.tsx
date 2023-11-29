@@ -6,7 +6,7 @@ const billApi = createApi({
     }),
     tagTypes: ["bill"],
     endpoints: builder => ({
-        setBill: builder.mutation<void, any>({
+        setBill: builder.mutation<any, any>({
             query: (body) => ({
                 url: `/Payment`,
                 method: "POST",
