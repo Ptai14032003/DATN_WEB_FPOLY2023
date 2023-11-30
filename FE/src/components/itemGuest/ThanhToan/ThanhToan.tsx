@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import "./page.css"
 import { useSetBillMutation } from '../../../rtk/bill/bill';
-import { Button } from 'antd';
+import { Button } from 'antd'
 import { useNavigate } from 'react-router-dom';
 type Props = {
     data: {
@@ -38,21 +38,30 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
         combo:
             combo.map((item) => (
                 {
-                    food_name: item.food_name,
+                    name: item.food_name,
                     quantity: item.soLuong
                 }
             ))
         ,
         total_money: priceTong
     }
-    
     const setThanhToan = () => {
-        data(dataBill).then((data)=> navigate(data.data)
-        )
-    }
+        data(dataBill)
+            .then((response) => {
+                if (('data' in response)) {
+                    const thanhToanURL = response.data;
+                    window.location.href = thanhToanURL;
+                }
+            })
+            .catch((error) => {
+                console.error('Lỗi truy vấn:', error);
+                alert('Đã xảy ra lỗi khi thực hiện thanh toán.');
+            });
+    };
     useEffect(() => {
     })
-    
+    console.log(dataBill);
+
     return (
         <>
             <a href=""></a>
@@ -80,8 +89,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                         <div className='flex flex-col-reverse w-[125px]'>
                             <dd className="text-sm text-white flex gap-1">{selectedSeats.map((item: any) => (
                                 <div key={item}>{item}</div>
-                            ))
-                            }</dd>
+                            ))}</dd>
                             <dt className="text-xs text-gray-500">Số ghế</dt>
                         </div>
                     </div>
@@ -92,7 +100,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                                 <span className="text-xs text-gray-500">Số lượng</span>
                             </div>
                             {combo.map((item: any) => (
-                                <div className='flex justify-between'>
+                                <div key={item.food_name} className='flex justify-between'>
                                     <span className="text-sm text-white">{item?.food_name}</span>
                                     <span className="text-sm text-white w-[50px] text-center">{item?.soLuong}</span>
                                 </div>
@@ -113,10 +121,9 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                     </div>
                 </div >
             </div >
-            <div>Phương thức thanh toán</div>
             <div className='flex justify-center'>
                 <Button className="w-[70%] rounded bg-teal-400 text-white text-base h-[42px] border-0" onClick={() => setThanhToan()} >Thanh toán</Button>
-            </div>    
+            </div>
         </>
     )
 };
