@@ -6,6 +6,7 @@ use App\Models\Bill;
 use App\Models\Food;
 use App\Models\Ticket;
 use App\Models\Ticket_Food;
+use Exception;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -124,8 +125,90 @@ class PaymentController extends Controller
         // vui lòng tham khảo thêm tại code demo
     }
 
-    public  function check_payment(){
+    public  function check_payment(Request $request)
+    {
+        $inputData = array();
+        $returnData = array();
+        $vnp_HashSecret = "UDAXFZLJPNALXHWXVNNNZKOFPQAQMOHX";
+        foreach ($request->all() as $key => $value) {
+            if (substr($key, 0, 4) == "vnp_") {
+                $inputData[$key] = $value;
+            }
+        }
 
-        return response()->json('haha');
+        $vnp_SecureHash = $inputData['vnp_SecureHash'];
+        unset($inputData['vnp_SecureHash']);
+        ksort($inputData);
+        $i = 0;
+        $hashData = "";
+        foreach ($inputData as $key => $value) {
+            if ($i == 1) {
+                $hashData = $hashData . '&' . urlencode($key) . "=" . urlencode($value);
+            } else {
+                $hashData = $hashData . urlencode($key) . "=" . urlencode($value);
+                $i = 1;
+            }
+        }
+
+        $secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
+        $vnpTranId = $inputData['vnp_TransactionNo']; //Mã giao dịch tại VNPAY
+        $vnp_BankCode = $inputData['vnp_BankCode']; //Ngân hàng thanh toán
+        $vnp_Amount = $inputData['vnp_Amount'] / 100; // Số tiền thanh toán VNPAY phản hồi
+
+        $Status = 0; // Là trạng thái thanh toán của giao dịch chưa có IPN lưu tại hệ thống của merchant chiều khởi tạo URL thanh toán.
+        $bill_id = $inputData['vnp_TxnRef'];
+        try {
+            //Check Orderid    
+            //Kiểm tra checksum của dữ liệu
+            if ($secureHash == $vnp_SecureHash) {
+                //Lấy thông tin đơn hàng lưu trong Database và kiểm tra trạng thái của đơn hàng, mã đơn hàng là: $bill_id            
+                //Việc kiểm tra trạng thái của đơn hàng giúp hệ thống không xử lý trùng lặp, xử lý nhiều lần một giao dịch
+                //Giả sử: $bill = mysqli_fetch_assoc($result);   
+                $bill = Bill::find($bill_id);
+
+                if ($bill != NULL) {
+                    if ($bill["total_money"] == $vnp_Amount) //Kiểm tra số tiền thanh toán của giao dịch: giả sử số tiền kiểm tra là đúng. //$bill["Amount"] == $vnp_Amount
+                    {
+                        if ($bill["status"] == 0) {
+                            if ($inputData['vnp_ResponseCode'] == '00' || $inputData['vnp_TransactionStatus'] == '00') {
+                                $Status = 1; // Trạng thái thanh toán thành công
+                                $returnData['RspCode'] = '00';
+                                $returnData['Message'] = 'Thanh toán thành công';
+                            } else {
+                                $Status = 2; // Trạng thái thanh toán thất bại / lỗi
+                                $returnData['RspCode'] = '99';
+                                $returnData['Message'] = 'Thanh toán thất bại / lỗi';
+                            }
+                            //Cài đặt Code cập nhật kết quả thanh toán, tình trạng đơn hàng vào DB
+                            Bill::where('id', $bill_id)->update(['status' => $Status]);
+                        } elseif ($bill["status"] == 1) {
+                            $returnData['RspCode'] = '02';
+                            $returnData['Message'] = 'Đơn hàng đã được xác thực';
+                        } else {
+                            // Trạng thái thanh toán thất bại / lỗi
+                            Bill::where('id', $bill_id)->update(['status' => 2]);
+                            $returnData['RspCode'] = '99';
+                            $returnData['Message'] = 'Thanh toán thất bại / lỗi';
+                        }
+                    } else {
+                        Bill::where('id', $bill_id)->update(['status' => 2]);
+                        $returnData['RspCode'] = '04';
+                        $returnData['Message'] = 'Số tiền không hợp lệ';
+                    }
+                } else {
+                    $returnData['RspCode'] = '01';
+                    $returnData['Message'] = 'Không tìm thấy đơn hàng';
+                }
+            } else {
+                $returnData['RspCode'] = '97';
+                $returnData['Message'] = 'Chữ ký không hợp lệ';
+            }
+        } catch (Exception $e) {
+            $returnData['RspCode'] = '99';
+            $returnData['Message'] = 'Unknow error';
+        }
+
+        //Trả lại VNPAY theo định dạng JSON
+        return response()->json($returnData);
     }
 }
