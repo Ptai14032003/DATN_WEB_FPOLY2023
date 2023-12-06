@@ -14,8 +14,16 @@ const billApi = createApi({
             }),
             invalidatesTags: ["bill"]
         }),
+        checkBill: builder.mutation<any, any>({
+            query: (body) => ({
+                url: `/check_payment`,
+                method: "POST",
+                body
+            }),
+            invalidatesTags: ["bill"]
+        }),
 
     })
 })
-export const { useSetBillMutation } = billApi
+export const { useSetBillMutation, useCheckBillMutation } = billApi
 export default billApi

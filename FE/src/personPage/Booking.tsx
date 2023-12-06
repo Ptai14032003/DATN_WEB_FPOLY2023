@@ -18,9 +18,39 @@ const Booking = () => {
     const [combo, setCombo] = useState<[]>([]);
     const [priceFood, setPriceFood] = useState(0)
     const [money, setMoney] = useState(0);
+    const [groupSeats, setGroupSeats] = useState<any>()
     const priceTong = money + priceFood;
     const seats = seatBooking?.seats;
     const movieBooking = movie?.movie
+    useEffect(() => {
+        // if (seats) {
+        //     const groupedData = seats.reduce((acc: any, item: any) => {
+        //         if (item.seat_code) {
+        //             const firstChar = item.seat_code.charAt(0);
+        //             acc[firstChar] = acc[firstChar] || [];
+        //             acc[firstChar].push(item);
+        //         }
+        //     }, {});
+        //     setGroupSeats(groupedData);
+        // }
+        // Object.keys(groupSeats).forEach((key) => {
+        //     console.log(`${key}:`, groupSeats[key]);
+        // });
+        // console.log(seats);
+
+        // const dataSeats = seats.map((item: any) => (
+        //     console.log(item)
+        // ))
+        if (seats) {
+            const dataSeats = seats.map((item: any) => {
+                if (item.seat_code) {
+                    const firstChar = item.seat_code.charAt(0);
+
+                }
+                return item;
+            }, [])
+        }
+    })
     const handleClick = (tabNumber: number) => {
         setActiveTab(tabNumber);
     };
@@ -44,7 +74,7 @@ const Booking = () => {
             setSelectedSeats([...selectedSeats, seatId]);
         }
 
-    };    
+    };
     const TongTien = async (seatId: any, price: any) => {
         if (selectedSeats.includes(seatId)) {
             setMoney(money - price);
@@ -100,11 +130,12 @@ const Booking = () => {
     const Continue = () => {
         if (!selectedSeats || selectedSeats.length === 0) {
             alert('Vui lòng chọn ghế');
+        } else {
+            handleClick(2);
         }
-        else {
-            handleClick(2)
-        }
-    }
+    };
+    console.log(groupSeats);
+
     return (
         <div className='bg-black text-white'>
             <Menu />
@@ -176,6 +207,9 @@ const Booking = () => {
                                             </div>
                                         ))}
                                     </div>
+                                    <div>
+                                        {groupSeats}
+                                    </div>
                                     <div className="classify max-w-3xl mx-auto my-[5rem]">
                                         <div className="seat">
                                             <div className="normal-seat"></div>
@@ -206,22 +240,22 @@ const Booking = () => {
                         </form>
                         <div className={`Booking-combo grid ${activeTab === 2 ? "" : "hidden"}`}>
                             <div className='mt-[7rem] mx-[4rem]'>
-                            <div className='grid grid-cols-2 gap-12'>
-                                {Foods?.map((item) => (
-                                    <div className='Combo grid grid-cols-3 border-2 border-white rounded-md bg-[#2f9c8a] p-3 gap-5' key={item?.id}>
-                                        <img src={`${item?.image}`} alt="" className='col-span-1 h-[140px] w-full' />
-                                        <div className="col-span-2 space-y-3">
-                                            <h1 className='text-xl'>{item?.food_name}</h1>
-                                            <p className='text-lg'>{item?.price}</p>
-                                            <input className='text-black' type="number" defaultValue={0} min={0} onChange={(e) => getCombo(e, item?.price, item?.food_name)} />
-                                            <div className='flex justify-end'>
-                                            <button className='cursor-pointer border rounded py-1 px-4 bg-black'>Chọn</button>
+                                <div className='grid grid-cols-2 gap-12'>
+                                    {Foods?.map((item) => (
+                                        <div className='Combo grid grid-cols-3 border-2 border-white rounded-md bg-[#2f9c8a] p-3 gap-5' key={item?.id}>
+                                            <img src={`${item?.image}`} alt="" className='col-span-1 h-[140px] w-full' />
+                                            <div className="col-span-2 space-y-3">
+                                                <h1 className='text-xl'>{item?.food_name}</h1>
+                                                <p className='text-lg'>{item?.price}</p>
+                                                <input className='text-black' type="number" defaultValue={0} min={0} onChange={(e) => getCombo(e, item?.price, item?.food_name)} />
+                                                <div className='flex justify-end'>
+                                                    <button className='cursor-pointer border rounded py-1 px-4 bg-black'>Chọn</button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className='my-10 flex justify-end space-x-5'>
+                                    ))}
+                                </div>
+                                <div className='my-10 flex justify-end space-x-5'>
                                     <a onClick={() => handleClick(1)} className='border-2 border-[#1ACAAC] rounded-full px-7 py-2 hover:bg-[#1ACAAC] cursor-pointer'>Quay lại</a>
                                     <a onClick={() => handleClick(3)} className='border-2 border-[#1ACAAC] rounded-full px-7 py-2 hover:bg-[#1ACAAC] cursor-pointer'>Tiếp tục</a>
                                 </div>

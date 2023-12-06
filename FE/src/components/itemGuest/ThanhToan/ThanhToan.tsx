@@ -60,8 +60,6 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
     };
     useEffect(() => {
     })
-    console.log(dataBill);
-
     return (
         <>
             <a href=""></a>
