@@ -3,29 +3,27 @@ import './personPage.css'
 import { Link, redirect, useNavigate } from 'react-router-dom';
 import { useFetchMoviesPersonQuery } from '../rtk/moviesPerson/moviesPerson';
 import Fuse from 'fuse.js';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { message } from 'antd';
+import { useCheckBillMutation } from '../rtk/bill/bill';
 
 
 const HomePage = () => {
   const { data: movies } = useFetchMoviesPersonQuery()
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [inputSearchValue, setInputSearchValue] = useState('');
-
   const userString = localStorage.getItem('user');
   const user = userString ? JSON.parse(userString) : null;
-
   const Navigate = useNavigate()
   // console.log(user.role);
   // if (user.role === 'admin') {
 
   // }
   // const dataMap = movies?.data
-
-  const handleLinkClick = (value:any,e:any) => {
+  const handleLinkClick = (value: any, e: any) => {
     e.preventDefault();
     console.log(value);
-    
+
     Navigate(`/${value}`)
   };
 
@@ -75,7 +73,7 @@ const HomePage = () => {
           </div>
         </div>
         <div className="btn-movie space-x-5 mb-16">
-          <button className='active bg-[#1ACAAC] rounded-md w-[200px] py-2 text-lg'  onClick={(e) => { handleLinkClick("", e); window.location.reload(); }}>Đang chiếu</button>
+          <button className='active bg-[#1ACAAC] rounded-md w-[200px] py-2 text-lg' onClick={(e) => { handleLinkClick("", e); window.location.reload(); }}>Đang chiếu</button>
           <button className='bg-[#282727] rounded-md w-[200px] py-2 text-lg' onClick={(e) => handleLinkClick("new", e)}>Sắp chiếu</button>
           <button className='bg-[#282727] rounded-md w-[200px] py-2 text-lg' onClick={(e) => handleLinkClick("dacbiet", e)}>Đặc biệt</button>
         </div>
