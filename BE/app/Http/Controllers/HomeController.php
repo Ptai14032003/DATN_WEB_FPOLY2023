@@ -110,7 +110,10 @@ class HomeController extends Controller
         $seats = Seat::join('type_seats', 'type_seats.id', '=', 'seats.type_seat_id')
             ->join('rooms', 'rooms.id', '=', 'seats.room_id')
             ->join('showtimes', 'showtimes.room_id', '=', 'rooms.id')
-            ->leftJoin('tickets', 'tickets.showtime_id', '=', 'showtimes.id')
+            ->leftJoin('tickets', function ($join) {
+                $join->on('tickets.showtime_id', '=', 'showtimes.id')
+                    ->whereRaw('tickets.id_seat = seats.id');
+            })
             ->leftJoin('bills', 'bills.id', '=', 'tickets.bill_id')
             ->where('showtimes.id', $id)
             ->select(
@@ -120,38 +123,17 @@ class HomeController extends Controller
                 'type_seats.type_name',
                 'rooms.name as room_name',
                 \DB::raw("(
-                    CASE
-                        WHEN NOT EXISTS (
-                            SELECT 1
-                            FROM tickets t
-                            WHERE t.id_seat = seats.id
-                        ) THEN 2
-                        WHEN EXISTS (
-                            SELECT 1
-                            FROM tickets t
-                            JOIN bills b ON b.id = t.bill_id
-                            WHERE t.id_seat = seats.id AND b.status IN (0, 1)
-                        ) THEN (
-                            SELECT b.status
-                            FROM tickets t
-                            JOIN bills b ON b.id = t.bill_id
-                            WHERE t.id_seat = seats.id AND b.status IN (0, 1)
-                            LIMIT 1
-                        )
-                        WHEN EXISTS (
-                            SELECT 1
-                            FROM tickets t
-                            JOIN bills b ON b.id = t.bill_id
-                            WHERE t.id_seat = seats.id AND b.status = 2
-                            GROUP BY t.id_seat
-                            HAVING COUNT(DISTINCT b.status) = 1
-                        ) THEN 2
-                        ELSE 2
-                    END
-                ) as status")
+                CASE
+                    WHEN tickets.id IS NULL THEN 2
+                    WHEN bills.status IN (0, 1) THEN bills.status
+                    WHEN bills.status = 2 THEN 2
+                    ELSE 2
+                END
+            ) as status")
             )
-            ->groupBy('seats.id', 'seats.seat_code', 'seats.type_seat_id', 'type_seats.type_name', 'room_name')
+            ->groupBy('seats.id', 'seats.seat_code', 'seats.type_seat_id', 'type_seats.type_name', 'room_name', 'tickets.id', 'bills.status')
             ->get();
+
 
 
         $movie = Movie::join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')

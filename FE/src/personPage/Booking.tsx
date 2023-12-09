@@ -134,7 +134,7 @@ const Booking = () => {
             handleClick(2);
         }
     };
-    console.log(groupSeats);
+    console.log(seats);
 
     return (
         <div className='bg-black text-white'>
