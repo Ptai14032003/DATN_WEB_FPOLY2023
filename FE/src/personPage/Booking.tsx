@@ -5,6 +5,8 @@ import { useFetchSeatRoomIdQuery } from '../rtk/booking/booking';
 import ThanhToan from '../components/itemGuest/ThanhToan/ThanhToan';
 import { useFetchFoodsQuery } from '../rtk/qlSp/qlSp';
 import { useFetchMovieIdPersonQuery } from '../rtk/moviesPerson/moviesPerson';
+import { MdChair } from "react-icons/md";
+import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 const Booking = () => {
     const { search } = useLocation();
     const show_time = new URLSearchParams(search).get('show_seat');
@@ -44,7 +46,7 @@ const Booking = () => {
             setSelectedSeats([...selectedSeats, seatId]);
         }
 
-    };    
+    };
     const TongTien = async (seatId: any, price: any) => {
         if (selectedSeats.includes(seatId)) {
             setMoney(money - price);
@@ -162,40 +164,40 @@ const Booking = () => {
                                     <div className="screen">
                                         <img src="/screen.png" alt="" className='w-full' />
                                     </div>
-                                    <div className="all-seat max-w-4xl mx-auto flex gap-5 flex-wrap justify-center">
+                                    <div className=" max-w-3xl mx-auto grid grid-cols-9">
 
                                         {seats?.map((item: any) => (
                                             <div
-                                                key={item?.seat_code}
-                                                className={`seat text-center ${(item?.type_name === 'VIP' && !selectedSeats.includes(item?.seat_code)) && 'bg-[#8f4747]' ||
-                                                    (selectedSeats.includes(item?.seat_code)) && 'bg-[#00FFD1]' || (item?.type_name === 'Thường' && !selectedSeats.includes(item?.seat_code)) && 'bg-[#797373]'
+                                                key={item?.seat_code} >
+                                                <MdChair className={`seat text-center cursor-pointer ${(item?.type_name === 'VIP' && !selectedSeats.includes(item?.seat_code)) && 'text-[#8f4747]' ||
+                                                    (selectedSeats.includes(item?.seat_code)) && 'text-[#00FFD1]' || (item?.type_name === 'Thường' && !selectedSeats.includes(item?.seat_code)) && 'text-[#797373]'
                                                     }`}
-                                                onClick={() => { autoSubmit(item?.seat_code); TongTien(item?.seat_code, item?.price); getIdGhe(item?.id, item?.price) }}
-                                            >
-                                                {item?.seat_code}
+                                                    onClick={() => { autoSubmit(item?.seat_code); TongTien(item?.seat_code, item?.price); getIdGhe(item?.id, item?.price) }}
+                                                    size={50}
+                                                />
                                             </div>
                                         ))}
                                     </div>
                                     <div className="classify max-w-3xl mx-auto my-[5rem]">
                                         <div className="seat">
-                                            <div className="normal-seat"></div>
-                                            <p>Thường</p>
+                                            <div><MdChair className="text-[#797373]" size={40} /></div>
+                                            <p className='ml-2'>Thường</p>
                                         </div>
                                         <div className="seat">
-                                            <div className="vip-seat"></div>
-                                            <p>Vip</p>
+                                            <div><MdChair className="text-[#8f4747]" size={40} /></div>
+                                            <p className='ml-2'>Vip</p>
                                         </div>
                                         <div className="seat">
-                                            <div className="sweet-box-seat"></div>
-                                            <p>Sweet-box</p>
+                                            <div><MdChair className="text-[#8f355a]" size={40} /></div>
+                                            <p className='ml-2'>Sweet-box</p>
                                         </div>
                                         <div className="seat">
-                                            <div className="select-seat"></div>
-                                            <p>Đang chọn</p>
+                                            <div><MdChair className="text-[#00FFD1]" size={40} /></div>
+                                            <p className='ml-2'>Đang chọn</p>
                                         </div>
                                         <div className="seat">
-                                            <div className="sold-seat"></div>
-                                            <p>Đã bán</p>
+                                            <div><MdChair className="text-[#ff0000]" size={40} /></div>
+                                            <p className='ml-2'>Đã bán</p>
                                         </div>
                                     </div>
                                 </div>
@@ -206,22 +208,35 @@ const Booking = () => {
                         </form>
                         <div className={`Booking-combo grid ${activeTab === 2 ? "" : "hidden"}`}>
                             <div className='mt-[7rem] mx-[4rem]'>
-                            <div className='grid grid-cols-2 gap-12'>
-                                {Foods?.map((item) => (
-                                    <div className='Combo grid grid-cols-3 border-2 border-white rounded-md bg-[#2f9c8a] p-3 gap-5' key={item?.id}>
-                                        <img src={`${item?.image}`} alt="" className='col-span-1 h-[140px] w-full' />
-                                        <div className="col-span-2 space-y-3">
-                                            <h1 className='text-xl'>{item?.food_name}</h1>
-                                            <p className='text-lg'>{item?.price}</p>
-                                            <input className='text-black' type="number" defaultValue={0} min={0} onChange={(e) => getCombo(e, item?.price, item?.food_name)} />
-                                            <div className='flex justify-end'>
-                                            <button className='cursor-pointer border rounded py-1 px-4 bg-black'>Chọn</button>
+                                <div className='grid grid-cols-2 gap-12'>
+                                    {Foods?.map((item) => (
+                                        <div className='Combo grid grid-cols-3 border-2 border-white rounded-md bg-[#2f9c8a] p-3 gap-5' key={item?.id}>
+                                            <img src={`${item?.image}`} alt="" className='col-span-1 h-full w-full rounded-md' />
+                                            <div className="col-span-2 flex flex-col justify-between">
+                                                <h1 className='text-xl font-semibold'>{item?.food_name} - {item?.price.toLocaleString("vi-VN", { style: "currency", currency: "VND", })}</h1>
+                                                <p className='description'>01 nước siêu lớn + 01 bắp lớn + 01 xúc xích lốc xoáy</p>
+                                                <p className='description'>* Nhận ngay trong ngày xem phim</p>
+                                                <p className='description'>** Miễn phí đổi vị bắp Caramel</p>
+                                                <div className='flex justify-between mt-2'>
+                                                    <div className='combo-quantity h-[30px] flex'>
+                                                        <button className='bg-white rounded-tl-md rounded-bl-md h-full flex items-center justify-center'>
+                                                            <MinusOutlined style={{ color: '#000', fontSize: '20px', padding: '3px' }} />
+                                                        </button>
+                                                        <input className='text-black w-[100px] h-full outline-none pl-3' type="number" defaultValue={0} min={0} onChange={(e) => getCombo(e, item?.price, item?.food_name)} />
+                                                        <button className='bg-white rounded-tr-md rounded-br-md h-full flex items-center justify-center'>
+                                                            <PlusOutlined style={{ color: '#000', fontSize: '20px', padding: '3px' }} />
+                                                        </button>
+                                                    </div>
+                                                    {/* <input className='text-black' type="number" defaultValue={0} min={0} onChange={(e) => getCombo(e, item?.price, item?.food_name)} /> */}
+                                                    <div>
+                                                        <button className='cursor-pointer border rounded py-1 px-4 bg-black'>Chọn</button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className='my-10 flex justify-end space-x-5'>
+                                    ))}
+                                </div>
+                                <div className='my-10 flex justify-end space-x-5'>
                                     <a onClick={() => handleClick(1)} className='border-2 border-[#1ACAAC] rounded-full px-7 py-2 hover:bg-[#1ACAAC] cursor-pointer'>Quay lại</a>
                                     <a onClick={() => handleClick(3)} className='border-2 border-[#1ACAAC] rounded-full px-7 py-2 hover:bg-[#1ACAAC] cursor-pointer'>Tiếp tục</a>
                                 </div>
