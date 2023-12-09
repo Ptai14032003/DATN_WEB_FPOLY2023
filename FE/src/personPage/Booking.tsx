@@ -107,6 +107,7 @@ const Booking = () => {
             handleClick(2)
         }
     }
+    
     return (
         <div className='bg-black text-white'>
             <Menu />

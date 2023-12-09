@@ -142,12 +142,14 @@ class PaymentController extends Controller
         $i = 0;
         $hashData = "";
         foreach ($inputData as $key => $value) {
-            if ($i == 1) {
-                $hashData = $hashData . '&' . urlencode($key) . "=" . urlencode($value);
-            } else {
-                $hashData = $hashData . urlencode($key) . "=" . urlencode($value);
-                $i = 1;
-            }
+            if($value != null){
+                if ($i == 1) {
+                    $hashData = $hashData . '&' . urlencode($key) . "=" . urlencode($value);
+                } else {
+                    $hashData = $hashData . urlencode($key) . "=" . urlencode($value);
+                    $i = 1;
+                }
+            } 
         }
 
         $secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
