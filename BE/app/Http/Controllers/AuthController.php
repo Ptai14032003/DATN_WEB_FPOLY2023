@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
@@ -26,7 +28,7 @@ class AuthController extends Controller
             return response([
                 'user' => $user,
                 'accessToken' => $token,
-            ],200)->withCookie($cookie);
+            ], 200)->withCookie($cookie);
         } elseif (Auth::guard('personnels')->attempt(['email' => $request->email, 'password' => $request->password], false)) {
             $personnel = Auth::guard('personnels')->user();
             $token = $personnel->createToken($personnel->email . 'token')->plainTextToken;
@@ -35,7 +37,7 @@ class AuthController extends Controller
             return response([
                 'user' => $user,
                 'accessToken' => $token,
-            ],200)->withCookie($cookie);
+            ], 200)->withCookie($cookie);
         } else {
             // $error = "Thông tin tài khoản hoặc mật khẩu không chính xác";
             return response([
@@ -44,15 +46,52 @@ class AuthController extends Controller
         }
     }
 
-    public function register(AuthRequest $request)
+    public function register(Request $request)
     {
-        $data = $request->validated();
-        $data['password'] = bcrypt($data['password']);
-        $data['user_code'] = Helper::IDGenerator(new User, 'user_code', 6, "KH");
-        $user = User::create($data);
-        return response(new UserResource($user), 201);
+        // $data = $request->validated();
+        // $data['password'] = bcrypt($data['password']);
+        // $data['user_code'] = Helper::IDGenerator(new User, 'user_code', 6, "KH");
+        // $user = User::create($data);
+        // if ($user->id) {
+        //     return response(new UserResource($user), 200);
+        // } else {
+        //     return response(['errors' => $data->errors()], 404);
+        // }
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required',
+                'email' => 'required|email|unique:users,email|unique:personnels,email',
+                'phone_number' => [
+                    'required',
+                    'regex:/^(0|\+84)(\s|\.)?((3[2-9])|(5[689])|(7[06-9])|(8[1-689])|(9[0-46-9]))(\d)(\s|\.)?(\d{3})(\s|\.)?(\d{3})$/',
+                    'unique:users,phone_number',
+                    'unique:personnels,phone_number'
+                ],
+                'password' => [
+                    'required',
+                    'confirmed',
+                    'min:8',
+                    'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).+$/'
+                ]
+            ],
+            [
+                'name.required' => "Tên không được để trống",
+                'email.required' => "Email không được để trống",
+                'email.email' => "Email không đúng định dạng",
+                'email.unique' => "Email đã được đăng ký",
+                'phone_number.required' => "Số điện thoại không được để trống",
+                'phone_number.regex' => "Số điện thoại không đúng định dạng",
+                'phone_number.unique' => "Số điện thoại đã được đăng ký",
+                'password.required' => "Mật khẩu không được để trống",
+                'password.confirmed' => "Mật khẩu không trùng khớp",
+                'password.min' | 'password.regex' => "Yêu cầu mật khẩu có ít nhất 8 ký tự, chứa các chữ cái và bao gồm các ký tự đặc biệt(*@!#...)."
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json($validator->messages());
+        }
     }
-
     public function logout(Request $request)
     {
         $user = $request->user();
