@@ -102,7 +102,6 @@ class HomeController extends Controller
             return response()->json(['messages' => 'Không tồn tại suất chiếu theo phim này'], 404);
         }
         // return response()->json([$st_movie]);
-
     }
 
     public function show_seat_room($id)
@@ -110,9 +109,6 @@ class HomeController extends Controller
         $seats = Seat::join('type_seats', 'type_seats.id', '=', 'seats.type_seat_id')
             ->join('rooms', 'rooms.id', '=', 'seats.room_id')
             ->join('showtimes', 'showtimes.room_id', '=', 'rooms.id')
-            ->leftJoin('tickets', 'tickets.showtime_id', '=', 'showtimes.id')
-            ->leftJoin('bills', 'bills.id', '=', 'tickets.bill_id')
-            ->where('showtimes.id', $id)
             ->select(
                 'seats.id',
                 'seats.seat_code',
@@ -120,39 +116,39 @@ class HomeController extends Controller
                 'type_seats.type_name',
                 'rooms.name as room_name',
                 \DB::raw("(
-                    CASE
-                        WHEN NOT EXISTS (
-                            SELECT 1
-                            FROM tickets t
-                            WHERE t.id_seat = seats.id
-                        ) THEN 2
-                        WHEN EXISTS (
-                            SELECT 1
-                            FROM tickets t
-                            JOIN bills b ON b.id = t.bill_id
-                            WHERE t.id_seat = seats.id AND b.status IN (0, 1)
-                        ) THEN (
-                            SELECT b.status
-                            FROM tickets t
-                            JOIN bills b ON b.id = t.bill_id
-                            WHERE t.id_seat = seats.id AND b.status IN (0, 1)
-                            LIMIT 1
-                        )
-                        WHEN EXISTS (
-                            SELECT 1
-                            FROM tickets t
-                            JOIN bills b ON b.id = t.bill_id
-                            WHERE t.id_seat = seats.id AND b.status = 2
-                            GROUP BY t.id_seat
-                            HAVING COUNT(DISTINCT b.status) = 1
-                        ) THEN 2
-                        ELSE 2
-                    END
-                ) as status")
+                CASE
+                    WHEN NOT EXISTS (
+                        SELECT 1
+                        FROM tickets t
+                        WHERE t.id_seat = seats.id AND t.showtime_id = $id
+                    ) THEN 2
+                    WHEN EXISTS (
+                        SELECT 1
+                        FROM tickets t
+                        JOIN bills b ON b.id = t.bill_id
+                        WHERE t.id_seat = seats.id AND b.status IN (0, 1) AND t.showtime_id = $id
+                    ) THEN (
+                        SELECT b.status
+                        FROM tickets t
+                        JOIN bills b ON b.id = t.bill_id
+                        WHERE t.id_seat = seats.id AND b.status IN (0, 1) AND t.showtime_id = $id
+                        LIMIT 1
+                    )
+                    WHEN EXISTS (
+                        SELECT 1
+                        FROM tickets t
+                        JOIN bills b ON b.id = t.bill_id
+                        WHERE t.id_seat = seats.id AND b.status = 2 AND t.showtime_id = $id
+                        GROUP BY t.id_seat
+                        HAVING COUNT(DISTINCT b.status) = 1
+                    ) THEN 2
+                    ELSE 2
+                END
+            ) as status")
             )
+            ->where('showtimes.id', $id)
             ->groupBy('seats.id', 'seats.seat_code', 'seats.type_seat_id', 'type_seats.type_name', 'room_name')
             ->get();
-
 
         $movie = Movie::join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
             ->join('showtimes', 'showtimes.movie_id', '=', 'movies.id')
