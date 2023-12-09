@@ -39,10 +39,7 @@ class UserRequest extends FormRequest
                         'confirmed',
                         'min:8',
                         'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).+$/'
-                    ],
-                    'address' => 'required',
-                    'birthday' => 'required',
-                    'gender' => 'required'
+                    ]
                 ];
                 break;
             case 'PUT':
@@ -65,10 +62,7 @@ class UserRequest extends FormRequest
                         'confirmed',
                         'min:8',
                         'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).+$/'
-                    ],
-                    'address' => 'required',
-                    'birthday' => 'required',
-                    'gender' => 'required'
+                    ]
                 ];
                 break;
             default:
@@ -87,10 +81,7 @@ class UserRequest extends FormRequest
             'phone_number.unique'>"Số điện thoại đã được đăng ký",
             'password.required'=>"Mật khẩu không được để trống",
             'password.confirmed'=>"Mật khẩu không trùng khớp",
-            'password.min'|'password.regex'=>"Yêu cầu mật khẩu có ít nhất 8 ký tự, chứa các chữ cái và bao gồm các ký tự đặc biệt(*@!#...).",
-            'address.required'=>"Địa chỉ không được để trống",
-            'birthday.required'=>"Ngày sinh không được để trống",
-            'gender.required'=>"Giới tính chưa được chọn"
+            'password.min'|'password.regex'=>"Yêu cầu mật khẩu có ít nhất 8 ký tự, chứa các chữ cái và bao gồm các ký tự đặc biệt(*@!#...)."
         ];
     }
 }

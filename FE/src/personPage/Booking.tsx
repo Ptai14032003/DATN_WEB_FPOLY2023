@@ -20,6 +20,7 @@ const Booking = () => {
     const [combo, setCombo] = useState<[]>([]);
     const [priceFood, setPriceFood] = useState(0)
     const [money, setMoney] = useState(0);
+    const [groupSeats,setGroupSeats] = useState<any>();
     const priceTong = money + priceFood;
     const seats = seatBooking?.seats;
     const movieBooking = movie?.movie
@@ -182,17 +183,18 @@ const Booking = () => {
                                     </div>
                                     <div className="all-seat max-w-4xl mx-auto flex gap-5 flex-wrap justify-center">
                                         {groupSeats?.map((group: any, index: number) => (
-                                            <div key={index} className="seat-group flex gap-4">
+                                            <div key={index} className="seat-group flex gap-4 res">
                                                 {group?.map((seat: any) => (
-                                                    <div
-                                                        key={seat?.seat_code}
-                                                        className={`seat text-center ${(seat?.type_name === 'VIP' && !selectedSeats.includes(seat?.seat_code)) && 'bg-[#8f4747]' ||
-                                                            (selectedSeats.includes(seat?.seat_code)) && 'bg-[#00FFD1]' || (seat?.type_name === 'Thường' && !selectedSeats.includes(seat?.seat_code)) && 'bg-[#797373]'
-                                                            }`}
-                                                        onClick={() => { autoSubmit(seat?.seat_code); TongTien(seat?.seat_code, seat?.price); getIdGhe(seat?.id, seat?.price) }}
-                                                    >
-                                                        {seat?.seat_code}
-                                                    </div>
+                                                    <div className='relative'
+                                                key={seat?.seat_code} >
+                                                <MdChair className={`seat text-center cursor-pointer ${(seat?.type_name === 'VIP' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#8f4747]' ||
+                                                    (selectedSeats.includes(seat?.seat_code)) && 'text-[#00FFD1]' || (seat?.type_name === 'Thường' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#797373]' || (seat?.type_name === 'Đôi' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#8f355a]'
+                                                    }`}
+                                                    onClick={() => { autoSubmit(seat?.seat_code); TongTien(seat?.seat_code, seat?.price); getIdGhe(seat?.id, seat?.price) }}
+                                                    size={80} 
+                                                        />
+                                                        <div className={`absolute top-4 right-8 font-semibold text-sm ${(selectedSeats.includes(seat?.seat_code)) && 'text-black'}`}>{seat?.seat_code}</div>
+                                            </div>
                                                 ))}
 
                                             </div>
