@@ -34,7 +34,7 @@ const authApi = createApi({
                     return { message, accessToken, user };
                 },
             }),
-            signup: builder.mutation<{ message: string, accessToken: string, user: {} },AuthSignup>({
+            signup: builder.mutation<{ message: string, accessToken: string, user: {} },any>({
              query:(user)=>({
                  url: 'api/register',
                  method:"POST",
