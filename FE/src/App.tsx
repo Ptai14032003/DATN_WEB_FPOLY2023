@@ -22,6 +22,7 @@ import Seat from './components/itemAdmin/Seat/page.tsx'
 import TicketPrice from './personPage/TicketPrice.tsx'
 import Profile from './personPage/Profile.tsx'
 import CheckPay from './personPage/checkPay.tsx'
+import Payment from './personPage/Payment.tsx'
 
 
 function App() {
@@ -39,6 +40,8 @@ function App() {
       <Route path="signup" element={<Signup />} />
       <Route path='movie_show_time/:id' element={<Detail />}></Route>
       <Route path='booking/:id' element={<Booking />} />
+      <Route path='payment' element={<Payment />} />
+
       <Route path='/admin' element={<LayoutAdmin />}>
         <Route path='qlPhim' element={<AdminQlPhim />}></Route>
         <Route path='qlSuatChieu' element={<AdminQlSc />}></Route>
