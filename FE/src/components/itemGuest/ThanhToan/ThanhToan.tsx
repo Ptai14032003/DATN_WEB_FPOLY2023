@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import "./page.css"
 import { useSetBillMutation } from '../../../rtk/bill/bill';
-import { Button } from 'antd'
+import { Button, Modal } from 'antd'
 import { useNavigate } from 'react-router-dom';
 type Props = {
     data: {
@@ -24,6 +24,11 @@ type Props = {
 }
 const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, show_time, movieBooking, idGhe } }: Props) => {
     const [data] = useSetBillMutation()
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [activeTab, setActiveTab] = useState(1);
+    const handleClick = (tabNumber: number) => {
+        setActiveTab(tabNumber);
+    };
     const navigate = useNavigate()
     const dataBill = {
         show_time: show_time,
@@ -60,6 +65,18 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
     };
     useEffect(() => {
     })
+
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleOk = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(true);
+    };
     return (
         <>
             <a href=""></a>
@@ -109,6 +126,42 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                         <div className='flex flex-col-reverse'>
                             <dd className="text-sm text-white text-left">Phố Trịnh Văn Bô, Phường Phương Canh, quận Từ Liêm</dd>
                             <dt className="text-xs text-gray-500 text-left">IMAGIX cinema</dt>
+                        </div>
+                    </div>
+                    <div className='block border-b-2'>
+                        <div className='sale-code'>
+                            <div className='grid grid-cols-3 space-x-2'>
+                                <input type="text" className='voucher-code cursor-not-allowed h-[30px] outline-none col-span-2' />
+                                <Button type="primary" onClick={showModal} className='bg-teal-400 mb-3'>
+                                    Discount code
+                                </Button>
+                            </div>
+                            <div className='flex justify-between mb-3'>
+                                <p>Discount</p>
+                                <p>0</p>
+                            </div>
+                            <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                                <div className='space-y-3'>
+                                    <button
+                                         onClick={() => handleClick(2)}
+                                         className={activeTab === 2 ? 'block bg-[#1ACAAC] text-black w-full rounded-md py-3' : 'block bg-[#797373] text-white w-full rounded-md hover:bg-[#464444] py-3'}
+                                    >
+                                        <h3 className='text-3xl font-medium'>GXHKTD4LJ</h3>
+                                        <p>Giảm 20% tổng giá trị đơn hàng</p>
+                                        <p>Thời gian áp dụng: 09/12/2023</p>
+                                        <p>Thời gian hết hạn: vô hạn</p>
+                                    </button>
+                                    <button
+                                         onClick={() => handleClick(3)}
+                                         className={activeTab === 3 ? 'block bg-[#1ACAAC] text-black w-full rounded-md py-3' : 'block bg-[#797373] text-white w-full rounded-md hover:bg-[#464444] py-3'}
+                                    >
+                                        <h3 className='text-3xl font-medium'>AS5FGS8HC</h3>
+                                        <p>Giảm 10% tổng giá trị đơn hàng</p>
+                                        <p>Thời gian áp dụng: 09/12/2023</p>
+                                        <p>Thời gian hết hạn: vô hạn</p>
+                                    </button>
+                                </div>
+                            </Modal>
                         </div>
                     </div>
                     <div className='block'>

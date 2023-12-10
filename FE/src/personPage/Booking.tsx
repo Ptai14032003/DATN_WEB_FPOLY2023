@@ -109,7 +109,6 @@ const Booking = () => {
     }
     return (
         <div className='bg-black text-white'>
-            <Menu />
             <div className="backdrop">
                 <img src={seatBooking?.movie?.image} className='backdrop-img w-full h-[550px] relative'></img>
             </div>
