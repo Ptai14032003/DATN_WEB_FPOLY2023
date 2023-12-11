@@ -202,7 +202,7 @@ const Booking = () => {
                                     </div>
                                     <div className="all-seat max-w-4xl mx-auto flex gap-5 flex-wrap justify-center">
                                         {groupSeats?.map((group: any, index: number) => (
-                                            <div key={index} className="seat-group gap-4 res">
+                                            <div key={index} className="seat-group flex gap-4 res">
                                                 {group?.map((seat: any) => (
                                                     <div className='relative '
                                                         key={seat?.seat_code} >
