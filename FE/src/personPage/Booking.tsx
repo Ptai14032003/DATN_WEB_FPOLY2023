@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useParams } from "react-router-dom";
-import Menu from '../components/layouts/layoutGuest/menu';
 import { useFetchSeatRoomIdQuery } from '../rtk/booking/booking';
 import ThanhToan from '../components/itemGuest/ThanhToan/ThanhToan';
 import { useFetchFoodsQuery } from '../rtk/qlSp/qlSp';
@@ -20,9 +19,24 @@ const Booking = () => {
     const [combo, setCombo] = useState<[]>([]);
     const [priceFood, setPriceFood] = useState(0)
     const [money, setMoney] = useState(0);
+    const [groupSeats, setGroupSeats] = useState<any>();
     const priceTong = money + priceFood;
     const seats = seatBooking?.seats;
     const movieBooking = movie?.movie
+    useEffect(() => {
+        if (seats) {
+            const groupedSeats = seats.reduce((acc: any, seat: any) => {
+                const firstChar = seat.seat_code.charAt(0);
+                if (!acc[firstChar]) {
+                    acc[firstChar] = [];
+                }
+                acc[firstChar].push(seat);
+                return acc;
+            }, {});
+            const groupedSeatsArray = Object.values(groupedSeats);
+            setGroupSeats(groupedSeatsArray)
+        }
+    }, [seats])
     const handleClick = (tabNumber: number) => {
         setActiveTab(tabNumber);
     };
@@ -39,13 +53,36 @@ const Booking = () => {
             setidGhe([...idGhe, data]);
         }
     };
-    const autoSubmit = async (seatId: any) => {
-        if (selectedSeats.includes(seatId)) {
-            setSelectedSeats(selectedSeats.filter((id) => id !== seatId));
-        } else {
-            setSelectedSeats([...selectedSeats, seatId]);
-        }
+    const autoSubmit = async (seatId: any, typeName: any) => {
+        if (typeName === 'Đôi') {
+            if (seatId.charAt(1) % 2 === 0) {
+                const seat = seatId.charAt(0) + `${Number(seatId.charAt(1)) - Number(1)}`;
+                const isSelected = selectedSeats.includes(seatId) || selectedSeats.includes(seat);
+                if (isSelected) {
+                    setSelectedSeats(selectedSeats.filter((id) => id !== seatId && id !== seat));
+                } else {
+                    setSelectedSeats([...selectedSeats, seat, seatId]);
+                }
+            }
+            else {
+                const seat = seatId.charAt(0) + `${Number(seatId.charAt(1)) + Number(1)}`
+                console.log(seat);
 
+                const isSelected = selectedSeats.includes(seatId) || selectedSeats.includes(seat);
+                if (isSelected) {
+                    setSelectedSeats(selectedSeats.filter((id) => id !== seatId && id !== seat));
+                } else {
+                    setSelectedSeats([...selectedSeats, seat, seatId]);
+                }
+            }
+
+        } else {
+            if (selectedSeats.includes(seatId)) {
+                setSelectedSeats(selectedSeats.filter((id) => id !== seatId));
+            } else {
+                setSelectedSeats([...selectedSeats, seatId]);
+            }
+        }
     };
     const TongTien = async (seatId: any, price: any) => {
         if (selectedSeats.includes(seatId)) {
@@ -107,6 +144,7 @@ const Booking = () => {
             handleClick(2)
         }
     }
+
     return (
         <div className='bg-black text-white'>
             <div className="backdrop">
@@ -135,7 +173,6 @@ const Booking = () => {
                                     <div key={item.food_name} className='flex gap-[100px]'>
                                         <div className='w-[80%]'>{item.food_name}</div>
                                         <div>x{item.soLuong}</div>
-                                        {/* <div>{item.soLuong * item.price}</div> */}
                                     </div>
                                 ))}
                                 <h1 className='mt-3 text-sm'>Tổng tiền : {priceFood + money}</h1>
@@ -163,7 +200,21 @@ const Booking = () => {
                                     <div className="screen">
                                         <img src="/screen.png" alt="" className='w-full' />
                                     </div>
-                                    <div className=" max-w-3xl mx-auto grid grid-cols-9">
+                                    <div className="all-seat max-w-4xl mx-auto flex gap-5 flex-wrap justify-center">
+                                        {groupSeats?.map((group: any, index: number) => (
+                                            <div key={index} className="seat-group flex gap-4 res">
+                                                {group?.map((seat: any) => (
+                                                    <div className='relative '
+                                                        key={seat?.seat_code} >
+                                                        <MdChair className={`seat text-center cursor-pointer ${(seat?.type_name === 'VIP' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#8f4747]' ||
+                                                            (selectedSeats.includes(seat?.seat_code)) && 'text-[#00FFD1]' || (seat?.type_name === 'Thường' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#797373]' || (seat?.type_name === 'Đôi' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#8f355a]'
+                                                            }`}
+                                                            onClick={() => { autoSubmit(seat?.seat_code, seat?.type_name); TongTien(seat?.seat_code, seat?.price); getIdGhe(seat?.id, seat?.price) }}
+                                                            size={80}
+                                                        />
+                                                        <div className={`cursor-pointer absolute top-4 right-8 font-semibold text-sm ${(selectedSeats.includes(seat?.seat_code)) && 'text-black'}`} onClick={() => { autoSubmit(seat?.seat_code, seat?.type_name); TongTien(seat?.seat_code, seat?.price); getIdGhe(seat?.id, seat?.price) }}>{seat?.seat_code}</div>
+                                                    </div>
+                                                ))}
 
                                         {seats?.map((item: any) => (
                                             <div
@@ -183,6 +234,7 @@ const Booking = () => {
                                                     }}
                                                     size={50}
                                                 />
+
                                             </div>
                                         ))}
                                     </div>
