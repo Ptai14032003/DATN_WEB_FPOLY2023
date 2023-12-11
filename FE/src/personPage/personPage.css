@@ -353,3 +353,119 @@
 .in4Active{
   background-color: #00FFD1;
 }
+
+/* paySuccess */
+.pay-success-screen{
+  background: rgba(13, 13, 13, 1);
+}
+.pay-success-box{
+  box-shadow: 0px 2px 18px 0px rgb(255, 255, 255);
+}
+.pay-success-box {
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  animation: fadeInUp 0.3s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  0% {
+    transform: scale(0.8);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+/* checkCircle */
+.svg-success {
+  display: inline-block;
+  vertical-align: top;
+  height: 80px;
+  width: 80px;
+  opacity: 1;
+  overflow: visible;
+}
+  @keyframes success-tick {
+    0% {
+      stroke-dashoffset: 16px;
+      opacity: 1
+    }
+
+    100% {
+      stroke-dashoffset: 31px;
+      opacity: 1
+    }
+  }
+
+  @keyframes success-circle-outline {
+    0% {
+      stroke-dashoffset: 72px;
+      opacity: 1
+    }
+
+    100% {
+      stroke-dashoffset: 0px;
+      opacity: 1
+    }
+  }
+
+  @keyframes success-circle-fill {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .success-tick {
+    fill: none;
+    stroke-width: 1px;
+    stroke: #ffffff;
+    stroke-dasharray: 15px, 15px;
+    /* stroke-dashoffset: -14px; */
+    animation: success-tick 450ms ease 1400ms forwards;
+    opacity: 0;
+  }
+
+  .success-circle-outline {
+    fill: none;
+    stroke-width: 1px;
+    stroke: #81c038;
+    stroke-dasharray: 72px, 72px;
+    stroke-dashoffset: 72px;
+    animation: success-circle-outline 300ms ease-in-out 800ms forwards;
+    opacity: 0;
+  }
+
+  .success-circle-fill {
+    fill: #81c038;
+    stroke: none;
+    opacity: 0;
+    animation: success-circle-fill 300ms ease-out 1100ms forwards;
+  }
+
+  /* // Can't animate stroke-dashoffset on IE 10 and 11, just show svg instead */
+  @media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {
+    .success-tick {
+      stroke-dasharray: 0;
+      stroke-dashoffset: 0;
+      animation: none;
+      opacity: 1;
+    }
+
+    .success-circle-outline {
+      stroke-dasharray: 0;
+      stroke-dashoffset: 0;
+      animation: none;
+      opacity: 1;
+    }
+
+    .success-circle-fill {
+      animation: none;
+      opacity: 1;
+    }
+  }
