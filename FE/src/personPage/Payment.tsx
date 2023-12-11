@@ -23,7 +23,7 @@ const Payment = () => {
                     <p>Xem chi tiết thông tin vé tại đây <a href="" className='text-blue-500'>Ticket Infomation</a>.</p>
                     <div className='pt-5'>
                         <Link to="/">
-                            <button className='bg-blue-500 text-white text-lg font-medium rounded-lg p-4'>Quay về trang chủ</button>
+                            <button className='bg-blue-500 text-white text-lg font-medium rounded-lg p-4'> Quay về trang chủ</button>
                         </Link>
                     </div>
                 </div>
