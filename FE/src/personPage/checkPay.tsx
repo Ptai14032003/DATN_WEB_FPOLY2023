@@ -42,7 +42,7 @@ const CheckPay = () => {
             )
         }
     }, [])
-    const moneny = vnp_Amount?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    const moneny = (Number(vnp_Amount) / 100)?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return (
         <div className='pay-success-screen h-screen grid place-content-center'>
             <div className='pay-success-box bg-white h-[500px] w-[600px] rounded-xl'>
