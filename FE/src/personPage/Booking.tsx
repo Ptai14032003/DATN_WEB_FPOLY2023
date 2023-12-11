@@ -216,6 +216,25 @@ const Booking = () => {
                                                     </div>
                                                 ))}
 
+                                        {seats?.map((item: any) => (
+                                            <div
+                                                key={item?.seat_code} >
+                                                 <MdChair
+                                                    className={`seat text-center cursor-pointer ${(item?.status === 0 && 'non-choose-1') || (item?.status === 1 && 'non-choose-2') ||
+                                                        (item?.type_name === 'VIP' && !selectedSeats.includes(item?.seat_code) && 'text-[#8f4747]') ||
+                                                        (selectedSeats.includes(item?.seat_code) && 'text-[#00FFD1]') ||
+                                                        (item?.type_name === 'Thường' && !selectedSeats.includes(item?.seat_code) && 'text-[#797373]')
+                                                        }`}
+                                                    onClick={() => {
+                                                        if (item?.status !== 1 && item?.status !== 0) {
+                                                            autoSubmit(item?.seat_code);
+                                                            TongTien(item?.seat_code, item?.price);
+                                                            getIdGhe(item?.id, item?.price);
+                                                        }
+                                                    }}
+                                                    size={50}
+                                                />
+
                                             </div>
                                         ))}
                                     </div>
