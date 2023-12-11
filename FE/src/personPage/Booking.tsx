@@ -221,23 +221,23 @@ const Booking = () => {
                                     </div>
                                     <div className="classify max-w-3xl mx-auto my-[5rem]">
                                         <div className="seat">
-                                            <div><MdChair className="text-[#797373]" size={40} /></div>
+                                            <div><MdChair className="text-[#797373]" size={40}/></div>
                                             <p className='ml-2'>Thường</p>
                                         </div>
                                         <div className="seat">
-                                            <div><MdChair className="text-[#8f4747]" size={40} /></div>
+                                            <div><MdChair className="text-[#8f4747]" size={40}/></div>
                                             <p className='ml-2'>Vip</p>
                                         </div>
                                         <div className="seat">
-                                            <div><MdChair className="text-[#8f355a]" size={40} /></div>
+                                            <div><MdChair className="text-[#8f355a]" size={40}/></div>
                                             <p className='ml-2'>Sweet-box</p>
                                         </div>
                                         <div className="seat">
-                                            <div><MdChair className="text-[#00FFD1]" size={40} /></div>
+                                            <div><MdChair className="text-[#00FFD1]" size={40}/></div>
                                             <p className='ml-2'>Đang chọn</p>
                                         </div>
                                         <div className="seat">
-                                            <div><MdChair className="text-[#ff0000]" size={40} /></div>
+                                            <div><MdChair className="text-[#ff0000]" size={40}/></div>
                                             <p className='ml-2'>Đã bán</p>
                                         </div>
                                     </div>

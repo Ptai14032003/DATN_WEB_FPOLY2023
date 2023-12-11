@@ -41,7 +41,6 @@ function App() {
       <Route path='movie_show_time/:id' element={<Detail />}></Route>
       <Route path='booking/:id' element={<Booking />} />
       <Route path='payment' element={<Payment />} />
-
       <Route path='/admin' element={<LayoutAdmin />}>
         <Route path='qlPhim' element={<AdminQlPhim />}></Route>
         <Route path='qlSuatChieu' element={<AdminQlSc />}></Route>
