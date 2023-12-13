@@ -34,7 +34,7 @@ const CheckPay = () => {
                 vnp_SecureHash: vnp_SecureHash,
                 vnp_CardType: vnp_CardType
             }
-            checkBill(data).then((req) => setMess(req?.data?.Message)
+            checkBill(data).then((req: any) => setMess(req?.data?.Message)
 
             )
         }
