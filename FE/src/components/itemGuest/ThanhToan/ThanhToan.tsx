@@ -50,7 +50,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
         ,
         total_money: priceTong
     }
-    const setThanhToan = () => {
+        const setThanhToan = () => {
         data(dataBill)
             .then((response) => {
                 if (('data' in response)) {
