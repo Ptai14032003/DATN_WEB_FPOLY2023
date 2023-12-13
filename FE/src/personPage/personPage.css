@@ -378,6 +378,7 @@
     transform: scale(1);
   }
 }
+
 /* checkCircle */
 .svg-success {
   display: inline-block;
@@ -469,3 +470,14 @@
       opacity: 1;
     }
   }
+
+
+/* can't choose seat */
+.non-choose-1{
+  color: #ff0000;
+  cursor: not-allowed!important;
+}
+.non-choose-2{
+  color: #bebdbd;
+  cursor: not-allowed!important;
+}

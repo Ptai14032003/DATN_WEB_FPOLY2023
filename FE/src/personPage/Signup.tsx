@@ -44,8 +44,6 @@ const Signup = () => {
     console.log(data);
 
   }
-
-
   return (
     <div className='User-box'>
       <div className="Form">
