@@ -251,17 +251,22 @@ const Booking = () => {
                                                 {group?.map((seat: any) => (
                                                     <div className='relative '
                                                         key={seat?.seat_code} >
-                                                        <MdChair className={`seat text-center cursor-pointer ${(seat?.type_name === 'VIP' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#8f4747]' ||
+                                                        <MdChair className={`seat text-center cursor-pointer ${(seat?.status === 0 && 'non-choose-1') || (seat?.status === 1 && 'non-choose-2') ||(seat?.type_name === 'VIP' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#8f4747]' ||
                                                             (selectedSeats.includes(seat?.seat_code)) && 'text-[#00FFD1]' || (seat?.type_name === 'Thường' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#797373]' || (seat?.type_name === 'Đôi' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#8f355a]'
                                                             }`}
-                                                            onClick={() => { autoSubmit(seat?.seat_code, seat?.type_name); TongTien(seat?.seat_code, seat?.price); getIdGhe(seat?.id, seat?.price, seat?.type_name) }}
+                                                            onClick={() => {
+                                                                if (seat?.status !== 1 && seat?.status !== 0) {
+                                                                    autoSubmit(seat?.seat_code, seat?.type_name); TongTien(seat?.seat_code, seat?.price); getIdGhe(seat?.id, seat?.price, seat?.type_name)                                                                }
+                                                            }}
+
                                                             size={80}
                                                         />
                                                         <div className={`cursor-pointer absolute top-4 right-8 font-semibold text-sm ${(selectedSeats.includes(seat?.seat_code)) && 'text-black'}`} onClick={() => { autoSubmit(seat?.seat_code, seat?.type_name); TongTien(seat?.seat_code, seat?.price); getIdGhe(seat?.id, seat?.price, seat?.type_name) }}>{seat?.seat_code}</div>
                                                     </div>
                                                 ))}
-
-                                        {seats?.map((item: any) => (
+                                               </div>
+                                            ))}
+                                        {/* {seats?.map((item: any) => (
                                             <div
                                                 key={item?.seat_code} >
                                                  <MdChair
@@ -281,7 +286,7 @@ const Booking = () => {
                                                 />
 
                                             </div>
-                                        ))}
+                                        ))} */}
                                     </div>
                                     <div className="classify max-w-3xl mx-auto my-[5rem]">
                                         <div className="seat">
