@@ -40,17 +40,64 @@ const Booking = () => {
     const handleClick = (tabNumber: number) => {
         setActiveTab(tabNumber);
     };
-    const getIdGhe = (id: string, price: string) => {
+    const getIdGhe = (id: string, price: string, typeName: string) => {
         const data = {
             id: id,
             price: price
         };
-        const checkId = idGhe.some((item: any) => item.id === data.id);
+        if (typeName === "Đôi") {
+            groupSeats?.map((item: any) => {
+                item?.map((item2: any) => {
+                    if (item2.type_name === "Đôi") {
+                        const data: number = item.findIndex((seat: any) => seat.id === id);
+                        // chẵn lẻ vị trí 
+                        if (data % 2 === 0) {
+                            const dataSeat1 = {
+                                id: item[data].id,
+                                price: item[data].price
+                            }
+                            const dataSeat2 = {
+                                id: item[data + 1].id,
+                                price: item[data + 1].price
+                            }
+                            const checkId = idGhe.some((item: any) => item.id === dataSeat1.id);
+                            console.log(checkId);
 
-        if (checkId) {
-            setidGhe(() => idGhe.filter((item: any) => item.id !== data.id));
+                            if (checkId) {
+                                setidGhe(() => idGhe.filter((item: any) => item.id !== dataSeat1.id && item.id !== dataSeat2.id));
+                            } else {
+                                setidGhe([...idGhe, dataSeat1, dataSeat2]);
+                            }
+                        } else {
+                            const dataSeat1 = {
+                                id: item[data].id,
+                                price: item[data].price
+                            }
+                            const dataSeat2 = {
+                                id: item[data - 1].id,
+                                price: item[data - 1].price
+                            }
+                            const checkId = idGhe.some((item: any) => item.id === dataSeat1.id);
+                            console.log(dataSeat2);
+
+                            if (checkId) {
+                                setidGhe(() => idGhe.filter((item: any) => item.id !== dataSeat1.id && item.id !== dataSeat2.id));
+                            } else {
+                                setidGhe([...idGhe, dataSeat1, dataSeat2]);
+                            }
+
+                        }
+
+                    }
+                })
+            })
         } else {
-            setidGhe([...idGhe, data]);
+            const checkId = idGhe.some((item: any) => item.id === data.id);
+            if (checkId) {
+                setidGhe(() => idGhe.filter((item: any) => item.id !== data.id));
+            } else {
+                setidGhe([...idGhe, data]);
+            }
         }
     };
     const autoSubmit = async (seatId: any, typeName: any) => {
@@ -66,8 +113,6 @@ const Booking = () => {
             }
             else {
                 const seat = seatId.charAt(0) + `${Number(seatId.charAt(1)) + Number(1)}`
-                console.log(seat);
-
                 const isSelected = selectedSeats.includes(seatId) || selectedSeats.includes(seat);
                 if (isSelected) {
                     setSelectedSeats(selectedSeats.filter((id) => id !== seatId && id !== seat));
@@ -211,12 +256,12 @@ const Booking = () => {
                                                             }`}
                                                             onClick={() => {
                                                                 if (seat?.status !== 1 && seat?.status !== 0) {
-                                                                    autoSubmit(seat?.seat_code, seat?.type_name); TongTien(seat?.seat_code, seat?.price); getIdGhe(seat?.id, seat?.price)
-                                                                }
+                                                                    autoSubmit(seat?.seat_code, seat?.type_name); TongTien(seat?.seat_code, seat?.price); getIdGhe(seat?.id, seat?.price, seat?.type_name)                                                                }
                                                             }}
+
                                                             size={80}
                                                         />
-                                                        <div className={`cursor-pointer absolute top-4 right-8 font-semibold text-sm ${(selectedSeats.includes(seat?.seat_code)) && 'text-black'}`} onClick={() => { autoSubmit(seat?.seat_code, seat?.type_name); TongTien(seat?.seat_code, seat?.price); getIdGhe(seat?.id, seat?.price) }}>{seat?.seat_code}</div>
+                                                        <div className={`cursor-pointer absolute top-4 right-8 font-semibold text-sm ${(selectedSeats.includes(seat?.seat_code)) && 'text-black'}`} onClick={() => { autoSubmit(seat?.seat_code, seat?.type_name); TongTien(seat?.seat_code, seat?.price); getIdGhe(seat?.id, seat?.price, seat?.type_name) }}>{seat?.seat_code}</div>
                                                     </div>
                                                 ))}
                                                </div>

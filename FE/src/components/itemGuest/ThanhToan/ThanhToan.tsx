@@ -23,13 +23,14 @@ type Props = {
     }
 }
 const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, show_time, movieBooking, idGhe } }: Props) => {
+    console.log(idGhe);
+
     const [data] = useSetBillMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState(1);
     const handleClick = (tabNumber: number) => {
         setActiveTab(tabNumber);
     };
-    const navigate = useNavigate()
     const dataBill = {
         show_time: show_time,
         seat:
@@ -143,8 +144,8 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                             <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                                 <div className='space-y-3'>
                                     <button
-                                         onClick={() => handleClick(2)}
-                                         className={activeTab === 2 ? 'block bg-[#1ACAAC] text-black w-full rounded-md py-3' : 'block bg-[#797373] text-white w-full rounded-md hover:bg-[#464444] py-3'}
+                                        onClick={() => handleClick(2)}
+                                        className={activeTab === 2 ? 'block bg-[#1ACAAC] text-black w-full rounded-md py-3' : 'block bg-[#797373] text-white w-full rounded-md hover:bg-[#464444] py-3'}
                                     >
                                         <h3 className='text-3xl font-medium'>GXHKTD4LJ</h3>
                                         <p>Giảm 20% tổng giá trị đơn hàng</p>
@@ -152,8 +153,8 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                                         <p>Thời gian hết hạn: vô hạn</p>
                                     </button>
                                     <button
-                                         onClick={() => handleClick(3)}
-                                         className={activeTab === 3 ? 'block bg-[#1ACAAC] text-black w-full rounded-md py-3' : 'block bg-[#797373] text-white w-full rounded-md hover:bg-[#464444] py-3'}
+                                        onClick={() => handleClick(3)}
+                                        className={activeTab === 3 ? 'block bg-[#1ACAAC] text-black w-full rounded-md py-3' : 'block bg-[#797373] text-white w-full rounded-md hover:bg-[#464444] py-3'}
                                     >
                                         <h3 className='text-3xl font-medium'>AS5FGS8HC</h3>
                                         <p>Giảm 10% tổng giá trị đơn hàng</p>
