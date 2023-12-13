@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useCheckBillMutation } from '../rtk/bill/bill';
 import { Link } from 'react-router-dom';
-
-type Props = {}
-
 const CheckPay = () => {
     const [checkBill] = useCheckBillMutation()
     const [mess, setMess] = useState("")
