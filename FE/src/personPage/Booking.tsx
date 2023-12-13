@@ -21,6 +21,7 @@ const Booking = () => {
     const [money, setMoney] = useState(0);
     const [groupSeats, setGroupSeats] = useState<any>();
     const priceTong = money + priceFood;
+    const dataTong = (Number(priceTong))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     const seats = seatBooking?.seats;
     const movieBooking = movie?.movie
     useEffect(() => {
@@ -61,8 +62,6 @@ const Booking = () => {
                                 price: item[data + 1].price
                             }
                             const checkId = idGhe.some((item: any) => item.id === dataSeat1.id);
-                            console.log(checkId);
-
                             if (checkId) {
                                 setidGhe(() => idGhe.filter((item: any) => item.id !== dataSeat1.id && item.id !== dataSeat2.id));
                             } else {
@@ -78,8 +77,6 @@ const Booking = () => {
                                 price: item[data - 1].price
                             }
                             const checkId = idGhe.some((item: any) => item.id === dataSeat1.id);
-                            console.log(dataSeat2);
-
                             if (checkId) {
                                 setidGhe(() => idGhe.filter((item: any) => item.id !== dataSeat1.id && item.id !== dataSeat2.id));
                             } else {
@@ -100,32 +97,37 @@ const Booking = () => {
             }
         }
     };
-    const autoSubmit = async (seatId: any, typeName: any) => {
+    const autoSubmit = async (seatId_code: any, typeName: any) => {
+        console.log(seatId_code);
+        
         if (typeName === 'Đôi') {
-            if (seatId.charAt(1) % 2 === 0) {
-                const seat = seatId.charAt(0) + `${Number(seatId.charAt(1)) - Number(1)}`;
-                const isSelected = selectedSeats.includes(seatId) || selectedSeats.includes(seat);
-                if (isSelected) {
-                    setSelectedSeats(selectedSeats.filter((id) => id !== seatId && id !== seat));
-                } else {
-                    setSelectedSeats([...selectedSeats, seat, seatId]);
-                }
-            }
-            else {
-                const seat = seatId.charAt(0) + `${Number(seatId.charAt(1)) + Number(1)}`
-                const isSelected = selectedSeats.includes(seatId) || selectedSeats.includes(seat);
-                if (isSelected) {
-                    setSelectedSeats(selectedSeats.filter((id) => id !== seatId && id !== seat));
-                } else {
-                    setSelectedSeats([...selectedSeats, seat, seatId]);
-                }
-            }
-
+            groupSeats?.map((item: any) => {
+                item?.map((item2: any) => {
+                    if (item2.type_name === "Đôi") {
+                        const data: number = item.findIndex((seat: any) => seat.seat_code === seatId_code);
+                        if (data % 2 === 0) {
+                            const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[data + 1].seat_code);
+                            if (isSelected) {
+                                setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[data + 1].seat_code));
+                            } else {
+                                setSelectedSeats([...selectedSeats, item[data + 1].seat_code, seatId_code]);
+                            }
+                        } else {
+                            const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[data - 1].seat_code);
+                            if (isSelected) {
+                                setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[data - 1].seat_code));
+                            } else {
+                                setSelectedSeats([...selectedSeats, item[data - 1].seat_code, seatId_code]);
+                            }
+                        }
+                    }
+                })
+            })
         } else {
-            if (selectedSeats.includes(seatId)) {
-                setSelectedSeats(selectedSeats.filter((id) => id !== seatId));
+            if (selectedSeats.includes(seatId_code)) {
+                setSelectedSeats(selectedSeats.filter((id) => id !== seatId_code));
             } else {
-                setSelectedSeats([...selectedSeats, seatId]);
+                setSelectedSeats([...selectedSeats, seatId_code]);
             }
         }
     };
@@ -220,7 +222,7 @@ const Booking = () => {
                                         <div>x{item.soLuong}</div>
                                     </div>
                                 ))}
-                                <h1 className='mt-3 text-sm'>Tổng tiền : {priceFood + money}</h1>
+                                <h1 className='mt-3 text-sm'>Tổng tiền : {dataTong} đ</h1>
                             </div>
                         </div>
                     </div>
@@ -251,12 +253,13 @@ const Booking = () => {
                                                 {group?.map((seat: any) => (
                                                     <div className='relative '
                                                         key={seat?.seat_code} >
-                                                        <MdChair className={`seat text-center cursor-pointer ${(seat?.status === 0 && 'non-choose-1') || (seat?.status === 1 && 'non-choose-2') ||(seat?.type_name === 'VIP' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#8f4747]' ||
+                                                        <MdChair className={`seat text-center cursor-pointer ${(seat?.status === 0 && 'non-choose-1') || (seat?.status === 1 && 'non-choose-2') || (seat?.type_name === 'VIP' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#8f4747]' ||
                                                             (selectedSeats.includes(seat?.seat_code)) && 'text-[#00FFD1]' || (seat?.type_name === 'Thường' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#797373]' || (seat?.type_name === 'Đôi' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#8f355a]'
                                                             }`}
                                                             onClick={() => {
                                                                 if (seat?.status !== 1 && seat?.status !== 0) {
-                                                                    autoSubmit(seat?.seat_code, seat?.type_name); TongTien(seat?.seat_code, seat?.price); getIdGhe(seat?.id, seat?.price, seat?.type_name)                                                                }
+                                                                    autoSubmit(seat?.seat_code, seat?.type_name); TongTien(seat?.seat_code, seat?.price); getIdGhe(seat?.id, seat?.price, seat?.type_name)
+                                                                }
                                                             }}
 
                                                             size={80}
@@ -264,49 +267,28 @@ const Booking = () => {
                                                         <div className={`cursor-pointer absolute top-4 right-8 font-semibold text-sm ${(selectedSeats.includes(seat?.seat_code)) && 'text-black'}`} onClick={() => { autoSubmit(seat?.seat_code, seat?.type_name); TongTien(seat?.seat_code, seat?.price); getIdGhe(seat?.id, seat?.price, seat?.type_name) }}>{seat?.seat_code}</div>
                                                     </div>
                                                 ))}
-                                               </div>
-                                            ))}
-                                        {/* {seats?.map((item: any) => (
-                                            <div
-                                                key={item?.seat_code} >
-                                                 <MdChair
-                                                    className={`seat text-center cursor-pointer ${(item?.status === 0 && 'non-choose-1') || (item?.status === 1 && 'non-choose-2') ||
-                                                        (item?.type_name === 'VIP' && !selectedSeats.includes(item?.seat_code) && 'text-[#8f4747]') ||
-                                                        (selectedSeats.includes(item?.seat_code) && 'text-[#00FFD1]') ||
-                                                        (item?.type_name === 'Thường' && !selectedSeats.includes(item?.seat_code) && 'text-[#797373]')
-                                                        }`}
-                                                    onClick={() => {
-                                                        if (item?.status !== 1 && item?.status !== 0) {
-                                                            autoSubmit(item?.seat_code);
-                                                            TongTien(item?.seat_code, item?.price);
-                                                            getIdGhe(item?.id, item?.price);
-                                                        }
-                                                    }}
-                                                    size={50}
-                                                />
-
                                             </div>
-                                        ))} */}
+                                        ))}
                                     </div>
                                     <div className="classify max-w-3xl mx-auto my-[5rem]">
                                         <div className="seat">
-                                            <div><MdChair className="text-[#797373]" size={40}/></div>
+                                            <div><MdChair className="text-[#797373]" size={40} /></div>
                                             <p className='ml-2'>Thường</p>
                                         </div>
                                         <div className="seat">
-                                            <div><MdChair className="text-[#8f4747]" size={40}/></div>
+                                            <div><MdChair className="text-[#8f4747]" size={40} /></div>
                                             <p className='ml-2'>Vip</p>
                                         </div>
                                         <div className="seat">
-                                            <div><MdChair className="text-[#8f355a]" size={40}/></div>
+                                            <div><MdChair className="text-[#8f355a]" size={40} /></div>
                                             <p className='ml-2'>Sweet-box</p>
                                         </div>
                                         <div className="seat">
-                                            <div><MdChair className="text-[#00FFD1]" size={40}/></div>
+                                            <div><MdChair className="text-[#00FFD1]" size={40} /></div>
                                             <p className='ml-2'>Đang chọn</p>
                                         </div>
                                         <div className="seat">
-                                            <div><MdChair className="text-[#ff0000]" size={40}/></div>
+                                            <div><MdChair className="text-[#ff0000]" size={40} /></div>
                                             <p className='ml-2'>Đã bán</p>
                                         </div>
                                     </div>

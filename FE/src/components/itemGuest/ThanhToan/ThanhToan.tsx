@@ -23,8 +23,6 @@ type Props = {
     }
 }
 const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, show_time, movieBooking, idGhe } }: Props) => {
-    console.log(idGhe);
-
     const [data] = useSetBillMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState(1);
@@ -51,7 +49,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
         ,
         total_money: priceTong
     }
-        const setThanhToan = () => {
+    const setThanhToan = () => {
         data(dataBill)
             .then((response) => {
                 if (('data' in response)) {
@@ -78,6 +76,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
     const handleCancel = () => {
         setIsModalOpen(true);
     };
+    const dataTong = (Number(priceTong))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     return (
         <>
             <a href=""></a>
@@ -168,7 +167,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                     <div className='block'>
                         <div className='info-card'>
                             <div>Tổng tiền</div>
-                            <div className='item-info-card'>{priceTong}</div>
+                            <div className='item-info-card'>{dataTong} đ</div>
                         </div>
                     </div>
                 </div >
