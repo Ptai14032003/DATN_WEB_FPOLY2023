@@ -6,6 +6,7 @@ import { useFetchFoodsQuery } from '../rtk/qlSp/qlSp';
 import { useFetchMovieIdPersonQuery } from '../rtk/moviesPerson/moviesPerson';
 import { MdChair } from "react-icons/md";
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import { message } from 'antd';
 const Booking = () => {
     const { search } = useLocation();
     const show_time = new URLSearchParams(search).get('show_seat');
@@ -24,6 +25,7 @@ const Booking = () => {
     const dataTong = (Number(priceTong))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     const seats = seatBooking?.seats;
     const movieBooking = movie?.movie
+    const [messageApi, contextHolder] = message.useMessage();
     useEffect(() => {
         if (seats) {
             const groupedSeats = seats.reduce((acc: any, seat: any) => {
@@ -98,44 +100,54 @@ const Booking = () => {
         }
     };
     const autoSubmit = async (seatId_code: any, typeName: any) => {
-        console.log(seatId_code);
-        
-        if (typeName === 'Đôi') {
-            groupSeats?.map((item: any) => {
-                item?.map((item2: any) => {
-                    if (item2.type_name === "Đôi") {
-                        const data: number = item.findIndex((seat: any) => seat.seat_code === seatId_code);
-                        if (data % 2 === 0) {
-                            const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[data + 1].seat_code);
-                            if (isSelected) {
-                                setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[data + 1].seat_code));
+        const checkSeat = (selectedSeats.includes((String(seatId_code.charAt(0)) + String(Number(seatId_code.charAt(1)) + 2))) || selectedSeats.includes((String(seatId_code.charAt(0)) + String(Number(seatId_code.charAt(1)) - 2)))) && !(selectedSeats.includes((String(seatId_code.charAt(0)) + String(Number(seatId_code.charAt(1)) + 1))) || selectedSeats.includes((String(seatId_code.charAt(0)) + String(Number(seatId_code.charAt(1)) - 1))))
+        if (selectedSeats.length > 0 && checkSeat) {
+            messageApi.error({
+                type: 'error',
+                content: 'Quý khách nên chọn ghế bên cạnh',
+                className: "h-[20%] mt-[20px]"
+            });
+        } else {
+            if (typeName === 'Đôi') {
+                groupSeats?.map((item: any) => {
+                    item?.map((item2: any) => {
+                        if (item2.type_name === "Đôi") {
+                            const data: number = item.findIndex((seat: any) => seat.seat_code === seatId_code);
+                            if (data % 2 === 0) {
+                                const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[data + 1].seat_code);
+                                if (isSelected) {
+                                    setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[data + 1].seat_code));
+                                } else {
+                                    setSelectedSeats([...selectedSeats, item[data + 1].seat_code, seatId_code]);
+                                }
                             } else {
-                                setSelectedSeats([...selectedSeats, item[data + 1].seat_code, seatId_code]);
-                            }
-                        } else {
-                            const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[data - 1].seat_code);
-                            if (isSelected) {
-                                setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[data - 1].seat_code));
-                            } else {
-                                setSelectedSeats([...selectedSeats, item[data - 1].seat_code, seatId_code]);
+                                const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[data - 1].seat_code);
+                                if (isSelected) {
+                                    setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[data - 1].seat_code));
+                                } else {
+                                    setSelectedSeats([...selectedSeats, item[data - 1].seat_code, seatId_code]);
+                                }
                             }
                         }
-                    }
+                    })
                 })
-            })
-        } else {
-            if (selectedSeats.includes(seatId_code)) {
-                setSelectedSeats(selectedSeats.filter((id) => id !== seatId_code));
             } else {
-                setSelectedSeats([...selectedSeats, seatId_code]);
+                if (selectedSeats.includes(seatId_code)) {
+                    setSelectedSeats(selectedSeats.filter((id) => id !== seatId_code));
+                } else {
+                    setSelectedSeats([...selectedSeats, seatId_code]);
+                }
             }
         }
     };
     const TongTien = async (seatId: any, price: any) => {
-        if (selectedSeats.includes(seatId)) {
-            setMoney(money - price);
+        if (selectedSeats.length > 0 && selectedSeats.includes((String(seatId.charAt(0)) + String(seatId.charAt(1) + 1)) || (String(seatId.charAt(0)) + String(seatId.charAt(1) - 1)))) {
         } else {
-            setMoney(money + price);
+            if (selectedSeats.includes(seatId)) {
+                setMoney(money - price);
+            } else {
+                setMoney(money + price);
+            }
         }
     }
     const getCombo = async (data: { target: { value: any } }, price: number, foodName: any) => {
@@ -248,6 +260,7 @@ const Booking = () => {
                                         <img src="/screen.png" alt="" className='w-full' />
                                     </div>
                                     <div className="all-seat max-w-4xl mx-auto flex gap-5 flex-wrap justify-center">
+                                        {contextHolder}
                                         {groupSeats?.map((group: any, index: number) => (
                                             <div key={index} className="seat-group flex gap-4 res">
                                                 {group?.map((seat: any) => (

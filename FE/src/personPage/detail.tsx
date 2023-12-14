@@ -96,39 +96,7 @@ export default function Detail() {
                             <span>Một huyền thoại Marvel mới sắp lộ diện. Là ác nhân hay anh hùng? Sẽ phá hủy hay chữa lành thế giới này? Morbius khởi chiếu 01.07.2023</span>
                         </div>
                     </div>
-                    <div className="border-b-2 pb-[10px] text-lg mt-[8%] mb-[50px]">
-                        <span>Diễn viên</span>
-                    </div>
-                    <div className="flex">
-                        <div className="w-[40%]">
-                            <div className="flex items-start gap-[30px] w-[280px] h-[120px] mb-[30px]">
-                                <div className="rounded-full">
-                                    <img width="120" height="120" src="/performer2.png" alt="" />
-                                </div>
-                                <div className="py-[14%]">Jared Leto</div>
-                            </div>
-                            <div className="flex items-start gap-[30px] w-[280px] h-[120px] mb-[30px]">
-                                <div className="rounded-full">
-                                    <img width="120" height="120" src="/performer3.png" alt="" />
-                                </div>
-                                <div className="py-[14%]">Matt Smith</div>
-                            </div>
-                            <div className="flex items-start gap-[30px] w-[280px] h-[120px] mb-[30px]">
-                                <div className="rounded-full">
-                                    <img width="120" height="120" src="/performer1.png" alt="" />
-                                </div>
-                                <div className="py-[14%]">Adria Arjona</div>
-                            </div>
-                            <div className="flex items-start gap-[30px] w-[280px] h-[120px] mb-[30px]">
-                                <div className="rounded-full">
-                                    <img width="120" height="120" src="/performer4.png" alt="" />
-                                </div>
-                                <div className="py-[14%]">Michael Keaton</div>
-                            </div>
-                        </div>
-                        <div className="w-[70%]">
-                            <img width="100%" src="/detailPhim.png" alt="" />
-                        </div>
+                    <div className="border-b-2 pb-[10px] text-lg mt-[8%]">
                     </div>
                 </div>
             </>
