@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import "./page.css"
 import { useSetBillMutation } from '../../../rtk/bill/bill';
 import { Button, Modal } from 'antd'
-import { useNavigate } from 'react-router-dom';
 type Props = {
     data: {
         selectedSeats: string[]

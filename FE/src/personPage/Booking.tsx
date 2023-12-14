@@ -26,6 +26,7 @@ const Booking = () => {
     const seats = seatBooking?.seats;
     const movieBooking = movie?.movie
     const [messageApi, contextHolder] = message.useMessage();
+    const checkUser = localStorage.getItem("user")
     useEffect(() => {
         if (seats) {
             const groupedSeats = seats.reduce((acc: any, seat: any) => {
@@ -41,7 +42,15 @@ const Booking = () => {
         }
     }, [seats])
     const handleClick = (tabNumber: number) => {
-        setActiveTab(tabNumber);
+        if (!checkUser) {
+            setActiveTab(tabNumber);
+        } else {
+            messageApi.error({
+                type: 'error',
+                content: 'Quý khách vui lòng đăng nhập để tiếp tục',
+                className: "h-[20%] mt-[20px]"
+            });
+        }
     };
     const getIdGhe = (id: string, price: string, typeName: string) => {
         const data = {
@@ -132,8 +141,19 @@ const Booking = () => {
                     })
                 })
             } else {
+                const checkSeatDelete = (selectedSeats.includes((String(seatId_code.charAt(0)) + String(Number(seatId_code.charAt(1)) + 1))) && selectedSeats.includes((String(seatId_code.charAt(0)) + String(Number(seatId_code.charAt(1)) - 1))))
+                console.log(checkSeatDelete);
+
                 if (selectedSeats.includes(seatId_code)) {
-                    setSelectedSeats(selectedSeats.filter((id) => id !== seatId_code));
+                    if (!checkSeatDelete) {
+                        setSelectedSeats(selectedSeats.filter((id) => id !== seatId_code));
+                    } else {
+                        messageApi.error({
+                            type: 'error',
+                            content: 'Quý khách nên hủy ghế lần lượt theo thứ tự',
+                            className: "h-[20%] mt-[20px]"
+                        });
+                    }
                 } else {
                     setSelectedSeats([...selectedSeats, seatId_code]);
                 }
