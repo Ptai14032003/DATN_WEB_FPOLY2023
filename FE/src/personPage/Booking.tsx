@@ -110,67 +110,59 @@ const Booking = () => {
         }
     };
     const autoSubmit = async (seatId_code: any, typeName: any) => {
-        // groupSeats?.map((item: any) => {
-        //     const data: number = item.findIndex((seat: any) => seat.seat_code === seatId_code);
-        //     if (data > 0) {
-        //         setCheckError(data)
-        //     }
-        //     console.log(checkSeatError);
-        // })
-        // console.log(checkSeatError);
         let mapExecuted = false;
-        const checkSeat = (selectedSeats.includes((String(seatId_code.charAt(0)) + String(Number(seatId_code.charAt(1)) + 2))) || selectedSeats.includes((String(seatId_code.charAt(0)) + String(Number(seatId_code.charAt(1)) - 2)))) && !(selectedSeats.includes((String(seatId_code.charAt(0)) + String(Number(seatId_code.charAt(1)) + 1))) || selectedSeats.includes((String(seatId_code.charAt(0)) + String(Number(seatId_code.charAt(1)) - 1))))
         groupSeats?.map((item: any) => {
             item?.map((item2: any) => {
-                if (selectedSeats.length > 0 && checkSeat && !mapExecuted) {
-                    messageApi.error({
-                        type: 'error',
-                        content: 'Quý khách nên chọn ghế bên cạnh',
-                        className: "h-[20%] mt-[20px]",
-                        duration: 2
-                    });
-                    mapExecuted = true;
-
-                }
-                if (!checkSeat) {
-                    if (typeName === 'Đôi') {
-                        if (item2.type_name === "Đôi") {
-                            const data: number = item.findIndex((seat: any) => seat.seat_code === seatId_code);
-                            if (data % 2 === 0) {
-                                const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[data + 1].seat_code);
-                                if (isSelected) {
-                                    setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[data + 1].seat_code));
+                const dataOderSeat: number = item.findIndex((seat: any) => seat.seat_code === seatId_code);
+                if (dataOderSeat >= 0) {
+                    const checkSeat = (selectedSeats.includes(item[dataOderSeat + 2]?.seat_code) || selectedSeats.includes(item[dataOderSeat - 2]?.seat_code)) && !(selectedSeats.includes(item[dataOderSeat + 1]?.seat_code) || selectedSeats.includes(item[dataOderSeat - 1]?.seat_code))
+                    if (selectedSeats.length > 0 && checkSeat && !mapExecuted) {
+                        messageApi.error({
+                            type: 'error',
+                            content: 'Quý khách nên chọn ghế bên cạnh',
+                            className: "h-[20%] mt-[20px]",
+                            duration: 2
+                        });
+                        mapExecuted = true;
+                    }
+                    if (!checkSeat) {
+                        if (typeName === 'Đôi') {
+                            if (item2.type_name === "Đôi") {
+                                const data: number = item.findIndex((seat: any) => seat.seat_code === seatId_code);
+                                if (data % 2 === 0) {
+                                    const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[data + 1].seat_code);
+                                    if (isSelected) {
+                                        setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[data + 1].seat_code));
+                                    } else {
+                                        setSelectedSeats([...selectedSeats, item[data + 1].seat_code, seatId_code]);
+                                    }
                                 } else {
-                                    setSelectedSeats([...selectedSeats, item[data + 1].seat_code, seatId_code]);
+                                    const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[data - 1].seat_code);
+                                    if (isSelected) {
+                                        setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[data - 1].seat_code));
+                                    } else {
+                                        setSelectedSeats([...selectedSeats, item[data - 1].seat_code, seatId_code]);
+                                    }
                                 }
-                            } else {
-                                const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[data - 1].seat_code);
-                                if (isSelected) {
-                                    setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[data - 1].seat_code));
-                                } else {
-                                    setSelectedSeats([...selectedSeats, item[data - 1].seat_code, seatId_code]);
-                                }
-                            }
-                        }
-                    } else {
-                        const checkSeatDelete = (selectedSeats.includes((String(seatId_code.charAt(0)) + String(Number(seatId_code.charAt(1)) + 1))) && selectedSeats.includes((String(seatId_code.charAt(0)) + String(Number(seatId_code.charAt(1)) - 1))))
-                        console.log(checkSeatDelete);
-
-                        if (selectedSeats.includes(seatId_code)) {
-                            if (!checkSeatDelete) {
-                                setSelectedSeats(selectedSeats.filter((id) => id !== seatId_code));
-                            }
-                            if (checkSeatDelete && !mapExecuted) {
-                                messageApi.error({
-                                    type: 'error',
-                                    content: 'Quý khách nên hủy ghế lần lượt theo thứ tự',
-                                    className: "h-[20%] mt-[20px]",
-                                    duration: 2
-                                });
-                                mapExecuted = true;
                             }
                         } else {
-                            setSelectedSeats([...selectedSeats, seatId_code]);
+                            const checkSeatDelete = (selectedSeats.includes(item[dataOderSeat + 1]?.seat_code) && selectedSeats.includes(item[dataOderSeat - 1]?.seat_code))
+                            if (selectedSeats.includes(seatId_code)) {
+                                if (!checkSeatDelete) {
+                                    setSelectedSeats(selectedSeats.filter((id) => id !== seatId_code));
+                                }
+                                if (checkSeatDelete && !mapExecuted) {
+                                    messageApi.error({
+                                        type: 'error',
+                                        content: 'Quý khách nên hủy ghế lần lượt theo thứ tự',
+                                        className: "h-[20%] mt-[20px]",
+                                        duration: 2
+                                    });
+                                    mapExecuted = true;
+                                }
+                            } else {
+                                setSelectedSeats([...selectedSeats, seatId_code]);
+                            }
                         }
                     }
                 }
