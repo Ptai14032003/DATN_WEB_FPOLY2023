@@ -19,7 +19,7 @@ const Booking = () => {
     const [idGhe, setidGhe] = useState<any[]>([])
     const [combo, setCombo] = useState<[]>([]);
     const [priceFood, setPriceFood] = useState(0)
-    const [money, setMoney] = useState(0);
+    const [money, setMoney] = useState<number>(0);
     const [groupSeats, setGroupSeats] = useState<any>();
     const priceTong = money + priceFood;
     const dataTong = (Number(priceTong))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -27,7 +27,6 @@ const Booking = () => {
     const movieBooking = movie?.movie
     const [messageApi, contextHolder] = message.useMessage();
     const checkUser = localStorage.getItem("user")
-    const [checkSeatError, setCheckError] = useState<boolean>(false)
     useEffect(() => {
         if (seats) {
             const groupedSeats = seats.reduce((acc: any, seat: any) => {
@@ -53,63 +52,79 @@ const Booking = () => {
             });
         }
     };
-    const getIdGhe = (id: string, price: string, typeName: string) => {
+    const getIdGhe = (id: string, price: string, typeName: string, seatId_code: any,) => {
         const data = {
             id: id,
             price: price
         };
-        if (typeName === "Đôi") {
-            groupSeats?.map((item: any) => {
-                item?.map((item2: any) => {
-                    if (item2.type_name === "Đôi") {
-                        const data: number = item.findIndex((seat: any) => seat.id === id);
-                        // chẵn lẻ vị trí 
-                        if (data % 2 === 0) {
-                            const dataSeat1 = {
-                                id: item[data].id,
-                                price: item[data].price
-                            }
-                            const dataSeat2 = {
-                                id: item[data + 1].id,
-                                price: item[data + 1].price
-                            }
-                            const checkId = idGhe.some((item: any) => item.id === dataSeat1.id);
-                            if (checkId) {
-                                setidGhe(() => idGhe.filter((item: any) => item.id !== dataSeat1.id && item.id !== dataSeat2.id));
-                            } else {
-                                setidGhe([...idGhe, dataSeat1, dataSeat2]);
+        groupSeats?.map((item: any) => {
+            item?.map((item2: any) => {
+                const dataOderSeat: number = item.findIndex((seat: any) => seat.seat_code === seatId_code);
+                let mapExecuted = false;
+                if (dataOderSeat >= 0) {
+                    const checkSeat = (selectedSeats.includes(item[dataOderSeat + 2]?.seat_code) || selectedSeats.includes(item[dataOderSeat - 2]?.seat_code)) && !(selectedSeats.includes(item[dataOderSeat + 1]?.seat_code) || selectedSeats.includes(item[dataOderSeat - 1]?.seat_code))
+                    if (selectedSeats.length > 0 && checkSeat && !mapExecuted) {
+                        mapExecuted = true;
+                        return;
+                    }
+                    if (!checkSeat) {
+                        if (typeName === "Đôi") {
+                            if (item2.type_name === "Đôi") {
+                                const data: number = item.findIndex((seat: any) => seat.id === id);
+                                // chẵn lẻ vị trí 
+                                if (data % 2 === 0) {
+                                    const dataSeat1 = {
+                                        id: item[data].id,
+                                        price: item[data].price
+                                    }
+                                    const dataSeat2 = {
+                                        id: item[data + 1].id,
+                                        price: item[data + 1].price
+                                    }
+                                    const checkId = idGhe.some((item: any) => item.id === dataSeat1.id);
+                                    if (checkId) {
+                                        setidGhe(() => idGhe.filter((item: any) => item.id !== dataSeat1.id && item.id !== dataSeat2.id));
+                                    } else {
+                                        setidGhe([...idGhe, dataSeat1, dataSeat2]);
+                                    }
+                                } else {
+                                    const dataSeat1 = {
+                                        id: item[data].id,
+                                        price: item[data].price
+                                    }
+                                    const dataSeat2 = {
+                                        id: item[data - 1].id,
+                                        price: item[data - 1].price
+                                    }
+                                    const checkId = idGhe.some((item: any) => item.id === dataSeat1.id);
+                                    if (checkId) {
+                                        setidGhe(() => idGhe.filter((item: any) => item.id !== dataSeat1.id && item.id !== dataSeat2.id));
+                                    } else {
+                                        setidGhe([...idGhe, dataSeat1, dataSeat2]);
+                                    }
+
+                                }
                             }
                         } else {
-                            const dataSeat1 = {
-                                id: item[data].id,
-                                price: item[data].price
-                            }
-                            const dataSeat2 = {
-                                id: item[data - 1].id,
-                                price: item[data - 1].price
-                            }
-                            const checkId = idGhe.some((item: any) => item.id === dataSeat1.id);
+                            const checkId = idGhe.some((item: any) => item.id === data.id);
+                            const checkSeatDelete = (selectedSeats.includes(item[dataOderSeat + 1]?.seat_code) && selectedSeats.includes(item[dataOderSeat - 1]?.seat_code))
                             if (checkId) {
-                                setidGhe(() => idGhe.filter((item: any) => item.id !== dataSeat1.id && item.id !== dataSeat2.id));
+                                if (!checkSeatDelete) {
+                                    setidGhe(() => idGhe.filter((item: any) => item.id !== data.id));
+                                }
                             } else {
-                                setidGhe([...idGhe, dataSeat1, dataSeat2]);
+                                setidGhe([...idGhe, data]);
                             }
 
                         }
-
                     }
-                })
+                }
             })
-        } else {
-            const checkId = idGhe.some((item: any) => item.id === data.id);
-            if (checkId) {
-                setidGhe(() => idGhe.filter((item: any) => item.id !== data.id));
-            } else {
-                setidGhe([...idGhe, data]);
-            }
-        }
+        })
     };
-    const autoSubmit = async (seatId_code: any, typeName: any) => {
+    console.log(idGhe);
+
+    const autoSubmit = async (seatId_code: any, typeName: any, price: number) => {
         let mapExecuted = false;
         groupSeats?.map((item: any) => {
             item?.map((item2: any) => {
@@ -124,24 +139,31 @@ const Booking = () => {
                             duration: 2
                         });
                         mapExecuted = true;
+                        return;
                     }
                     if (!checkSeat) {
                         if (typeName === 'Đôi') {
                             if (item2.type_name === "Đôi") {
                                 const data: number = item.findIndex((seat: any) => seat.seat_code === seatId_code);
                                 if (data % 2 === 0) {
-                                    const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[data + 1].seat_code);
+                                    const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[data + 1]?.seat_code);
                                     if (isSelected) {
-                                        setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[data + 1].seat_code));
+                                        setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[data + 1]?.seat_code));
+                                        setMoney(money - price);
                                     } else {
-                                        setSelectedSeats([...selectedSeats, item[data + 1].seat_code, seatId_code]);
+                                        setSelectedSeats([...selectedSeats, item[data + 1]?.seat_code, seatId_code]);
+                                        setMoney(money + price);
                                     }
                                 } else {
-                                    const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[data - 1].seat_code);
+                                    const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[data - 1]?.seat_code);
                                     if (isSelected) {
-                                        setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[data - 1].seat_code));
+                                        setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[data - 1]?.seat_code));
+
+                                        setMoney(money - price);
                                     } else {
-                                        setSelectedSeats([...selectedSeats, item[data - 1].seat_code, seatId_code]);
+                                        setSelectedSeats([...selectedSeats, item[data - 1]?.seat_code, seatId_code]);
+                                        setMoney(money + price);
+
                                     }
                                 }
                             }
@@ -150,6 +172,7 @@ const Booking = () => {
                             if (selectedSeats.includes(seatId_code)) {
                                 if (!checkSeatDelete) {
                                     setSelectedSeats(selectedSeats.filter((id) => id !== seatId_code));
+                                    setMoney(money - price);
                                 }
                                 if (checkSeatDelete && !mapExecuted) {
                                     messageApi.error({
@@ -159,9 +182,11 @@ const Booking = () => {
                                         duration: 2
                                     });
                                     mapExecuted = true;
+                                    return;
                                 }
                             } else {
                                 setSelectedSeats([...selectedSeats, seatId_code]);
+                                setMoney(money + price);
                             }
                         }
                     }
@@ -169,16 +194,6 @@ const Booking = () => {
             })
         })
     };
-    const TongTien = async (seatId: any, price: any) => {
-        if (selectedSeats.length > 0 && selectedSeats.includes((String(seatId.charAt(0)) + String(seatId.charAt(1) + 1)) || (String(seatId.charAt(0)) + String(seatId.charAt(1) - 1)))) {
-        } else {
-            if (selectedSeats.includes(seatId)) {
-                setMoney(money - price);
-            } else {
-                setMoney(money + price);
-            }
-        }
-    }
     const getCombo = async (data: { target: { value: any } }, price: number, foodName: any) => {
         let soLuong = parseInt(data.target.value, 10);
         soLuong = isNaN(soLuong) || soLuong < 0 ? 0 : soLuong;
@@ -214,25 +229,6 @@ const Booking = () => {
 
         setPriceFood(tongComboPrice);
     }, [combo]);
-
-    useEffect(() => {
-        let priceCombo = 0;
-        let tongComboPrice = 0
-        combo.map((item: any) => {
-            priceCombo = item.price * (item.soLuong);
-            tongComboPrice += priceCombo
-        })
-        setPriceFood(tongComboPrice)
-    }, [combo])
-    useEffect(() => {
-        if (checkSeatError) {
-            messageApi.error({
-                type: 'error',
-                content: 'Quý khách nên chọn ghế bên cạnh',
-                className: "h-[20%] mt-[20px]"
-            });
-        }
-    }, [])
     const Continue = () => {
         if (!selectedSeats || selectedSeats.length === 0) {
             alert('Vui lòng chọn ghế');
@@ -241,7 +237,9 @@ const Booking = () => {
             handleClick(2)
         }
     }
-
+    if (priceTong < 0) {
+        window.location.reload();
+    }
     return (
         <div className='bg-black text-white'>
             <div className="backdrop">
@@ -309,13 +307,13 @@ const Booking = () => {
                                                             }`}
                                                             onClick={() => {
                                                                 if (seat?.status !== 1 && seat?.status !== 0) {
-                                                                    autoSubmit(seat?.seat_code, seat?.type_name); TongTien(seat?.seat_code, seat?.price); getIdGhe(seat?.id, seat?.price, seat?.type_name)
+                                                                    autoSubmit(seat?.seat_code, seat?.type_name, seat?.price); getIdGhe(seat?.id, seat?.price, seat?.type_name, seat?.seat_code,)
                                                                 }
                                                             }}
 
                                                             size={80}
                                                         />
-                                                        <div className={`cursor-pointer absolute top-4 right-8 font-semibold text-sm ${(selectedSeats.includes(seat?.seat_code)) && 'text-black'}`} onClick={() => { autoSubmit(seat?.seat_code, seat?.type_name); TongTien(seat?.seat_code, seat?.price); getIdGhe(seat?.id, seat?.price, seat?.type_name) }}>{seat?.seat_code}</div>
+                                                        <div className={`cursor-pointer absolute top-4 right-8 font-semibold text-sm ${(selectedSeats.includes(seat?.seat_code)) && 'text-black'}`} onClick={() => { autoSubmit(seat?.seat_code, seat?.type_name, seat?.price); getIdGhe(seat?.id, seat?.price, seat?.type_name, seat?.seat_code,) }}>{seat?.seat_code}</div>
                                                     </div>
                                                 ))}
                                             </div>
