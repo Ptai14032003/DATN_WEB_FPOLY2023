@@ -101,7 +101,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                             <dt className="text-xs text-gray-500">Số vé</dt>
                         </div>
                         <div className='flex flex-col-reverse w-[125px]'>
-                            <dd className="text-sm text-white flex gap-1">{selectedSeats.map((item: any) => (
+                            <dd className="text-sm text-white flex gap-1 max-w-[80px]">{selectedSeats.map((item: any) => (
                                 <div key={item}>{item}</div>
                             ))}</dd>
                             <dt className="text-xs text-gray-500">Số ghế</dt>
