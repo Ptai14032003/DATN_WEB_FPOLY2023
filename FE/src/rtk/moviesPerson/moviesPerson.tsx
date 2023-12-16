@@ -7,7 +7,7 @@ const moviesApiPerson = createApi({
     }),
     tagTypes: ["moviesPerson"],
     endpoints: builder => ({
-        fetchMoviesPerson: builder.query<any[], void>({
+        fetchMoviesPerson: builder.query<any, void>({
             query: () => "/movie_home",
             providesTags: ["moviesPerson"]
         }),

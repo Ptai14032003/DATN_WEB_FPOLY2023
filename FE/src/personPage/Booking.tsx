@@ -52,77 +52,11 @@ const Booking = () => {
             });
         }
     };
-    const getIdGhe = (id: string, price: string, typeName: string, seatId_code: any,) => {
+    const autoSubmit = async (id: string, seatId_code: any, typeName: any, price: number,) => {
         const data = {
             id: id,
             price: price
         };
-        groupSeats?.map((item: any) => {
-            item?.map((item2: any) => {
-                const dataOderSeat: number = item.findIndex((seat: any) => seat.seat_code === seatId_code);
-                let mapExecuted = false;
-                if (dataOderSeat >= 0) {
-                    const checkSeat = (selectedSeats.includes(item[dataOderSeat + 2]?.seat_code) || selectedSeats.includes(item[dataOderSeat - 2]?.seat_code)) && !(selectedSeats.includes(item[dataOderSeat + 1]?.seat_code) || selectedSeats.includes(item[dataOderSeat - 1]?.seat_code))
-                    if (selectedSeats.length > 0 && checkSeat && !mapExecuted) {
-                        mapExecuted = true;
-                        return;
-                    }
-                    if (!checkSeat) {
-                        if (typeName === "Đôi") {
-                            if (item2.type_name === "Đôi") {
-                                const data: number = item.findIndex((seat: any) => seat.id === id);
-                                // chẵn lẻ vị trí 
-                                if (data % 2 === 0) {
-                                    const dataSeat1 = {
-                                        id: item[data].id,
-                                        price: item[data].price
-                                    }
-                                    const dataSeat2 = {
-                                        id: item[data + 1].id,
-                                        price: item[data + 1].price
-                                    }
-                                    const checkId = idGhe.some((item: any) => item.id === dataSeat1.id);
-                                    if (checkId) {
-                                        setidGhe(() => idGhe.filter((item: any) => item.id !== dataSeat1.id && item.id !== dataSeat2.id));
-                                    } else {
-                                        setidGhe([...idGhe, dataSeat1, dataSeat2]);
-                                    }
-                                } else {
-                                    const dataSeat1 = {
-                                        id: item[data].id,
-                                        price: item[data].price
-                                    }
-                                    const dataSeat2 = {
-                                        id: item[data - 1].id,
-                                        price: item[data - 1].price
-                                    }
-                                    const checkId = idGhe.some((item: any) => item.id === dataSeat1.id);
-                                    if (checkId) {
-                                        setidGhe(() => idGhe.filter((item: any) => item.id !== dataSeat1.id && item.id !== dataSeat2.id));
-                                    } else {
-                                        setidGhe([...idGhe, dataSeat1, dataSeat2]);
-                                    }
-
-                                }
-                            }
-                        } else {
-                            const checkId = idGhe.some((item: any) => item.id === data.id);
-                            const checkSeatDelete = (selectedSeats.includes(item[dataOderSeat + 1]?.seat_code) && selectedSeats.includes(item[dataOderSeat - 1]?.seat_code))
-                            if (checkId) {
-                                if (!checkSeatDelete) {
-                                    setidGhe(() => idGhe.filter((item: any) => item.id !== data.id));
-                                }
-                            } else {
-                                setidGhe([...idGhe, data]);
-                            }
-
-                        }
-                    }
-                }
-            })
-        })
-    };
-    const autoSubmit = async (seatId_code: any, typeName: any, price: number) => {
         let mapExecuted = false;
         groupSeats?.map((item: any) => {
             item?.map((item2: any) => {
@@ -141,38 +75,62 @@ const Booking = () => {
                     }
                     if (typeName === 'Đôi') {
                         if (item2.type_name === "Đôi") {
-                            const data: number = item.findIndex((seat: any) => seat.seat_code === seatId_code);
-                            if (data % 2 === 0) {
-                                const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[data + 1]?.seat_code);
+                            const dataSeat1 = {
+                                id: item[dataOderSeat]?.id,
+                                price: item[dataOderSeat]?.price
+                            }
+                            if (dataOderSeat % 2 === 0) {
+                                const dataSeat2 = {
+                                    id: item[dataOderSeat + 1]?.id,
+                                    price: item[dataOderSeat + 1]?.price
+                                }
+                                const checkId = idGhe.some((item: any) => item.id === dataSeat1?.id || item.id === dataSeat2?.id);
+                                const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[dataOderSeat + 1]?.seat_code);
                                 if (isSelected) {
-                                    setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[data + 1]?.seat_code));
+                                    setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[dataOderSeat + 1]?.seat_code));
                                     setMoney(money - price);
                                 } else {
-                                    setSelectedSeats([...selectedSeats, item[data + 1]?.seat_code, seatId_code]);
+                                    setSelectedSeats([...selectedSeats, item[dataOderSeat + 1]?.seat_code, seatId_code]);
                                     setMoney(money + price);
                                 }
+                                if (checkId) {
+                                    setidGhe(() => idGhe.filter((item: any) => item.id !== dataSeat1.id && item.id !== dataSeat2.id));
+                                } else {
+                                    setidGhe([...idGhe, dataSeat1, dataSeat2]);
+                                }
                             } else {
-                                const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[data - 1]?.seat_code);
+                                const dataSeat2 = {
+                                    id: item[dataOderSeat - 1]?.id,
+                                    price: item[dataOderSeat - 1]?.price
+                                }
+                                const checkId = idGhe.some((item: any) => item.id === dataSeat1.id);
+                                const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[dataOderSeat - 1]?.seat_code);
                                 if (isSelected) {
-                                    setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[data - 1]?.seat_code));
-
+                                    setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[dataOderSeat - 1]?.seat_code));
                                     setMoney(money - price);
                                 } else {
-                                    setSelectedSeats([...selectedSeats, item[data - 1]?.seat_code, seatId_code]);
+                                    setSelectedSeats([...selectedSeats, item[dataOderSeat - 1]?.seat_code, seatId_code]);
                                     setMoney(money + price);
 
+                                }
+                                if (checkId) {
+                                    setidGhe(() => idGhe.filter((item: any) => item.id !== dataSeat1.id && item.id !== dataSeat2.id));
+                                } else {
+                                    setidGhe([...idGhe, dataSeat1, dataSeat2]);
                                 }
                             }
                         }
                     }
                     if (typeName !== 'Đôi' && !checkSeat) {
                         const checkSeatDelete = (selectedSeats.includes(item[dataOderSeat + 1]?.seat_code) && selectedSeats.includes(item[dataOderSeat - 1]?.seat_code))
+                        const checkId = idGhe.some((item: any) => item.id === data.id);
                         if (selectedSeats.includes(seatId_code)) {
-                            if (!checkSeatDelete) {
+                            if (!checkSeatDelete && checkId) {
                                 setSelectedSeats(selectedSeats.filter((id) => id !== seatId_code));
+                                setidGhe(() => idGhe.filter((item: any) => item.id !== data.id));
                                 setMoney(money - price);
                             }
-                            if (checkSeatDelete && !mapExecuted) {
+                            if (checkSeatDelete && !mapExecuted && checkId) {
                                 messageApi.error({
                                     type: 'error',
                                     content: 'Quý khách nên hủy ghế lần lượt theo thứ tự',
@@ -185,6 +143,7 @@ const Booking = () => {
                         } else {
                             setSelectedSeats([...selectedSeats, seatId_code]);
                             setMoney(money + price);
+                            setidGhe([...idGhe, data]);
                         }
                     }
                 }
@@ -298,19 +257,17 @@ const Booking = () => {
                                             <div key={index} className="seat-group flex gap-4 res">
                                                 {group?.map((seat: any) => (
                                                     <div className='relative '
-                                                        key={seat?.seat_code} >
+                                                        key={seat?.seat_code} onClick={() => {
+                                                            if (seat?.status !== 1 && seat?.status !== 0) {
+                                                                autoSubmit(seat?.id, seat?.seat_code, seat?.type_name, seat?.price)
+                                                            }
+                                                        }}>
                                                         <MdChair className={`seat text-center cursor-pointer ${(seat?.status === 0 && 'non-choose-1') || (seat?.status === 1 && 'non-choose-2') || (seat?.type_name === 'VIP' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#8f4747]' ||
                                                             (selectedSeats.includes(seat?.seat_code)) && 'text-[#00FFD1]' || (seat?.type_name === 'Thường' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#797373]' || (seat?.type_name === 'Đôi' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#8f355a]'
                                                             }`}
-                                                            onClick={() => {
-                                                                if (seat?.status !== 1 && seat?.status !== 0) {
-                                                                    autoSubmit(seat?.seat_code, seat?.type_name, seat?.price); getIdGhe(seat?.id, seat?.price, seat?.type_name, seat?.seat_code,)
-                                                                }
-                                                            }}
-
                                                             size={80}
                                                         />
-                                                        <div className={`cursor-pointer absolute top-4 right-8 font-semibold text-sm ${(selectedSeats.includes(seat?.seat_code)) && 'text-black'}`} onClick={() => { autoSubmit(seat?.seat_code, seat?.type_name, seat?.price); getIdGhe(seat?.id, seat?.price, seat?.type_name, seat?.seat_code,) }}>{seat?.seat_code}</div>
+                                                        <div className={`cursor-pointer absolute top-4 right-8 font-semibold text-sm ${(selectedSeats.includes(seat?.seat_code)) && 'text-black'}`}>{seat?.seat_code}</div>
                                                     </div>
                                                 ))}
                                             </div>

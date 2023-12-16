@@ -27,18 +27,18 @@ export default function Detail() {
                         </div>
                         <div className="w-[100%] mt-[3%] flex ">
                             {st_movie?.map((item: any) => (
-                                <div className="w-[20%]">
+                                <div className="w-[20%]" key={item.id}>
                                     <div className="flex border-b-2 border-red">
-                                        <button key={item.id} className={`btn-date`}>
+                                        <button className={`btn-date`}>
                                             <div className="w-[90px] h-full flex flex-col items-center justify-center text-xs transition-colors">
                                                 <span>{item.weekday}</span>
-                                                <span className="text-xl font-bold">{item.show_date}</span>
+                                                <span className="text-xl font-bold">{item?.show_date}</span>
                                             </div>
                                         </button>
                                     </div>
                                     <div className="w-[70%] grid grid-cols-5 gap-5 mt-[20px] text-black">
                                         <button className="detail-time w-[100px] h-[40px] bg-white rounded-sm" onClick={() => redirectToLink('/booking/' + movie?.id + `?show_seat=${item?.showtime_id}`)}>
-                                            <p className="font-bold text-sm">{item.show_time}</p>
+                                            <p className="font-bold text-sm">{item?.show_time}</p>
                                         </button>
                                     </div>
 
@@ -62,7 +62,7 @@ export default function Detail() {
                                 <div>Diễn Viên</div>
                                 <div>
                                     {actor?.map((item: any) => (
-                                        <span className="mx-[5px]">{item.actor_name},</span>
+                                        <span className="mx-[5px]" key={item.actor_name}>{item?.actor_name},</span>
                                     ))}
                                 </div>
 
@@ -71,7 +71,7 @@ export default function Detail() {
                                 <div>Thể loại</div>
                                 <div>
                                     {genres?.map((item: any) => (
-                                        <span className="mx-[5px]" key={item.id}>{item.genre},</span>
+                                        <span className="mx-[5px]" key={item?.genre}>{item?.genre},</span>
                                     ))}
                                 </div>
                             </div>
