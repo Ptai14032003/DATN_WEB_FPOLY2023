@@ -27,18 +27,18 @@ export default function Detail() {
                         </div>
                         <div className="w-[100%] mt-[3%] flex ">
                             {st_movie?.map((item: any) => (
-                                <div className="w-[20%]">
+                                <div className="w-[20%]" key={item.id}>
                                     <div className="flex border-b-2 border-red">
-                                        <button key={item.id} className={`btn-date`}>
+                                        <button className={`btn-date`}>
                                             <div className="w-[90px] h-full flex flex-col items-center justify-center text-xs transition-colors">
                                                 <span>{item.weekday}</span>
-                                                <span className="text-xl font-bold">{item.show_date}</span>
+                                                <span className="text-xl font-bold">{item?.show_date}</span>
                                             </div>
                                         </button>
                                     </div>
                                     <div className="w-[70%] grid grid-cols-5 gap-5 mt-[20px] text-black">
                                         <button className="detail-time w-[100px] h-[40px] bg-white rounded-sm" onClick={() => redirectToLink('/booking/' + movie?.id + `?show_seat=${item?.showtime_id}`)}>
-                                            <p className="font-bold text-sm">{item.show_time}</p>
+                                            <p className="font-bold text-sm">{item?.show_time}</p>
                                         </button>
                                     </div>
 
@@ -62,7 +62,7 @@ export default function Detail() {
                                 <div>Diễn Viên</div>
                                 <div>
                                     {actor?.map((item: any) => (
-                                        <span className="mx-[5px]">{item.actor_name},</span>
+                                        <span className="mx-[5px]" key={item.actor_name}>{item?.actor_name},</span>
                                     ))}
                                 </div>
 
@@ -71,7 +71,7 @@ export default function Detail() {
                                 <div>Thể loại</div>
                                 <div>
                                     {genres?.map((item: any) => (
-                                        <span className="mx-[5px]" key={item.id}>{item.genre},</span>
+                                        <span className="mx-[5px]" key={item?.genre}>{item?.genre},</span>
                                     ))}
                                 </div>
                             </div>
@@ -96,39 +96,7 @@ export default function Detail() {
                             <span>Một huyền thoại Marvel mới sắp lộ diện. Là ác nhân hay anh hùng? Sẽ phá hủy hay chữa lành thế giới này? Morbius khởi chiếu 01.07.2023</span>
                         </div>
                     </div>
-                    <div className="border-b-2 pb-[10px] text-lg mt-[8%] mb-[50px]">
-                        <span>Diễn viên</span>
-                    </div>
-                    <div className="flex">
-                        <div className="w-[40%]">
-                            <div className="flex items-start gap-[30px] w-[280px] h-[120px] mb-[30px]">
-                                <div className="rounded-full">
-                                    <img width="120" height="120" src="/performer2.png" alt="" />
-                                </div>
-                                <div className="py-[14%]">Jared Leto</div>
-                            </div>
-                            <div className="flex items-start gap-[30px] w-[280px] h-[120px] mb-[30px]">
-                                <div className="rounded-full">
-                                    <img width="120" height="120" src="/performer3.png" alt="" />
-                                </div>
-                                <div className="py-[14%]">Matt Smith</div>
-                            </div>
-                            <div className="flex items-start gap-[30px] w-[280px] h-[120px] mb-[30px]">
-                                <div className="rounded-full">
-                                    <img width="120" height="120" src="/performer1.png" alt="" />
-                                </div>
-                                <div className="py-[14%]">Adria Arjona</div>
-                            </div>
-                            <div className="flex items-start gap-[30px] w-[280px] h-[120px] mb-[30px]">
-                                <div className="rounded-full">
-                                    <img width="120" height="120" src="/performer4.png" alt="" />
-                                </div>
-                                <div className="py-[14%]">Michael Keaton</div>
-                            </div>
-                        </div>
-                        <div className="w-[70%]">
-                            <img width="100%" src="/detailPhim.png" alt="" />
-                        </div>
+                    <div className="border-b-2 pb-[10px] text-lg mt-[8%]">
                     </div>
                 </div>
             </>

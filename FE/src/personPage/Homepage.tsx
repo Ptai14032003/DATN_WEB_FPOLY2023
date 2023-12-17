@@ -3,11 +3,8 @@ import './personPage.css'
 import { Link, redirect, useNavigate } from 'react-router-dom';
 import { useFetchMoviesPersonQuery } from '../rtk/moviesPerson/moviesPerson';
 import Fuse from 'fuse.js';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { message } from 'antd';
-import { useCheckBillMutation } from '../rtk/bill/bill';
-
-
 const HomePage = () => {
   const { data: movies } = useFetchMoviesPersonQuery()
   const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -82,7 +79,7 @@ const HomePage = () => {
       <div className='max-w-[1420px] mx-auto p-5 grid grid-cols-4 gap-10'>
         {allMovie?.map((item: any) => (
 
-          <div key={item.id} className="movie-item hover:border  bg-[#0E0E0E]">
+          <div key={item.id} className="movie-item rounded-md bg-[#0E0E0E]]">
             <Link to={'/movie_show_time/' + item?.id}>
               <img src={item.image} alt="" className='h-[420px] w-full' />
               <div className="text my-2 px-3">
@@ -93,11 +90,11 @@ const HomePage = () => {
                   <p>{item.director}</p>
                 </div>
                 <span className='font-semibold text-[#B6B4B4] block my-2'>{item.genre}</span>
-                <div className="button">
-                  <Link to={'/movie_show_time/' + item?.id}><button className='border-[1px] border-[#1ACAAC] rounded-md bg-[#1ACAAC] py-3 w-full hover:bg-gray-500'>Đặt vé ngay</button></Link>
-                </div>
               </div>
             </Link>
+            <div className="button">
+              <Link to={'/movie_show_time/' + item?.id}><button className='border-[1px] border-[#1ACAAC] rounded-md bg-[#1ACAAC] py-3 w-full hover:bg-gray-500 hover:border-none'>Đặt vé ngay</button></Link>
+            </div>
           </div>
         ))}
       </div>
