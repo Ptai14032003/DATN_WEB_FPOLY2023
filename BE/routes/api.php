@@ -25,6 +25,7 @@ Route::match(['GET', 'POST'], '/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
 Route::get('/movie_home', [HomeController::class, 'index'])->name('movie_home');
+Route::post('/search_movies', [HomeController::class, 'index'])->name('searchMovies');
 
 Route::Post('Payment', [PaymentController::class, 'vnpay_payment']);
 Route::post('/book_ticket', [TicketController::class, 'book_ticket'])->name('book_ticket');

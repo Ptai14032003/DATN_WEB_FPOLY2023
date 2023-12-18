@@ -20,19 +20,53 @@ class HomeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-
         $movie =  Movie::join('countries', 'movies.country_id', '=', 'countries.id')
             ->join('producers', 'movies.producer_id', '=', 'producers.id')
             ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
             ->select('movies.*', 'countries.country_name', 'producers.producer_name', 'movie_types.type_name')
             ->whereNull('movies.deleted_at')
-            ->OrderBy('movies.id', 'asc')
+            ->orderBy('movies.id', 'asc')
             ->get();
-        return response()->json($movie);
+            if ($request->post() && $request->searchMovies) {
+                $keyword = $request->searchMovies;
+                $movie = $movie->where(function ($query) use ($keyword) {
+                    $query->where('movies.movie_name', 'like', '%' . $keyword . '%')
+                        ->orWhereHas('country', function ($query) use ($keyword) {
+                            $query->where('countries.country_name', 'like', '%' . $keyword . '%');
+                        })
+                        ->orWhereHas('producer', function ($query) use ($keyword) {
+                            $query->where('producers.producer_name', 'like', '%' . $keyword . '%');
+                        })
+                        ->orWhereHas('movie_type', function ($query) use ($keyword) {
+                            $query->where('movie_types.type_name', 'like', '%' . $keyword . '%');
+                        });
+                });
+            }
+            return response()->json($movie);
     }
 
+    // public function searchMovies(Request $request)
+    // {
+    //     $keyword = $request->input('keyword');
+    
+    //     $movies = Movie::join('countries', 'movies.country_id', '=', 'countries.id')
+    //         ->join('producers', 'movies.producer_id', '=', 'producers.id')
+    //         ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+    //         ->select('movies.*', 'countries.country_name', 'producers.producer_name', 'movie_types.type_name')
+    //         ->whereNull('movies.deleted_at')
+    //         ->where(function ($query) use ($keyword) {
+    //             $query->where('movies.movie_name', 'like', '%' . $keyword . '%')
+    //                 ->where('countries.country_name', 'like', '%' . $keyword . '%')
+    //                 ->where('producers.producer_name', 'like', '%' . $keyword . '%')
+    //                 ->where('movie_types.type_name', 'like', '%' . $keyword . '%');
+    //         })
+    //         ->orderBy('movies.id', 'asc')
+    //         ->get();
+    
+    //     return response()->json($movies);
+    // }
 
     public function show_time_movie(string $id)
     {
