@@ -12,6 +12,12 @@ export type PhongChieu = {
     total_seat: number;
 }
 
+export type PhongChieu1 = {
+    key: string;
+    name: string;
+    total_seat_ngang: number;
+    total_seat_doc: number;
+}
 const AdminQlPhongChieu: React.FC = () => {
     const { data: dataPhongChieu, isLoading } = useFetchPhongChieuQuery()
     const [deletePhongChieu] = useDeletePhongChieuMutation()

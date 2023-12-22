@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useFetchSeatRoomIdQuery } from '../rtk/booking/booking';
 import ThanhToan from '../components/itemGuest/ThanhToan/ThanhToan';
 import { useFetchFoodsQuery } from '../rtk/qlSp/qlSp';
@@ -27,6 +27,10 @@ const Booking = () => {
     const movieBooking = movie?.movie
     const [messageApi, contextHolder] = message.useMessage();
     const checkUser = localStorage.getItem("user")
+    const [minute, setMinute] = useState<number>(10);
+    const [second, setSecond] = useState<number>(0)
+    const navigate = useNavigate();
+
     useEffect(() => {
         if (seats) {
             const groupedSeats = seats.reduce((acc: any, seat: any) => {
@@ -250,6 +254,30 @@ const Booking = () => {
     if (priceTong < 0) {
         window.location.reload();
     }
+    useEffect(() => {
+        const countdownInterval = setInterval(() => {
+            if (second === 0) {
+                if (minute === 0) {
+                    messageApi.error({
+                        type: 'error',
+                        content: 'Đã hết giờ chọn ghế ! Bạn vui lòng thực hiện lại',
+                        className: "h-[20%] mt-[20px]",
+                        duration: 2
+                    }).then(() => navigate("/"));
+                    clearInterval(countdownInterval);
+                    return;
+                } else {
+                    setMinute(minute - 1)
+                    setSecond(59);
+                }
+            } else {
+                setSecond(second - 1);
+            }
+        }, 1000)
+        return () => clearInterval(countdownInterval);
+    }, [second, minute])
+    const formattedSecond = String(second).padStart(2, '0');
+    const formattedMinute = String(minute).padStart(2, '0');
     return (
         <div className='bg-black text-white'>
             <div className="backdrop">
@@ -261,6 +289,7 @@ const Booking = () => {
                     <p>{seatBooking?.movie?.time}</p>
                 </div>
             </div>
+
             <div className="booking h-full max-w-[1420px] mx-auto ">
                 <div className="booking-seat">
                     {/* Dữ liệu form */}
@@ -298,10 +327,11 @@ const Booking = () => {
                                 </li>
                             </ul>
                         </div>
+                        <div className="w-[210px] h-[42px] border-[2px] rounded-md mt-[50px] px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
                         <form action="" method='POST'>
                             <div className={`Booking-content ${activeTab === 1 ? "" : "hidden"}`}>
                                 <input type="text" hidden id={id} name='showtime_id' />
-                                <div className="choose-seat mt-[7rem]">
+                                <div className="choose-seat mt-2">
                                     <div className="screen">
                                         <img src="/screen.png" alt="" className='w-full' />
                                     </div>
