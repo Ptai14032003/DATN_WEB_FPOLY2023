@@ -21,6 +21,12 @@ use App\Http\Controllers\TypeFoodController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
+Route::middleware('web')->group(function () {
+    Route::get('/sanctum/csrf-cookie', function (Request $request) {
+        return response()->json(['message' => 'CSRF cookie set']);
+    });
+});
+
 Route::match(['GET', 'POST'], '/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
@@ -32,7 +38,7 @@ Route::post('/book_ticket', [TicketController::class, 'book_ticket'])->name('boo
 Route::get('/movie_show_time/{id}', [HomeController::class, 'show_time_movie'])->name('movie_show_time');
 Route::get('/show_seat_room/{id}', [HomeController::class, 'show_seat_room'])->name('show_seat_room');
 
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware('checkrole')->group(function () {
     Route::resource('bill', BillController::class);
     Route::resource('food', FoodController::class);
     Route::resource('food_type', TypeFoodController::class);
