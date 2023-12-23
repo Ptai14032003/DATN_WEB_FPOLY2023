@@ -76,8 +76,6 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
         setIsModalOpen(true);
     };
     const dataTong = (Number(priceTong))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-    console.log(idGhe);
-
     return (
         <>
             <a href=""></a>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useFetchSeatRoomIdQuery } from '../rtk/booking/booking';
 import ThanhToan from '../components/itemGuest/ThanhToan/ThanhToan';
 import { useFetchFoodsQuery } from '../rtk/qlSp/qlSp';
@@ -27,6 +27,10 @@ const Booking = () => {
     const movieBooking = movie?.movie
     const [messageApi, contextHolder] = message.useMessage();
     const checkUser = localStorage.getItem("user")
+    const [minute, setMinute] = useState<number>(10);
+    const [second, setSecond] = useState<number>(0)
+    const navigate = useNavigate();
+
     useEffect(() => {
         if (seats) {
             const groupedSeats = seats.reduce((acc: any, seat: any) => {
@@ -63,6 +67,38 @@ const Booking = () => {
                 const dataOderSeat: number = item.findIndex((seat: any) => seat.seat_code === seatId_code);
                 if (dataOderSeat >= 0) {
                     const checkSeat = (selectedSeats.includes(item[dataOderSeat + 2]?.seat_code) || selectedSeats.includes(item[dataOderSeat - 2]?.seat_code)) && !(selectedSeats.includes(item[dataOderSeat + 1]?.seat_code) || selectedSeats.includes(item[dataOderSeat - 1]?.seat_code))
+                    const checkLeft = (dataOderSeat === 1) && !selectedSeats.includes(item[0]?.seat_code) && !selectedSeats.includes(item[dataOderSeat + 1]?.seat_code)
+                    const checkRight = (item[dataOderSeat + 1]?.seat_code === item[item.length - 1]?.seat_code && !(selectedSeats.includes(item[dataOderSeat - 1]?.seat_code) || selectedSeats.includes(item[dataOderSeat + 1]?.seat_code)));
+                    if (checkRight && !mapExecuted && typeName !== 'Đôi') {
+                        messageApi.error({
+                            type: 'error',
+                            content: 'Vẫn còn ghế trống bên phải không thể mua ghế vừa chọn',
+                            className: "h-[20%] mt-[20px]",
+                            duration: 2
+                        });
+                        mapExecuted = true;
+                        return;
+                    }
+                    if (checkLeft && !mapExecuted && typeName !== 'Đôi') {
+                        messageApi.error({
+                            type: 'error',
+                            content: 'Vẫn còn ghế trống bên trái không thể mua ghế vừa chọn',
+                            className: "h-[20%] mt-[20px]",
+                            duration: 2
+                        });
+                        mapExecuted = true;
+                        return;
+                    }
+                    if (!item[dataOderSeat + 2] && !mapExecuted && typeName !== 'Đôi' && checkSeat) {
+                        messageApi.error({
+                            type: 'error',
+                            content: 'Vẫn còn ghế trống bên phải không thể mua ghế vừa chọn',
+                            className: "h-[20%] mt-[20px]",
+                            duration: 2
+                        });
+                        mapExecuted = true;
+                        return;
+                    }
                     if (selectedSeats.length > 0 && checkSeat && !mapExecuted && typeName !== 'Đôi') {
                         messageApi.error({
                             type: 'error',
@@ -121,15 +157,12 @@ const Booking = () => {
                             }
                         }
                     }
-                    if (typeName !== 'Đôi' && !checkSeat) {
+                    if (typeName !== 'Đôi' && !checkSeat && !checkRight && !checkLeft) {
                         const checkSeatDelete = (selectedSeats.includes(item[dataOderSeat + 1]?.seat_code) && selectedSeats.includes(item[dataOderSeat - 1]?.seat_code))
+                        const checkedRight = (dataOderSeat === item.length - 1) && selectedSeats.includes(item[item.length - 1]?.seat_code) && selectedSeats.includes(item[item.length - 2]?.seat_code)
+                        const checkedLeft = ((dataOderSeat) === 0) && selectedSeats.includes(item[0]?.seat_code) && selectedSeats.includes(item[1]?.seat_code)
                         const checkId = idGhe.some((item: any) => item.id === data.id);
                         if (selectedSeats.includes(seatId_code)) {
-                            if (!checkSeatDelete && checkId) {
-                                setSelectedSeats(selectedSeats.filter((id) => id !== seatId_code));
-                                setidGhe(() => idGhe.filter((item: any) => item.id !== data.id));
-                                setMoney(money - price);
-                            }
                             if (checkSeatDelete && !mapExecuted && checkId) {
                                 messageApi.error({
                                     type: 'error',
@@ -139,6 +172,31 @@ const Booking = () => {
                                 });
                                 mapExecuted = true;
                                 return;
+                            }
+                            if (checkedLeft && !mapExecuted && checkId) {
+                                messageApi.error({
+                                    type: 'error',
+                                    content: `Quý khách nên hủy ghế lần lượt theo thứ tự l`,
+                                    className: "h-[20%] mt-[20px]",
+                                    duration: 2
+                                });
+                                mapExecuted = true;
+                                return;
+                            }
+                            if (checkedRight && !mapExecuted && checkId) {
+                                messageApi.error({
+                                    type: 'error',
+                                    content: `Quý khách nên hủy ghế lần lượt theo thứ tự r`,
+                                    className: "h-[20%] mt-[20px]",
+                                    duration: 2
+                                });
+                                mapExecuted = true;
+                                return;
+                            }
+                            if (!(checkSeatDelete || checkedLeft && checkSeatDelete || checkedRight && checkSeatDelete || checkedLeft) && checkId) {
+                                setSelectedSeats(selectedSeats.filter((id) => id !== seatId_code));
+                                setidGhe(() => idGhe.filter((item: any) => item.id !== data.id));
+                                setMoney(money - price);
                             }
                         } else {
                             setSelectedSeats([...selectedSeats, seatId_code]);
@@ -196,6 +254,30 @@ const Booking = () => {
     if (priceTong < 0) {
         window.location.reload();
     }
+    useEffect(() => {
+        const countdownInterval = setInterval(() => {
+            if (second === 0) {
+                if (minute === 0) {
+                    messageApi.error({
+                        type: 'error',
+                        content: 'Đã hết giờ chọn ghế ! Bạn vui lòng thực hiện lại',
+                        className: "h-[20%] mt-[20px]",
+                        duration: 2
+                    }).then(() => navigate("/"));
+                    clearInterval(countdownInterval);
+                    return;
+                } else {
+                    setMinute(minute - 1)
+                    setSecond(59);
+                }
+            } else {
+                setSecond(second - 1);
+            }
+        }, 1000)
+        return () => clearInterval(countdownInterval);
+    }, [second, minute])
+    const formattedSecond = String(second).padStart(2, '0');
+    const formattedMinute = String(minute).padStart(2, '0');
     return (
         <div className='bg-black text-white'>
             <div className="backdrop">
@@ -207,6 +289,7 @@ const Booking = () => {
                     <p>{seatBooking?.movie?.time}</p>
                 </div>
             </div>
+
             <div className="booking h-full max-w-[1420px] mx-auto ">
                 <div className="booking-seat">
                     {/* Dữ liệu form */}
@@ -244,10 +327,11 @@ const Booking = () => {
                                 </li>
                             </ul>
                         </div>
+                        <div className="w-[210px] h-[42px] border-[2px] rounded-md mt-[50px] px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
                         <form action="" method='POST'>
                             <div className={`Booking-content ${activeTab === 1 ? "" : "hidden"}`}>
                                 <input type="text" hidden id={id} name='showtime_id' />
-                                <div className="choose-seat mt-[7rem]">
+                                <div className="choose-seat mt-2">
                                     <div className="screen">
                                         <img src="/screen.png" alt="" className='w-full' />
                                     </div>
