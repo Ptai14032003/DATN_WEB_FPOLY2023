@@ -311,7 +311,7 @@
 .ticket-price-table{
   width: 75rem;
   table-layout: fixed;
-  border: solid rgb(76, 76, 76) 0.5px;
+  border: solid rgb(76, 76, 76) 0px;
   border-radius: 30px;
 }
 .ticket-price-table td{
@@ -480,4 +480,17 @@
 .non-choose-2{
   color: #bebdbd;
   cursor: not-allowed!important;
+}
+
+/* loading */
+.loading-home{
+  position: relative;
+  width: 1420px;
+  margin: 0 auto 0 auto;
+  height: 300px;
+  display: grid;
+  place-items: center;
+}
+.loading-home > * {
+  position: absolute;
 }
