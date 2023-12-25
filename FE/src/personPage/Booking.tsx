@@ -8,6 +8,7 @@ import { MdChair } from "react-icons/md";
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 import Footer from '../components/layouts/layoutGuest/footer';
+
 const Booking = () => {
     const { search } = useLocation();
     const show_time = new URLSearchParams(search).get('show_seat');
@@ -47,7 +48,8 @@ const Booking = () => {
         }
     }, [seats])
     const handleClick = (tabNumber: number) => {
-        if (!checkUser) {
+
+        if (checkUser) {
             setActiveTab(tabNumber);
         } else {
             messageApi.error({
@@ -211,6 +213,10 @@ const Booking = () => {
     };
     const getCombo = (quantity: number, price: number, foodName: any) => {
         let soLuong = parseInt(quantity.toString(), 10);
+
+    //const getCombo = async (data: { target: { value: any } }, price: number, foodName: any) => {
+        //let soLuong = parseInt(data.target.value, 10);
+
         soLuong = isNaN(soLuong) || soLuong < 0 ? 0 : soLuong;
 
         const comboObject = {
@@ -309,6 +315,7 @@ const Booking = () => {
         });
       };
 
+
     return (
         <div className='bg-black text-white'>
             <div className="backdrop">
@@ -359,7 +366,7 @@ const Booking = () => {
                             </ul>
                         </div>
                         <div className="w-[230px] h-[42px] border-[2px] rounded-md mt-[50px] px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
-                        <form action="" method='POST'>
+           <form action="" method='POST'>
                             <div className={`Booking-content ${activeTab === 1 ? "" : "hidden"}`}>
                                 <input type="text" hidden id={id} name='showtime_id' />
                                 <div className="choose-seat mt-2">
@@ -377,7 +384,9 @@ const Booking = () => {
                                                                 autoSubmit(seat?.id, seat?.seat_code, seat?.type_name, seat?.price)
                                                             }
                                                         }}>
+
                                                         <MdChair className={`seat text-center cursor-pointer ${(seat?.status === 1 && 'non-choose-1') || (seat?.status === 0 && 'non-choose-2') || (seat?.type_name === 'VIP' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#8f4747]' ||
+
                                                             (selectedSeats.includes(seat?.seat_code)) && 'text-[#00FFD1]' || (seat?.type_name === 'Thường' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#797373]' || (seat?.type_name === 'Đôi' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#8f355a]'
                                                             }`}
                                                             size={80}

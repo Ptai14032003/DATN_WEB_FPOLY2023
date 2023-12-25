@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import "./page.css"
 import { useSetBillMutation } from '../../../rtk/bill/bill';
 import { Button, Modal } from 'antd'
-import { useNavigate } from 'react-router-dom';
 type Props = {
     data: {
         selectedSeats: string[]
@@ -29,7 +28,6 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
     const handleClick = (tabNumber: number) => {
         setActiveTab(tabNumber);
     };
-    const navigate = useNavigate()
     const dataBill = {
         show_time: show_time,
         seat:
@@ -77,6 +75,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
     const handleCancel = () => {
         setIsModalOpen(true);
     };
+    const dataTong = (Number(priceTong))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     return (
         <>
             <a href=""></a>
@@ -102,7 +101,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                             <dt className="text-xs text-gray-500">Số vé</dt>
                         </div>
                         <div className='flex flex-col-reverse w-[125px]'>
-                            <dd className="text-sm text-white flex gap-1">{selectedSeats.map((item: any) => (
+                            <dd className="text-sm text-white flex gap-1 max-w-[80px]">{selectedSeats.map((item: any) => (
                                 <div key={item}>{item}</div>
                             ))}</dd>
                             <dt className="text-xs text-gray-500">Số ghế</dt>
@@ -143,8 +142,8 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                             <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                                 <div className='space-y-3'>
                                     <button
-                                         onClick={() => handleClick(2)}
-                                         className={activeTab === 2 ? 'block bg-[#1ACAAC] text-black w-full rounded-md py-3' : 'block bg-[#797373] text-white w-full rounded-md hover:bg-[#464444] py-3'}
+                                        onClick={() => handleClick(2)}
+                                        className={activeTab === 2 ? 'block bg-[#1ACAAC] text-black w-full rounded-md py-3' : 'block bg-[#797373] text-white w-full rounded-md hover:bg-[#464444] py-3'}
                                     >
                                         <h3 className='text-3xl font-medium'>GXHKTD4LJ</h3>
                                         <p>Giảm 20% tổng giá trị đơn hàng</p>
@@ -152,8 +151,8 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                                         <p>Thời gian hết hạn: vô hạn</p>
                                     </button>
                                     <button
-                                         onClick={() => handleClick(3)}
-                                         className={activeTab === 3 ? 'block bg-[#1ACAAC] text-black w-full rounded-md py-3' : 'block bg-[#797373] text-white w-full rounded-md hover:bg-[#464444] py-3'}
+                                        onClick={() => handleClick(3)}
+                                        className={activeTab === 3 ? 'block bg-[#1ACAAC] text-black w-full rounded-md py-3' : 'block bg-[#797373] text-white w-full rounded-md hover:bg-[#464444] py-3'}
                                     >
                                         <h3 className='text-3xl font-medium'>AS5FGS8HC</h3>
                                         <p>Giảm 10% tổng giá trị đơn hàng</p>
@@ -167,7 +166,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                     <div className='block'>
                         <div className='info-card'>
                             <div>Tổng tiền</div>
-                            <div className='item-info-card'>{priceTong}</div>
+                            <div className='item-info-card'>{dataTong} đ</div>
                         </div>
                     </div>
                 </div >

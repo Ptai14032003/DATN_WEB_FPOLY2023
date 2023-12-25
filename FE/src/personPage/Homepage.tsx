@@ -3,11 +3,13 @@ import './personPage.css'
 import { Link, redirect, useNavigate } from 'react-router-dom';
 import { useFetchMoviesPersonQuery } from '../rtk/moviesPerson/moviesPerson';
 import Fuse from 'fuse.js';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { message } from 'antd';
+
 import { useCheckBillMutation } from '../rtk/bill/bill';
 import "./responsive.css"
 import Loading from '../components/layouts/layoutGuest/loading';
+
 
 const HomePage = () => {
   const { data: movies } = useFetchMoviesPersonQuery();
@@ -118,6 +120,7 @@ const HomePage = () => {
       </div>
       <div className={`Special ${activeTab === 3 ? "max-w-[1420px] mx-auto p-5 grid grid-cols-5 gap-10 mb-8" : "hidden"}`}>
         <h1>Special</h1>
+
       </div>
     </div>
 

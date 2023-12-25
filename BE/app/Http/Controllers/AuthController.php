@@ -17,27 +17,24 @@ use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
-    //
     public function login(Request $request)
     {
         if (Auth::guard('users')->attempt(['email' => $request->email, 'password' => $request->password], false)) {
             $users = Auth::guard('users')->user();
             $token = $users->createToken($users->email . 'token')->plainTextToken;
             $user = new UserResource(Auth::guard('users')->user());
-            $cookie = cookie('jwt', $token, 60);
             return response([
                 'user' => $user,
                 'accessToken' => $token,
-            ], 200)->withCookie($cookie);
+            ], 200);
         } elseif (Auth::guard('personnels')->attempt(['email' => $request->email, 'password' => $request->password], false)) {
             $personnel = Auth::guard('personnels')->user();
             $token = $personnel->createToken($personnel->email . 'token')->plainTextToken;
             $user = new PersonnelResource(Auth::guard('personnels')->user());
-            $cookie = cookie('jwt', $token, 60);
             return response([
                 'user' => $user,
                 'accessToken' => $token,
-            ], 200)->withCookie($cookie);
+            ], 200);
         } else {
             // $error = "Thông tin tài khoản hoặc mật khẩu không chính xác";
             return response([
@@ -99,5 +96,9 @@ class AuthController extends Controller
         $user->currentAccessToken()->delete();
 
         return response(['mesage' => "Đăng xuất thành công"], 200);
+    }
+
+    public function refresh_token(Request $requet)
+    {
     }
 }

@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useCheckBillMutation } from '../rtk/bill/bill';
 import { Link } from 'react-router-dom';
-
-type Props = {}
-
 const CheckPay = () => {
     const [checkBill] = useCheckBillMutation()
     const [mess, setMess] = useState("")
@@ -37,12 +34,20 @@ const CheckPay = () => {
                 vnp_SecureHash: vnp_SecureHash,
                 vnp_CardType: vnp_CardType
             }
-            checkBill(data).then((req) => setMess(req?.data?.Message)
+            checkBill(data).then((req: any) => setMess(req?.data?.Message)
 
             )
         }
     }, [])
     const moneny = (Number(vnp_Amount) / 100)?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    const date: Array<number> = vnp_PayDate?.split("").map(Number) as [];
+    const year = date.slice(0, 4).join("");
+    const month = date.slice(4, 6).join("");
+    const day = date.slice(6, 8).join("");
+    const hour = date.slice(8, 10).join("");
+    const mins = date.slice(10, 12).join("");
+    const second = date.slice(12, 14).join("");
+    const timePay = `${hour}:${mins}:${second} , ${day}/${month}/${year}`
     return (
         <div className='pay-success-screen h-screen grid place-content-center'>
             <div className='pay-success-box bg-white h-[500px] w-[600px] rounded-xl'>
@@ -58,7 +63,7 @@ const CheckPay = () => {
                     <span className='block text-4xl text-[#81c038] font-medium'>{moneny} đ </span>
                 </div>
                 <div className='pay-content text-center mt-10 space-y-3'>
-                    <p>Thời gian giao dịch: <span className=' font-medium'>21:20, 10/12/2023</span>.</p>
+                    <p>Thời gian giao dịch: <span className=' font-medium'>{timePay}</span>.</p>
                     <p>Mã giao dịch của bạn là <span className='text-[#81c038] font-medium'>{vnp_TxnRef}</span>.</p>
                     <p>Xem chi tiết thông tin vé tại đây <a href="" className='text-blue-500'>Ticket Infomation</a>.</p>
                     <div className='pt-5'>

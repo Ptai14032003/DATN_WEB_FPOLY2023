@@ -5,6 +5,7 @@ import { useSigninMutation } from '../rtk/auth/auth';
 import { redirect, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import { useForm } from 'react-hook-form';
+import axios from 'axios';
 
 interface Form {
   email: string;
@@ -18,10 +19,13 @@ const Signin = () => {
   const [signin, { error }] = useSigninMutation();
   const onFinish = async (values: any) => {
     try {
+      // Gửi request để lấy CSRF token và thiết lập cookie
+      // await axios.get('http://127.0.0.1:8000/sanctum/csrf-cookie',{ withCredentials: true });
+      
       await signin(values).unwrap()
         .then(() => {
           const userString = localStorage.getItem('user');
-          const user = userString ? JSON.parse(userString) : null;
+          const user = userString ? JSON.parse(userString) : null;          
           if (user.role == 'Admin') {
             navigate("/admin?isAuth=true")
           }
