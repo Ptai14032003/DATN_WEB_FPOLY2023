@@ -5,6 +5,7 @@ import { useFetchMoviesPersonQuery } from '../rtk/moviesPerson/moviesPerson';
 import Fuse from 'fuse.js';
 import { useCallback, useState } from 'react';
 import { message } from 'antd';
+import { useEffect } from 'react';
 
 import { useCheckBillMutation } from '../rtk/bill/bill';
 import "./responsive.css"

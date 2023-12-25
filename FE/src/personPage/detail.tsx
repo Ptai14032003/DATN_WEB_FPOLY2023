@@ -4,10 +4,10 @@ import { useFetchMovieIdPersonQuery } from "../rtk/moviesPerson/moviesPerson"
 
 import Footer from "../components/layouts/layoutGuest/footer";
 
-<!-- import { FormComment, formComment } from "../types/comment"
+import { FormComment, formComment } from "../types/comment"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useState } from "react";
-import { useForm } from "react-hook-form"; -->
+import { useForm } from "react-hook-form"; 
 
 export default function Detail() {
     const { id } = useParams()
