@@ -46,7 +46,7 @@ const Booking = () => {
         }
     }, [seats])
     const handleClick = (tabNumber: number) => {
-        if (!checkUser) {
+        if (checkUser) {
             setActiveTab(tabNumber);
         } else {
             messageApi.error({
