@@ -118,6 +118,46 @@ export default function Detail() {
                             <span>Một huyền thoại Marvel mới sắp lộ diện. Là ác nhân hay anh hùng? Sẽ phá hủy hay chữa lành thế giới này? Morbius khởi chiếu 01.07.2023</span>
                         </div>
                     </div>
+            </div>
+            <div className="w-[90%] mx-auto bg-white text-black px-[25px] py-[15px]">
+                <h2 className="mb-[15px]">Bình luận</h2>
+                <div className="flex gap-10 rounder">
+                    <div><img src="/avata.jpg" alt="" width={56} height={48} /></div>
+                    <div className={`w-[75%] h-[85px] relative ${checkComment === true ? "bg-[#f5f6f7]" : ""} `}>
+                        <input type="text" name="" id="" className="w-[100%] h-[50px] outline-none border-[2px] pl-2 placeholder:text-gray-500 text-[15px] " placeholder="Viết bình luận ....." autoComplete="false" onClick={() => setComment(true)} />
+                        <div className={`bg-blue-600 w-[60px] my-[6px] absolute right-5 text-center ${checkComment === true ? "" : "hidden"}`}>
+                            <button type="submit" className="rounder bg-transparent text-white" onSubmit={() => postComment()}>Đăng</button>
+                        </div>
+                    </div>
+                </div>
+                <div className={`flex gap-10 mb-[90px] ${checkPhanHoi === 0 ? "" : `${checkPhanHoi === 1 ? "" : ``}`}`}>
+                    <div><img src="/avata.jpg" alt="" width={56} height={48} /></div>
+                    <div className={`w-[75%] h-[85px] block`}>
+                        <div className="text-[#4267b2] font-bold">Đinh Tài</div>
+                        <div className="">Cuốn vc :)))</div>
+                        <div className="flex gap-2 text-[12px] text-blue-500 mt-2">
+                            <div className="btn-comment hover:cursor-pointer">Thích</div>
+                            <div>-</div>
+                            <div className="btn-comment hover:cursor-pointer" onClick={() => { setPhanHoi(1) }}>Phản hồi</div>
+                            <div>-</div>
+                            <div className="text-slate-400">4 ngày</div>
+                        </div>
+                        <div className={`border-l-[1px] pl-[10px] ${checkPhanHoi === 1 ? "" : "hidden"}`}>
+                            <div className="flex gap-4 rounded mt-[10px] ">
+                                <div><img src="/avata.jpg" alt="" width={36} height={36} /></div>
+                                <div className={`w-[75%] h-[90px] relative bg-[#f5f6f7]`}>
+                                    <input type="text" name="" id="" className="w-[100%] h-[50px] outline-none border-[2px] pl-2 placeholder:text-gray-500 text-[15px] " placeholder="Viết bình luận ....." autoComplete="false" />
+                                    <div className={`bg-transparent w-[60px] my-[6px] absolute right-[120px] text-center rounded border-[2px]`}>
+                                        <button type="submit" className="bg-transparent mx-[10px] text-slate-500" onClick={() => closeComment()}>Huỷ</button>
+                                    </div>
+                                    <div className={`bg-blue-600 w-[80px] my-[6px] absolute right-5 text-center rounded border-[1px]`}>
+                                        <button type="submit" className=" bg-transparent mx-[10px] text-white" onSubmit={() => postComment()}>Trả lời</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 </div>
                 <footer>
                     <Footer/>
