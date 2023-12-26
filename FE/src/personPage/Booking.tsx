@@ -46,14 +46,14 @@ const Booking = () => {
         }
     }, [seats])
     const handleClick = (tabNumber: number) => {
-        if (!checkUser) {
+        if (checkUser) {
             setActiveTab(tabNumber);
         } else {
             messageApi.error({
                 type: 'error',
                 content: 'Quý khách vui lòng đăng nhập để tiếp tục',
                 className: "h-[20%] mt-[20px]"
-            });
+            }).then(() => navigate("/signin"));
         }
     };
     const autoSubmit = async (id: string, seatId_code: any, typeName: any, price: number,) => {
