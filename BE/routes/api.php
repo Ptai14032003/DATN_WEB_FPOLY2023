@@ -21,6 +21,12 @@ use App\Http\Controllers\TypeFoodController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
+Route::middleware('web')->group(function () {
+    Route::get('/sanctum/csrf-cookie', function (Request $request) {
+        return response()->json(['message' => 'CSRF cookie set']);
+    });
+});
+
 Route::match(['GET', 'POST'], '/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth:sanctum');

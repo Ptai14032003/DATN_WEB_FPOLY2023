@@ -5,8 +5,17 @@ import { useFetchMoviesPersonQuery } from '../rtk/moviesPerson/moviesPerson';
 import Fuse from 'fuse.js';
 import { useCallback, useState } from 'react';
 import { message } from 'antd';
+import { useEffect } from 'react';
+
+import { useCheckBillMutation } from '../rtk/bill/bill';
+import "./responsive.css"
+import Loading from '../components/layouts/layoutGuest/loading';
+
+
 const HomePage = () => {
-  const { data: movies } = useFetchMoviesPersonQuery()
+  const { data: movies } = useFetchMoviesPersonQuery();
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState(1);
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [inputSearchValue, setInputSearchValue] = useState('');
   const userString = localStorage.getItem('user');
@@ -17,11 +26,17 @@ const HomePage = () => {
 
   // }
   // const dataMap = movies?.data
-  const handleLinkClick = (value: any, e: any) => {
-    e.preventDefault();
-    console.log(value);
 
-    Navigate(`/${value}`)
+  useEffect(() => {
+    if (!movies || movies.length === 0) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [movies]);
+
+  const handleClick = (tabNumber: number) => {
+    setActiveTab(tabNumber);
   };
 
   const fuseOptions = {
@@ -70,35 +85,46 @@ const HomePage = () => {
           </div>
         </div>
         <div className="btn-movie space-x-5 mb-16">
-          <button className='active bg-[#1ACAAC] rounded-md w-[200px] py-2 text-lg' onClick={(e) => { handleLinkClick("", e); window.location.reload(); }}>Đang chiếu</button>
-          <button className='bg-[#282727] rounded-md w-[200px] py-2 text-lg' onClick={(e) => handleLinkClick("new", e)}>Sắp chiếu</button>
-          <button className='bg-[#282727] rounded-md w-[200px] py-2 text-lg' onClick={(e) => handleLinkClick("dacbiet", e)}>Đặc biệt</button>
+          <button className={activeTab === 1 ? ' bg-[#1ACAAC] rounded-md w-[200px] py-2 text-lg' : 'bg-[#282727] rounded-md w-[200px] py-2 text-lg'}  onClick={() => handleClick(1)}>Đang chiếu</button>
+          <button className={activeTab === 2 ? ' bg-[#1ACAAC] rounded-md w-[200px] py-2 text-lg' : 'bg-[#282727] rounded-md w-[200px] py-2 text-lg'}  onClick={() => handleClick(2)}>Sắp chiếu</button>
+          <button className={activeTab === 3 ? ' bg-[#1ACAAC] rounded-md w-[200px] py-2 text-lg' : 'bg-[#282727] rounded-md w-[200px] py-2 text-lg'}  onClick={() => handleClick(3)}>Đặc biệt</button>
         </div>
       </div>
       {/*  */}
-      <div className='max-w-[1420px] mx-auto p-5 grid grid-cols-4 gap-10'>
-        {allMovie?.map((item: any) => (
+      {loading ? (
+        <div className="loading-home">
+          <Loading />
+        </div>
+      ) : (
+        <div className={`Showing-movies ${activeTab === 1 ? "max-w-[1420px] mx-auto p-5 grid grid-cols-5 gap-10 mb-8" : "hidden"}`}>
 
-          <div key={item.id} className="movie-item rounded-md bg-[#0E0E0E]]">
-            <Link to={'/movie_show_time/' + item?.id}>
-              <img src={item.image} alt="" className='h-[420px] w-full' />
-              <div className="text my-2 px-3">
-                <h1 className='text-xl font-semibold'>{item.movie_name}</h1>
-                <div className="flex space-x-5 font-semibold text-[#B6B4B4] my-1">
-                  <p>{item.start_date}</p>
-                  <p>|</p>
-                  <p>{item.director}</p>
+          {allMovie?.map((item: any) => (
+            <div key={item.id} className="movie-item">
+              <Link to={'/movie_show_time/' + item?.id}>
+                <img src={item.image} alt="" className='h-[370px] w-full rounded-lg' />
+                <div className="text my-2 px-3">
+                  <h1 className='text-xl font-semibold'>{item.movie_name}</h1>
+                  <div className="grid grid-cols-5 font-semibold text-[#B6B4B4] my-1 text-sm">
+                    <p className='col-span-2'>{item.start_date}</p>
+                    <p className='text-center'>|</p>
+                    <p className='col-span-2'>{item.director}</p>
+                  </div>
                 </div>
-                <span className='font-semibold text-[#B6B4B4] block my-2'>{item.genre}</span>
-              </div>
-            </Link>
-            <div className="button">
-              <Link to={'/movie_show_time/' + item?.id}><button className='border-[1px] border-[#1ACAAC] rounded-md bg-[#1ACAAC] py-3 w-full hover:bg-gray-500 hover:border-none'>Đặt vé ngay</button></Link>
+              </Link>
             </div>
-          </div>
-        ))}
+          ))}
+
+        </div>
+      )}
+      <div className={`Coming-soon-movies ${activeTab === 2 ? "max-w-[1420px] mx-auto p-5 grid grid-cols-5 gap-10 mb-8" : "hidden"}`}>
+        <h1>Coming-soon-movies</h1>
+      </div>
+      <div className={`Special ${activeTab === 3 ? "max-w-[1420px] mx-auto p-5 grid grid-cols-5 gap-10 mb-8" : "hidden"}`}>
+        <h1>Special</h1>
+
       </div>
     </div>
+
   );
 }
 export default HomePage

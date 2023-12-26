@@ -7,6 +7,8 @@ import { useFetchMovieIdPersonQuery } from '../rtk/moviesPerson/moviesPerson';
 import { MdChair } from "react-icons/md";
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { message } from 'antd';
+import Footer from '../components/layouts/layoutGuest/footer';
+
 const Booking = () => {
     const { search } = useLocation();
     const show_time = new URLSearchParams(search).get('show_seat');
@@ -208,8 +210,12 @@ const Booking = () => {
             })
         })
     };
-    const getCombo = async (data: { target: { value: any } }, price: number, foodName: any) => {
-        let soLuong = parseInt(data.target.value, 10);
+    const getCombo = (quantity: number, price: number, foodName: any) => {
+        let soLuong = parseInt(quantity.toString(), 10);
+
+    //const getCombo = async (data: { target: { value: any } }, price: number, foodName: any) => {
+        //let soLuong = parseInt(data.target.value, 10);
+
         soLuong = isNaN(soLuong) || soLuong < 0 ? 0 : soLuong;
 
         const comboObject = {
@@ -278,6 +284,37 @@ const Booking = () => {
     }, [second, minute])
     const formattedSecond = String(second).padStart(2, '0');
     const formattedMinute = String(minute).padStart(2, '0');
+
+    interface ComboItems {
+        [key: string]: number;
+      }
+
+    const [comboItems, setComboItems] = useState<ComboItems>({});
+    const handleIncrease = (foodName: string, price: number) => {
+        setComboItems((prevItems) => {
+          const prevQuantity = prevItems[foodName] || 0;
+          const updatedItems: ComboItems = {
+            ...prevItems,
+            [foodName]: prevQuantity + 1,
+          };
+          getCombo(updatedItems[foodName], price, foodName); // Tính toán giá tiền
+          return updatedItems;
+        });
+      };
+
+      const handleDecrease = (foodName: string, price: number) => {
+        setComboItems((prevItems) => {
+          const prevQuantity = prevItems[foodName] || 0;
+          const updatedItems: ComboItems = {
+            ...prevItems,
+            [foodName]: Math.max(prevQuantity - 1, 0),
+          };
+          getCombo(updatedItems[foodName], price, foodName); // Tính toán giá tiền
+          return updatedItems;
+        });
+      };
+
+
     return (
         <div className='bg-black text-white'>
             <div className="backdrop">
@@ -327,8 +364,8 @@ const Booking = () => {
                                 </li>
                             </ul>
                         </div>
-                        <div className="w-[210px] h-[42px] border-[2px] rounded-md mt-[50px] px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
-                        <form action="" method='POST'>
+                        <div className="w-[230px] h-[42px] border-[2px] rounded-md mt-[50px] px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
+           <form action="" method='POST'>
                             <div className={`Booking-content ${activeTab === 1 ? "" : "hidden"}`}>
                                 <input type="text" hidden id={id} name='showtime_id' />
                                 <div className="choose-seat mt-2">
@@ -346,7 +383,9 @@ const Booking = () => {
                                                                 autoSubmit(seat?.id, seat?.seat_code, seat?.type_name, seat?.price)
                                                             }
                                                         }}>
-                                                        <MdChair className={`seat text-center cursor-pointer ${(seat?.status === 0 && 'non-choose-1') || (seat?.status === 1 && 'non-choose-2') || (seat?.type_name === 'VIP' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#8f4747]' ||
+
+                                                        <MdChair className={`seat text-center cursor-pointer ${(seat?.status === 1 && 'non-choose-1') || (seat?.status === 0 && 'non-choose-2') || (seat?.type_name === 'VIP' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#8f4747]' ||
+
                                                             (selectedSeats.includes(seat?.seat_code)) && 'text-[#00FFD1]' || (seat?.type_name === 'Thường' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#797373]' || (seat?.type_name === 'Đôi' && !selectedSeats.includes(seat?.seat_code)) && 'text-[#8f355a]'
                                                             }`}
                                                             size={80}
@@ -390,23 +429,22 @@ const Booking = () => {
                                 <div className='grid grid-cols-2 gap-12'>
                                     {Foods?.map((item) => (
                                         <div className='Combo grid grid-cols-3 border-2 border-white rounded-md bg-[#2f9c8a] p-3 gap-5' key={item?.id}>
-                                            <img src={`${item?.image}`} alt="" className='col-span-1 h-full w-full rounded-md' />
+                                            <img src={item?.image} alt="" className='col-span-1 h-full w-full rounded-md' />
                                             <div className="col-span-2 flex flex-col justify-between">
-                                                <h1 className='text-xl font-semibold'>{item?.food_name} - {item?.price.toLocaleString("vi-VN", { style: "currency", currency: "VND", })}</h1>
+                                                <h1 className='text-xl font-semibold'>{item?.food_name} - {item?.price.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}</h1>
                                                 <p className='description'>01 nước siêu lớn + 01 bắp lớn + 01 xúc xích lốc xoáy</p>
                                                 <p className='description'>* Nhận ngay trong ngày xem phim</p>
                                                 <p className='description'>** Miễn phí đổi vị bắp Caramel</p>
                                                 <div className='flex justify-between mt-2'>
                                                     <div className='combo-quantity h-[30px] flex'>
-                                                        <button className='bg-white rounded-tl-md rounded-bl-md h-full flex items-center justify-center'>
+                                                        <button className='bg-white rounded-tl-md rounded-bl-md h-full flex items-center justify-center' onClick={() => handleDecrease(item?.food_name, item?.price)}>
                                                             <MinusOutlined style={{ color: '#000', fontSize: '20px', padding: '3px' }} />
                                                         </button>
-                                                        <input className='text-black w-[100px] h-full outline-none pl-3' type="number" defaultValue={0} min={0} onChange={(e) => getCombo(e, item?.price, item?.food_name)} />
-                                                        <button className='bg-white rounded-tr-md rounded-br-md h-full flex items-center justify-center'>
+                                                        <input className='text-black w-[100px] h-full outline-none pl-3' type="number" defaultValue={comboItems[item?.food_name] || 0} min={0} value={comboItems[item?.food_name] || 0} readOnly/>
+                                                        <button className='bg-white rounded-tr-md rounded-br-md h-full flex items-center justify-center' onClick={() => handleIncrease(item?.food_name, item?.price)}>
                                                             <PlusOutlined style={{ color: '#000', fontSize: '20px', padding: '3px' }} />
                                                         </button>
                                                     </div>
-                                                    {/* <input className='text-black' type="number" defaultValue={0} min={0} onChange={(e) => getCombo(e, item?.price, item?.food_name)} /> */}
                                                     <div>
                                                         <button className='cursor-pointer border rounded py-1 px-4 bg-black'>Chọn</button>
                                                     </div>
@@ -427,6 +465,9 @@ const Booking = () => {
                     </div>
                 </div>
             </div >
+            <footer className='mt-10'>
+                <Footer/>
+            </footer>
         </div >
     )
 }
