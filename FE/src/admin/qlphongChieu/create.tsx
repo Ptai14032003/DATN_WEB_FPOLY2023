@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, InputNumber, Modal } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { PhongChieu1 } from './page';
+import { message } from 'antd';
 import { useAddPhongChieuMutation } from '../../rtk/qlPhongChieu/qlPhongChieu';
 import { MdChair } from 'react-icons/md';
 const CreateQlPhongChieu: React.FC = () => {
@@ -11,8 +12,8 @@ const CreateQlPhongChieu: React.FC = () => {
     const [dataSeat, setDataSeat] = useState<any>([]);
     const [seat, setSeat] = useState<any>([])
     const [buttonClick, setButtonClick] = useState<any>(0)
+    const [messageApi, contextHolder] = message.useMessage();
     const onFinish = (values: any) => {
-        // addPhongChieu(values).then(() => { setIsModalOpen(false); message.success("Tạo mới thành công"); formRef.current?.resetFields() })
         const newDataSeat = [];
         for (let i = 0; i < values.total_seat_doc; i++) {
             for (let j = 0; j < values.total_seat_ngang; j++) {
@@ -58,46 +59,69 @@ const CreateQlPhongChieu: React.FC = () => {
                     }
                 }
                 if (buttonClick === 2) {
-                    const dataOderSeat: number = dataSeat.findIndex((seat: any) => seat.seat_code === seat_code);
-                    if (dataOderSeat % 2 === 0) {
-                        console.log(dataSeat[dataOderSeat + 1]?.seat_code);
+                    seat?.map((seatItem: any) => {
+                        seatItem.map((item2: any) => {
+                            if (item2 && item2?.seat_code === seat_code) {
+                                const dataLength = seatItem.length
+                                const dataOderSeat: number = seatItem.findIndex((seat: any) => seat?.seat_code === seat_code);
+                                if (dataOderSeat % 2 === 0 && (seat_code !== seatItem[dataLength - 1]?.seat_code)) {
+                                    if (buttonClick === seatItem[dataOderSeat]?.type_name || buttonClick === seatItem[dataOderSeat + 1]?.type_name) {
+                                        seatItem[dataOderSeat + 1].type_name = 0
+                                        seatItem[dataOderSeat].type_name = 0
+                                        seatItem[dataOderSeat + 1].hidden = 0
+                                        seatItem[dataOderSeat].hidden = 0
+                                        setDataArraySeat()
+                                        return;
+                                    } else {
+                                        seatItem[dataOderSeat + 1].type_name = buttonClick
+                                        seatItem[dataOderSeat].type_name = buttonClick
+                                        seatItem[dataOderSeat + 1].hidden = 0
+                                        seatItem[dataOderSeat].hidden = 0
+                                        setDataSeat(dataSeat);
+                                        setDataArraySeat()
+                                        return;
+                                    }
+                                }
+                                if (dataOderSeat % 2 !== 0) {
+                                    if (buttonClick === seatItem[dataOderSeat]?.type_name || buttonClick === seatItem[dataOderSeat - 1]?.type_name) {
+                                        seatItem[dataOderSeat - 1].type_name = 0
+                                        seatItem[dataOderSeat].type_name = 0
+                                        seatItem[dataOderSeat - 1].hidden = 0
+                                        seatItem[dataOderSeat].hidden = 0
+                                        setDataArraySeat()
+                                        return;
+                                    } else {
+                                        seatItem[dataOderSeat - 1].type_name = buttonClick
+                                        seatItem[dataOderSeat].type_name = buttonClick
+                                        seatItem[dataOderSeat - 1].hidden = 0
+                                        seatItem[dataOderSeat].hidden = 0
+                                        setDataSeat(dataSeat);
+                                        setDataArraySeat()
+                                        return;
+                                    }
 
-                        if (item?.seat_code === dataSeat[dataOderSeat + 1]?.seat_code) {
-                            if (buttonClick === item?.type_name) {
-                                item.type_name = 0
-                                setDataArraySeat()
-                                return;
-                            } else {
-                                item.type_name = buttonClick
-                                dataSeat[dataOderSeat + 1]?.type_name === buttonClick
-                                setDataSeat(dataSeat);
-                                setDataArraySeat()
-                                return;
+                                }
                             }
-                        }
-                    } else {
-                        if (item?.seat_code === dataSeat[dataOderSeat - 1]?.seat_code) {
-                            if (buttonClick === item?.type_name) {
-                                item.type_name = 0
-                                setDataArraySeat()
-                                return;
-                            } else {
-                                item.type_name = buttonClick
-                                dataSeat[dataOderSeat - 1]?.type_name === buttonClick
-                                setDataSeat(dataSeat);
-                                setDataArraySeat()
-                                return;
-                            }
-                        }
-                    }
-
+                        })
+                    })
                 }
                 if (buttonClick === 3) {
-                    if (hidden === 0) {
+                    if (hidden === 0 && type_name === 2) {
+                        messageApi.error({
+                            type: 'error',
+                            content: 'Vui lòng huỷ trạng thái ghế đôi',
+                            className: "h-[20%] mt-[20px]",
+                            duration: 2
+                        });
+                        return;
+                    }
+                    if (hidden === 0 && type_name !== 2) {
                         item.hidden = 1
+                        setDataSeat(dataSeat);
                         setDataArraySeat()
                         return;
-                    } else {
+                    }
+                    if (hidden === 1) {
                         item.hidden = 0
                         setDataSeat(dataSeat);
                         setDataArraySeat()
@@ -124,8 +148,14 @@ const CreateQlPhongChieu: React.FC = () => {
             setDataArraySeat()
         }
     }, [dataSeat],)
+    const addPhong = () => {
+        console.log(dataSeat);
+
+        addPhongChieu(dataSeat).then(() => { setIsModalOpen(false); message.success("Tạo mới thành công"); formRef.current?.resetFields() })
+    }
     return (
         <>
+            {contextHolder}
             <Button onClick={showModal}>Thêm phòng chiếu mới</Button>
             <Modal title="Thêm phòng chiếu mới" open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: false }} width={1200} className="text-center w-[800px]">
                 <Form className='mx-auto'
@@ -169,14 +199,14 @@ const CreateQlPhongChieu: React.FC = () => {
                     <div className=''>
                         <div className="flex">
                             <div className=" w-max-[1000px] w-[50%] mx-[10%]">
-                                {seat?.map((item: any) => (
-                                    <div className="seat-group flex gap-4">
+                                {seat?.map((item: any, index: number) => (
+                                    <div className="seat-group flex gap-4" key={index}>
                                         {item?.map((item2: any) => (
                                             <div className={`relative `}
                                                 key={item2?.seat_code} onClick={() => {
                                                     changeSeat(item2?.seat_code, item2?.type_name, item2?.hidden);
                                                 }}>
-                                                <MdChair className={`seat text-center cursor-pointer text-[#797373] ${((item2?.hidden === 0 && "text-[#797373]") && (((item2?.type_name === 1 && 'text-[#8f4747]') || (item2?.type_name === 0 && 'text-[#797373]') || (item2?.type_name === 2 && 'text-[#8f355a]')))) || (item2?.hidden === 1 && "text-orange-400")}`}
+                                                <MdChair className={`seat text-center cursor-pointer text-[#797373] ${((item2?.hidden === 0 && "text-[#797373]") && (((item2?.type_name === 1 && 'text-[#8f4747]') || (item2?.type_name === 0 && 'text-[#797373]') || (item2?.type_name === 2 && 'text-[#8f355a]')))) || (item2?.hidden === 1 && "text-black")}`}
                                                     size={35}
                                                 />
                                                 <div className={`cursor-pointer absolute top-1 right-[11.2px] font-semibold text-[8px] `}>{item2?.seat_code}</div>
@@ -185,8 +215,8 @@ const CreateQlPhongChieu: React.FC = () => {
                                     </div>
                                 ))}
                             </div>
-                            <div className="text-center w-[10%] ml-[150px] ">
-                                <div>Lựa chọn loại ghế :</div>
+                            <div className="text-center w-[15%] ml-[140px] ">
+                                <div className='ml-[-55px]'>Lựa chọn loại ghế :</div>
                                 <div className={`seat flex border-2 rounded-lg w-[120px] mt-4 ${buttonClick === 0 ? "bg-green-500" : ""}`} onClick={() => setButtonClick(0)}>
                                     <div><MdChair className="text-[#797373]" size={40} /></div>
                                     <p className='ml-2 py-2'>Thường</p>
@@ -199,13 +229,13 @@ const CreateQlPhongChieu: React.FC = () => {
                                     <div><MdChair className="text-[#8f355a]" size={40} /></div>
                                     <p className='ml-2 py-2'>Sweet-box</p>
                                 </div>
-                                <div className="seat flex border-2 rounded-lg w-[120px] mt-4" onClick={() => setButtonClick(3)}>
-                                    <div><MdChair className="text-[#00FFD1]" size={40} /></div>
+                                <div className={`seat flex border-2 rounded-lg w-[120px] mt-4 ${buttonClick === 3 ? "bg-green-500" : ""}`} onClick={() => setButtonClick(3)}>
+                                    <div><MdChair className="text-black" size={40} /></div>
                                     <p className='ml-2 py-2'>Huỷ ghế</p>
                                 </div>
                             </div>
                         </div>
-                        <Button className="w-[80px] mt-[20px]">
+                        <Button className="w-[80px] mt-[20px]" onClick={() => addPhong()}>
                             Lưu
                         </Button>
                     </div>
