@@ -37,6 +37,7 @@ Route::post('/check_payment', [PaymentController::class, 'check_payment']);
 Route::post('/book_ticket', [TicketController::class, 'book_ticket'])->name('book_ticket');
 Route::get('/movie_show_time/{id}', [HomeController::class, 'show_time_movie'])->name('movie_show_time');
 Route::get('/show_seat_room/{id}', [HomeController::class, 'show_seat_room'])->name('show_seat_room');
+Route::get('/voucher', [HomeController::class, 'voucher'])->name('voucher');
 
 Route::prefix('admin')->group(function () {
     Route::resource('bill', BillController::class);
