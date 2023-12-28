@@ -22,11 +22,12 @@ class RoomApiController extends Controller
         // $total = Room::join('seats','seats.room_id','=','seats.id')->where('id',$request->id)->count();
         $theater = Room::create(
             $request->all()
+            
         );
         $type_seats = Type_Seat::all();
         if ($theater) {
             foreach ($type_seats as $type_seat) {
-                if($request->type_seat == 1){
+                // if($request->type_seat == 1){}
                 if ($type_seat->id == 1) {
                     for ($i = 1; $i < 2; $i++) {
                         for ($y = 1; $y < 11; $y++) {
@@ -77,8 +78,8 @@ class RoomApiController extends Controller
                         }
                     }
                 }
-            }
-            if($request->type_seat == 2){
+            
+            // if($request->type_seat == 2){}
                 if ($type_seat->id == 2) {
                     for ($i = 1; $i < 2; $i++) {
                         for ($y = 1; $y < 11; $y++) {
@@ -129,8 +130,8 @@ class RoomApiController extends Controller
                         }
                     }
                 }
-            }
-            if($request->type_seat == 3){
+            
+            // if($request->type_seat == 3){}
                 if($type_seat->id == 3){
                     for ($i = 1; $i <2; $i++){
                         for ($y = 1; $y < 9; $y++) {
@@ -145,7 +146,7 @@ class RoomApiController extends Controller
                         }
                     }
                 }
-            }
+            
             }
         }
         return new RoomResource($theater);
