@@ -7,37 +7,16 @@ const { Column } = Table;
 
 interface DataType {
     key: string;
-    firstName: string;
-    lastName: string;
-    age: number;
-    address: string;
+    food_name: string,
+    food_type: string
+    price: number,
+    image: string,
+    created_at: string,
+    updated_at: string,
+    deleted_at: string,
 }
-
-const data: DataType[] = [
-    {
-        key: '1',
-        firstName: 'John',
-        lastName: 'Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-    },
-    {
-        key: '2',
-        firstName: 'Jim',
-        lastName: 'Green',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-    },
-    {
-        key: '3',
-        firstName: 'Joe',
-        lastName: 'Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-    },
-];
-
 const AdminQlSp: React.FC = () => {
+
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {

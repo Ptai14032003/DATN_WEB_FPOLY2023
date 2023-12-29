@@ -36,6 +36,8 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
         setIsModalOpen(false);
         formRef.current?.resetFields();
     };
+    console.log(data);
+
     return (
         <>
 
@@ -113,7 +115,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                         </Form.Item>
                         <Form.Item<QlPhim>
                             label="Poster"
-                            name="director"
+                            name="image"
                             rules={[{ required: true, message: 'Vui lòng nhập ảnh !' }]}
                         >
                             <Upload>

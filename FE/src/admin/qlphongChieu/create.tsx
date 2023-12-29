@@ -46,7 +46,9 @@ const CreateQlPhongChieu: React.FC = () => {
     const changeSeat = (seat_code: any, type_name: any, hidden: any) => {
         dataSeat?.map((item: any) => {
             if (item && item?.seat_code === seat_code) {
-                if (buttonClick === 0 || buttonClick === 1) {
+                console.log(type_name);
+
+                if ((buttonClick === 0 || buttonClick === 1) && type_name !== 2) {
                     if (buttonClick === item?.type_name) {
                         item.type_name = 0
                         setDataArraySeat()
@@ -57,6 +59,15 @@ const CreateQlPhongChieu: React.FC = () => {
                         setDataArraySeat()
                         return;
                     }
+                }
+                if ((buttonClick === 0 || buttonClick === 1) && type_name === 2) {
+                    messageApi.error({
+                        type: 'error',
+                        content: 'Vui lòng huỷ trạng thái ghế đôi',
+                        className: "h-[20%] mt-[20px]",
+                        duration: 2
+                    });
+                    return;
                 }
                 if (buttonClick === 2) {
                     seat?.map((seatItem: any) => {
@@ -149,15 +160,13 @@ const CreateQlPhongChieu: React.FC = () => {
         }
     }, [dataSeat],)
     const addPhong = () => {
-        console.log(dataSeat);
-
         addPhongChieu(dataSeat).then(() => { setIsModalOpen(false); message.success("Tạo mới thành công"); formRef.current?.resetFields() })
     }
     return (
         <>
             {contextHolder}
             <Button onClick={showModal}>Thêm phòng chiếu mới</Button>
-            <Modal title="Thêm phòng chiếu mới" open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: false }} width={1200} className="text-center w-[800px]">
+            <Modal title="Thêm phòng chiếu mới" open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: false }} width={1200} className="text-center">
                 <Form className='mx-auto'
                     name='formPhongChieu'
                     ref={formRef}
@@ -241,7 +250,6 @@ const CreateQlPhongChieu: React.FC = () => {
                     </div>
 
                 ) : (
-                    // Render content when 'seat' does not exist
                     <div>
                     </div>
                 )}

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
 import CreateQlSc from './create';
 import { useDeleteSuatChieuMutation, useFetchSuatChieuQuery } from '../../rtk/qlSc/qlSc';
-import { SuatChieu } from '../../type';
 import { Waveform } from '@uiball/loaders';
 const { Column } = Table;
 
@@ -13,7 +12,7 @@ export type QlSuatChieu = {
     show_date: string;
     show_time: string;
     total_ticket_sold?: number;
-    total_money?: number
+    total_money?: string
 }
 const AdminQlSc: React.FC = () => {
     const { data: dataSuatChieu, isLoading } = useFetchSuatChieuQuery()
@@ -51,11 +50,12 @@ const AdminQlSc: React.FC = () => {
                 show_date: item.show_date,
                 show_time: item.show_time,
                 total_ticket_sold: item.total_ticket_sold,
-                total_money: item.total_money,
+                total_money: (Number(item.total_money))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
             }));
             setDataTable(mapSuatChieu);
         }
     }, [dataSuatChieu]);
+    console.log(dataSuatChieu);
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý Suất Chiếu</div>

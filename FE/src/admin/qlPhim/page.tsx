@@ -6,7 +6,7 @@ import { useDeleteMoviesMutation, useFetchMoviesQuery } from '../../rtk/movies/m
 import TrailerPhim from '../../components/itemAdmin/Trailer/page';
 import PosterPhim from '../../components/itemAdmin/Poster/page';
 import { Waveform } from '@uiball/loaders';
-import { checkApiStatus }  from "../checkApiStatus"; // Import hàm trợ giúp
+import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
 const { Column } = Table;
 
 export type QlPhim = {
@@ -22,7 +22,7 @@ export type QlPhim = {
     trailer: string;
 }
 const AdminQlPhim: React.FC = () => {
-    const { data: dataMovies, isLoading} = useFetchMoviesQuery()
+    const { data: dataMovies, isLoading } = useFetchMoviesQuery()
     // const status = error?.status;
     // checkApiStatus(status);
     const [deleteMovie] = useDeleteMoviesMutation()
@@ -30,7 +30,6 @@ const AdminQlPhim: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
     const onSelectChange = (newSelectedRowKeys: any[]) => {
-        console.log('', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
     };
     const DeleteAll = () => {
@@ -52,7 +51,7 @@ const AdminQlPhim: React.FC = () => {
     useEffect(() => {
         const dataMap = dataMovies
         console.log(dataMap);
-        
+
         // chưa có kiểu dữ liệu cho data
         if (Array.isArray(dataMap)) {
             const mapMovies = dataMap.map((item: any) => ({
@@ -70,6 +69,8 @@ const AdminQlPhim: React.FC = () => {
             setDataTable(mapMovies)
         }
     }, [dataMovies])
+    console.log(dataMovies);
+
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Danh sách phim</div>
@@ -117,10 +118,10 @@ const AdminQlPhim: React.FC = () => {
                     <Column title="Đạo Diễn" dataIndex="director" key="director" />
                     <Column title="Poster" dataIndex="image" key="image"
                         render={(_: any, record: QlPhim) => (
-                            <PosterPhim data={`https://www.theindianwire.com/wp-content/uploads/2019/02/Avengers-Endgame.jpg`} key={record.image} />
+                            <PosterPhim data={record?.image} key={record.image} />
                         )} />
                     <Column title="Trailer" dataIndex="trailer" key="trailer" render={(_: any, record: QlPhim) => (
-                        <TrailerPhim data={`https://www.youtube.com/embed/XBczBMc4LPQ?si=oS0QKFixvq636T3Q&amp;start=103`} key={record.trailer} />
+                        <TrailerPhim data={record.trailer} key={record.trailer} />
                     )} />
                     <Column
                         title="Action"
