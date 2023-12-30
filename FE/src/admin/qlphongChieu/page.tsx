@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
 import CreateQlPhongChieu from './create';
 import EditQlPhongChieu from './edit';
 import { useDeletePhongChieuMutation, useFetchPhongChieuQuery } from '../../rtk/qlPhongChieu/qlPhongChieu';
 import { Waveform } from '@uiball/loaders'
+import Fuse from 'fuse.js';
 const { Column } = Table;
 
 export type PhongChieu = {
@@ -37,10 +38,18 @@ const AdminQlPhongChieu: React.FC = () => {
         onChange: onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
+    const fuseOptions = {
+        includeScore: true,
+        useExtendedSearch: true,
+        keys: ["name"]
+    }
+    const fuse = new Fuse(dataPhongChieu?.data, fuseOptions)
+
     const searchProject = (value: string) => {
-        console.log(value);
-        setSearchTerm(value);
+        setSearchTerm(value)
     };
+    console.log(dataTable);
+
     const deleteOne = (key: string) => {
         deletePhongChieu(key).then(() => message.success("Xóa thành công"))
     }
@@ -55,6 +64,20 @@ const AdminQlPhongChieu: React.FC = () => {
             setDataTable(mapPhongChieu)
         }
     }, [dataPhongChieu])
+    useEffect(() => {
+        if (searchTerm.length > 0) {
+            const results = fuse?.search(searchTerm);
+            const newData = results?.map((result) => result.item);
+            if (Array.isArray(newData)) {
+                const mapPhongChieu = newData.map((item: any) => ({
+                    key: item.id,
+                    name: item.name,
+                    total_seat: item.total_seat
+                }))
+                setDataTable(mapPhongChieu)
+            }
+        }
+    }, [searchTerm])
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Danh sách phòng chiếu</div>
