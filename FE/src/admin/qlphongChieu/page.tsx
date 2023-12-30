@@ -4,6 +4,10 @@ import CreateQlPhongChieu from './create';
 import EditQlPhongChieu from './edit';
 import { useDeletePhongChieuMutation, useFetchPhongChieuQuery } from '../../rtk/qlPhongChieu/qlPhongChieu';
 import { Waveform } from '@uiball/loaders'
+
+import { checkApiStatus }  from "../checkApiStatus"; // Import hàm trợ giúp
+import { useNavigate } from 'react-router-dom';
+
 const { Column } = Table;
 
 export type PhongChieu = {
@@ -19,7 +23,11 @@ export type PhongChieu1 = {
     total_seat_doc: number;
 }
 const AdminQlPhongChieu: React.FC = () => {
-    const { data: dataPhongChieu, isLoading } = useFetchPhongChieuQuery()
+    const { data: dataPhongChieu, isLoading, error } = useFetchPhongChieuQuery()
+
+    const navigate = useNavigate();
+    const status = error?.status;
+
     const [deletePhongChieu] = useDeletePhongChieuMutation()
     const [dataTable, setDataTable] = useState<PhongChieu[]>([])
     const [searchTerm, setSearchTerm] = useState('');
@@ -54,7 +62,10 @@ const AdminQlPhongChieu: React.FC = () => {
             }))
             setDataTable(mapPhongChieu)
         }
-    }, [dataPhongChieu])
+        if (status) {
+            checkApiStatus(status,navigate);
+          }
+    }, [dataPhongChieu,status])
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Danh sách phòng chiếu</div>

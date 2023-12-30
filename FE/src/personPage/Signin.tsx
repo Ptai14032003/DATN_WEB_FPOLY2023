@@ -14,13 +14,12 @@ interface Form {
 
 const Signin = () => {
   // const handleSubmit = (e) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { register, handleSubmit } = useForm<Form>();
   const [signin, { error }] = useSigninMutation();
   const onFinish = async (values: any) => {
     try {
-      // Gửi request để lấy CSRF token và thiết lập cookie
-      // await axios.get('http://127.0.0.1:8000/sanctum/csrf-cookie',{ withCredentials: true });
+
       
       await signin(values).unwrap()
         .then(() => {
