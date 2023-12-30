@@ -45,15 +45,6 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        // $data = $request->validated();
-        // $data['password'] = bcrypt($data['password']);
-        // $data['user_code'] = Helper::IDGenerator(new User, 'user_code', 6, "KH");
-        // $user = User::create($data);
-        // if ($user->id) {
-        //     return response(new UserResource($user), 200);
-        // } else {
-        //     return response(['errors' => $data->errors()], 404);
-        // }
         $validator = Validator::make(
             $request->all(),
             [
@@ -87,6 +78,12 @@ class AuthController extends Controller
         );
         if ($validator->fails()) {
             return response()->json($validator->messages());
+        } else {
+            $data = $request->all();
+            $data['password'] = bcrypt($data['password']);
+            $data['user_code'] = Helper::IDGenerator(new User, 'user_code', 6, "KH");
+            $user = User::create($data);
+            return response("Đăng ký thành công", 200);
         }
     }
     public function logout(Request $request)
@@ -98,7 +95,7 @@ class AuthController extends Controller
         return response(['mesage' => "Đăng xuất thành công"], 200);
     }
 
-    public function refresh_token(Request $requet)
-    {
-    }
+    // public function refresh_token(Request $requet)
+    // {
+    // }
 }

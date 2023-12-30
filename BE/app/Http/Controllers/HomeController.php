@@ -10,6 +10,7 @@ use App\Models\Movie;
 use App\Models\Movie_Genre;
 use App\Models\Seat;
 use App\Models\Showtime;
+use App\Models\Promotion;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -181,5 +182,12 @@ class HomeController extends Controller
         }
         $combo = Food::all();
         return response()->json(['seats' => $seats, 'movie' => $movie, 'combo' => $combo]);
+    }
+
+    public function voucher()
+    {
+        $promotion = Promotion::all();
+        return response()->json($promotion);
+
     }
 }

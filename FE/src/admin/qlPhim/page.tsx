@@ -6,7 +6,8 @@ import { useDeleteMoviesMutation, useFetchMoviesQuery } from '../../rtk/movies/m
 import TrailerPhim from '../../components/itemAdmin/Trailer/page';
 import PosterPhim from '../../components/itemAdmin/Poster/page';
 import { Waveform } from '@uiball/loaders';
-import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
+import { checkApiStatus }  from "../checkApiStatus"; // Import hàm trợ giúp
+import { useNavigate } from 'react-router-dom';
 const { Column } = Table;
 
 export type QlPhim = {
@@ -22,9 +23,10 @@ export type QlPhim = {
     trailer: string;
 }
 const AdminQlPhim: React.FC = () => {
-    const { data: dataMovies, isLoading } = useFetchMoviesQuery()
-    // const status = error?.status;
-    // checkApiStatus(status);
+    const { data: dataMovies, isLoading, error } = useFetchMoviesQuery()
+    const navigate = useNavigate();
+    const status = error?.status;
+        //checkApiStatus(status);
     const [deleteMovie] = useDeleteMoviesMutation()
     const [dataTable, setDataTable] = useState<QlPhim[]>([])
     const [searchTerm, setSearchTerm] = useState('');
@@ -51,7 +53,6 @@ const AdminQlPhim: React.FC = () => {
     useEffect(() => {
         const dataMap = dataMovies
         console.log(dataMap);
-
         // chưa có kiểu dữ liệu cho data
         if (Array.isArray(dataMap)) {
             const mapMovies = dataMap.map((item: any) => ({
@@ -68,9 +69,10 @@ const AdminQlPhim: React.FC = () => {
             }))
             setDataTable(mapMovies)
         }
-    }, [dataMovies])
-    console.log(dataMovies);
-
+        if (status) {
+            checkApiStatus(status,navigate);
+          }
+    }, [dataMovies,status])
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Danh sách phim</div>

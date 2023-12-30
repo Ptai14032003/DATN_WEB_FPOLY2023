@@ -3,6 +3,10 @@ import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
 import CreateQlSc from './create';
 import { useDeleteSuatChieuMutation, useFetchSuatChieuQuery } from '../../rtk/qlSc/qlSc';
 import { Waveform } from '@uiball/loaders';
+
+import { checkApiStatus }  from "../checkApiStatus"; // Import hàm trợ giúp
+import { useNavigate } from 'react-router-dom';
+
 const { Column } = Table;
 
 export type QlSuatChieu = {
@@ -15,7 +19,11 @@ export type QlSuatChieu = {
     total_money?: string
 }
 const AdminQlSc: React.FC = () => {
-    const { data: dataSuatChieu, isLoading } = useFetchSuatChieuQuery()
+    const { data: dataSuatChieu, isLoading, error } = useFetchSuatChieuQuery()
+    
+    const navigate = useNavigate();
+    const status = error?.status;
+
     const [deleteSuatChieu] = useDeleteSuatChieuMutation()
     const [dataTable, setDataTable] = useState<QlSuatChieu[]>([])
     const [searchTerm, setSearchTerm] = useState('');
@@ -54,8 +62,11 @@ const AdminQlSc: React.FC = () => {
             }));
             setDataTable(mapSuatChieu);
         }
-    }, [dataSuatChieu]);
-    console.log(dataSuatChieu);
+        if (status) {
+            checkApiStatus(status,navigate);
+        }
+        
+    }, [dataSuatChieu,status]);
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý Suất Chiếu</div>

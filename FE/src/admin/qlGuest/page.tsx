@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Table, Input, Button, message, Popconfirm } from 'antd';
 import { useFetchGuestsQuery } from '../../rtk/qlGuest/qlGuest';
 import { Waveform } from '@uiball/loaders';
+
+import { checkApiStatus }  from "../checkApiStatus"; // Import hàm trợ giúp
+import { useNavigate } from 'react-router-dom';
+
 const { Column } = Table;
 interface Guest {
     key: string;
@@ -15,8 +19,11 @@ interface Guest {
     gender: string;
 }
 const AdminQlGuest: React.FC = () => {
-    const { data: dataGuest, isLoading } = useFetchGuestsQuery()
+    const { data: dataGuest, isLoading,error } = useFetchGuestsQuery()
     console.log(dataGuest);
+
+    const navigate = useNavigate();
+    const status = error?.status;
 
     const [dataTable, setDataTable] = useState<Guest[]>([])
     const [searchTerm, setSearchTerm] = useState('');
@@ -54,7 +61,10 @@ const AdminQlGuest: React.FC = () => {
             }))
             setDataTable(mapMovies)
         }
-    }, [dataGuest])
+        if (status) {
+            checkApiStatus(status,navigate);
+          }
+    }, [dataGuest,status])
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý khách hàng</div>

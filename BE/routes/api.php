@@ -37,8 +37,9 @@ Route::post('/check_payment', [PaymentController::class, 'check_payment']);
 Route::post('/book_ticket', [TicketController::class, 'book_ticket'])->name('book_ticket');
 Route::get('/movie_show_time/{id}', [HomeController::class, 'show_time_movie'])->name('movie_show_time');
 Route::get('/show_seat_room/{id}', [HomeController::class, 'show_seat_room'])->name('show_seat_room');
+Route::get('/voucher', [HomeController::class, 'voucher'])->name('voucher');
 
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware('checkrole')->group(function () {
     Route::resource('bill', BillController::class);
     Route::resource('food', FoodController::class);
     Route::resource('food_type', TypeFoodController::class);
@@ -121,7 +122,18 @@ Route::prefix('admin')->group(function () {
         Route::put('/{id}', [ShowtimeApiController::class, 'update']);
         Route::delete('/{id}', [ShowtimeApiController::class, 'destroy']);
     });
-
-    Route::apiResource('/users', UserController::class);
-    Route::apiResource('/personnels', PersonnelController::class);
+    Route::prefix('users')->group(function () {
+        Route::get('/', [UserController::class, 'index']);
+        Route::post('/', [UserController::class, 'store']);
+        Route::get('/{id}', [UserController::class, 'show']);
+        Route::put('/{id}', [UserController::class, 'update']);
+        Route::delete('/{id}', [UserController::class, 'destroy']);
+    });
+    Route::prefix('personnels')->group(function () {
+        Route::get('/', [PersonnelController::class, 'index']);
+        Route::post('/', [PersonnelController::class, 'store']);
+        Route::get('/{id}', [PersonnelController::class, 'show']);
+        Route::put('/{id}', [PersonnelController::class, 'update']);
+        Route::delete('/{id}', [PersonnelController::class, 'destroy']);
+    });
 });
