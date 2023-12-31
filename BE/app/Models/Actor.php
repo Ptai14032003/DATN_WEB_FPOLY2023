@@ -17,4 +17,10 @@ class Actor extends Model
         'role',//0 là diễn viên phụ, 1 là diễn viên chính
         'movie_role'//vai diễn
     ];
+
+    public function movie()
+{
+    return $this->belongsTo(Movie::class, 'movie_id');
+}
+
 }
