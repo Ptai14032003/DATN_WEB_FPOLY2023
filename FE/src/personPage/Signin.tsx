@@ -26,7 +26,7 @@ const Signin = () => {
           const userString = localStorage.getItem('user');
           const user = userString ? JSON.parse(userString) : null;          
           if (user.role == 'Admin') {
-            navigate("/admin?isAuth=true")
+            navigate("/")
           }
           else {
             navigate("/")

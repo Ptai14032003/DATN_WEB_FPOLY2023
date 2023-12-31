@@ -36,8 +36,6 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
         setIsModalOpen(false);
         formRef.current?.resetFields();
     };
-    console.log(data);
-
     return (
         <>
 

@@ -5,7 +5,7 @@ import EditQlPhongChieu from './edit';
 import { useDeletePhongChieuMutation, useFetchPhongChieuQuery } from '../../rtk/qlPhongChieu/qlPhongChieu';
 import { Waveform } from '@uiball/loaders'
 import Fuse from 'fuse.js';
-import { checkApiStatus }  from "../checkApiStatus"; // Import hàm trợ giúp
+import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
 import { useNavigate } from 'react-router-dom';
 const { Column } = Table;
 
@@ -47,6 +47,8 @@ const AdminQlPhongChieu: React.FC = () => {
     const fuseOptions = {
         includeScore: true,
         useExtendedSearch: true,
+        isCaseSensitive: true,
+        findAllMatches: true,
         keys: ["name"]
     }
     const fuse = new Fuse(dataPhongChieu?.data, fuseOptions)
@@ -79,6 +81,17 @@ const AdminQlPhongChieu: React.FC = () => {
             const newData = results?.map((result) => result.item);
             if (Array.isArray(newData)) {
                 const mapPhongChieu = newData.map((item: any) => ({
+                    key: item.id,
+                    name: item.name,
+                    total_seat: item.total_seat
+                }))
+                setDataTable(mapPhongChieu)
+            }
+        }
+        if (searchTerm.length === 0) {
+            const dataMap = dataPhongChieu?.data
+            if (Array.isArray(dataMap)) {
+                const mapPhongChieu = dataMap.map((item: any) => ({
                     key: item.id,
                     name: item.name,
                     total_seat: item.total_seat

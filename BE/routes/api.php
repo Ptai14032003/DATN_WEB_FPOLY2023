@@ -39,7 +39,7 @@ Route::get('/movie_show_time/{id}', [HomeController::class, 'show_time_movie'])-
 Route::get('/show_seat_room/{id}', [HomeController::class, 'show_seat_room'])->name('show_seat_room');
 Route::get('/voucher', [HomeController::class, 'voucher'])->name('voucher');
 
-Route::prefix('admin')->middleware('checkrole')->group(function () {
+Route::prefix('admin')->group(function () {
     Route::resource('bill', BillController::class);
     Route::resource('food', FoodController::class);
     Route::resource('food_type', TypeFoodController::class);

@@ -6,8 +6,9 @@ import { useDeleteMoviesMutation, useFetchMoviesQuery } from '../../rtk/movies/m
 import TrailerPhim from '../../components/itemAdmin/Trailer/page';
 import PosterPhim from '../../components/itemAdmin/Poster/page';
 import { Waveform } from '@uiball/loaders';
-import { checkApiStatus }  from "../checkApiStatus"; // Import hàm trợ giúp
+import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
 import { useNavigate } from 'react-router-dom';
+import Fuse from 'fuse.js';
 const { Column } = Table;
 
 export type QlPhim = {
@@ -26,7 +27,7 @@ const AdminQlPhim: React.FC = () => {
     const { data: dataMovies, isLoading, error } = useFetchMoviesQuery()
     const navigate = useNavigate();
     const status = error?.status;
-        //checkApiStatus(status);
+    //checkApiStatus(status);
     const [deleteMovie] = useDeleteMoviesMutation()
     const [dataTable, setDataTable] = useState<QlPhim[]>([])
     const [searchTerm, setSearchTerm] = useState('');
@@ -43,8 +44,18 @@ const AdminQlPhim: React.FC = () => {
         onChange: onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
+    const fuseOptions = {
+        includeScore: true,
+        includeMatches: true,
+        isCaseSensitive: true,
+        findAllMatches: true,
+        useExtendedSearch: true,
+        keys: ["movie_name"]
+    }
+
+    const fuse = new Fuse(dataMovies, fuseOptions)
+
     const searchProject = (value: string) => {
-        console.log(value);
         setSearchTerm(value);
     };
     const deleteOne = (key: string) => {
@@ -52,7 +63,6 @@ const AdminQlPhim: React.FC = () => {
     }
     useEffect(() => {
         const dataMap = dataMovies
-        console.log(dataMap);
         // chưa có kiểu dữ liệu cho data
         if (Array.isArray(dataMap)) {
             const mapMovies = dataMap.map((item: any) => ({
@@ -70,9 +80,50 @@ const AdminQlPhim: React.FC = () => {
             setDataTable(mapMovies)
         }
         if (status) {
-            checkApiStatus(status,navigate);
-          }
-    }, [dataMovies,status])
+            checkApiStatus(status, navigate);
+        }
+    }, [dataMovies, status])
+    useEffect(() => {
+        if (searchTerm.length > 0) {
+            const results = fuse?.search(searchTerm);
+            const newData = results?.map((result) => result.item);
+            if (Array.isArray(newData)) {
+                const mapMovies = newData.map((item: any) => ({
+                    key: item.id,
+                    movie_name: item.movie_name,
+                    country_name: item.country_name,
+                    producer_name: item.producer_name,
+                    actor_name: item.actor_name,
+                    type_name: item.type_name,
+                    genre: item.genre,
+                    director: item.director,
+                    image: item.image,
+                    trailer: item.trailer,
+                }))
+                setDataTable(mapMovies)
+            }
+        }
+        if (searchTerm.length === 0) {
+            const dataMap = dataMovies
+            if (Array.isArray(dataMap)) {
+                const mapMovies = dataMap.map((item: any) => ({
+                    key: item.id,
+                    movie_name: item.movie_name,
+                    country_name: item.country_name,
+                    producer_name: item.producer_name,
+                    actor_name: item.actor_name,
+                    type_name: item.type_name,
+                    genre: item.genre,
+                    director: item.director,
+                    image: item.image,
+                    trailer: item.trailer,
+                }))
+                setDataTable(mapMovies)
+            }
+        }
+    }, [searchTerm, dataMovies])
+    console.log(dataTable);
+
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Danh sách phim</div>

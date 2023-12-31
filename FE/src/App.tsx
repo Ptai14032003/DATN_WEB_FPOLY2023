@@ -29,7 +29,7 @@ import NotFound from './personPage/404.tsx'
 function App() {
   const checkLocal = localStorage.getItem("user");
   const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
-  const checkRole = checkUser?.role
+  const checkRoleAdmin = checkUser?.role === "Admin"
   return <BrowserRouter>
     <Routes>
       <Route path='/' element={<LayoutPerson />}>
@@ -44,7 +44,7 @@ function App() {
       <Route path='movie_show_time/:id' element={<Detail />}></Route>
       <Route path='booking/:id' element={<Booking />} />
       <Route path='payment' element={<Payment />} />
-      {checkRole === "Admin" ? (
+      {checkRoleAdmin ? (
         <Route path='/admin' element={<LayoutAdmin />}>
           <Route path='qlPhim' element={<AdminQlPhim />}></Route>
           <Route path='qlSuatChieu' element={<AdminQlSc />}></Route>
