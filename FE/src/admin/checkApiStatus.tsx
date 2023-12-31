@@ -1,9 +1,9 @@
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 // Hàm trợ giúp để kiểm tra trạng thái của API
-export function checkApiStatus(status) {
+export function checkApiStatus(status,navigate) {
   // Sử dụng hook useNavigate để chuyển hướng
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   // Nếu trạng thái là 403, chuyển hướng đến trang người dùng
   if (status === 403) {
@@ -15,7 +15,7 @@ export function checkApiStatus(status) {
     navigate("/signin");
   }
   // Nếu trạng thái là 200, tiếp tục hành động
-  if (status === 200) {
+  if (status >= 200 && status < 300) {
     return;
     }
 }

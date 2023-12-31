@@ -4,6 +4,10 @@ import EditQlNhanSu from './edit';
 import CreateQlNhanSu from './create';
 import { useDeleteNhanSuMutation, useFetchNhanSuQuery } from '../../rtk/qlNhanSu/qlNhanSu';
 import { Waveform } from '@uiball/loaders';
+
+import { checkApiStatus }  from "../checkApiStatus"; // Import hàm trợ giúp
+import { useNavigate } from 'react-router-dom';
+
 const { Column } = Table;
 export interface QlNhanSu {
     key: string;
@@ -18,7 +22,11 @@ export interface QlNhanSu {
     role: string
 }
 const AdminQlNhanSu: React.FC = () => {
-    const { data: dataNhanSu, isLoading } = useFetchNhanSuQuery()
+    const { data: dataNhanSu, isLoading, error } = useFetchNhanSuQuery()
+    
+    const navigate = useNavigate();
+    const status = error?.status;
+
     const [dataTable, setDataTable] = useState<QlNhanSu[]>([])
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
@@ -60,7 +68,10 @@ const AdminQlNhanSu: React.FC = () => {
             }))
             setDataTable(mapNhanSu)
         }
-    }, [dataNhanSu])
+        if (status) {
+            checkApiStatus(status,navigate);
+          }
+    }, [dataNhanSu,status])
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Danh sách nhân sự</div>

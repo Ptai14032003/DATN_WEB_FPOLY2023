@@ -28,6 +28,9 @@ class UserController extends Controller
         $data = $request->validated();
         $data['password'] = bcrypt($data['password']);
         $data['user_code'] = Helper::IDGenerator(new User, 'user_code', 6, "KH");
+        $data['address'] = $request->address ?? null;
+        $data['birthday'] = $request->birthday ?? null;
+        $data['gender'] = $request->gender ?? null;
         $user = User::create($data);
         return response(new UserResource($user), 201);
     }
@@ -52,8 +55,11 @@ class UserController extends Controller
         $data = $request->validated();
         $data['password'] = bcrypt($data['password']);
         $data['user_code'] = $user->user_code;
+        $data['address'] = $request->address ?? $user->address;
+        $data['birthday'] = $request->birthday ?? $user->birthday;
+        $data['gender'] = $request->gender ?? $user->gender;
         $user->update($data);
-        return response(new UserResource($user));
+        return response(new UserResource($user), 201);
     }
 
     /**
