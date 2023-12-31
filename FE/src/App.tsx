@@ -29,6 +29,7 @@ import NotFound from './personPage/404.tsx'
 function App() {
   const checkLocal = localStorage.getItem("user");
   const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
+  const checkRole = checkUser?.role
   return <BrowserRouter>
     <Routes>
       <Route path='/' element={<LayoutPerson />}>
@@ -43,7 +44,7 @@ function App() {
       <Route path='movie_show_time/:id' element={<Detail />}></Route>
       <Route path='booking/:id' element={<Booking />} />
       <Route path='payment' element={<Payment />} />
-      {/* {checkUser ? (
+      {checkRole === "Admin" ? (
         <Route path='/admin' element={<LayoutAdmin />}>
           <Route path='qlPhim' element={<AdminQlPhim />}></Route>
           <Route path='qlSuatChieu' element={<AdminQlSc />}></Route>
@@ -56,25 +57,10 @@ function App() {
           <Route path='country' element={<DsCountry />}></Route>
           <Route path='listGenres' element={<DsGenres />}></Route>
           <Route path='thongKe' element={<ThongKe />}></Route>
-          <Route path='/notfound' element={<NotFound />}></Route>
         </Route>
       ) : (
         <Route path='/notfound' element={<NotFound />}></Route>
-      )} */}
-      <Route path='/admin' element={<LayoutAdmin />}>
-        <Route path='qlPhim' element={<AdminQlPhim />}></Route>
-        <Route path='qlSuatChieu' element={<AdminQlSc />}></Route>
-        <Route path='qlSanPham' element={<AdminQlSp />}></Route>
-        <Route path='qlNhanSu' element={<AdminQlNhanSu />}></Route>
-        <Route path='qlGuest' element={<AdminQlGuest />}></Route>
-        <Route path='qlPhongChieu' element={<AdminQlPhongChieu />}></Route>
-        <Route path='voucher' element={<AdminQlDiscount />}></Route>
-        <Route path='actors' element={<AdminQlActors />}></Route>
-        <Route path='country' element={<DsCountry />}></Route>
-        <Route path='listGenres' element={<DsGenres />}></Route>
-        <Route path='thongKe' element={<ThongKe />}></Route>
-      </Route>
-      <Route path='/notfound' element={<NotFound />}></Route>
+      )}
       <Route path='*' element={<Navigate to='/notfound' />} />
       <Route path="listvnp" element={<CheckPay />} />
     </Routes>

@@ -1,8 +1,6 @@
 import { Button, Dropdown, MenuProps, Space } from "antd";
 const HeaderAdmin: React.FC = () => {
     const LogOut = () => {
-        console.log("ngu vl");
-
     }
     const items: MenuProps['items'] = [
         {
