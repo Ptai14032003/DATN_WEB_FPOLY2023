@@ -20,6 +20,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
         value: type,
         label: type,
     }));
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
@@ -36,9 +37,10 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
         setIsModalOpen(false);
         formRef.current?.resetFields();
     };
+    console.log(data);
+
     return (
         <>
-
             <Button onClick={showModal}>Sửa</Button>
             <Modal title="Sửa phim " open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
                 {data ? (
@@ -66,7 +68,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                             rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
                         >
                             <Select className='ml-[-72px]'
-                                defaultValue="Chọn nước sản xuất"
+                                placeholder="Chọn nước sản xuất"
                                 style={{ width: 200 }}
                                 options={countryOptions}
                             />
@@ -80,10 +82,15 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                         </Form.Item>
                         <Form.Item<QlPhim>
                             label="Diễn viên"
-                            name="actor_name"
+                            name="actors"
                             rules={[{ required: true, message: 'Vui lòng nhập tên các diễn viên !' }]}
                         >
-                            <Input />
+                            <Select className='ml-[-72px]'
+                                mode='multiple'
+                                value="Chọn dạng phim"
+                                style={{ width: 200 }}
+                                options={typeOptions}
+                            />
                         </Form.Item>
                         <Form.Item<QlPhim>
                             label="Dạng phim"
@@ -92,14 +99,13 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                         >
                             <Select className='ml-[-72px]'
                                 mode='multiple'
-                                defaultValue="Chọn dạng phim"
+                                value="Chọn dạng phim"
                                 style={{ width: 200 }}
                                 options={typeOptions}
                             />
                         </Form.Item>
                         <Form.Item<QlPhim>
                             label="Thể loại"
-                            name="genre"
                             rules={[{ required: true, message: 'Vui lòng nhập thể loại!' }]}
                         >
                             <Input />

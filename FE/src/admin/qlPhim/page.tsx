@@ -22,6 +22,7 @@ export type QlPhim = {
     director: string;
     image: string;
     trailer: string;
+
 }
 const AdminQlPhim: React.FC = () => {
     const { data: dataMovies, isLoading, error } = useFetchMoviesQuery()
@@ -122,7 +123,7 @@ const AdminQlPhim: React.FC = () => {
             }
         }
     }, [searchTerm, dataMovies])
-    console.log(dataTable);
+    console.log(dataMovies);
 
     return (
         <div>
@@ -169,6 +170,7 @@ const AdminQlPhim: React.FC = () => {
                     <Column title="Dạng Phim" dataIndex="type_name" key="type_name" />
                     <Column title="Thể Loại" dataIndex="genre" key="genre" />
                     <Column title="Đạo Diễn" dataIndex="director" key="director" />
+                    <Column title="Diễn Viên" dataIndex="actor_name" key="actor_name" />
                     <Column title="Poster" dataIndex="image" key="image"
                         render={(_: any, record: QlPhim) => (
                             <PosterPhim data={record?.image} key={record.image} />
