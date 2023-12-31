@@ -14,51 +14,40 @@ class ApiMovieController extends Controller
     
     public function index()
     {
-
-        $movie =  Movie::join('countries', 'movies.country_id', '=', 'countries.id')
+        $movies =  Movie::join('countries', 'movies.country_id', '=', 'countries.id')
             ->join('producers', 'movies.producer_id', '=', 'producers.id')
             ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
-           
             ->select('movies.*', 'countries.country_name', 'producers.producer_name', 'movie_types.type_name')
             ->whereNull('movies.deleted_at')
-            ->OrderBy('movies.id', 'asc')
+            ->orderBy('movies.id', 'asc')
             ->get();
-            foreach ($movie as $mv){
-               $id = $mv->id;
-               $mv->genre = '';
-               $genres = DB::table('list_genres')
-               ->join('movie_genres', 'movie_genres.list_genre_id', '=' ,'list_genres.id') 
-               ->join('movies','movies.id','=', 'movie_genres.movie_id')
-               ->where('movie_genres.movie_id', $id)
-               ->select('genre')
-               ->get();
-             
-               foreach($genres as $name){
-                $mv->genre = $mv->genre.''.(string)$name->genre.', ';
-               }
-               $mv->genre = substr($mv->genre, 0, -1);
-              
-            }
-
-            foreach ($movie as $mv){
-                $id = $mv->id;
-                $mv->actor_name = '';
-                $actors = DB::table('actors')
-                ->join('movies', 'actors.movie_id' ,'=','movies.id')
+    
+        foreach ($movies as $movie) {
+            $id = $movie->id;
+    
+            $genres = DB::table('list_genres')
+                ->join('movie_genres', 'movie_genres.list_genre_id', '=', 'list_genres.id') 
+                ->join('movies', 'movies.id', '=', 'movie_genres.movie_id')
+                ->where('movie_genres.movie_id', $id)
+                ->select('genre')
+                ->get();
+    
+            $movie->genre = $genres->pluck('genre')->toArray();
+    
+            $actors = DB::table('actors')
+                ->join('movies', 'actors.movie_id', '=', 'movies.id')
                 ->where('actors.movie_id', $id)
                 ->select('actor_name')
                 ->get();
-              
-                foreach($actors as $actor){
-                 $mv->actor_name = $mv->actor_name.''.(string)$actor->actor_name.', ';
-                }
-                $mv->actor_name = substr($mv->actor_name, 0, -1);
-                $mv->makeHidden(['country_id', 'producer_id', 'movie_type_id']);
-               
-             }
-            return response()->json($movie);
+    
+            $movie->actor_name = $actors->pluck('actor_name')->toArray();
+    
+            $movie->makeHidden(['country_id', 'producer_id', 'movie_type_id']);
+        }
+    
+        return response()->json($movies);
     }
-   
+    
     public function store(Request $request){
         
         if($request->hasFile('image')){
@@ -130,8 +119,8 @@ class ApiMovieController extends Controller
                 $genres = DB::table('list_genres')
                     ->join('movie_genres', 'movie_genres.list_genre_id', '=', 'list_genres.id')
                     ->where('movie_genres.movie_id', $id)
-                    ->select('list_genres.id as genre_id', 'list_genres.genre')
-                    ->get();
+                    ->pluck('genre')
+                    ->toArray();
                 $movie->genres = $genres;
             
     
@@ -141,7 +130,7 @@ class ApiMovieController extends Controller
                 ->toArray();
     
             $movie->actors = $actors; // Change 'actor_name' to 'actors' to store as an array
-    
+            $movie->makeHidden(['country_id', 'producer_id', 'movie_type_id']);
             // Render the edit form with the movie data
             return response()->json($movie);
         } else {
