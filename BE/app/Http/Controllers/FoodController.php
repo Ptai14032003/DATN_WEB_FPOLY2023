@@ -18,6 +18,8 @@ class FoodController extends Controller
         ->select('foods.*', 'food_types.name')
         ->whereNull('foods.deleted_at')
         ->get();
+        $food->makeHidden(['food_type_id']);
+
         return response()->json($food);
     }
 

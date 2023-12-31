@@ -53,6 +53,7 @@ class ApiMovieController extends Controller
                  $mv->actor_name = $mv->actor_name.''.(string)$actor->actor_name.', ';
                 }
                 $mv->actor_name = substr($mv->actor_name, 0, -1);
+                $mv->makeHidden(['country_id', 'producer_id', 'movie_type_id']);
                
              }
             return response()->json($movie);
@@ -182,7 +183,7 @@ class ApiMovieController extends Controller
     
     //     return response()->json($movie);
     // }
-    
+
     public function update(Request $request, string $id) {
         $movie = Movie::find($id);
     
