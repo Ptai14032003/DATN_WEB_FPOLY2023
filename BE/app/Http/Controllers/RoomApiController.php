@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\RoomResource;
+use App\Http\Resources\SeatResource;
 use App\Models\Room;
 use App\Models\Seat;
 use App\Models\Type_Seat;
@@ -154,9 +155,15 @@ class RoomApiController extends Controller
     public function show(string $id)
     {
         $theater = Room::find($id);
-        $seat = Seat::where('room_id','=',$id)->select('*')->get();
-        if ($theater) {
-            return new RoomResource($theater);
+        $seats = Seat::where('room_id','=',$id)->get();
+        if($theater){
+            if($seats){
+                $response = [
+                    'theaters' => $theater,
+                    'seats' => $seats
+                ];
+                return response()->json($response, 200);
+            }
         } else {
             return response()->json(['message' => 'Khach hang khong ton tai'], 404);
         }
