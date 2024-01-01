@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Actor;
 use App\Models\Movie;
+use App\Models\Movie_Genre;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Cloudinary\Cloudinary;
@@ -12,42 +13,42 @@ use Cloudinary\Cloudinary;
 class ApiMovieController extends Controller
 {
     
-    public function index()
-    {
-        $movies =  Movie::join('countries', 'movies.country_id', '=', 'countries.id')
-            ->join('producers', 'movies.producer_id', '=', 'producers.id')
-            ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
-            ->select('movies.*', 'countries.country_name', 'producers.producer_name', 'movie_types.type_name')
-            ->whereNull('movies.deleted_at')
-            ->orderBy('movies.id', 'asc')
+   public function index()
+{
+    $movies =  Movie::join('countries', 'movies.country_id', '=', 'countries.id')
+        ->join('producers', 'movies.producer_id', '=', 'producers.id')
+        ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+        ->select('movies.*', 'countries.country_name', 'producers.producer_name', 'movie_types.type_name')
+        ->whereNull('movies.deleted_at')
+        ->orderBy('movies.id', 'asc')
+        ->get();
+
+    foreach ($movies as $movie) {
+        $id = $movie->id;
+
+        $genres = DB::table('list_genres')
+            ->join('movie_genres', 'movie_genres.list_genre_id', '=', 'list_genres.id') 
+            ->join('movies', 'movies.id', '=', 'movie_genres.movie_id')
+            ->where('movie_genres.movie_id', $id)
+            ->select('genre')
             ->get();
-    
-        foreach ($movies as $movie) {
-            $id = $movie->id;
-    
-            $genres = DB::table('list_genres')
-                ->join('movie_genres', 'movie_genres.list_genre_id', '=', 'list_genres.id') 
-                ->join('movies', 'movies.id', '=', 'movie_genres.movie_id')
-                ->where('movie_genres.movie_id', $id)
-                ->select('genre')
-                ->get();
-    
-            $movie->genre = $genres->pluck('genre')->toArray();
-    
-            $actors = DB::table('actors')
-                ->join('movies', 'actors.movie_id', '=', 'movies.id')
-                ->where('actors.movie_id', $id)
-                ->select('actor_name')
-                ->get();
-    
-            $movie->actor_name = $actors->pluck('actor_name')->toArray();
-    
-            $movie->makeHidden(['country_id', 'producer_id', 'movie_type_id']);
-        }
-    
-        return response()->json($movies);
+
+        $movie->genre = $genres->pluck('genre')->toArray();
+
+        $actors = DB::table('actors')
+            ->join('movies', 'actors.movie_id', '=', 'movies.id')
+            ->where('actors.movie_id', $id)
+            ->select('actor_name')
+            ->get();
+
+        $movie->actor_name = $actors->pluck('actor_name')->toArray();
+
+        $movie->makeHidden(['country_id', 'producer_id', 'movie_type_id']);
     }
-    
+
+    return response()->json($movies);
+}
+
     public function store(Request $request){
         
         if($request->hasFile('image')){
@@ -104,7 +105,6 @@ class ApiMovieController extends Controller
         }
     }
 
-
     public function edit(string $id)
     {
         $movie = Movie::join('countries', 'movies.country_id', '=', 'countries.id')
@@ -121,8 +121,7 @@ class ApiMovieController extends Controller
                     ->where('movie_genres.movie_id', $id)
                     ->pluck('genre')
                     ->toArray();
-                $movie->genres = $genres;
-            
+                $movie->genres = $genres;    
     
             $actors = DB::table('actors')
                 ->where('actors.movie_id', $id)
@@ -138,41 +137,6 @@ class ApiMovieController extends Controller
         }
     }
     
-    // public function update(Request $request, $id){
-    //     $movie = Movie::findOrFail($id);
-    
-    //     // Validate the request data if needed
-    
-    //     $data = [
-    //         'movie_name' => $request->get('movie_name'),
-    //         'producer_id' => $request->get('producer_id'),
-    //         'country_id' => $request->get('country_id'),
-    //         'movie_type_id' => $request->get('movie_type_id'),
-    //         'director' => $request->get('director'),
-    //         'genre' => $request->get('genre'),
-    //         'actor_name' => $request->get('actor_name'),
-    //         'start_date' => $request->get('start_date'),
-    //         'end_date' => $request->get('end_date'),
-    //         'total_revenue' => $request->get('total_revenue'),
-    //         'trailer' => $request->get('trailer'),
-    //     ];
-    
-    //     // Check if a new image is provided
-    //     if ($request->hasFile('image')) {
-    //         // Upload the new image to Cloudinary
-    //         $response = cloudinary()->upload($request->file('image')->getRealPath())->getSecurePath();
-    //         $data['image'] = $response;
-            
-    //     } else {
-    //         // If no new image is provided, keep the existing image path
-    //         $data['image'] = $movie->image;
-    //     }
-    
-    //     $movie->update($data);
-    
-    //     return response()->json($movie);
-    // }
-
     public function update(Request $request, string $id) {
         $movie = Movie::find($id);
     
@@ -189,33 +153,33 @@ class ApiMovieController extends Controller
         $movie->movieType->update(['type_name' => $request->input('type_name')]);
     
     // Update genres
-    $newGenre = $request->input('genre');
-    if ($newGenre !== null) {
-        $genreIds = DB::table('list_genres')
-            ->join('movie_genres', 'movie_genres.list_genre_id', '=', 'list_genres.id')
-            ->where('movie_genres.movie_id', $id)
-            ->pluck('list_genres.id');
+        $gen = DB::table('movie_genres')      
+        ->where('movie_genres.movie_id', $id)
+        ->delete();
 
-        foreach ($genreIds as $genreId) {
-            List_Genre::find($genreId)->update(['genre' => $newGenre]);
+        $newGenre = $request->input('genres');
+     
+        foreach ($newGenre as $new){
+            $genreID = DB::table('list_genres')->where('genre' , $new)->first();
+            Movie_Genre::create(['movie_id' => $id, 'list_genre_id' => $genreID->id]);
         }
-    }
+          
     // Update actors
-    // $newActor = $request->input('actor_name');
-    // if ($newActor !== null) {
-    //     $actors = DB::table('actors')
-    //         ->where('movie_id', $id)
-    //         ->select('id')
-    //         ->get();
-
-    //     foreach ($actors as $actor) {
-    //         DB::table('actors')->where('id', $actor->id)->update(['actor_name' => $newActor]);
-    //     }
-    // }
-        return response()->json(['messages' => 'Cập nhật phim thành công'], 202);
+        $newActor = $request->input('actors');
+        DB::table('actors')->where('movie_id', $id)->update(['actor_name' => $newActor]);
+     
+        // if ($request->hasFile('image')) {
+        //     // Upload the new image to Cloudinary
+        //     $response = cloudinary()->upload($request->file('image')->getRealPath())->getSecurePath();
+        //     $data['image'] = $response;    
+        // } else {
+        //     $data['image'] = $movie->image;
+        // }
+        // $movie->update($data);
+    
+    return response()->json(['messages' => 'Cập nhật phim thành công'], 202);
     }
     
-
     public function destroy(string $id){
         $movie = Movie::find($id);
 

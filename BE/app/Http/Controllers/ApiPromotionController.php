@@ -16,7 +16,7 @@ class ApiPromotionController extends Controller
         // lấy ra toàn bộ danh danh sách
         $promotion = Promotion::all();
 //        Trả về danh sách dưới dạng json
-        return PromotionResource::collection($promotion);
+        return response()->json($promotion);
 
     }
 
@@ -26,8 +26,7 @@ class ApiPromotionController extends Controller
     public function store(Request $request)
     {
         $promotion = Promotion::create($request->all());
-//        trả về thông vừa thêm
-        return new PromotionResource($promotion);
+        return response()->json($promotion);
     }
 
     /**
@@ -39,7 +38,7 @@ class ApiPromotionController extends Controller
         //
         $promotion = Promotion::find($id);
         if($promotion){
-            return new PromotionResource($promotion);
+            return response()->json($promotion);
         }else{
             return  response()->json(['message'=>'Không tồn tại'], 404);
         }
