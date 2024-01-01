@@ -64,7 +64,7 @@ const CreateQlPhim: React.FC = () => {
                         rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
                     >
                         <Select className='ml-[-72px]'
-                            defaultValue="Chọn nước sản xuất"
+                            placeholder="Chọn nước sản xuất"
                             style={{ width: 200 }}
                             options={countryOptions}
                         />

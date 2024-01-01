@@ -163,6 +163,7 @@ const Booking = () => {
                         const checkSeatDelete = (selectedSeats.includes(item[dataOderSeat + 1]?.seat_code) && selectedSeats.includes(item[dataOderSeat - 1]?.seat_code))
                         const checkedRight = (dataOderSeat === item.length - 1) && selectedSeats.includes(item[item.length - 1]?.seat_code) && selectedSeats.includes(item[item.length - 2]?.seat_code)
                         const checkedLeft = ((dataOderSeat) === 0) && selectedSeats.includes(item[0]?.seat_code) && selectedSeats.includes(item[1]?.seat_code)
+                        const checkFull = selectedSeats.includes(item[0]?.seat_code) && selectedSeats.includes(item[item.length - 1]?.seat_code)
                         const checkId = idGhe.some((item: any) => item.id === data.id);
                         if (selectedSeats.includes(seatId_code)) {
                             if (checkSeatDelete && !mapExecuted && checkId) {
@@ -175,7 +176,17 @@ const Booking = () => {
                                 mapExecuted = true;
                                 return;
                             }
-                            if (checkedLeft && !mapExecuted && checkId) {
+                            if (checkFull && !mapExecuted && checkId && !checkSeatDelete) {
+                                messageApi.error({
+                                    type: 'error',
+                                    content: 'Quý khách nên hủy ghế lần lượt theo thứ tự ngu',
+                                    className: "h-[20%] mt-[20px]",
+                                    duration: 2
+                                });
+                                mapExecuted = true;
+                                return;
+                            }
+                            if (checkedLeft && !mapExecuted && checkId && !checkedRight && !checkSeatDelete) {
                                 messageApi.error({
                                     type: 'error',
                                     content: `Quý khách nên hủy ghế lần lượt theo thứ tự l`,
@@ -185,7 +196,7 @@ const Booking = () => {
                                 mapExecuted = true;
                                 return;
                             }
-                            if (checkedRight && !mapExecuted && checkId) {
+                            if (checkedRight && !mapExecuted && checkId && !checkedLeft && !checkSeatDelete) {
                                 messageApi.error({
                                     type: 'error',
                                     content: `Quý khách nên hủy ghế lần lượt theo thứ tự r`,
@@ -195,7 +206,17 @@ const Booking = () => {
                                 mapExecuted = true;
                                 return;
                             }
-                            if (!(checkSeatDelete || checkedLeft && checkSeatDelete || checkedRight && checkSeatDelete || checkedLeft) && checkId) {
+                            // if (checkFull && !mapExecuted && checkId) {
+                            //     messageApi.error({
+                            //         type: 'error',
+                            //         content: `Quý khách nên hủy ghế lần lượt theo thứ tự ngu`,
+                            //         className: "h-[20%] mt-[20px]",
+                            //         duration: 2
+                            //     });
+                            //     mapExecuted = true;
+                            //     return;
+                            // }
+                            if (!(checkSeatDelete || checkedLeft || checkedRight) && checkId) {
                                 setSelectedSeats(selectedSeats.filter((id) => id !== seatId_code));
                                 setidGhe(() => idGhe.filter((item: any) => item.id !== data.id));
                                 setMoney(money - price);
@@ -213,7 +234,7 @@ const Booking = () => {
     const getCombo = (quantity: number, price: number, foodName: any) => {
         let soLuong = parseInt(quantity.toString(), 10);
 
-    //const getCombo = async (data: { target: { value: any } }, price: number, foodName: any) => {
+        //const getCombo = async (data: { target: { value: any } }, price: number, foodName: any) => {
         //let soLuong = parseInt(data.target.value, 10);
 
         soLuong = isNaN(soLuong) || soLuong < 0 ? 0 : soLuong;
@@ -287,32 +308,32 @@ const Booking = () => {
 
     interface ComboItems {
         [key: string]: number;
-      }
+    }
 
     const [comboItems, setComboItems] = useState<ComboItems>({});
     const handleIncrease = (foodName: string, price: number) => {
         setComboItems((prevItems) => {
-          const prevQuantity = prevItems[foodName] || 0;
-          const updatedItems: ComboItems = {
-            ...prevItems,
-            [foodName]: prevQuantity + 1,
-          };
-          getCombo(updatedItems[foodName], price, foodName); // Tính toán giá tiền
-          return updatedItems;
+            const prevQuantity = prevItems[foodName] || 0;
+            const updatedItems: ComboItems = {
+                ...prevItems,
+                [foodName]: prevQuantity + 1,
+            };
+            getCombo(updatedItems[foodName], price, foodName); // Tính toán giá tiền
+            return updatedItems;
         });
-      };
+    };
 
-      const handleDecrease = (foodName: string, price: number) => {
+    const handleDecrease = (foodName: string, price: number) => {
         setComboItems((prevItems) => {
-          const prevQuantity = prevItems[foodName] || 0;
-          const updatedItems: ComboItems = {
-            ...prevItems,
-            [foodName]: Math.max(prevQuantity - 1, 0),
-          };
-          getCombo(updatedItems[foodName], price, foodName); // Tính toán giá tiền
-          return updatedItems;
+            const prevQuantity = prevItems[foodName] || 0;
+            const updatedItems: ComboItems = {
+                ...prevItems,
+                [foodName]: Math.max(prevQuantity - 1, 0),
+            };
+            getCombo(updatedItems[foodName], price, foodName); // Tính toán giá tiền
+            return updatedItems;
         });
-      };
+    };
 
 
     return (
@@ -365,7 +386,7 @@ const Booking = () => {
                             </ul>
                         </div>
                         <div className="w-[230px] h-[42px] border-[2px] rounded-md mt-[50px] px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
-           <form action="" method='POST'>
+                        <form action="" method='POST'>
                             <div className={`Booking-content ${activeTab === 1 ? "" : "hidden"}`}>
                                 <input type="text" hidden id={id} name='showtime_id' />
                                 <div className="choose-seat mt-2">
@@ -440,7 +461,7 @@ const Booking = () => {
                                                         <button className='bg-white rounded-tl-md rounded-bl-md h-full flex items-center justify-center' onClick={() => handleDecrease(item?.food_name, item?.price)}>
                                                             <MinusOutlined style={{ color: '#000', fontSize: '20px', padding: '3px' }} />
                                                         </button>
-                                                        <input className='text-black w-[100px] h-full outline-none pl-3' type="number" defaultValue={comboItems[item?.food_name] || 0} min={0} value={comboItems[item?.food_name] || 0} readOnly/>
+                                                        <input className='text-black w-[100px] h-full outline-none pl-3' type="number" defaultValue={comboItems[item?.food_name] || 0} min={0} value={comboItems[item?.food_name] || 0} readOnly />
                                                         <button className='bg-white rounded-tr-md rounded-br-md h-full flex items-center justify-center' onClick={() => handleIncrease(item?.food_name, item?.price)}>
                                                             <PlusOutlined style={{ color: '#000', fontSize: '20px', padding: '3px' }} />
                                                         </button>
@@ -466,7 +487,7 @@ const Booking = () => {
                 </div>
             </div >
             <footer className='mt-10'>
-                <Footer/>
+                <Footer />
             </footer>
         </div >
     )

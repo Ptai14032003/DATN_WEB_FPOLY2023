@@ -71,9 +71,9 @@ const AdminQlPhim: React.FC = () => {
                 movie_name: item.movie_name,
                 country_name: item.country_name,
                 producer_name: item.producer_name,
-                actor_name: item.actor_name,
+                actor_name: item.actor_name.join(", "),
                 type_name: item.type_name,
-                genre: item.genre,
+                genre: item.genre.join(", "),
                 director: item.director,
                 image: item.image,
                 trailer: item.trailer,
@@ -112,9 +112,9 @@ const AdminQlPhim: React.FC = () => {
                     movie_name: item.movie_name,
                     country_name: item.country_name,
                     producer_name: item.producer_name,
-                    actor_name: item.actor_name,
+                    actor_name: item.actor_name.join(", "),
                     type_name: item.type_name,
-                    genre: item.genre,
+                    genre: item.genre.join(", "),
                     director: item.director,
                     image: item.image,
                     trailer: item.trailer,
@@ -123,8 +123,6 @@ const AdminQlPhim: React.FC = () => {
             }
         }
     }, [searchTerm, dataMovies])
-    console.log(dataMovies);
-
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Danh sách phim</div>
