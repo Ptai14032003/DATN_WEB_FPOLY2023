@@ -60,14 +60,14 @@ class FoodController extends Controller
             $price = $request->get('price');
             $food_type_id = $request->get('food_type_id');
             $data = [
+                'image' => $image,
                 'food_name' => $food_name,
                 'price' => $price,
                 'food_type_id' => $food_type_id,
             ];
 
-            Food::create($data); 
-              
-
+            Food::create($data);   
+            return response()->json(['message' => 'Food added successfully'], 200);
         }else{
             return $this->returnError(202, 'file is required');
         }
@@ -91,7 +91,6 @@ class FoodController extends Controller
         }
     }
     
-
     /**
      * Update the specified resource in storage.
      */
@@ -111,7 +110,6 @@ class FoodController extends Controller
             // Upload the new image to Cloudinary
             $response = cloudinary()->upload($request->file('image')->getRealPath())->getSecurePath();
             $data['image'] = $response;
-        
         } else {
             // If no new image is provided, keep the existing image path
             $data['image'] = $food->image;
