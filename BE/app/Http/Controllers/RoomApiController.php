@@ -154,6 +154,7 @@ class RoomApiController extends Controller
     public function show(string $id)
     {
         $theater = Room::find($id);
+        $seat = Seat::where('room_id','=',$id)->select('*')->get();
         if ($theater) {
             return new RoomResource($theater);
         } else {
@@ -177,6 +178,7 @@ class RoomApiController extends Controller
         $theater = Room::find($id);
         if ($theater) {
             $theater->delete();
+            Seat::where('room_id','=',$id)->delete();
             return response()->json(['message' => 'Xoa thanh cong'], 202);
         } else {
             return response()->json(['message' => 'Khach hang khong ton tai'], 404);
