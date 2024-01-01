@@ -99,7 +99,7 @@ const AdminQlPhongChieu: React.FC = () => {
                 setDataTable(mapPhongChieu)
             }
         }
-    }, [searchTerm])
+    }, [dataPhongChieu,searchTerm])
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Danh sách phòng chiếu</div>

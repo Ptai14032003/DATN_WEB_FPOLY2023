@@ -4,23 +4,29 @@ import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
 import { QlPhim } from './page';
 import { useAddMoviesMutation } from '../../rtk/movies/movies';
-
+import { useFetchGenresQuery } from '../../rtk/genres/genres';
+interface QlGenre {
+    id: string;
+    genre: string
+}
 const CreateQlPhim: React.FC = () => {
     const [addMovies] = useAddMoviesMutation()
+    const { data: dataGenres } = useFetchGenresQuery()
+    console.log(dataGenres);
+
     const countryName = ["Hoa Kỳ", "Canada", "Việt Nam", "United States"]
     const countryOptions = countryName.map((country) => ({
         value: country,
         label: country,
     }));
-    const typeMovies = ["2D", "3D", "United States"];
+    const typeMovies = ["2D", "3D"];
     const typeOptions = typeMovies.map((type) => ({
         value: type,
         label: type,
     }));
-    const genreMovies = ["Hành động", "Hoạt hình", "Hài hước"]
-    const genreOptions = genreMovies.map((genre) => ({
-        value: genre,
-        label: genre,
+    const genreOptions = dataGenres?.data?.map((genre: QlGenre) => ({
+        value: genre.id,
+        label: genre.genre,
     }))
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);

@@ -29,7 +29,8 @@ export const store = configureStore({
         moviesPerson: moviesApiPerson.reducer,
         booking: bookingApi.reducer,
         food: foodsApi.reducer,
-        bill: billApi.reducer
+        bill: billApi.reducer,
+        promotions: discountApi.reducer
 
     },
     middleware: (getDefaultMiddleware) =>
@@ -48,6 +49,7 @@ export const store = configureStore({
             .concat(bookingApi.middleware)
             .concat(foodsApi.middleware)
             .concat(billApi.middleware)
+            .concat(discountApi.middleware)
 });
 
 
