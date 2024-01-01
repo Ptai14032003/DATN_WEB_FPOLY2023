@@ -50,7 +50,7 @@ const Booking = () => {
     const handleClick = (tabNumber: number) => {
 
         if (checkUser) {
-            setActiveTab(tabNumber);
+        setActiveTab(tabNumber);
         } else {
             messageApi.error({
                 type: 'error',
@@ -214,7 +214,7 @@ const Booking = () => {
     const getCombo = (quantity: number, price: number, foodName: any) => {
         let soLuong = parseInt(quantity.toString(), 10);
 
-    //const getCombo = async (data: { target: { value: any } }, price: number, foodName: any) => {
+        //const getCombo = async (data: { target: { value: any } }, price: number, foodName: any) => {
         //let soLuong = parseInt(data.target.value, 10);
 
         soLuong = isNaN(soLuong) || soLuong < 0 ? 0 : soLuong;
@@ -288,32 +288,32 @@ const Booking = () => {
 
     interface ComboItems {
         [key: string]: number;
-      }
+    }
 
     const [comboItems, setComboItems] = useState<ComboItems>({});
     const handleIncrease = (foodName: string, price: number) => {
         setComboItems((prevItems) => {
-          const prevQuantity = prevItems[foodName] || 0;
-          const updatedItems: ComboItems = {
-            ...prevItems,
-            [foodName]: prevQuantity + 1,
-          };
-          getCombo(updatedItems[foodName], price, foodName); // Tính toán giá tiền
-          return updatedItems;
+            const prevQuantity = prevItems[foodName] || 0;
+            const updatedItems: ComboItems = {
+                ...prevItems,
+                [foodName]: prevQuantity + 1,
+            };
+            getCombo(updatedItems[foodName], price, foodName); // Tính toán giá tiền
+            return updatedItems;
         });
-      };
+    };
 
-      const handleDecrease = (foodName: string, price: number) => {
+    const handleDecrease = (foodName: string, price: number) => {
         setComboItems((prevItems) => {
-          const prevQuantity = prevItems[foodName] || 0;
-          const updatedItems: ComboItems = {
-            ...prevItems,
-            [foodName]: Math.max(prevQuantity - 1, 0),
-          };
-          getCombo(updatedItems[foodName], price, foodName); // Tính toán giá tiền
-          return updatedItems;
+            const prevQuantity = prevItems[foodName] || 0;
+            const updatedItems: ComboItems = {
+                ...prevItems,
+                [foodName]: Math.max(prevQuantity - 1, 0),
+            };
+            getCombo(updatedItems[foodName], price, foodName); // Tính toán giá tiền
+            return updatedItems;
         });
-      };
+    };
 
 
     return (
@@ -366,7 +366,7 @@ const Booking = () => {
                             </ul>
                         </div>
                         <div className="w-[230px] h-[42px] border-[2px] rounded-md mt-[50px] px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
-           <form action="" method='POST'>
+                        <form action="" method='POST'>
                             <div className={`Booking-content ${activeTab === 1 ? "" : "hidden"}`}>
                                 <input type="text" hidden id={id} name='showtime_id' />
                                 <div className="choose-seat mt-2">
