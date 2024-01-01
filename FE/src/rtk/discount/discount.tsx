@@ -15,40 +15,40 @@ const discountApi = createApi({
             return headers;
         }
     }),
-    tagTypes: ["discount"],
+    tagTypes: ["promotions"],
     endpoints: builder => ({
-        fetchDiscounts: builder.query<any[], void>({
-            query: () => "/discount/",
-            providesTags: ["discount"]
+        fetchDiscounts: builder.query<any, void>({
+            query: () => "/promotions/",
+            providesTags: ["promotions"]
         }),
         addDiscount: builder.mutation<void, any>({
             query: (body) => ({
-                url: "/discount/",
+                url: "/promotions/",
                 method: "POST",
                 body
             }),
-            invalidatesTags: ["discount"]
+            invalidatesTags: ["promotions"]
         }),
         fetchDiscountID: builder.query<any[], string>({
-            query: (id) => `/discount/${id}`,
-            providesTags: ["discount"]
+            query: (id) => `/promotions/${id}`,
+            providesTags: ["promotions"]
         }),
         updateDiscount: builder.mutation<void, { id: string, body: any }>({
             query: ({ id, body }) => ({
-                url: `/discount/${id}`,
-                method: "PATCH",
+                url: `/promotions/${id}`,
+                method: "PUT",
                 body
             }),
-            invalidatesTags: ["discount"]
+            invalidatesTags: ["promotions"]
         }),
         deleteDiscount: builder.mutation<void, string>({
             query: (id) => ({
-                url: `/discount/${id}`,
+                url: `/promotions/${id}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["discount"]
+            invalidatesTags: ["promotions"]
         }),
     })
 })
-export const { useFetchDiscountsQuery, useFetchDiscountIDQuery, useAddDiscountMutation, useDeleteDiscountMutation,useUpdateDiscountMutation } = discountApi
+export const { useFetchDiscountsQuery, useFetchDiscountIDQuery, useAddDiscountMutation, useDeleteDiscountMutation, useUpdateDiscountMutation } = discountApi
 export default discountApi
