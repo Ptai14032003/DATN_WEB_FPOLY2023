@@ -13,8 +13,7 @@ use Cloudinary\Cloudinary;
 class ApiMovieController extends Controller
 {
     
-   public function index()
-{
+   public function index(){
     $movies =  Movie::join('countries', 'movies.country_id', '=', 'countries.id')
         ->join('producers', 'movies.producer_id', '=', 'producers.id')
         ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')

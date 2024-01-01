@@ -33,8 +33,37 @@ class HomeController extends Controller
             ->get();
         return response()->json($movie);
     }
+    public function comingSoon(){
+        $currentDate = Carbon::now();
+    
+        $movies = Movie::join('countries', 'movies.country_id', '=', 'countries.id')
+            ->join('producers', 'movies.producer_id', '=', 'producers.id')
+            ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+            ->select('movies.*', 'countries.country_name', 'producers.producer_name', 'movie_types.type_name')
+            ->whereNull('movies.deleted_at')
+            ->where('movies.start_date', '>', $currentDate) // Filter movies with start_date greater than the current date
+            ->orderBy('movies.id', 'asc')
+            ->get();
+    
+        return response()->json($movies);
+    }
 
-
+    public function showing()
+    {
+        $currentDate = Carbon::now();
+    
+        $movies = Movie::join('countries', 'movies.country_id', '=', 'countries.id')
+            ->join('producers', 'movies.producer_id', '=', 'producers.id')
+            ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+            ->select('movies.*', 'countries.country_name', 'producers.producer_name', 'movie_types.type_name')
+            ->whereNull('movies.deleted_at')
+            ->where('movies.start_date', '<=', $currentDate) 
+            ->where('movies.end_date', '>=', $currentDate)   
+            ->orderBy('movies.id', 'asc')
+            ->get();
+    
+        return response()->json($movies);
+    }
     public function show_time_movie(string $id)
     {
         $st_movie = Movie::join('showtimes', 'showtimes.movie_id', '=', 'movies.id')
