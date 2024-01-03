@@ -4,6 +4,12 @@ import EditQlNhanSu from './edit';
 import CreateQlNhanSu from './create';
 import { useDeleteNhanSuMutation, useFetchNhanSuQuery } from '../../rtk/qlNhanSu/qlNhanSu';
 import { Waveform } from '@uiball/loaders';
+
+import Fuse from 'fuse.js';
+import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
+import { useNavigate } from 'react-router-dom';
+
+
 const { Column } = Table;
 export interface QlNhanSu {
     key: string;
@@ -18,7 +24,13 @@ export interface QlNhanSu {
     role: string
 }
 const AdminQlNhanSu: React.FC = () => {
-    const { data: dataNhanSu, isLoading } = useFetchNhanSuQuery()
+
+    const { data: dataNhanSu, isLoading, error } = useFetchNhanSuQuery()
+
+    const navigate = useNavigate();
+    const status = error?.status;
+
+
     const [dataTable, setDataTable] = useState<QlNhanSu[]>([])
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
@@ -36,6 +48,18 @@ const AdminQlNhanSu: React.FC = () => {
         onChange: onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
+
+    const fuseOptions = {
+        includeScore: true,
+        includeMatches: true,
+        isCaseSensitive: true,
+        findAllMatches: true,
+        useExtendedSearch: true,
+        keys: ["user_code", "name", "email"]
+    }
+    const fuse = new Fuse(dataNhanSu?.data, fuseOptions)
+
+
     const searchProject = (value: string) => {
         console.log(value);
         setSearchTerm(value);
@@ -60,7 +84,51 @@ const AdminQlNhanSu: React.FC = () => {
             }))
             setDataTable(mapNhanSu)
         }
-    }, [dataNhanSu])
+
+        if (status) {
+            checkApiStatus(status, navigate);
+        }
+    }, [dataNhanSu, status])
+    useEffect(() => {
+        if (searchTerm.length > 0) {
+            const results = fuse?.search(searchTerm);
+            const newData = results?.map((result) => result.item);
+            if (Array.isArray(newData)) {
+                const mapGuest = newData.map((item: any) => ({
+                    key: item.id,
+                    personnel_code: item.personnel_code,
+                    name: item.name,
+                    email: item.email,
+                    phone_number: item.phone_number,
+                    password: item.password,
+                    address: item.address,
+                    birthday: item.birthday,
+                    gender: item.gender,
+                    role: item.role,
+                }))
+                setDataTable(mapGuest)
+            }
+        }
+        if (searchTerm.length === 0) {
+            const dataMap = dataNhanSu?.data
+            if (Array.isArray(dataMap)) {
+                const mapMovies = dataMap.map((item: any) => ({
+                    key: item.id,
+                    personnel_code: item.personnel_code,
+                    name: item.name,
+                    email: item.email,
+                    phone_number: item.phone_number,
+                    password: item.password,
+                    address: item.address,
+                    birthday: item.birthday,
+                    gender: item.gender,
+                    role: item.role,
+                }))
+                setDataTable(mapMovies)
+            }
+        }
+    }, [searchTerm, dataNhanSu])
+
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Danh sách nhân sự</div>

@@ -1,8 +1,15 @@
+
+import { Navigate, useNavigate } from 'react-router-dom';
 import { Button, Dropdown, MenuProps, Space } from "antd";
 const HeaderAdmin: React.FC = () => {
+    const checkLocal = localStorage.getItem("user");
+    const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
+    const nameAdmin = checkUser?.name
+    const navigate = useNavigate();
     const LogOut = () => {
-        console.log("ngu vl");
-
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("user");
+        navigate('/')
     }
     const items: MenuProps['items'] = [
         {
@@ -26,7 +33,8 @@ const HeaderAdmin: React.FC = () => {
                         <Dropdown menu={{ items }} placement="bottom">
                             <div className="flex mt-[18px]">
                                 <div className=""><img src="/avatarAdmin.png" alt="" /></div>
-                                <div className="text-white my-auto mx-[15px]">Admin</div>
+
+                                <div className="text-white my-auto mx-[15px]">{nameAdmin}</div>
                             </div>
                         </Dropdown>
                     </Space>

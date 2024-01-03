@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('image');
             $table->string('trailer');
             $table->integer('movie_time');
+            $table->integer('movie_status');
             $table->timestamps();
             $table->foreign('producer_id')->references('id')->on('producers');
             $table->foreign('country_id')->references('id')->on('countries');

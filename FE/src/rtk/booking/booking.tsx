@@ -10,8 +10,9 @@ const bookingApi = createApi({
             query: (id) => `/show_seat_room/${id}`,
             providesTags: ["booking"]
         }),
-        
+
     })
 })
-export const { useFetchSeatRoomIdQuery} = bookingApi
+export const { useFetchSeatRoomIdQuery } = bookingApi
+
 export default bookingApi

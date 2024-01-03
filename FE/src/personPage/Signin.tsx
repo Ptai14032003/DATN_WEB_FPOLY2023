@@ -5,6 +5,8 @@ import { useSigninMutation } from '../rtk/auth/auth';
 import { redirect, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import { useForm } from 'react-hook-form';
+import axios from 'axios';
+
 
 interface Form {
   email: string;
@@ -13,17 +15,23 @@ interface Form {
 
 const Signin = () => {
   // const handleSubmit = (e) => {
-  const navigate = useNavigate()
+
+  const navigate = useNavigate();
+
   const { register, handleSubmit } = useForm<Form>();
   const [signin, { error }] = useSigninMutation();
   const onFinish = async (values: any) => {
     try {
+
+
+      
       await signin(values).unwrap()
         .then(() => {
           const userString = localStorage.getItem('user');
-          const user = userString ? JSON.parse(userString) : null;
+          const user = userString ? JSON.parse(userString) : null;          
           if (user.role == 'Admin') {
-            navigate("/admin?isAuth=true")
+            navigate("/")
+
           }
           else {
             navigate("/")
@@ -38,7 +46,7 @@ const Signin = () => {
   // }
   return (
     <div className='User-box'>
-      <div className="Form">
+      <div className="FormSignin">
         <form action="" onSubmit={handleSubmit(onFinish)}>
           <h1>Signin</h1>
           <div className="input-box">

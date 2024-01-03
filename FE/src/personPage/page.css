@@ -43,4 +43,8 @@
     background:#1ACAAC;
     top: 100%;
     left: 0;
+
+}
+.btn-comment:hover{
+    border-bottom: 1px solid  #4c6db0;
 }

@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+
+import React, { useEffect, useState } from 'react';
+
 import type { MenuProps } from 'antd';
 import { Layout, Menu, theme } from 'antd';
 import { NavLink, Outlet, redirect } from 'react-router-dom';
 import HeaderAdmin from './headerAdmin';
 import { HomeOutlined } from '@ant-design/icons';
+
+import { checkApiStatus } from '../../../admin/checkApiStatus'; // Import hàm trợ giúp
+import { useNavigate } from 'react-router-dom';
 
 const { Header, Content, Sider } = Layout;
 
@@ -48,6 +53,15 @@ const AdminLayout: React.FC = () => {
     // if (user.role !== 'Admin') {
     //     redirect('/')
     // }
+
+    // const navigate = useNavigate();
+    // const status = error?.status;
+    // useEffect(() => {
+    //     if (status) {
+    //         checkApiStatus(status, navigate);
+    //     }
+    // })
+
     return (
         <div>
             <HeaderAdmin />

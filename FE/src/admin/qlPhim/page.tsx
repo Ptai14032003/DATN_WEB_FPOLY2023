@@ -6,7 +6,11 @@ import { useDeleteMoviesMutation, useFetchMoviesQuery } from '../../rtk/movies/m
 import TrailerPhim from '../../components/itemAdmin/Trailer/page';
 import PosterPhim from '../../components/itemAdmin/Poster/page';
 import { Waveform } from '@uiball/loaders';
-import { checkApiStatus }  from "../checkApiStatus"; // Import hàm trợ giúp
+
+import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
+import { useNavigate } from 'react-router-dom';
+import Fuse from 'fuse.js';
+
 const { Column } = Table;
 
 export type QlPhim = {
@@ -20,17 +24,21 @@ export type QlPhim = {
     director: string;
     image: string;
     trailer: string;
+
 }
 const AdminQlPhim: React.FC = () => {
-    const { data: dataMovies, isLoading} = useFetchMoviesQuery()
-    // const status = error?.status;
-    // checkApiStatus(status);
+    const { data: dataMovies, isLoading, error } = useFetchMoviesQuery()
+    const navigate = useNavigate();
+    const status = error?.status;
+    //checkApiStatus(status);
+
     const [deleteMovie] = useDeleteMoviesMutation()
     const [dataTable, setDataTable] = useState<QlPhim[]>([])
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
     const onSelectChange = (newSelectedRowKeys: any[]) => {
-        console.log('', newSelectedRowKeys);
+
+
         setSelectedRowKeys(newSelectedRowKeys);
     };
     const DeleteAll = () => {
@@ -42,8 +50,20 @@ const AdminQlPhim: React.FC = () => {
         onChange: onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
+
+    const fuseOptions = {
+        includeScore: true,
+        includeMatches: true,
+        isCaseSensitive: true,
+        findAllMatches: true,
+        useExtendedSearch: true,
+        keys: ["movie_name"]
+    }
+
+    const fuse = new Fuse(dataMovies, fuseOptions)
+
     const searchProject = (value: string) => {
-        console.log(value);
+
         setSearchTerm(value);
     };
     const deleteOne = (key: string) => {
@@ -51,25 +71,71 @@ const AdminQlPhim: React.FC = () => {
     }
     useEffect(() => {
         const dataMap = dataMovies
-        console.log(dataMap);
-        
+
+
         // chưa có kiểu dữ liệu cho data
         if (Array.isArray(dataMap)) {
             const mapMovies = dataMap.map((item: any) => ({
                 key: item.id,
                 movie_name: item.movie_name,
-                country_name: item.country_id.country_name,
-                producer_name: item.producer_id.producer_name,
-                actor_name: item.actor_name,
-                type_name: item.movie_type_id.type_name,
-                genre: item.genre,
+
+                country_name: item.country_name,
+                producer_name: item.producer_name,
+                actor_name: item.actor_name.join(", "),
+                type_name: item.type_name,
+                genre: item.genre.join(", "),
+
                 director: item.director,
                 image: item.image,
                 trailer: item.trailer,
             }))
             setDataTable(mapMovies)
         }
-    }, [dataMovies])
+
+        if (status) {
+            checkApiStatus(status, navigate);
+        }
+    }, [dataMovies, status])
+    useEffect(() => {
+        if (searchTerm.length > 0) {
+            const results = fuse?.search(searchTerm);
+            const newData = results?.map((result) => result.item);
+            if (Array.isArray(newData)) {
+                const mapMovies = newData.map((item: any) => ({
+                    key: item.id,
+                    movie_name: item.movie_name,
+                    country_name: item.country_name,
+                    producer_name: item.producer_name,
+                    actor_name: item.actor_name,
+                    type_name: item.type_name,
+                    genre: item.genre,
+                    director: item.director,
+                    image: item.image,
+                    trailer: item.trailer,
+                }))
+                setDataTable(mapMovies)
+            }
+        }
+        if (searchTerm.length === 0) {
+            const dataMap = dataMovies
+            if (Array.isArray(dataMap)) {
+                const mapMovies = dataMap.map((item: any) => ({
+                    key: item.id,
+                    movie_name: item.movie_name,
+                    country_name: item.country_name,
+                    producer_name: item.producer_name,
+                    actor_name: item.actor_name.join(", "),
+                    type_name: item.type_name,
+                    genre: item.genre.join(", "),
+                    director: item.director,
+                    image: item.image,
+                    trailer: item.trailer,
+                }))
+                setDataTable(mapMovies)
+            }
+        }
+    }, [searchTerm, dataMovies])
+
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Danh sách phim</div>
@@ -115,12 +181,15 @@ const AdminQlPhim: React.FC = () => {
                     <Column title="Dạng Phim" dataIndex="type_name" key="type_name" />
                     <Column title="Thể Loại" dataIndex="genre" key="genre" />
                     <Column title="Đạo Diễn" dataIndex="director" key="director" />
+
+                    <Column title="Diễn Viên" dataIndex="actor_name" key="actor_name" />
                     <Column title="Poster" dataIndex="image" key="image"
                         render={(_: any, record: QlPhim) => (
-                            <PosterPhim data={`https://www.theindianwire.com/wp-content/uploads/2019/02/Avengers-Endgame.jpg`} key={record.image} />
+                            <PosterPhim data={record?.image} key={record.image} />
                         )} />
                     <Column title="Trailer" dataIndex="trailer" key="trailer" render={(_: any, record: QlPhim) => (
-                        <TrailerPhim data={`https://www.youtube.com/embed/XBczBMc4LPQ?si=oS0QKFixvq636T3Q&amp;start=103`} key={record.trailer} />
+                        <TrailerPhim data={record.trailer} key={record.trailer} />
+
                     )} />
                     <Column
                         title="Action"

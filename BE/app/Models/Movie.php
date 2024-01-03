@@ -20,6 +20,34 @@ class Movie extends Model
         'end_date',
         'total_revenue',
         'image',
-        'trailer'
+        'trailer',
+        'movie_time',
+        'movie_status'
     ];
+
+    public function countries()
+{
+    return $this->belongsTo(Country::class, 'country_id');
+}
+
+public function producers()
+{
+    return $this->belongsTo(Producer::class, 'producer_id');
+}
+
+public function movieType()
+{
+    return $this->belongsTo(Movie_Type::class, 'movie_type_id');
+}
+
+public function genres()
+{
+    return $this->belongsToMany(List_Genre::class, 'movie_genres', 'movie_id', 'list_genre_id');
+}
+
+public function actors()
+{
+    return $this->belongsToMany(Actor::class, 'movie_id');
+}
+
 }

@@ -10,6 +10,7 @@ use App\Models\Movie;
 use App\Models\Movie_Genre;
 use App\Models\Seat;
 use App\Models\Showtime;
+use App\Models\Promotion;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,8 +33,36 @@ class HomeController extends Controller
             ->get();
         return response()->json($movie);
     }
+    public function comingSoon(){
+        $currentDate = Carbon::now();
+        $movies = Movie::join('countries', 'movies.country_id', '=', 'countries.id')
+            ->join('producers', 'movies.producer_id', '=', 'producers.id')
+            ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+            ->select('movies.*', 'countries.country_name', 'producers.producer_name', 'movie_types.type_name')
+            ->whereNull('movies.deleted_at')
+            ->where('movies.start_date', '>', $currentDate) // Filter movies with start_date greater than the current date
+            ->orderBy('movies.id', 'asc')
+            ->get();
+    
+        return response()->json($movies);
+    }
 
-
+    public function showing()
+    {
+        $currentDate = Carbon::now();
+    
+        $movies = Movie::join('countries', 'movies.country_id', '=', 'countries.id')
+            ->join('producers', 'movies.producer_id', '=', 'producers.id')
+            ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+            ->select('movies.*', 'countries.country_name', 'producers.producer_name', 'movie_types.type_name')
+            ->whereNull('movies.deleted_at')
+            ->where('movies.start_date', '<=', $currentDate) 
+            ->where('movies.end_date', '>=', $currentDate)   
+            ->orderBy('movies.id', 'asc')
+            ->get();
+    
+        return response()->json($movies);
+    }
     public function show_time_movie(string $id)
     {
         $st_movie = Movie::join('showtimes', 'showtimes.movie_id', '=', 'movies.id')
@@ -50,12 +79,10 @@ class HomeController extends Controller
             ->where('movies.id', $id)
             ->get();
         $movies = Movie::where('movies.id', $id)->select('movies.*')->first();
-
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
         foreach ($st_movie as $movie) {
-            $movie->show_date = Carbon::parse($movie->show_date)->format('d-m');
-            $movie->show_time = Carbon::parse($movie->show_time)->format('h:i');
+
             //tính ra ngày trong tuần
-            date_default_timezone_set('Asia/Ho_Chi_Minh');
 
             $weekday = date('l', strtotime($movie->show_date));
 
@@ -84,6 +111,8 @@ class HomeController extends Controller
                     break;
             }
             $movie->weekday = $weekday;
+            $movie->show_date = Carbon::parse($movie->show_date)->format('d-m');
+            $movie->show_time = Carbon::parse($movie->show_time)->format('h:i');
         }
         $st_movie = $st_movie->toArray();
         if ($st_movie) {
@@ -101,17 +130,52 @@ class HomeController extends Controller
             return response()->json(['messages' => 'Không tồn tại suất chiếu theo phim này'], 404);
         }
         // return response()->json([$st_movie]);
-
     }
 
     public function show_seat_room($id)
     {
         $seats = Seat::join('type_seats', 'type_seats.id', '=', 'seats.type_seat_id')
-
             ->join('rooms', 'rooms.id', '=', 'seats.room_id')
             ->join('showtimes', 'showtimes.room_id', '=', 'rooms.id')
+            ->select(
+                'seats.id',
+                'seats.seat_code',
+                'seats.type_seat_id',
+                'type_seats.type_name',
+                'rooms.name as room_name',
+                DB::raw("(
+                CASE
+                    WHEN NOT EXISTS (
+                        SELECT 1
+                        FROM tickets t
+                        WHERE t.id_seat = seats.id AND t.showtime_id = $id
+                    ) THEN 2
+                    WHEN EXISTS (
+                        SELECT 1
+                        FROM tickets t
+                        JOIN bills b ON b.id = t.bill_id
+                        WHERE t.id_seat = seats.id AND b.status IN (0, 1) AND t.showtime_id = $id
+                    ) THEN (
+                        SELECT b.status
+                        FROM tickets t
+                        JOIN bills b ON b.id = t.bill_id
+                        WHERE t.id_seat = seats.id AND b.status IN (0, 1) AND t.showtime_id = $id
+                        LIMIT 1
+                    )
+                    WHEN EXISTS (
+                        SELECT 1
+                        FROM tickets t
+                        JOIN bills b ON b.id = t.bill_id
+                        WHERE t.id_seat = seats.id AND b.status = 2 AND t.showtime_id = $id
+                        GROUP BY t.id_seat
+                        HAVING COUNT(DISTINCT b.status) = 1
+                    ) THEN 2
+                    ELSE 2
+                END
+            ) as status")
+            )
             ->where('showtimes.id', $id)
-            ->select('seats.id', 'seats.seat_code', 'seats.type_seat_id', 'type_seats.type_name', 'rooms.name as room_name')
+            ->groupBy('seats.id', 'seats.seat_code', 'seats.type_seat_id', 'type_seats.type_name', 'room_name')
             ->get();
         $movie = Movie::join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
             ->join('showtimes', 'showtimes.movie_id', '=', 'movies.id')
@@ -123,12 +187,15 @@ class HomeController extends Controller
             ->select('showtimes.*', 'movies.movie_name', 'rooms.name')
             ->where('showtimes.id', '=', $id)
             ->first();
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+
         foreach ($seats as $seat) {
             //nếu phim 2d thì vé thường 45k 3d thì ghế thường 60k
             if ($movie->movie_type == '2D') {
                 $seat->price = 45000; //mặc định ghế thường là 45k - phòng 2D
             } else {
-                $seat->price = 60000; //mặc định ghế thường là 45k - phòng 2D
+                $seat->price = 60000; //mặc định ghế thường là 60k - phòng 3D
+
             }
             $show_date = new DateTime($showtime->show_date); //lấy ra ngày chiếu
             if ($show_date->format('N') == '7' || $show_date->format('N') == '6') { //nếu thứ 7 hoặc chủ nhật thì tăng giá vé lên 10k
@@ -144,4 +211,12 @@ class HomeController extends Controller
         $combo = Food::all();
         return response()->json(['seats' => $seats, 'movie' => $movie, 'combo' => $combo]);
     }
+
+    public function voucher()
+    {
+        $promotion = Promotion::all();
+        return response()->json($promotion);
+
+    }
+
 }
