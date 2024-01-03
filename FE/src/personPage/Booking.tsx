@@ -334,7 +334,7 @@ const Booking = () => {
             getCombo(updatedItems[foodName], price, foodName); // Tính toán giá tiền
             return updatedItems;
         });
->>>>>>> main
+
     };
 
 

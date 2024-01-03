@@ -7,7 +7,7 @@ import Fuse from 'fuse.js';
 import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
 import { useNavigate } from 'react-router-dom';
 
->>>>>>> main
+
 const { Column } = Table;
 interface Guest {
     key: string;

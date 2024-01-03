@@ -19,7 +19,7 @@ export interface Discount {
 }
 const AdminQlDiscount: React.FC = () => {
     const { data: dataDiscounts, isLoading, error } = useFetchDiscountsQuery()
->>>>>>> main
+
     const [deleteDiscount] = useDeleteDiscountMutation()
     const [dataTable, setDataTable] = useState<Discount[]>([])
     const [searchTerm, setSearchTerm] = useState('');

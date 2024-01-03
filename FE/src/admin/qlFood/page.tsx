@@ -36,7 +36,7 @@ const AdminQlSp: React.FC = () => {
     const navigate = useNavigate();
     const status = error?.status;
     const [dataTable, setDataTable] = useState<QlFood[]>([])
->>>>>>> main
+
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
