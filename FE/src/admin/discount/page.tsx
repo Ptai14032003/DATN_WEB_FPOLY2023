@@ -27,7 +27,7 @@ const AdminQlDiscount: React.FC = () => {
 
     const navigate = useNavigate();
     const status = error?.status;
->>>>>>> main
+
     const onSelectChange = (newSelectedRowKeys: any[]) => {
         console.log('', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
@@ -36,7 +36,7 @@ const AdminQlDiscount: React.FC = () => {
         console.log(selectedRowKeys);
 
         message.success("Xóa thành công", 2);
->>>>>>> main
+
     }
     const rowSelection = {
         selectedRowKeys,
@@ -64,7 +64,7 @@ const AdminQlDiscount: React.FC = () => {
             const mapMovies = dataDiscounts.map((item: Discount) => ({
                 id: item.id,
                 discount_code: item.discount_code,
->>>>>>> main
+
                 event: item.event,
                 start: item.start,
                 end: item.end,
@@ -108,7 +108,7 @@ const AdminQlDiscount: React.FC = () => {
             }
         }
     }, [searchTerm, dataDiscounts])
->>>>>>> main
+
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Khuyến mãi</div>
@@ -180,7 +180,7 @@ const AdminQlDiscount: React.FC = () => {
                     />
                 </Table>
             )}
->>>>>>> main
+
         </div>
     );
 }

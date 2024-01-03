@@ -25,7 +25,7 @@ const AdminQlGuest: React.FC = () => {
     const { data: dataGuest, isLoading, error } = useFetchGuestsQuery()
     const navigate = useNavigate();
     const status = error?.status;
->>>>>>> main
+
 
     const [dataTable, setDataTable] = useState<Guest[]>([])
     const [searchTerm, setSearchTerm] = useState('');
@@ -55,7 +55,7 @@ const AdminQlGuest: React.FC = () => {
     const fuse = new Fuse(dataGuest?.data, fuseOptions)
 
     const searchProject = (value: string) => {
->>>>>>> main
+
         setSearchTerm(value);
     };
     useEffect(() => {
@@ -116,7 +116,7 @@ const AdminQlGuest: React.FC = () => {
             }
         }
     }, [searchTerm, dataGuest])
->>>>>>> main
+
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý khách hàng</div>

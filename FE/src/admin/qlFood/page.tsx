@@ -63,7 +63,7 @@ const AdminQlSp: React.FC = () => {
 
     const fuse = new Fuse(dataFood, fuseOptions)
 
->>>>>>> main
+
     const searchProject = (value: string) => {
         console.log(value);
         setSearchTerm(value);
@@ -119,14 +119,14 @@ const AdminQlSp: React.FC = () => {
             }
         }
     }, [searchTerm, dataFood])
->>>>>>> main
+
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý Sản Phẩm</div>
             <div className='flex justify-between mb-[10px]'>
 
                 <Input style={{ width: '20%' }} placeholder='Tìm kiếm sản phẩm'
->>>>>>> main
+
                     value={searchTerm}
                     onChange={(e) => searchProject(e.target.value)} />
                 <CreateQlPhim />
@@ -197,7 +197,7 @@ const AdminQlSp: React.FC = () => {
                     />
                 </Table>
             )}
->>>>>>> main
+
         </div>
     );
 }
