@@ -179,8 +179,8 @@ const AdminQlSp: React.FC = () => {
                                 <a><EditQlPhim key={record.key} projects={record.key} /> </a>
                                 <a>
                                     <Popconfirm
-                                        title="Delete the task"
-                                        description="Are you sure to delete this task?"
+                                        title="Xoá"
+                                        description="Bạn có muốn xoá sản phẩm này không?"
                                         onConfirm={() => {
                                             deleteOne(record.key);
                                         }}

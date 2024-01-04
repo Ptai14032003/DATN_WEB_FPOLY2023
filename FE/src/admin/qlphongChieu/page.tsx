@@ -16,15 +16,18 @@ const { Column } = Table;
 export type PhongChieu = {
     key: string;
     name: string;
-    total_seat: number;
+    row: number;
+    col: number;
+    total_seat: number
 }
 
 
 export type PhongChieu1 = {
     key: string;
     name: string;
-    total_seat_ngang: number;
-    total_seat_doc: number;
+    row: number;
+    col: number;
+    total_seat: number
 }
 const AdminQlPhongChieu: React.FC = () => {
     const { data: dataPhongChieu, isLoading, error } = useFetchPhongChieuQuery()
@@ -75,6 +78,8 @@ const AdminQlPhongChieu: React.FC = () => {
             const mapPhongChieu = dataMap.map((item: any) => ({
                 key: item.id,
                 name: item.name,
+                row: item.row,
+                col: item.col,
                 total_seat: item.total_seat
             }))
             setDataTable(mapPhongChieu)
@@ -92,6 +97,8 @@ const AdminQlPhongChieu: React.FC = () => {
                 const mapPhongChieu = newData.map((item: any) => ({
                     key: item.id,
                     name: item.name,
+                    row: item.row,
+                    col: item.col,
                     total_seat: item.total_seat
                 }))
                 setDataTable(mapPhongChieu)
@@ -103,12 +110,14 @@ const AdminQlPhongChieu: React.FC = () => {
                 const mapPhongChieu = dataMap.map((item: any) => ({
                     key: item.id,
                     name: item.name,
+                    row: item.row,
+                    col: item.col,
                     total_seat: item.total_seat
                 }))
                 setDataTable(mapPhongChieu)
             }
         }
-    }, [dataPhongChieu,searchTerm])
+    }, [dataPhongChieu, searchTerm])
 
     return (
         <div>
@@ -150,6 +159,8 @@ const AdminQlPhongChieu: React.FC = () => {
             ) : (
                 <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
                     <Column title="Phòng" dataIndex="name" key="name" />
+                    <Column title="Hàng ngang" dataIndex="row" key="row" />
+                    <Column title="Hàng dọc" dataIndex="col" key="col" />
                     <Column title="Tổng số ghế" dataIndex="total_seat" key="total_seat" />
                     <Column
                         title="Action"
