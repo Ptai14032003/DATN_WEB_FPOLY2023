@@ -35,7 +35,6 @@ class HomeController extends Controller
     }
     public function comingSoon(){
         $currentDate = Carbon::now();
-    
         $movies = Movie::join('countries', 'movies.country_id', '=', 'countries.id')
             ->join('producers', 'movies.producer_id', '=', 'producers.id')
             ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
@@ -80,7 +79,6 @@ class HomeController extends Controller
             ->where('movies.id', $id)
             ->get();
         $movies = Movie::where('movies.id', $id)->select('movies.*')->first();
-
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         foreach ($st_movie as $movie) {
 
@@ -145,7 +143,7 @@ class HomeController extends Controller
                 'seats.type_seat_id',
                 'type_seats.type_name',
                 'rooms.name as room_name',
-                \DB::raw("(
+                DB::raw("(
                 CASE
                     WHEN NOT EXISTS (
                         SELECT 1
@@ -179,7 +177,6 @@ class HomeController extends Controller
             ->where('showtimes.id', $id)
             ->groupBy('seats.id', 'seats.seat_code', 'seats.type_seat_id', 'type_seats.type_name', 'room_name')
             ->get();
-
         $movie = Movie::join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
             ->join('showtimes', 'showtimes.movie_id', '=', 'movies.id')
             ->where('showtimes.id', $id)
@@ -191,12 +188,14 @@ class HomeController extends Controller
             ->where('showtimes.id', '=', $id)
             ->first();
         date_default_timezone_set('Asia/Ho_Chi_Minh');
+
         foreach ($seats as $seat) {
             //nếu phim 2d thì vé thường 45k 3d thì ghế thường 60k
             if ($movie->movie_type == '2D') {
                 $seat->price = 45000; //mặc định ghế thường là 45k - phòng 2D
             } else {
                 $seat->price = 60000; //mặc định ghế thường là 60k - phòng 3D
+
             }
             $show_date = new DateTime($showtime->show_date); //lấy ra ngày chiếu
             if ($show_date->format('N') == '7' || $show_date->format('N') == '6') { //nếu thứ 7 hoặc chủ nhật thì tăng giá vé lên 10k
@@ -219,4 +218,5 @@ class HomeController extends Controller
         return response()->json($promotion);
 
     }
+
 }

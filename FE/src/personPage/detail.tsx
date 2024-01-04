@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom"
 import "./page.css"
+
 import { useFetchMovieIdPersonQuery } from "../rtk/moviesPerson/moviesPerson"
 
 import Footer from "../components/layouts/layoutGuest/footer";
@@ -55,10 +56,12 @@ export default function Detail() {
                                         <div className="w-[90px] h-full flex flex-col items-center justify-center text-xs transition-colors">
                                             <span>{item.weekday}</span>
                                             <span className="text-xl font-bold">{item?.show_date}</span>
+
                                         </div>
                                     </button>
                                 </div>
                                 <div className="w-[70%] grid grid-cols-5 gap-5 mt-[20px] text-black">
+
                                     <button className="detail-time w-[100px] h-[40px] bg-white rounded-sm" onClick={() => redirectToLink('/booking/' + movie?.id + `?show_seat=${item?.showtime_id}`)}>
                                         <p className="font-bold text-sm">{item?.show_time}</p>
                                     </button>
@@ -162,6 +165,7 @@ export default function Detail() {
             <footer>
                 <Footer />
             </footer>
+
         </div >
     );
 }

@@ -19,6 +19,7 @@ use App\Http\Controllers\FoodController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TypeFoodController;
 use App\Http\Controllers\PaymentController;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('web')->group(function () {
@@ -41,6 +42,7 @@ Route::get('/movie_show_time/{id}', [HomeController::class, 'show_time_movie'])-
 Route::get('/show_seat_room/{id}', [HomeController::class, 'show_seat_room'])->name('show_seat_room');
 Route::get('/voucher', [HomeController::class, 'voucher'])->name('voucher');
 
+
 Route::prefix('admin')->group(function () {
     Route::resource('bill', BillController::class);
     Route::resource('food', FoodController::class);
@@ -49,9 +51,11 @@ Route::prefix('admin')->group(function () {
     Route::prefix('movies')->group(function () {
         Route::get('/', [ApiMovieController::class, 'index']);
         Route::post('/', [ApiMovieController::class, 'store']);
+
         Route::get('/{id}', [ApiMovieController::class, 'edit']);
         Route::put('/{id}', [ApiMovieController::class, 'update']);
         Route::delete('/{id}', [ApiMovieController::class, 'destroy']);
+
     });
 
     Route::prefix('movie_genres')->group(function () {
@@ -138,4 +142,5 @@ Route::prefix('admin')->group(function () {
         Route::put('/{id}', [PersonnelController::class, 'update']);
         Route::delete('/{id}', [PersonnelController::class, 'destroy']);
     });
+
 });

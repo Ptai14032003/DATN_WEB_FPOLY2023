@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Food;
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\DB;
 use Cloudinary\Cloudinary;
 
@@ -21,6 +22,7 @@ class FoodController extends Controller
         $food->makeHidden(['food_type_id']);
 
         return response()->json($food);
+
     }
 
     /**
@@ -71,6 +73,7 @@ class FoodController extends Controller
         }else{
             return $this->returnError(202, 'file is required');
         }
+
     }
 
     /**
@@ -118,6 +121,7 @@ class FoodController extends Controller
         $food->update($data);
     
         return response()->json($food);
+
     }
 
     /**
@@ -132,3 +136,4 @@ class FoodController extends Controller
        ]);
     }
 }
+

@@ -1,4 +1,6 @@
+
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+
 import LayoutAdmin from './components/layouts/layoutAdmin/page'
 import AdminQlSc from './admin/qlSc/page'
 import AdminQlSp from './admin/qlFood/page'
@@ -18,6 +20,7 @@ import Signin from './personPage/Signin'
 import Signup from './personPage/Signup'
 import Booking from './personPage/Booking'
 import Detail from './personPage/detail.tsx'
+
 import Seat from './components/itemAdmin/Seat/page.tsx'
 import TicketPrice from './personPage/TicketPrice.tsx'
 import Profile from './personPage/Profile.tsx'
@@ -63,6 +66,7 @@ function App() {
       )}
       <Route path='*' element={<Navigate to='/notfound' />} />
       <Route path="listvnp" element={<CheckPay />} />
+
     </Routes>
   </BrowserRouter>
 }

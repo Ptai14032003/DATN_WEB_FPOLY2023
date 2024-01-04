@@ -4,7 +4,9 @@ import "./layout.css"
 import { Carousel} from 'antd'
 // import { BiSearch } from 'react-icons/bi'
 import Menu from './menu'; 
+
 import Footer from './footer';
+
 
 
 const LayoutPerson = () => {
@@ -17,6 +19,8 @@ const Navigate = useNavigate()
     margin: 0,
     height: '750px',
   };
+
+
   
 
   return (
@@ -45,6 +49,7 @@ const Navigate = useNavigate()
       <footer>
         <Footer/>
       </footer>
+
     </div>
   )
 }

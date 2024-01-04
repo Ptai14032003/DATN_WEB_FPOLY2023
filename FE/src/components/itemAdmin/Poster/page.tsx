@@ -17,8 +17,10 @@ const PosterPhim: React.FC<Props> = ({ data }: Props) => {
     return (
         <>
             <Button onClick={showModal}>Poster</Button>
+
             <Modal title="Poster" open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center px-[85px]">
                 <img width={300} height={400} src={dataTrailer} alt="Lỗi poster" />
+
             </Modal>
         </>
     )

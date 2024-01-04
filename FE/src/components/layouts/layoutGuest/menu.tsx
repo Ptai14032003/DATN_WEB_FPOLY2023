@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react'
 import logoweb from "/logo-web.png"
 import { Navigate, useNavigate } from 'react-router-dom';
@@ -75,6 +76,7 @@ const Menu = () => {
       </nav>
     </div>
   )
+
 }
 
 export default Menu

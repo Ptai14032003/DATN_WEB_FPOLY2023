@@ -17,7 +17,6 @@ class ApiListGenreController extends Controller
         $listGenre = List_Genre::all();
 //        Trả về danh sách dưới dạng json
         return response()->json($listGenre);
-
     }
 
     /**

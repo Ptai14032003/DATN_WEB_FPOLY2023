@@ -1,12 +1,16 @@
+
 import React, { useCallback, useEffect, useState } from 'react';
+
 import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
 import CreateQlPhongChieu from './create';
 import EditQlPhongChieu from './edit';
 import { useDeletePhongChieuMutation, useFetchPhongChieuQuery } from '../../rtk/qlPhongChieu/qlPhongChieu';
 import { Waveform } from '@uiball/loaders'
+
 import Fuse from 'fuse.js';
 import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
 import { useNavigate } from 'react-router-dom';
+
 const { Column } = Table;
 
 export type PhongChieu = {
@@ -14,6 +18,7 @@ export type PhongChieu = {
     name: string;
     total_seat: number;
 }
+
 
 export type PhongChieu1 = {
     key: string;
@@ -26,6 +31,7 @@ const AdminQlPhongChieu: React.FC = () => {
 
     const navigate = useNavigate();
     const status = error?.status;
+
 
     const [deletePhongChieu] = useDeletePhongChieuMutation()
     const [dataTable, setDataTable] = useState<PhongChieu[]>([])
@@ -44,6 +50,7 @@ const AdminQlPhongChieu: React.FC = () => {
         onChange: onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
+
     const fuseOptions = {
         includeScore: true,
         useExtendedSearch: true,
@@ -58,6 +65,7 @@ const AdminQlPhongChieu: React.FC = () => {
     };
     console.log(dataTable);
 
+
     const deleteOne = (key: string) => {
         deletePhongChieu(key).then(() => message.success("Xóa thành công"))
     }
@@ -71,6 +79,7 @@ const AdminQlPhongChieu: React.FC = () => {
             }))
             setDataTable(mapPhongChieu)
         }
+
         if (status) {
             checkApiStatus(status, navigate);
         }
@@ -100,6 +109,7 @@ const AdminQlPhongChieu: React.FC = () => {
             }
         }
     }, [dataPhongChieu,searchTerm])
+
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Danh sách phòng chiếu</div>

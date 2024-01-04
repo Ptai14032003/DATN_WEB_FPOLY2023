@@ -3,6 +3,7 @@ import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
 import CreateQlDiscount from './create';
 import EditQlDiscount from './edit';
 import { useDeleteDiscountMutation, useFetchDiscountsQuery } from '../../rtk/discount/discount';
+
 import { Waveform } from '@uiball/loaders';
 import Fuse from 'fuse.js';
 import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
@@ -18,25 +19,31 @@ export interface Discount {
 }
 const AdminQlDiscount: React.FC = () => {
     const { data: dataDiscounts, isLoading, error } = useFetchDiscountsQuery()
+
     const [deleteDiscount] = useDeleteDiscountMutation()
     const [dataTable, setDataTable] = useState<Discount[]>([])
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
+
     const navigate = useNavigate();
     const status = error?.status;
+
     const onSelectChange = (newSelectedRowKeys: any[]) => {
         console.log('', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
     };
     const DeleteAll = () => {
         console.log(selectedRowKeys);
+
         message.success("Xóa thành công", 2);
+
     }
     const rowSelection = {
         selectedRowKeys,
         onChange: onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
+
     const fuseOptions = {
         includeScore: true,
         useExtendedSearch: true,
@@ -57,6 +64,7 @@ const AdminQlDiscount: React.FC = () => {
             const mapMovies = dataDiscounts.map((item: Discount) => ({
                 id: item.id,
                 discount_code: item.discount_code,
+
                 event: item.event,
                 start: item.start,
                 end: item.end,
@@ -64,6 +72,7 @@ const AdminQlDiscount: React.FC = () => {
             }))
             setDataTable(mapMovies)
         }
+
         if (status) {
             checkApiStatus(status, navigate);
         }
@@ -99,6 +108,7 @@ const AdminQlDiscount: React.FC = () => {
             }
         }
     }, [searchTerm, dataDiscounts])
+
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Khuyến mãi</div>
@@ -129,6 +139,7 @@ const AdminQlDiscount: React.FC = () => {
                     <div></div>
                 )}
             </span>
+
             {isLoading ? (
                 <Waveform
                     size={40}
@@ -169,6 +180,7 @@ const AdminQlDiscount: React.FC = () => {
                     />
                 </Table>
             )}
+
         </div>
     );
 }

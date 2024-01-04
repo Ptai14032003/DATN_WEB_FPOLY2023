@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, InputNumber, Modal, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
@@ -229,6 +230,7 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
             setDataSeat(newDataSeat);
         }
         // updatePhongChieu({ body: values, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
+
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -238,6 +240,7 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
         setIsModalOpen(true);
     };
     const handleCancel = () => {
+
         const isconfirm = confirm(`Dữ liệu sẽ bị xoá nếu bạn thoát`)
         if (isconfirm) {
             setIsModalOpen(false);
@@ -355,6 +358,7 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
             {contextHolder}
             <Button onClick={showModal}>Sửa</Button>
             <Modal title="Sửa phòng chiếu " open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} width={1200} className="text-center">
+
                 {data ? (
                     <Form className='mr-[60px]'
                         name='formLogin'
@@ -367,13 +371,16 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
                         autoComplete="off"
                         initialValues={data}
                     >
+
                         <Form.Item<PhongChieu1>
+
                             label="Tên phòng"
                             name="name"
                             rules={[{ required: true, message: 'Vui lòng nhập tên phòng !' }]}
                         >
                             <Input />
                         </Form.Item>
+
                         <Form.Item<PhongChieu1>
                             label="Số ghế hàng ngang"
                             name="total_seat_ngang"
@@ -448,6 +455,7 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
                     <div>
                     </div>
                 )}
+
             </Modal>
         </>
     )

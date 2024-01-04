@@ -7,6 +7,7 @@ import { message } from 'antd';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 
+
 interface Form {
   email: string;
   password: string;
@@ -14,11 +15,14 @@ interface Form {
 
 const Signin = () => {
   // const handleSubmit = (e) => {
+
   const navigate = useNavigate();
+
   const { register, handleSubmit } = useForm<Form>();
   const [signin, { error }] = useSigninMutation();
   const onFinish = async (values: any) => {
     try {
+
 
       
       await signin(values).unwrap()
@@ -27,6 +31,7 @@ const Signin = () => {
           const user = userString ? JSON.parse(userString) : null;          
           if (user.role == 'Admin') {
             navigate("/")
+
           }
           else {
             navigate("/")

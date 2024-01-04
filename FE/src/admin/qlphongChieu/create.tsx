@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, InputNumber, Modal } from 'antd';
 import type { FormInstance } from 'antd/es/form';
@@ -5,10 +6,12 @@ import { PhongChieu1 } from './page';
 import { message } from 'antd';
 import { useAddPhongChieuMutation } from '../../rtk/qlPhongChieu/qlPhongChieu';
 import { MdChair } from 'react-icons/md';
+
 const CreateQlPhongChieu: React.FC = () => {
     const [addPhongChieu] = useAddPhongChieuMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
+
     const [dataSeat, setDataSeat] = useState<any>([]);
     const [seat, setSeat] = useState<any>([])
     const [buttonClick, setButtonClick] = useState<any>(0)
@@ -29,6 +32,7 @@ const CreateQlPhongChieu: React.FC = () => {
             }
         }
         setDataSeat(newDataSeat);
+
     };
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
@@ -37,6 +41,7 @@ const CreateQlPhongChieu: React.FC = () => {
         setIsModalOpen(true);
     };
     const handleCancel = () => {
+
         const isconfirm = confirm(`Dữ liệu sẽ bị xoá nếu bạn thoát`)
         if (isconfirm) {
             setIsModalOpen(false);
@@ -171,6 +176,7 @@ const CreateQlPhongChieu: React.FC = () => {
             <Modal title="Thêm phòng chiếu mới" open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: false }} width={1200} className="text-center">
                 <Form className='mx-auto'
                     name='formPhongChieu'
+
                     ref={formRef}
                     labelCol={{ span: 8 }}
                     wrapperCol={{ span: 16 }}
@@ -179,13 +185,16 @@ const CreateQlPhongChieu: React.FC = () => {
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
                 >
+
                     <Form.Item<PhongChieu1>
+
                         label="Tên phòng"
                         name="name"
                         rules={[{ required: true, message: 'Vui lòng nhập tên phòng !' }]}
                     >
                         <Input />
                     </Form.Item>
+
                     <Form.Item<PhongChieu1>
                         label="Số ghế hàng ngang"
                         name="total_seat_ngang"
@@ -255,6 +264,7 @@ const CreateQlPhongChieu: React.FC = () => {
                     <div>
                     </div>
                 )}
+
             </Modal >
         </>
     )

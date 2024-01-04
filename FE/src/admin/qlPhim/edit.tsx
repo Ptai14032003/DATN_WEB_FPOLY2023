@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Image, Input, Modal, Select, Upload, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
@@ -7,6 +8,7 @@ import { useFetchMovieIdQuery, useUpdateMoviesMutation } from '../../rtk/movies/
 type Props = {
     projects: string
 }
+
 type QlPhimEdit = {
     key: string;
     movie_name: string;
@@ -42,16 +44,20 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
     const [patchMovie] = useUpdateMoviesMutation();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
+
     const countryName = ["Hoa Kỳ", "Canada", "Việt Nam", "United States"]
     const countryOptions = countryName.map((country) => ({
         value: country,
         label: country,
     }));
+
     const typeMovies = ["2D", "3D"];
+
     const typeOptions = typeMovies.map((type) => ({
         value: type,
         label: type,
     }));
+
     const ListGenres = dataMovies?.genres
     const GenresOptions = ListGenres?.map((genres: any) => ({
         value: genres,
@@ -66,6 +72,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
         console.log(values);
 
         // patchMovie({ body: values, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
+
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -80,9 +87,11 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
     };
     return (
         <>
+
             <Button onClick={showModal}>Sửa</Button>
             <Modal title="Sửa phim " open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
                 {newData ? (
+
                     <Form className='mr-[60px]'
                         name='formLogin'
                         ref={formRef}
@@ -92,38 +101,49 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                         onFinish={onFinish}
                         onFinishFailed={onFinishFailed}
                         autoComplete="off"
+
                         initialValues={newData}
                     >
                         <Form.Item<QlPhimEdit>
+
                             label="Tên phim"
                             name="movie_name"
                             rules={[{ required: true, message: 'Vui lòng nhập tên !' }]}
                         >
                             <Input />
                         </Form.Item>
+
                         <Form.Item<QlPhimEdit>
+
                             label="Nước sản xuất"
                             name="country_name"
                             rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
                         >
                             <Select className='ml-[-72px]'
+
                                 placeholder="Chọn nước sản xuất"
+
                                 style={{ width: 200 }}
                                 options={countryOptions}
                             />
                         </Form.Item>
+
                         <Form.Item<QlPhimEdit>
+
                             label="Nhà sản xuất"
                             name="producer_name"
                             rules={[{ required: true, message: 'Vui lòng nhập nhà sản xuất !' }]}
                         >
                             <Input />
                         </Form.Item>
+
                         <Form.Item<QlPhimEdit>
+
                             label="Diễn viên"
                             name="actor_name"
                             rules={[{ required: true, message: 'Vui lòng nhập tên các diễn viên !' }]}
                         >
+
                             <Select className='ml-[-72px]'
                                 mode='multiple'
                                 placeholder="Chọn diễn viên"
@@ -132,22 +152,28 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                             />
                         </Form.Item>
                         <Form.Item<QlPhimEdit>
+
                             label="Dạng phim"
                             name="type_name"
                             rules={[{ required: true, message: 'Vui lòng nhập dang phim !' }]}
                         >
                             <Select className='ml-[-72px]'
                                 mode='multiple'
+
                                 placeholder="Chọn dạng phim"
+
                                 style={{ width: 200 }}
                                 options={typeOptions}
                             />
                         </Form.Item>
+
                         <Form.Item<QlPhimEdit>
+
                             label="Thể loại"
                             name="genre"
                             rules={[{ required: true, message: 'Vui lòng nhập thể loại!' }]}
                         >
+
                             <Select className='ml-[-72px]'
                                 mode='multiple'
                                 placeholder="Chọn dạng phim"
@@ -156,6 +182,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                             />
                         </Form.Item>
                         <Form.Item<QlPhimEdit>
+
                             label="Đạo diễn"
                             name="director"
                             rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
@@ -186,6 +213,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                             </Upload>
                         </Form.Item>
                         <Form.Item<QlPhimEdit>
+
                             label="Trailer"
                             name="trailer"
                             rules={[{ required: true, message: 'Vui lòng nhập trailer !' }, { type: "url", message: 'Vui lòng nhập đúng định dạng !' }]}

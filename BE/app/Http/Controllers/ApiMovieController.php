@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
-
 use App\Models\Actor;
 use App\Models\Movie;
 use App\Models\Movie_Genre;
@@ -11,8 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Cloudinary\Cloudinary;
 
 class ApiMovieController extends Controller
-{
-    
+{ 
    public function index(){
     $movies =  Movie::join('countries', 'movies.country_id', '=', 'countries.id')
         ->join('producers', 'movies.producer_id', '=', 'producers.id')
@@ -49,7 +46,6 @@ class ApiMovieController extends Controller
 }
 
     public function store(Request $request){
-        
         if($request->hasFile('image')){
             $response = cloudinary()->upload($request->file('image')->getRealPath())->getSecurePath();
             $image = $response;
@@ -84,7 +80,6 @@ class ApiMovieController extends Controller
                 'image' => $image,
                 'trailer' => $trailer
             ];
-
             Movie::create($data); 
             $movie = DB::select(' SELECT * FROM movies WHERE movie_name = :movie_name ', ['movie_name' => $movie_name ]);
             foreach($movie as $movi) {
@@ -98,7 +93,6 @@ class ApiMovieController extends Controller
                 ];
                 Actor::create($newdata);
                 }
-
         }else{
             return $this->returnError(202, 'file is required');
         }

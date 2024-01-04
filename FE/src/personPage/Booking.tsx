@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useFetchSeatRoomIdQuery } from '../rtk/booking/booking';
@@ -323,6 +324,7 @@ const Booking = () => {
             getCombo(updatedItems[foodName], price, foodName); // Tính toán giá tiền
             return updatedItems;
         });
+
     };
 
 
@@ -331,10 +333,12 @@ const Booking = () => {
             <div className="backdrop">
                 <img src={seatBooking?.movie?.image} className='backdrop-img w-full h-[550px] relative'></img>
             </div>
+
             <div className="movies-title absolute flex justify-between items-center translate-x-[28rem] -translate-y-[4rem] text-white w-[63.875rem]">
                 <h3 className='text-3xl'>{seatBooking?.movie?.movie_name}</h3>
                 <div className="time flex text-lg items-center space-x-10">
                     <p>{seatBooking?.movie?.time}</p>
+
                 </div>
             </div>
 
@@ -371,10 +375,12 @@ const Booking = () => {
                                     <span>2</span> Combo
                                 </li>
                                 <li className={activeTab === 3 ? 'active' : ''}>
+
                                     <span>3</span> Thanh toán
                                 </li>
                             </ul>
                         </div>
+
                         <div className="w-[230px] h-[42px] border-[2px] rounded-md mt-[50px] px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
                         <form action="" method='POST'>
                             <div className={`Booking-content ${activeTab === 1 ? "" : "hidden"}`}>
@@ -480,6 +486,7 @@ const Booking = () => {
                 <Footer />
             </footer>
         </div >
+
     )
 }
 export default Booking

@@ -13,7 +13,9 @@ const EditQlDiscount: React.FC<Props> = ({ projects }: Props) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
+
         update({ body: values, id: projects }).then(() => { setIsModalOpen(false); message.success("Sửa thành công") })
+
     };
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
@@ -43,7 +45,9 @@ const EditQlDiscount: React.FC<Props> = ({ projects }: Props) => {
                     >
                         <Form.Item<Discount>
                             label="Mã khuyến mãi"
+
                             name="discount_code"
+
                             rules={[{ required: true, message: 'Vui lòng nhập tên !' }]}
                         >
                             <Input />
@@ -60,14 +64,18 @@ const EditQlDiscount: React.FC<Props> = ({ projects }: Props) => {
                             name="start"
                             rules={[{ required: true, message: 'Vui lòng nhập ngày áp dụng !' }]}
                         >
+
                             <Input type='date' style={{ width: 200 }} />
+
                         </Form.Item>
                         <Form.Item<Discount>
                             label="Ngày Kết Thúc"
                             name="end"
                             rules={[{ required: true, message: 'Vui lòng nhập ngày kết thúc !' }]}
                         >
+
                             <Input type='date' style={{ width: 200 }} />
+
                         </Form.Item>
                         <Form.Item<Discount>
                             label="Mức Giảm (%)"
