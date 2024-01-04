@@ -16,6 +16,8 @@ const CreateQlPhongChieu: React.FC = () => {
     const [seat, setSeat] = useState<any>([])
     const [buttonClick, setButtonClick] = useState<any>(0)
     const [messageApi, contextHolder] = message.useMessage();
+    console.log(dataSeat);
+    
     const onFinish = (values: any) => {
 
         const newDataSeat = [];
