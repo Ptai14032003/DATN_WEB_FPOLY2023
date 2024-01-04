@@ -6,7 +6,7 @@ const foodsApi = createApi({
     }),
     tagTypes: ["food"],
     endpoints: builder => ({
-        fetchFoods: builder.query<any[], void>({
+        fetchFoods: builder.query<any, void>({
             query: () => "/food/",
             providesTags: ["food"]
         }),

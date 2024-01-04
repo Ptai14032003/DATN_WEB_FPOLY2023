@@ -17,7 +17,7 @@ const phongChieuApi = createApi({
     }),
     tagTypes: ["rooms"],
     endpoints: builder => ({
-        fetchPhongChieu: builder.query<any[], void>({
+        fetchPhongChieu: builder.query<any, void>({
             query: () => "/rooms/",
             providesTags: ["rooms"]
         }),

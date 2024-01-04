@@ -21,11 +21,11 @@ use App\Http\Controllers\TypeFoodController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('web')->group(function () {
-    Route::get('/sanctum/csrf-cookie', function (Request $request) {
-        return response()->json(['message' => 'CSRF cookie set']);
-    });
-});
+// Route::middleware('web')->group(function () {
+//     Route::get('/sanctum/csrf-cookie', function (Request $request) {
+//         return response()->json(['message' => 'CSRF cookie set']);
+//     });
+// });
 
 Route::match(['GET', 'POST'], '/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
@@ -40,6 +40,11 @@ Route::post('/book_ticket', [TicketController::class, 'book_ticket'])->name('boo
 Route::get('/movie_show_time/{id}', [HomeController::class, 'show_time_movie'])->name('movie_show_time');
 Route::get('/show_seat_room/{id}', [HomeController::class, 'show_seat_room'])->name('show_seat_room');
 Route::get('/voucher', [HomeController::class, 'voucher'])->name('voucher');
+
+//lịch sử đặt vé
+Route::post('/booking_history', [HomeController::class, 'booking_history'])->name('booking_history')->middleware('auth:sanctum');
+// send mail
+Route::post('/send_mail', [HomeController::class, 'send_mail'])->name('send_mail')->middleware('auth:sanctum');
 
 Route::prefix('admin')->middleware('checkrole')->group(function () {
     Route::resource('bill', BillController::class);
