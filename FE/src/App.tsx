@@ -27,22 +27,10 @@ import Profile from './personPage/Profile.tsx'
 import CheckPay from './personPage/checkPay.tsx'
 import Payment from './personPage/Payment.tsx'
 import NotFound from './personPage/404.tsx'
-import { useEffect } from 'react'
-
-
 function App() {
   const checkLocal = localStorage.getItem("user");
   const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
   const checkRoleAdmin = checkUser?.role === "Admin"
-  useEffect(() => {
-    const countdownInterval = setInterval(() => {
-      if (checkLocal) {
-        localStorage.removeItem("user")
-        localStorage.removeItem("accessToken")
-      }
-    }, 15000)
-    return () => clearInterval(countdownInterval);
-  }, [])
   return <BrowserRouter>
     <Routes>
       <Route path='/' element={<LayoutPerson />}>
