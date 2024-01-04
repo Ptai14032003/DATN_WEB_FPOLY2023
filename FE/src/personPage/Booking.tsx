@@ -206,16 +206,6 @@ const Booking = () => {
                                 mapExecuted = true;
                                 return;
                             }
-                            // if (checkFull && !mapExecuted && checkId) {
-                            //     messageApi.error({
-                            //         type: 'error',
-                            //         content: `Quý khách nên hủy ghế lần lượt theo thứ tự ngu`,
-                            //         className: "h-[20%] mt-[20px]",
-                            //         duration: 2
-                            //     });
-                            //     mapExecuted = true;
-                            //     return;
-                            // }
                             if (!(checkSeatDelete || checkedLeft || checkedRight) && checkId) {
                                 setSelectedSeats(selectedSeats.filter((id) => id !== seatId_code));
                                 setidGhe(() => idGhe.filter((item: any) => item.id !== data.id));

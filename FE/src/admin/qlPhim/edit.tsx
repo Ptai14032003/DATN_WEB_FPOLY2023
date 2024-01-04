@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, Modal, Select, Upload, message } from 'antd';
+import { Button, Form, Image, Input, Modal, Select, Upload, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
 import { QlPhim } from './page';
@@ -162,14 +162,29 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                         >
                             <Input />
                         </Form.Item>
+                        <Form.Item<QlPhimEdit>>
+                            <div className='mx-[60%]'>
+                                <Image className='' width={150} 
+                                    src={dataMovies?.image} />
+                            </div>
+                        </Form.Item>
                         <Form.Item<QlPhimEdit>
                             label="Poster"
                             name="image"
                             rules={[{ required: true, message: 'Vui lòng nhập ảnh !' }]}
                         >
-                            <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                            <Upload listType='picture' beforeUpload={(file) => {
+                                return new Promise((resolve, reject) => {
+                                    if (file.type === 'image/jpg' || file.type === 'image/png') {
+                                        reject();
+                                    } else {
+                                        message.error("Vui lòng thêm ảnh đúng định dạng")
+                                    }
+                                })
+                            }} maxCount={1} multiple>
+                                <Button icon={<UploadOutlined />}>Click to Upload </Button>
+                            </Upload>
                         </Form.Item>
-                        <img className='mx-auto' width="80" height="120" src={dataMovies?.image} alt="" />
                         <Form.Item<QlPhimEdit>
                             label="Trailer"
                             name="trailer"
