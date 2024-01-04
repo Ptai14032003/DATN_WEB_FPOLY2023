@@ -18,7 +18,9 @@ class PaymentController extends Controller
         $seat = $request->seat;
         $combo = $request->combo;
         $total_money = $request->total_money;
+        $user_code = $request->user_code ?? null;
         $bill = [
+            "user_code" => $user_code,
             "total_ticket" => count($seat),
             "total_combo" => count($combo),
             "total_money" => $total_money,

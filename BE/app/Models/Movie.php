@@ -22,7 +22,6 @@ class Movie extends Model
         'image',
         'trailer',
         'movie_time',
-        'movie_status'
     ];
 
     public function countries()
