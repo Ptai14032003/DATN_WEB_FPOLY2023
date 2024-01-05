@@ -109,7 +109,7 @@ class ApiMovieController extends Controller
         // Update the movie data
         $movie->update($request->all());
     
-    // Update genres
+        // Update genres
         $gen = DB::table('movie_genres')      
         ->where('movie_genres.movie_id', $id)
         ->delete();
