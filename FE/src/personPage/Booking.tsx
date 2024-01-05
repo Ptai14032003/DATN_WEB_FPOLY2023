@@ -445,7 +445,7 @@ const Booking = () => {
                         <div className={`Booking-combo grid ${activeTab === 2 ? "" : "hidden"}`}>
                             <div className='mt-[7rem] mx-[4rem]'>
                                 <div className='grid grid-cols-2 gap-12'>
-                                    {Foods?.map((item) => (
+                                    {Foods?.map((item: any) => (
                                         <div className='Combo grid grid-cols-3 border-2 border-white rounded-md bg-[#2f9c8a] p-3 gap-5' key={item?.id}>
                                             <img src={item?.image} alt="" className='col-span-1 h-full w-full rounded-md' />
                                             <div className="col-span-2 flex flex-col justify-between">

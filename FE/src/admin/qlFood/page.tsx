@@ -86,9 +86,9 @@ const AdminQlSp: React.FC = () => {
             }))
             setDataTable(mapFood)
         }
-        if (status) {
-            checkApiStatus(status, navigate);
-        }
+        // if (status) {
+        //     checkApiStatus(status, navigate);
+        // }
     }, [dataFood, status])
     useEffect(() => {
         if (searchTerm.length > 0) {

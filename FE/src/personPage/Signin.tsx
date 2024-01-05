@@ -21,14 +21,13 @@ const Signin = () => {
   const { register, handleSubmit } = useForm<Form>();
   const [signin, { error }] = useSigninMutation();
   const onFinish = async (values: any) => {
+    console.log(values);
+
     try {
-
-
-      
       await signin(values).unwrap()
         .then(() => {
           const userString = localStorage.getItem('user');
-          const user = userString ? JSON.parse(userString) : null;          
+          const user = userString ? JSON.parse(userString) : null;
           if (user.role == 'Admin') {
             navigate("/")
 

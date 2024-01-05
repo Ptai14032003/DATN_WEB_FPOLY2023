@@ -149,4 +149,3 @@ Route::prefix('admin')->middleware('checkrole')->group(function () {
     });
 
 });
-
