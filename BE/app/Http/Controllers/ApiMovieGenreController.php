@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\MovieGenreResource;
+
 use App\Models\Movie_Genre;
 use Illuminate\Http\Request;
 
@@ -17,9 +17,9 @@ class ApiMovieGenreController extends Controller
         $movieGenre = Movie_Genre::
         join('movies', 'movie_genres.movie_id', '=', 'movies.id')
         ->join('list_genres', 'movie_genres.list_genre_id', '=', 'list_genres.id')
+        ->select('movie_genres.*')
         ->get();
-//        Trả về danh sách dưới dạng json
-        return MovieGenreResource::collection($movieGenre);
+        return response()->json($movieGenre);
 
     }
 
@@ -29,10 +29,6 @@ class ApiMovieGenreController extends Controller
     public function store(Request $request)
     {
         $movieGenre = Movie_Genre::create($request->all());
-
-
-       
-
         // Lưu trữ các thể loại đã chọn
         // $genres = $request->input('genres');
     
@@ -44,7 +40,7 @@ class ApiMovieGenreController extends Controller
         //     ]);
         // }
 //        trả về thông vừa thêm
-        return new MovieGenreResource($movieGenre);
+return response()->json($movieGenre);
     }
 
     /**
@@ -59,7 +55,7 @@ class ApiMovieGenreController extends Controller
         ->join('list_genres', 'movie_genres.list_genre_id', '=', 'list_genres.id')
         ->find($id);
         if($movieGenre){
-            return new MovieGenreResource($movieGenre);
+            return  response()->json($movieGenre);
         }else{
             return  response()->json(['message'=>'Không tồn tại'], 404);
         }

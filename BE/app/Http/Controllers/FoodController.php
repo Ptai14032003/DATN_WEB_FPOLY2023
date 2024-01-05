@@ -108,13 +108,19 @@ class FoodController extends Controller
             'food_type_id' => $request->get('food_type_id'),
         ];
     
-        // Check if a new image is provided
         if ($request->hasFile('image')) {
             // Upload the new image to Cloudinary
             $response = cloudinary()->upload($request->file('image')->getRealPath())->getSecurePath();
             $data['image'] = $response;
+    
+            // Delete old image from Cloudinary
+            $oldImage = $food->image;
+            if ($oldImage) {
+                $publicId = cloudinary()->getPublicIdFromPath($oldImage);
+                cloudinary()->destroy($publicId);
+            }
         } else {
-            // If no new image is provided, keep the existing image path
+            // If no new image is provided, keep the existing image
             $data['image'] = $food->image;
         }
     

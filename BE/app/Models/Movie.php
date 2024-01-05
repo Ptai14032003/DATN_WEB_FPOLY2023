@@ -12,8 +12,7 @@ class Movie extends Model
     protected $table = 'movies';
     protected $fillable = [
         'movie_name',
-        'producer_id',
-        'country_id',
+        'country_name',
         'movie_type_id',
         'director',
         'start_date',
@@ -22,17 +21,11 @@ class Movie extends Model
         'image',
         'trailer',
         'movie_time',
+        'actor_name',
+        'describe'
     ];
 
-    public function countries()
-{
-    return $this->belongsTo(Country::class, 'country_id');
-}
 
-public function producers()
-{
-    return $this->belongsTo(Producer::class, 'producer_id');
-}
 
 public function movieType()
 {
@@ -44,9 +37,6 @@ public function genres()
     return $this->belongsToMany(List_Genre::class, 'movie_genres', 'movie_id', 'list_genre_id');
 }
 
-public function actors()
-{
-    return $this->belongsToMany(Actor::class, 'movie_id');
-}
+
 
 }
