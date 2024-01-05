@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Modal } from 'antd';
+import { Button, Image, Modal } from 'antd';
 type Props = {
     data: string
 }
@@ -19,7 +19,7 @@ const PosterPhim: React.FC<Props> = ({ data }: Props) => {
             <Button onClick={showModal}>Poster</Button>
 
             <Modal title="Poster" open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center px-[85px]">
-                <img width={300} height={400} src={dataTrailer} alt="Lỗi poster" />
+                <Image width={300} src={dataTrailer} alt="Lỗi poster" />
 
             </Modal>
         </>

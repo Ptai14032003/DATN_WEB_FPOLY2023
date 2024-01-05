@@ -48,7 +48,7 @@ Route::post('/booking_history', [HomeController::class, 'booking_history'])->nam
 // send mail
 Route::post('/send_mail', [HomeController::class, 'send_mail'])->name('send_mail')->middleware('auth:sanctum');
 
-Route::prefix('admin')->middleware('checkrole')->group(function () {
+Route::prefix('admin')->group(function () {
     Route::resource('bill', BillController::class);
     Route::resource('food', FoodController::class);
     Route::resource('food_type', TypeFoodController::class);

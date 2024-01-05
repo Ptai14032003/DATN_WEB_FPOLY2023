@@ -5,6 +5,8 @@ import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
 import { QlPhim } from './page';
 import { useFetchMovieIdQuery, useUpdateMoviesMutation } from '../../rtk/movies/movies';
+import { useFetchGenresQuery } from '../../rtk/genres/genres';
+import { QlGenre } from './create';
 type Props = {
     projects: string
 }
@@ -14,15 +16,16 @@ type QlPhimEdit = {
     movie_name: string;
     country_name: string;
     producer_name: string;
-    actor_name: [];
+    actor_name: string;
     type_name: string;
-    genre: [];
+    genres: [];
     director: string;
     image: string;
     trailer: string;
 }
 const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
     const { data: dataMovies } = useFetchMovieIdQuery(projects);
+    const { data: dataGenres } = useFetchGenresQuery()
     useEffect(() => {
         if (dataMovies) {
             const newData: QlPhimEdit = {
@@ -30,9 +33,9 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                 movie_name: dataMovies?.movie_name,
                 country_name: dataMovies?.country_name,
                 producer_name: dataMovies?.producer_name,
-                actor_name: dataMovies?.actors,
+                actor_name: dataMovies?.actor_name,
                 type_name: dataMovies?.type_name,
-                genre: dataMovies?.genres,
+                genres: dataMovies?.genres,
                 director: dataMovies?.director,
                 image: dataMovies?.image,
                 trailer: dataMovies?.trailer
@@ -57,20 +60,13 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
         value: type,
         label: type,
     }));
+    const genreOptions = dataGenres?.map((genre: QlGenre) => ({
+        value: genre.id,
+        label: genre.genre,
 
-    const ListGenres = dataMovies?.genres
-    const GenresOptions = ListGenres?.map((genres: any) => ({
-        value: genres,
-        label: genres,
-    }));
-    const ListActors = dataMovies?.genres
-    const ActorsOptions = ListActors?.map((genres: any) => ({
-        value: genres,
-        label: genres,
-    }));
+    }))
     const onFinish = (values: any) => {
         console.log(values);
-
         // patchMovie({ body: values, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
 
     };
@@ -85,6 +81,8 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
         setIsModalOpen(false);
         formRef.current?.resetFields();
     };
+    console.log(newData);
+
     return (
         <>
 
@@ -127,29 +125,13 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                                 options={countryOptions}
                             />
                         </Form.Item>
-
-                        <Form.Item<QlPhimEdit>
-
-                            label="Nhà sản xuất"
-                            name="producer_name"
-                            rules={[{ required: true, message: 'Vui lòng nhập nhà sản xuất !' }]}
-                        >
-                            <Input />
-                        </Form.Item>
-
                         <Form.Item<QlPhimEdit>
 
                             label="Diễn viên"
                             name="actor_name"
                             rules={[{ required: true, message: 'Vui lòng nhập tên các diễn viên !' }]}
                         >
-
-                            <Select className='ml-[-72px]'
-                                mode='multiple'
-                                placeholder="Chọn diễn viên"
-                                style={{ width: 200 }}
-                                options={ActorsOptions}
-                            />
+                            <Input />
                         </Form.Item>
                         <Form.Item<QlPhimEdit>
 
@@ -158,10 +140,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                             rules={[{ required: true, message: 'Vui lòng nhập dang phim !' }]}
                         >
                             <Select className='ml-[-72px]'
-                                mode='multiple'
-
                                 placeholder="Chọn dạng phim"
-
                                 style={{ width: 200 }}
                                 options={typeOptions}
                             />
@@ -170,7 +149,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                         <Form.Item<QlPhimEdit>
 
                             label="Thể loại"
-                            name="genre"
+                            name="genres"
                             rules={[{ required: true, message: 'Vui lòng nhập thể loại!' }]}
                         >
 
@@ -178,7 +157,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                                 mode='multiple'
                                 placeholder="Chọn dạng phim"
                                 style={{ width: 200 }}
-                                options={GenresOptions}
+                                options={genreOptions}
                             />
                         </Form.Item>
                         <Form.Item<QlPhimEdit>
@@ -191,7 +170,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                         </Form.Item>
                         <Form.Item<QlPhimEdit>>
                             <div className='mx-[60%]'>
-                                <Image className='' width={150} 
+                                <Image className='' width={150}
                                     src={dataMovies?.image} />
                             </div>
                         </Form.Item>

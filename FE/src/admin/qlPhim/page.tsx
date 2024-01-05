@@ -3,13 +3,14 @@ import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
 import CreateQlPhim from './create';
 import EditQlPhim from './edit';
 import { useDeleteMoviesMutation, useFetchMoviesQuery } from '../../rtk/movies/movies';
-import TrailerPhim from '../../components/itemAdmin/Trailer/page';
-import PosterPhim from '../../components/itemAdmin/Poster/page';
 import { Waveform } from '@uiball/loaders';
-
 import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
 import { useNavigate } from 'react-router-dom';
 import Fuse from 'fuse.js';
+import PosterPhim from '../../components/itemAdmin/qlPhim/Poster/page';
+import TrailerPhim from '../../components/itemAdmin/qlPhim/Trailer/page';
+import DescriptionPhim from '../../components/itemAdmin/qlPhim/Description/page';
+import ActorPhim from '../../components/itemAdmin/qlPhim/Actor/page';
 
 const { Column } = Table;
 
@@ -17,28 +18,24 @@ export type QlPhim = {
     key: string;
     movie_name: string;
     country_name: string;
-    producer_name: string;
     actor_name: string;
     type_name: string;
     genre: string;
     director: string;
     image: string;
     trailer: string;
-
+    describe: string
 }
 const AdminQlPhim: React.FC = () => {
     const { data: dataMovies, isLoading, error } = useFetchMoviesQuery()
     const navigate = useNavigate();
     const status = error?.status;
     //checkApiStatus(status);
-
     const [deleteMovie] = useDeleteMoviesMutation()
     const [dataTable, setDataTable] = useState<QlPhim[]>([])
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
     const onSelectChange = (newSelectedRowKeys: any[]) => {
-
-
         setSelectedRowKeys(newSelectedRowKeys);
     };
     const DeleteAll = () => {
@@ -78,20 +75,17 @@ const AdminQlPhim: React.FC = () => {
             const mapMovies = dataMap.map((item: any) => ({
                 key: item.id,
                 movie_name: item.movie_name,
-
-                country_name: item.country_name,
-                producer_name: item.producer_name,
-                actor_name: item.actor_name.join(", "),
-                type_name: item.type_name,
-                genre: item.genre.join(", "),
-
-                director: item.director,
-                image: item.image,
-                trailer: item.trailer,
+                country_name: item?.country_name,
+                actor_name: item?.actor_name,
+                type_name: item?.type_name,
+                genre: item?.genre.join(", "),
+                director: item?.director,
+                image: item?.image,
+                trailer: item?.trailer,
+                describe: item?.describe
             }))
             setDataTable(mapMovies)
         }
-
         if (status) {
             checkApiStatus(status, navigate);
         }
@@ -104,14 +98,14 @@ const AdminQlPhim: React.FC = () => {
                 const mapMovies = newData.map((item: any) => ({
                     key: item.id,
                     movie_name: item.movie_name,
-                    country_name: item.country_name,
-                    producer_name: item.producer_name,
-                    actor_name: item.actor_name,
-                    type_name: item.type_name,
-                    genre: item.genre,
-                    director: item.director,
-                    image: item.image,
-                    trailer: item.trailer,
+                    country_name: item?.country_name,
+                    actor_name: item?.actor_name,
+                    type_name: item?.type_name,
+                    genre: item?.genre.join(", "),
+                    director: item?.director,
+                    image: item?.image,
+                    trailer: item?.trailer,
+                    describe: item?.describe
                 }))
                 setDataTable(mapMovies)
             }
@@ -122,14 +116,14 @@ const AdminQlPhim: React.FC = () => {
                 const mapMovies = dataMap.map((item: any) => ({
                     key: item.id,
                     movie_name: item.movie_name,
-                    country_name: item.country_name,
-                    producer_name: item.producer_name,
-                    actor_name: item.actor_name.join(", "),
-                    type_name: item.type_name,
-                    genre: item.genre.join(", "),
-                    director: item.director,
-                    image: item.image,
-                    trailer: item.trailer,
+                    country_name: item?.country_name,
+                    actor_name: item?.actor_name,
+                    type_name: item?.type_name,
+                    genre: item?.genre.join(", "),
+                    director: item?.director,
+                    image: item?.image,
+                    trailer: item?.trailer,
+                    describe: item?.describe
                 }))
                 setDataTable(mapMovies)
             }
@@ -177,12 +171,17 @@ const AdminQlPhim: React.FC = () => {
                 <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
                     <Column title="Phim " dataIndex="movie_name" key="movie_name" />
                     <Column title="Nước Sản Xuất " dataIndex="country_name" key="ountry_name" />
-                    <Column title="Nhà Sản Xuất" dataIndex="producer_name" key="producer_name" />
                     <Column title="Dạng Phim" dataIndex="type_name" key="type_name" />
                     <Column title="Thể Loại" dataIndex="genre" key="genre" />
                     <Column title="Đạo Diễn" dataIndex="director" key="director" />
+                    <Column title="Diễn Viên" dataIndex="actor_name" key="actor_name" render={(_: any, record: QlPhim) => (
+                        <ActorPhim data={record.actor_name} key={record.actor_name} />
 
-                    <Column title="Diễn Viên" dataIndex="actor_name" key="actor_name" />
+                    )} />
+                    <Column title="Mô tả" dataIndex="describe" key="describe" render={(_: any, record: QlPhim) => (
+                        <DescriptionPhim data={record.describe} key={record.describe} />
+
+                    )} />
                     <Column title="Poster" dataIndex="image" key="image"
                         render={(_: any, record: QlPhim) => (
                             <PosterPhim data={record?.image} key={record.image} />

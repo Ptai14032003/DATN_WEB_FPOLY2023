@@ -33,6 +33,8 @@ interface FetchFoods {
 }
 const AdminQlSp: React.FC = () => {
     const { data: dataFood, isLoading, error } = useFetchFoodsQuery()
+    console.log(error);
+
     const navigate = useNavigate();
     const status = error?.status;
     const [dataTable, setDataTable] = useState<QlFood[]>([])

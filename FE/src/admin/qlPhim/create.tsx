@@ -6,16 +6,13 @@ import { QlPhim } from './page';
 import { useAddMoviesMutation } from '../../rtk/movies/movies';
 
 import { useFetchGenresQuery } from '../../rtk/genres/genres';
-interface QlGenre {
+export interface QlGenre {
     id: string;
     genre: string
 }
 const CreateQlPhim: React.FC = () => {
     const [addMovies] = useAddMoviesMutation()
     const { data: dataGenres } = useFetchGenresQuery()
-    console.log(dataGenres);
-
-
     const countryName = ["Hoa Kỳ", "Canada", "Việt Nam", "United States"]
     const countryOptions = countryName.map((country) => ({
         value: country,
@@ -29,7 +26,7 @@ const CreateQlPhim: React.FC = () => {
         label: type,
     }));
 
-    const genreOptions = dataGenres?.data?.map((genre: QlGenre) => ({
+    const genreOptions = dataGenres?.map((genre: QlGenre) => ({
         value: genre.id,
         label: genre.genre,
 
@@ -84,13 +81,6 @@ const CreateQlPhim: React.FC = () => {
                         />
                     </Form.Item>
                     <Form.Item<QlPhim>
-                        label="Nhà sản xuất"
-                        name="producer_name"
-                        rules={[{ required: true, message: 'Vui lòng nhập nhà sản xuất !' }]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item<QlPhim>
                         label="Diễn viên"
                         name="actor_name"
                         rules={[{ required: true, message: 'Vui lòng nhập tên các diễn viên !' }]}
@@ -103,7 +93,6 @@ const CreateQlPhim: React.FC = () => {
                         rules={[{ required: true, message: 'Vui lòng nhập dạng phim !' }]}
                     >
                         <Select className='ml-[-72px]'
-                            mode='multiple'
                             placeholder={"Chọn dạng phim"}
                             style={{ width: 200 }}
                             options={typeOptions}
