@@ -22,8 +22,16 @@ const billApi = createApi({
             }),
             invalidatesTags: ["bill"]
         }),
+        sendMail: builder.mutation<any, any>({
+            query: (body) => ({
+                url: `/send_mail`,
+                method: "POST",
+                body
+            }),
+            invalidatesTags: ["bill"]
+        }),
 
     })
 })
-export const { useSetBillMutation, useCheckBillMutation } = billApi
+export const { useSetBillMutation, useCheckBillMutation, useSendMailMutation } = billApi
 export default billApi

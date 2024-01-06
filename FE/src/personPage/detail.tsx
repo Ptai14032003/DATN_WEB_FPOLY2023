@@ -82,6 +82,10 @@ export default function Detail() {
                 <div className="flex justify-around">
                     <div className="w-[1600px] pr-[50px]">
                         <div className="detail-content">
+                            <div>Quốc gia</div>
+                            <div>{movie?.country_name}</div>
+                        </div>
+                        <div className="detail-content">
                             <div>Đạo diễn</div>
                             <div>{movie?.director}</div>
                         </div>
@@ -92,7 +96,11 @@ export default function Detail() {
                         </div>
                         <div className="detail-content">
                             <div>Thể loại</div>
-                            <div></div>
+                            <div>{movie?.genre}</div>
+                        </div>
+                        <div className="detail-content">
+                            <div>Dạng phim</div>
+                            <div>{movie?.type_name}</div>
                         </div>
                         <div className="detail-content">
                             <div>Khởi chiếu</div>
