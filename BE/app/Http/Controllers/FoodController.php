@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Food;
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\DB;
 use Cloudinary\Cloudinary;
 
@@ -21,6 +22,7 @@ class FoodController extends Controller
         $food->makeHidden(['food_type_id']);
 
         return response()->json($food);
+
     }
 
     public function store(Request $request){
@@ -42,6 +44,7 @@ class FoodController extends Controller
             Food::create($data);   
             return response()->json(['message' => 'Thêm Thành công'], 200);
         }
+
     }
 
     /**
@@ -90,6 +93,7 @@ class FoodController extends Controller
         }
         $food->update($data);
         return response()->json($food);
+
     }
 
     /**
@@ -104,3 +108,4 @@ class FoodController extends Controller
        ]);
     }
 }
+

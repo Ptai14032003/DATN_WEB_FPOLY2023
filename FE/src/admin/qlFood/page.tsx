@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Space, Table, Input, Button, message, Popconfirm, Image } from 'antd';
 import CreateQlPhim from './create';
@@ -9,7 +10,7 @@ import Fuse from 'fuse.js';
 import { Waveform } from '@uiball/loaders';
 const { Column } = Table;
 
-interface QlFood {
+export interface QlFood {
     key: string;
     food_name: string,
     name: string,
@@ -32,9 +33,12 @@ interface FetchFoods {
 }
 const AdminQlSp: React.FC = () => {
     const { data: dataFood, isLoading, error } = useFetchFoodsQuery()
+    console.log(error);
+
     const navigate = useNavigate();
     const status = error?.status;
     const [dataTable, setDataTable] = useState<QlFood[]>([])
+
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
@@ -61,6 +65,7 @@ const AdminQlSp: React.FC = () => {
 
     const fuse = new Fuse(dataFood, fuseOptions)
 
+
     const searchProject = (value: string) => {
         console.log(value);
         setSearchTerm(value);
@@ -69,6 +74,7 @@ const AdminQlSp: React.FC = () => {
         console.log(key);
         message.success("Xóa thành công");
     }
+
     useEffect(() => {
         const dataMap = dataFood
         // chưa có kiểu dữ liệu cho data
@@ -82,9 +88,9 @@ const AdminQlSp: React.FC = () => {
             }))
             setDataTable(mapFood)
         }
-        if (status) {
-            checkApiStatus(status, navigate);
-        }
+        // if (status) {
+        //     checkApiStatus(status, navigate);
+        // }
     }, [dataFood, status])
     useEffect(() => {
         if (searchTerm.length > 0) {
@@ -115,11 +121,14 @@ const AdminQlSp: React.FC = () => {
             }
         }
     }, [searchTerm, dataFood])
+
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý Sản Phẩm</div>
             <div className='flex justify-between mb-[10px]'>
+
                 <Input style={{ width: '20%' }} placeholder='Tìm kiếm sản phẩm'
+
                     value={searchTerm}
                     onChange={(e) => searchProject(e.target.value)} />
                 <CreateQlPhim />
@@ -145,6 +154,7 @@ const AdminQlSp: React.FC = () => {
                     <div></div>
                 )}
             </span>
+
             {isLoading ? (
                 <Waveform
                     size={40}
@@ -171,8 +181,8 @@ const AdminQlSp: React.FC = () => {
                                 <a><EditQlPhim key={record.key} projects={record.key} /> </a>
                                 <a>
                                     <Popconfirm
-                                        title="Delete the task"
-                                        description="Are you sure to delete this task?"
+                                        title="Xoá"
+                                        description="Bạn có muốn xoá sản phẩm này không?"
                                         onConfirm={() => {
                                             deleteOne(record.key);
                                         }}
@@ -189,6 +199,7 @@ const AdminQlSp: React.FC = () => {
                     />
                 </Table>
             )}
+
         </div>
     );
 }

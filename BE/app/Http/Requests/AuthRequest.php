@@ -21,7 +21,6 @@ class AuthRequest extends FormRequest
      */
     public function rules(): array
     {
-
         return [
             'name' => 'required',
             'email' => 'required|email|unique:users,email|unique:personnels,email',
@@ -36,6 +35,7 @@ class AuthRequest extends FormRequest
                 'confirmed',
                 'min:8',
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).+$/'
+
             ]
         ];
     }

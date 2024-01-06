@@ -42,7 +42,6 @@ class AuthController extends Controller
             ], 422);
         }
     }
-
     public function register(Request $request)
     {
         $validator = Validator::make(
@@ -94,7 +93,6 @@ class AuthController extends Controller
 
         return response(['mesage' => "Đăng xuất thành công"], 200);
     }
-
     // public function refresh_token(Request $requet)
     // {
     // }

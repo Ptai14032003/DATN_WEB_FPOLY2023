@@ -1,31 +1,40 @@
+
 import React, { useCallback, useEffect, useState } from 'react';
+
 import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
 import CreateQlPhongChieu from './create';
 import EditQlPhongChieu from './edit';
 import { useDeletePhongChieuMutation, useFetchPhongChieuQuery } from '../../rtk/qlPhongChieu/qlPhongChieu';
 import { Waveform } from '@uiball/loaders'
+
 import Fuse from 'fuse.js';
 import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
 import { useNavigate } from 'react-router-dom';
+
 const { Column } = Table;
 
 export type PhongChieu = {
     key: string;
     name: string;
-    total_seat: number;
+    row: number;
+    col: number;
+    total_seat: number
 }
+
 
 export type PhongChieu1 = {
     key: string;
     name: string;
-    total_seat_ngang: number;
-    total_seat_doc: number;
+    row: number;
+    col: number;
+    total_seat: number
 }
 const AdminQlPhongChieu: React.FC = () => {
     const { data: dataPhongChieu, isLoading, error } = useFetchPhongChieuQuery()
 
     const navigate = useNavigate();
     const status = error?.status;
+
 
     const [deletePhongChieu] = useDeletePhongChieuMutation()
     const [dataTable, setDataTable] = useState<PhongChieu[]>([])
@@ -44,6 +53,7 @@ const AdminQlPhongChieu: React.FC = () => {
         onChange: onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
+
     const fuseOptions = {
         includeScore: true,
         useExtendedSearch: true,
@@ -58,6 +68,7 @@ const AdminQlPhongChieu: React.FC = () => {
     };
     console.log(dataTable);
 
+
     const deleteOne = (key: string) => {
         deletePhongChieu(key).then(() => message.success("Xóa thành công"))
     }
@@ -67,10 +78,13 @@ const AdminQlPhongChieu: React.FC = () => {
             const mapPhongChieu = dataMap.map((item: any) => ({
                 key: item.id,
                 name: item.name,
+                row: item.row,
+                col: item.col,
                 total_seat: item.total_seat
             }))
             setDataTable(mapPhongChieu)
         }
+
         if (status) {
             checkApiStatus(status, navigate);
         }
@@ -83,6 +97,8 @@ const AdminQlPhongChieu: React.FC = () => {
                 const mapPhongChieu = newData.map((item: any) => ({
                     key: item.id,
                     name: item.name,
+                    row: item.row,
+                    col: item.col,
                     total_seat: item.total_seat
                 }))
                 setDataTable(mapPhongChieu)
@@ -94,12 +110,15 @@ const AdminQlPhongChieu: React.FC = () => {
                 const mapPhongChieu = dataMap.map((item: any) => ({
                     key: item.id,
                     name: item.name,
+                    row: item.row,
+                    col: item.col,
                     total_seat: item.total_seat
                 }))
                 setDataTable(mapPhongChieu)
             }
         }
-    }, [dataPhongChieu,searchTerm])
+    }, [dataPhongChieu, searchTerm])
+
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Danh sách phòng chiếu</div>
@@ -140,6 +159,8 @@ const AdminQlPhongChieu: React.FC = () => {
             ) : (
                 <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
                     <Column title="Phòng" dataIndex="name" key="name" />
+                    <Column title="Hàng ngang" dataIndex="row" key="row" />
+                    <Column title="Hàng dọc" dataIndex="col" key="col" />
                     <Column title="Tổng số ghế" dataIndex="total_seat" key="total_seat" />
                     <Column
                         title="Action"

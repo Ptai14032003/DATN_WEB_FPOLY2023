@@ -25,6 +25,9 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
     const [data] = useSetBillMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState(1);
+    const checkLocal = localStorage.getItem("user");
+    const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
+    const userCode = checkUser?.user_code
     const handleClick = (tabNumber: number) => {
         setActiveTab(tabNumber);
     };
@@ -46,7 +49,8 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                 }
             ))
         ,
-        total_money: priceTong
+        total_money: priceTong,
+        user_code: userCode
     }
     const setThanhToan = () => {
         data(dataBill)

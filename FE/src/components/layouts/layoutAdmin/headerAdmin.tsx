@@ -1,3 +1,4 @@
+
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Button, Dropdown, MenuProps, Space } from "antd";
 const HeaderAdmin: React.FC = () => {
@@ -32,6 +33,7 @@ const HeaderAdmin: React.FC = () => {
                         <Dropdown menu={{ items }} placement="bottom">
                             <div className="flex mt-[18px]">
                                 <div className=""><img src="/avatarAdmin.png" alt="" /></div>
+
                                 <div className="text-white my-auto mx-[15px]">{nameAdmin}</div>
                             </div>
                         </Dropdown>

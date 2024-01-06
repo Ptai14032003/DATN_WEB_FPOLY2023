@@ -14,4 +14,5 @@ const bookingApi = createApi({
     })
 })
 export const { useFetchSeatRoomIdQuery } = bookingApi
+
 export default bookingApi

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, InputNumber, Modal, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
@@ -184,14 +185,10 @@ const dataSeatEdit = [
         "room_name": "12"
     }
 ]
-const dataChart = {
-    "name": "Phòng 12",
-    "total_seat_ngang": 12,
-    "total_seat_doc": 6
-}
 const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
-    // const { data } = useFetchPhongChieuIDQuery(projects);
-    const [data, setData] = useState<any>(dataChart)
+    const { data: dataRoom, isLoading, isFetching } = useFetchPhongChieuIDQuery(projects);
+    const [data, setData] = useState<any>(dataRoom?.theaters)
+    const [tongGhe, setTongGhe] = useState<any>(dataRoom?.theaters?.total_seat)
     const [updatePhongChieu] = usePatchPhongChieuMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
@@ -215,8 +212,8 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
         const checkConfirm = confirm("Bạn có chắc muốn cập nhật lại ghế không ?")
         if (checkConfirm) {
             const newDataSeat = [];
-            for (let i = 0; i < values.total_seat_doc; i++) {
-                for (let j = 0; j < values.total_seat_ngang; j++) {
+            for (let i = 0; i < values.col; i++) {
+                for (let j = 0; j < values.row; j++) {
                     newDataSeat.push({
                         seat_code: String.fromCharCode(65 + i) + (j + 1),
                         hidden: 0,
@@ -227,8 +224,10 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
                 }
             }
             setDataSeat(newDataSeat);
+            setTongGhe(values.col * values.row)
         }
         // updatePhongChieu({ body: values, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
+
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -238,6 +237,7 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
         setIsModalOpen(true);
     };
     const handleCancel = () => {
+
         const isconfirm = confirm(`Dữ liệu sẽ bị xoá nếu bạn thoát`)
         if (isconfirm) {
             setIsModalOpen(false);
@@ -355,6 +355,7 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
             {contextHolder}
             <Button onClick={showModal}>Sửa</Button>
             <Modal title="Sửa phòng chiếu " open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} width={1200} className="text-center">
+
                 {data ? (
                     <Form className='mr-[60px]'
                         name='formLogin'
@@ -367,30 +368,38 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
                         autoComplete="off"
                         initialValues={data}
                     >
+
                         <Form.Item<PhongChieu1>
+
                             label="Tên phòng"
                             name="name"
                             rules={[{ required: true, message: 'Vui lòng nhập tên phòng !' }]}
                         >
                             <Input />
                         </Form.Item>
+
                         <Form.Item<PhongChieu1>
                             label="Số ghế hàng ngang"
-                            name="total_seat_ngang"
+                            name="row"
                             rules={[{ required: true, message: 'Vui lòng nhập số ghế hàng ngang !' }]}
                         >
                             <InputNumber min="1" max="15" />
                         </Form.Item>
                         <Form.Item<PhongChieu1>
                             label="Số ghế hàng dọc"
-                            name="total_seat_doc"
+                            name="col"
                             rules={[{ required: true, message: 'Vui lòng nhập số ghế hàng dọc !' }]}
                         >
                             <InputNumber min="1" max="15" />
                         </Form.Item>
+                        <Form.Item<PhongChieu1>
+                            label="Tổng số ghế"
+                        >
+                            <InputNumber value={tongGhe} disabled />
+                        </Form.Item>
                         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                             <Button htmlType="submit" className='mr-[80px]'>
-                                Check
+                                Sửa ghế
                             </Button>
                         </Form.Item>
                     </Form>
@@ -420,6 +429,7 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
                                 ))}
                             </div>
                             <div className="text-center w-[15%] ml-[140px] ">
+                                <div className="text-xl ml-[-55px]">Tổng số ghế : {tongGhe}</div>
                                 <div className='ml-[-55px]'>Lựa chọn loại ghế :</div>
                                 <div className={`seat flex border-2 rounded-lg w-[120px] mt-4 ${buttonClick === 0 ? "bg-green-500" : ""}`} onClick={() => setButtonClick(0)}>
                                     <div><MdChair className="text-[#797373]" size={40} /></div>
@@ -448,6 +458,7 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
                     <div>
                     </div>
                 )}
+
             </Modal>
         </>
     )

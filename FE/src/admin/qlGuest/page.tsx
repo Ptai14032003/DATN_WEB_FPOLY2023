@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Table, Input, Button, message, Popconfirm } from 'antd';
 import { useFetchGuestsQuery } from '../../rtk/qlGuest/qlGuest';
 import { Waveform } from '@uiball/loaders';
+
 import Fuse from 'fuse.js';
 import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
 import { useNavigate } from 'react-router-dom';
+
 
 const { Column } = Table;
 interface Guest {
@@ -19,9 +21,11 @@ interface Guest {
     gender: string;
 }
 const AdminQlGuest: React.FC = () => {
+
     const { data: dataGuest, isLoading, error } = useFetchGuestsQuery()
     const navigate = useNavigate();
     const status = error?.status;
+
 
     const [dataTable, setDataTable] = useState<Guest[]>([])
     const [searchTerm, setSearchTerm] = useState('');
@@ -39,6 +43,7 @@ const AdminQlGuest: React.FC = () => {
         onChange: onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
+
     const fuseOptions = {
         includeScore: true,
         isCaseSensitive: true,
@@ -50,6 +55,7 @@ const AdminQlGuest: React.FC = () => {
     const fuse = new Fuse(dataGuest?.data, fuseOptions)
 
     const searchProject = (value: string) => {
+
         setSearchTerm(value);
     };
     useEffect(() => {
@@ -68,6 +74,7 @@ const AdminQlGuest: React.FC = () => {
             }))
             setDataTable(mapMovies)
         }
+
         if (status) {
             checkApiStatus(status, navigate);
         }
@@ -109,6 +116,7 @@ const AdminQlGuest: React.FC = () => {
             }
         }
     }, [searchTerm, dataGuest])
+
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý khách hàng</div>

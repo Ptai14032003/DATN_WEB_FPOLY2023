@@ -1,26 +1,31 @@
+
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, Modal, Select, Upload, message } from 'antd';
+import { Button, Form, Image, Input, Modal, Select, Upload, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
 import { QlPhim } from './page';
 import { useFetchMovieIdQuery, useUpdateMoviesMutation } from '../../rtk/movies/movies';
+import { useFetchGenresQuery } from '../../rtk/genres/genres';
+import { QlGenre } from './create';
 type Props = {
     projects: string
 }
+
 type QlPhimEdit = {
     key: string;
     movie_name: string;
     country_name: string;
     producer_name: string;
-    actor_name: [];
+    actor_name: string;
     type_name: string;
-    genre: [];
+    genres: [];
     director: string;
     image: string;
     trailer: string;
 }
 const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
     const { data: dataMovies } = useFetchMovieIdQuery(projects);
+    const { data: dataGenres } = useFetchGenresQuery()
     useEffect(() => {
         if (dataMovies) {
             const newData: QlPhimEdit = {
@@ -28,9 +33,9 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                 movie_name: dataMovies?.movie_name,
                 country_name: dataMovies?.country_name,
                 producer_name: dataMovies?.producer_name,
-                actor_name: dataMovies?.actors,
+                actor_name: dataMovies?.actor_name,
                 type_name: dataMovies?.type_name,
-                genre: dataMovies?.genres,
+                genres: dataMovies?.genres,
                 director: dataMovies?.director,
                 image: dataMovies?.image,
                 trailer: dataMovies?.trailer
@@ -42,30 +47,28 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
     const [patchMovie] = useUpdateMoviesMutation();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
+
     const countryName = ["Hoa Kỳ", "Canada", "Việt Nam", "United States"]
     const countryOptions = countryName.map((country) => ({
         value: country,
         label: country,
     }));
+
     const typeMovies = ["2D", "3D"];
+
     const typeOptions = typeMovies.map((type) => ({
         value: type,
         label: type,
     }));
-    const ListGenres = dataMovies?.genres
-    const GenresOptions = ListGenres?.map((genres: any) => ({
-        value: genres,
-        label: genres,
-    }));
-    const ListActors = dataMovies?.genres
-    const ActorsOptions = ListActors?.map((genres: any) => ({
-        value: genres,
-        label: genres,
-    }));
+    const genreOptions = dataGenres?.map((genre: QlGenre) => ({
+        value: genre.id,
+        label: genre.genre,
+
+    }))
     const onFinish = (values: any) => {
         console.log(values);
-
         // patchMovie({ body: values, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
+
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -78,11 +81,15 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
         setIsModalOpen(false);
         formRef.current?.resetFields();
     };
+    console.log(newData);
+
     return (
         <>
+
             <Button onClick={showModal}>Sửa</Button>
             <Modal title="Sửa phim " open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
                 {newData ? (
+
                     <Form className='mr-[60px]'
                         name='formLogin'
                         ref={formRef}
@@ -92,85 +99,100 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                         onFinish={onFinish}
                         onFinishFailed={onFinishFailed}
                         autoComplete="off"
+
                         initialValues={newData}
                     >
                         <Form.Item<QlPhimEdit>
+
                             label="Tên phim"
                             name="movie_name"
                             rules={[{ required: true, message: 'Vui lòng nhập tên !' }]}
                         >
                             <Input />
                         </Form.Item>
+
                         <Form.Item<QlPhimEdit>
+
                             label="Nước sản xuất"
                             name="country_name"
                             rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
                         >
                             <Select className='ml-[-72px]'
+
                                 placeholder="Chọn nước sản xuất"
+
                                 style={{ width: 200 }}
                                 options={countryOptions}
                             />
                         </Form.Item>
                         <Form.Item<QlPhimEdit>
-                            label="Nhà sản xuất"
-                            name="producer_name"
-                            rules={[{ required: true, message: 'Vui lòng nhập nhà sản xuất !' }]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item<QlPhimEdit>
+
                             label="Diễn viên"
                             name="actor_name"
                             rules={[{ required: true, message: 'Vui lòng nhập tên các diễn viên !' }]}
                         >
-                            <Select className='ml-[-72px]'
-                                mode='multiple'
-                                placeholder="Chọn diễn viên"
-                                style={{ width: 200 }}
-                                options={ActorsOptions}
-                            />
+                            <Input />
                         </Form.Item>
                         <Form.Item<QlPhimEdit>
+
                             label="Dạng phim"
                             name="type_name"
                             rules={[{ required: true, message: 'Vui lòng nhập dang phim !' }]}
                         >
                             <Select className='ml-[-72px]'
-                                mode='multiple'
                                 placeholder="Chọn dạng phim"
                                 style={{ width: 200 }}
                                 options={typeOptions}
                             />
                         </Form.Item>
+
                         <Form.Item<QlPhimEdit>
+
                             label="Thể loại"
-                            name="genre"
+                            name="genres"
                             rules={[{ required: true, message: 'Vui lòng nhập thể loại!' }]}
                         >
+
                             <Select className='ml-[-72px]'
                                 mode='multiple'
                                 placeholder="Chọn dạng phim"
                                 style={{ width: 200 }}
-                                options={GenresOptions}
+                                options={genreOptions}
                             />
                         </Form.Item>
                         <Form.Item<QlPhimEdit>
+
                             label="Đạo diễn"
                             name="director"
                             rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
                         >
                             <Input />
                         </Form.Item>
+                        <Form.Item<QlPhimEdit>>
+                            <div className='mx-[60%]'>
+                                <Image className='' width={150}
+                                    src={dataMovies?.image} />
+                            </div>
+                        </Form.Item>
                         <Form.Item<QlPhimEdit>
                             label="Poster"
                             name="image"
                             rules={[{ required: true, message: 'Vui lòng nhập ảnh !' }]}
                         >
-                            <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                            <Upload listType='picture' beforeUpload={(file) => {
+                                return new Promise((resolve, reject) => {
+                                    if (file.type === 'image/jpg' || file.type === 'image/png') {
+                                        reject();
+                                    } else {
+                                        message.error("Vui lòng thêm ảnh đúng định dạng")
+                                    }
+                                })
+                            }} maxCount={1} multiple>
+                                <Button icon={<UploadOutlined />}>Click to Upload </Button>
+                            </Upload>
                         </Form.Item>
-                        <img className='mx-auto' width="80" height="120" src={dataMovies?.image} alt="" />
                         <Form.Item<QlPhimEdit>
+
                             label="Trailer"
                             name="trailer"
                             rules={[{ required: true, message: 'Vui lòng nhập trailer !' }, { type: "url", message: 'Vui lòng nhập đúng định dạng !' }]}

@@ -23,10 +23,10 @@ class ShowtimeApiController extends Controller
 
     public function store(Request $request)
     {
+
         $show_time = Showtime::create($request->all());
         return new ShowtimeResource($show_time);
     }
-
     public function show(string $id)
     {
         $show_time = Showtime::join('movies', 'showtimes.movie_id', '=', 'movies.id')
