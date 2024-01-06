@@ -75,7 +75,10 @@ class HomeController extends Controller
             )
             ->where('movies.id', $id)
             ->get();
-        $movies = Movie::where('movies.id', $id)->select('movies.*')->first();
+        $movies = Movie::
+        join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
+        ->where('movies.id', $id)->select('movies.*', 'movie_types.type_name')->first();
+        $movies->makeHidden([ 'movie_type_id']);
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         foreach ($st_movie as $movie) {
 
