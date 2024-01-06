@@ -11,6 +11,7 @@ class Food extends Model
     use HasFactory,SoftDeletes;
     protected $table = 'foods';
     protected $fillable = [
+        'image',
         'food_name',
         'price',
         'food_type_id'

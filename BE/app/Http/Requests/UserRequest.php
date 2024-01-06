@@ -39,8 +39,7 @@ class UserRequest extends FormRequest
                         'confirmed',
                         'min:8',
                         'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).+$/'
-                    ]
-                ];
+                ]];
                 break;
             case 'PUT':
                 $rule = [
@@ -62,6 +61,7 @@ class UserRequest extends FormRequest
                         'confirmed',
                         'min:8',
                         'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).+$/'
+
                     ]
                 ];
                 break;

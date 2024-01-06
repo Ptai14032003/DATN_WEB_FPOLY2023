@@ -17,7 +17,7 @@ const phongChieuApi = createApi({
     }),
     tagTypes: ["rooms"],
     endpoints: builder => ({
-        fetchPhongChieu: builder.query<any[], void>({
+        fetchPhongChieu: builder.query<any, void>({
             query: () => "/rooms/",
             providesTags: ["rooms"]
         }),
@@ -29,14 +29,14 @@ const phongChieuApi = createApi({
             }),
             invalidatesTags: ["rooms"]
         }),
-        fetchPhongChieuID: builder.query<any[], string>({
+        fetchPhongChieuID: builder.query<any, string>({
             query: (id) => `/rooms/${id}`,
             providesTags: ["rooms"]
         }),
         patchPhongChieu: builder.mutation<void, { body: any, id: string }>({
             query: ({ body, id }) => ({
                 url: `/rooms/${id}`,
-                method: "PATCH",
+                method: "PUT",
                 body
             }),
             invalidatesTags: ["rooms"]

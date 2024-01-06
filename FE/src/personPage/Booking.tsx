@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useFetchSeatRoomIdQuery } from '../rtk/booking/booking';
@@ -13,7 +14,7 @@ const Booking = () => {
     const { search } = useLocation();
     const show_time = new URLSearchParams(search).get('show_seat');
     const { id } = useParams();
-    const { data: Foods } = useFetchFoodsQuery()
+    // const { data: Foods } = useFetchFoodsQuery()
     const { data: seatBooking } = useFetchSeatRoomIdQuery(show_time);
     const { data: movie } = useFetchMovieIdPersonQuery(id);
     const [activeTab, setActiveTab] = useState(1);
@@ -26,6 +27,7 @@ const Booking = () => {
     const priceTong = money + priceFood;
     const dataTong = (Number(priceTong))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     const seats = seatBooking?.seats;
+    const Foods = seatBooking?.combo;
     const movieBooking = movie?.movie
     const [messageApi, contextHolder] = message.useMessage();
     const checkUser = localStorage.getItem("user")
@@ -48,7 +50,6 @@ const Booking = () => {
         }
     }, [seats])
     const handleClick = (tabNumber: number) => {
-
         if (checkUser) {
         setActiveTab(tabNumber);
         } else {
@@ -56,7 +57,7 @@ const Booking = () => {
                 type: 'error',
                 content: 'Quý khách vui lòng đăng nhập để tiếp tục',
                 className: "h-[20%] mt-[20px]"
-            });
+            }).then(() => navigate("/signin"));
         }
     };
     const autoSubmit = async (id: string, seatId_code: any, typeName: any, price: number,) => {
@@ -128,13 +129,13 @@ const Booking = () => {
                                 if (isSelected) {
                                     setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[dataOderSeat + 1]?.seat_code));
                                     setMoney(money - price);
-                                } else {
+                                } else if (selectedSeats.length < 5) {
                                     setSelectedSeats([...selectedSeats, item[dataOderSeat + 1]?.seat_code, seatId_code]);
                                     setMoney(money + price);
                                 }
                                 if (checkId) {
                                     setidGhe(() => idGhe.filter((item: any) => item.id !== dataSeat1.id && item.id !== dataSeat2.id));
-                                } else {
+                                } else if (selectedSeats.length < 5) {
                                     setidGhe([...idGhe, dataSeat1, dataSeat2]);
                                 }
                             } else {
@@ -147,14 +148,14 @@ const Booking = () => {
                                 if (isSelected) {
                                     setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[dataOderSeat - 1]?.seat_code));
                                     setMoney(money - price);
-                                } else {
+                                } else if (selectedSeats.length < 5) {
                                     setSelectedSeats([...selectedSeats, item[dataOderSeat - 1]?.seat_code, seatId_code]);
                                     setMoney(money + price);
 
                                 }
                                 if (checkId) {
                                     setidGhe(() => idGhe.filter((item: any) => item.id !== dataSeat1.id && item.id !== dataSeat2.id));
-                                } else {
+                                } else if (selectedSeats.length < 5) {
                                     setidGhe([...idGhe, dataSeat1, dataSeat2]);
                                 }
                             }
@@ -164,6 +165,7 @@ const Booking = () => {
                         const checkSeatDelete = (selectedSeats.includes(item[dataOderSeat + 1]?.seat_code) && selectedSeats.includes(item[dataOderSeat - 1]?.seat_code))
                         const checkedRight = (dataOderSeat === item.length - 1) && selectedSeats.includes(item[item.length - 1]?.seat_code) && selectedSeats.includes(item[item.length - 2]?.seat_code)
                         const checkedLeft = ((dataOderSeat) === 0) && selectedSeats.includes(item[0]?.seat_code) && selectedSeats.includes(item[1]?.seat_code)
+                        const checkFull = selectedSeats.includes(item[0]?.seat_code) && selectedSeats.includes(item[item.length - 1]?.seat_code)
                         const checkId = idGhe.some((item: any) => item.id === data.id);
                         if (selectedSeats.includes(seatId_code)) {
                             if (checkSeatDelete && !mapExecuted && checkId) {
@@ -176,32 +178,42 @@ const Booking = () => {
                                 mapExecuted = true;
                                 return;
                             }
-                            if (checkedLeft && !mapExecuted && checkId) {
+                            if (checkFull && !mapExecuted && checkId && !checkSeatDelete) {
                                 messageApi.error({
                                     type: 'error',
-                                    content: `Quý khách nên hủy ghế lần lượt theo thứ tự l`,
+                                    content: 'Quý khách nên hủy ghế lần lượt theo thứ tự',
                                     className: "h-[20%] mt-[20px]",
                                     duration: 2
                                 });
                                 mapExecuted = true;
                                 return;
                             }
-                            if (checkedRight && !mapExecuted && checkId) {
+                            if (checkedLeft && !mapExecuted && checkId && !checkedRight && !checkSeatDelete) {
                                 messageApi.error({
                                     type: 'error',
-                                    content: `Quý khách nên hủy ghế lần lượt theo thứ tự r`,
+                                    content: `Quý khách nên hủy ghế lần lượt theo thứ tự`,
                                     className: "h-[20%] mt-[20px]",
                                     duration: 2
                                 });
                                 mapExecuted = true;
                                 return;
                             }
-                            if (!(checkSeatDelete || checkedLeft && checkSeatDelete || checkedRight && checkSeatDelete || checkedLeft) && checkId) {
+                            if (checkedRight && !mapExecuted && checkId && !checkedLeft && !checkSeatDelete) {
+                                messageApi.error({
+                                    type: 'error',
+                                    content: `Quý khách nên hủy ghế lần lượt theo thứ tự`,
+                                    className: "h-[20%] mt-[20px]",
+                                    duration: 2
+                                });
+                                mapExecuted = true;
+                                return;
+                            }
+                            if (!(checkSeatDelete || checkedLeft || checkedRight) && checkId) {
                                 setSelectedSeats(selectedSeats.filter((id) => id !== seatId_code));
                                 setidGhe(() => idGhe.filter((item: any) => item.id !== data.id));
                                 setMoney(money - price);
                             }
-                        } else {
+                        } else if (selectedSeats.length < 6) {
                             setSelectedSeats([...selectedSeats, seatId_code]);
                             setMoney(money + price);
                             setidGhe([...idGhe, data]);
@@ -224,7 +236,6 @@ const Booking = () => {
             price: price,
             food_name: foodName,
         };
-
         setCombo((prevCombo: any) => {
             const comboExists = prevCombo.some((comboObjectInArray: any) => comboObjectInArray.food_name === comboObject.food_name);
 
@@ -313,6 +324,7 @@ const Booking = () => {
             getCombo(updatedItems[foodName], price, foodName); // Tính toán giá tiền
             return updatedItems;
         });
+
     };
 
 
@@ -321,10 +333,12 @@ const Booking = () => {
             <div className="backdrop">
                 <img src={seatBooking?.movie?.image} className='backdrop-img w-full h-[550px] relative'></img>
             </div>
+
             <div className="movies-title absolute flex justify-between items-center translate-x-[28rem] -translate-y-[4rem] text-white w-[63.875rem]">
                 <h3 className='text-3xl'>{seatBooking?.movie?.movie_name}</h3>
                 <div className="time flex text-lg items-center space-x-10">
                     <p>{seatBooking?.movie?.time}</p>
+
                 </div>
             </div>
 
@@ -361,12 +375,15 @@ const Booking = () => {
                                     <span>2</span> Combo
                                 </li>
                                 <li className={activeTab === 3 ? 'active' : ''}>
+
                                     <span>3</span> Thanh toán
                                 </li>
                             </ul>
                         </div>
+                      
                         <div className="w-[230px] h-[42px] border-[2px] rounded-md mt-[50px] px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
                         <form action="" method='POST'>
+
                             <div className={`Booking-content ${activeTab === 1 ? "" : "hidden"}`}>
                                 <input type="text" hidden id={id} name='showtime_id' />
                                 <div className="choose-seat mt-2">
@@ -428,7 +445,7 @@ const Booking = () => {
                         <div className={`Booking-combo grid ${activeTab === 2 ? "" : "hidden"}`}>
                             <div className='mt-[7rem] mx-[4rem]'>
                                 <div className='grid grid-cols-2 gap-12'>
-                                    {Foods?.map((item) => (
+                                    {Foods?.map((item: any) => (
                                         <div className='Combo grid grid-cols-3 border-2 border-white rounded-md bg-[#2f9c8a] p-3 gap-5' key={item?.id}>
                                             <img src={item?.image} alt="" className='col-span-1 h-full w-full rounded-md' />
                                             <div className="col-span-2 flex flex-col justify-between">
@@ -441,7 +458,7 @@ const Booking = () => {
                                                         <button className='bg-white rounded-tl-md rounded-bl-md h-full flex items-center justify-center' onClick={() => handleDecrease(item?.food_name, item?.price)}>
                                                             <MinusOutlined style={{ color: '#000', fontSize: '20px', padding: '3px' }} />
                                                         </button>
-                                                        <input className='text-black w-[100px] h-full outline-none pl-3' type="number" defaultValue={comboItems[item?.food_name] || 0} min={0} value={comboItems[item?.food_name] || 0} readOnly/>
+                                                        <input className='text-black w-[100px] h-full outline-none pl-3' type="number" defaultValue={comboItems[item?.food_name] || 0} min={0} value={comboItems[item?.food_name] || 0} readOnly />
                                                         <button className='bg-white rounded-tr-md rounded-br-md h-full flex items-center justify-center' onClick={() => handleIncrease(item?.food_name, item?.price)}>
                                                             <PlusOutlined style={{ color: '#000', fontSize: '20px', padding: '3px' }} />
                                                         </button>
@@ -467,9 +484,10 @@ const Booking = () => {
                 </div>
             </div >
             <footer className='mt-10'>
-                <Footer/>
+                <Footer />
             </footer>
         </div >
+
     )
 }
 export default Booking

@@ -7,6 +7,7 @@ import { message } from 'antd';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 
+
 interface Form {
   email: string;
   password: string;
@@ -14,19 +15,22 @@ interface Form {
 
 const Signin = () => {
   // const handleSubmit = (e) => {
+
   const navigate = useNavigate();
+
   const { register, handleSubmit } = useForm<Form>();
   const [signin, { error }] = useSigninMutation();
   const onFinish = async (values: any) => {
-    try {
+    console.log(values);
 
-      
+    try {
       await signin(values).unwrap()
         .then(() => {
           const userString = localStorage.getItem('user');
-          const user = userString ? JSON.parse(userString) : null;          
+          const user = userString ? JSON.parse(userString) : null;
           if (user.role == 'Admin') {
-            navigate("/admin?isAuth=true")
+            navigate("/")
+
           }
           else {
             navigate("/")
@@ -49,11 +53,6 @@ const Signin = () => {
           </div>
           <div className="input-box">
             <input type="password" placeholder="password" {...register("password", { required: true })} required />
-          </div>
-
-          <div className="remember-forgot">
-            <label><input type="checkbox" /> Remember me</label>
-            <a href="#">Forgot password?</a>
           </div>
 
           <button type="submit" className="btn">Login</button>

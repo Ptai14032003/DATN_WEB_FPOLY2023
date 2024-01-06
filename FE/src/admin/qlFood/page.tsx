@@ -1,43 +1,44 @@
-import React, { useState } from 'react';
-import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
+
+import React, { useEffect, useState } from 'react';
+import { Space, Table, Input, Button, message, Popconfirm, Image } from 'antd';
 import CreateQlPhim from './create';
 import EditQlPhim from './edit';
-
+import { useFetchFoodsQuery } from '../../rtk/qlSp/qlSp';
+import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
+import { useNavigate } from 'react-router-dom';
+import Fuse from 'fuse.js';
+import { Waveform } from '@uiball/loaders';
 const { Column } = Table;
 
-interface DataType {
+export interface QlFood {
     key: string;
-    firstName: string;
-    lastName: string;
-    age: number;
-    address: string;
+    food_name: string,
+    name: string,
+    price: number,
+    image: string,
+    // created_at: string,
+    // updated_at: string,
+    // deleted_at: string,
 }
 
-const data: DataType[] = [
-    {
-        key: '1',
-        firstName: 'John',
-        lastName: 'Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-    },
-    {
-        key: '2',
-        firstName: 'Jim',
-        lastName: 'Green',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-    },
-    {
-        key: '3',
-        firstName: 'Joe',
-        lastName: 'Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-    },
-];
-
+interface FetchFoods {
+    id: string;
+    food_name: string,
+    name: string,
+    price: number,
+    image: string,
+    // created_at: string,
+    // updated_at: string,
+    // deleted_at: string,
+}
 const AdminQlSp: React.FC = () => {
+    const { data: dataFood, isLoading, error } = useFetchFoodsQuery()
+    console.log(error);
+
+    const navigate = useNavigate();
+    const status = error?.status;
+    const [dataTable, setDataTable] = useState<QlFood[]>([])
+
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
@@ -53,6 +54,18 @@ const AdminQlSp: React.FC = () => {
         onChange: onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
+    const fuseOptions = {
+        includeScore: true,
+        includeMatches: true,
+        isCaseSensitive: true,
+        findAllMatches: true,
+        useExtendedSearch: true,
+        keys: ["food_name"]
+    }
+
+    const fuse = new Fuse(dataFood, fuseOptions)
+
+
     const searchProject = (value: string) => {
         console.log(value);
         setSearchTerm(value);
@@ -61,11 +74,61 @@ const AdminQlSp: React.FC = () => {
         console.log(key);
         message.success("Xóa thành công");
     }
+
+    useEffect(() => {
+        const dataMap = dataFood
+        // chưa có kiểu dữ liệu cho data
+        if (Array.isArray(dataMap)) {
+            const mapFood = dataMap.map((item: FetchFoods) => ({
+                key: item.id,
+                food_name: item.food_name,
+                price: item.price,
+                image: item.image,
+                name: item.name,
+            }))
+            setDataTable(mapFood)
+        }
+        // if (status) {
+        //     checkApiStatus(status, navigate);
+        // }
+    }, [dataFood, status])
+    useEffect(() => {
+        if (searchTerm.length > 0) {
+            const results = fuse?.search(searchTerm);
+            const newData = results?.map((result) => result.item);
+            if (Array.isArray(newData)) {
+                const mapFoods = newData.map((item: any) => ({
+                    key: item.id,
+                    food_name: item.food_name,
+                    price: item.price,
+                    image: item.image,
+                    name: item.name,
+                }))
+                setDataTable(mapFoods)
+            }
+        }
+        if (searchTerm.length === 0) {
+            const dataMap = dataFood
+            if (Array.isArray(dataMap)) {
+                const mapFoods = dataMap.map((item: FetchFoods) => ({
+                    key: item.id,
+                    food_name: item.food_name,
+                    price: item.price,
+                    image: item.image,
+                    name: item.name,
+                }))
+                setDataTable(mapFoods)
+            }
+        }
+    }, [searchTerm, dataFood])
+
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý Sản Phẩm</div>
             <div className='flex justify-between mb-[10px]'>
-                <Input style={{ width: '20%' }} placeholder='Tìm kiếm dự án'
+
+                <Input style={{ width: '20%' }} placeholder='Tìm kiếm sản phẩm'
+
                     value={searchTerm}
                     onChange={(e) => searchProject(e.target.value)} />
                 <CreateQlPhim />
@@ -91,36 +154,52 @@ const AdminQlSp: React.FC = () => {
                     <div></div>
                 )}
             </span>
-            <Table dataSource={data} rowSelection={rowSelection} >
-                <Column title="First Name" dataIndex="firstName" key="firstName" />
-                <Column title="Last Name" dataIndex="lastName" key="lastName" />
-                <Column title="Age" dataIndex="age" key="age" />
-                <Column title="Address" dataIndex="address" key="address" />
-                <Column
-                    title="Action"
-                    key="action"
-                    render={(_: any, record: DataType) => (
-                        <Space size="middle">
-                            <a><EditQlPhim key={record.key} projects={record.key} /> </a>
-                            <a>
-                                <Popconfirm
-                                    title="Delete the task"
-                                    description="Are you sure to delete this task?"
-                                    onConfirm={() => {
-                                        deleteOne(record.key);
-                                    }}
-                                    okButtonProps={{
-                                        style: { backgroundColor: "#007bff" },
-                                    }}
-                                    okText="Yes"
-                                    cancelText="No"
-                                >
-                                    <Button danger>Delete</Button>
-                                </Popconfirm></a>
-                        </Space>
-                    )}
+
+            {isLoading ? (
+                <Waveform
+                    size={40}
+                    lineWeight={3.5}
+                    speed={1}
+                    color="black"
                 />
-            </Table>
+            ) : (
+                <Table dataSource={dataTable} rowSelection={rowSelection} >
+                    <Column title="Sản phẩm" dataIndex="food_name" key="food_name" />
+                    <Column title="Giá" dataIndex="price" key="price" />
+                    <Column title="Ảnh" dataIndex="image" key="image" render={(_: any, record: QlFood) => (
+                        <Image
+                            width={100}
+                            src={record?.image}
+                        />
+                    )} />
+                    <Column title="Loại sản phẩm" dataIndex="name" key="name" />
+                    <Column
+                        title="Action"
+                        key="action"
+                        render={(_: any, record: QlFood) => (
+                            <Space size="middle">
+                                <a><EditQlPhim key={record.key} projects={record.key} /> </a>
+                                <a>
+                                    <Popconfirm
+                                        title="Xoá"
+                                        description="Bạn có muốn xoá sản phẩm này không?"
+                                        onConfirm={() => {
+                                            deleteOne(record.key);
+                                        }}
+                                        okButtonProps={{
+                                            style: { backgroundColor: "#007bff" },
+                                        }}
+                                        okText="Yes"
+                                        cancelText="No"
+                                    >
+                                        <Button danger>Delete</Button>
+                                    </Popconfirm></a>
+                            </Space>
+                        )}
+                    />
+                </Table>
+            )}
+
         </div>
     );
 }

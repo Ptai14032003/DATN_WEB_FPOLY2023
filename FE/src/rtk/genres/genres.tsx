@@ -21,7 +21,7 @@ const genresApi = createApi({
             query: () => "/list_genres/",
             providesTags: ["list_genres"]
         }),
-        addGenres: builder.mutation<void,any>({
+        addGenres: builder.mutation<void, any>({
             query: (body) => ({
                 url: "/list_genres/",
                 method: "POST",

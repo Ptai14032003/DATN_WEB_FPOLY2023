@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Button, ConfigProvider, DatePicker, Form, Input, InputNumber, Modal } from 'antd';
+
+import { Button, ConfigProvider, Form, Input, InputNumber, Modal, message } from 'antd';
+
 import type { FormInstance } from 'antd/es/form';
 import { Discount } from './page';
 import { useAddDiscountMutation } from '../../rtk/discount/discount';
@@ -9,7 +11,11 @@ const CreateQlDiscount: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
-        addDiscount(values).then(() => setIsModalOpen(false))
+
+        addDiscount(values).then(() => { setIsModalOpen(false); message.success("Thêm thành công") }).catch(() => {
+            message.error("Thêm không thành công. Vui lòng thử lại.");
+        });
+
     };
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
@@ -37,7 +43,9 @@ const CreateQlDiscount: React.FC = () => {
                 >
                     <Form.Item<Discount>
                         label="Mã khuyến mãi"
-                        name="code"
+
+                        name="discount_code"
+
                         rules={[{ required: true, message: 'Vui lòng nhập mã khuyến mãi !' }]}
                     >
                         <Input />
@@ -54,14 +62,18 @@ const CreateQlDiscount: React.FC = () => {
                         name="start"
                         rules={[{ required: true, message: 'Vui lòng nhập ngày áp dụng !' }]}
                     >
-                        <DatePicker />
+
+                        <Input type='date' style={{ width: 200 }} />
+
                     </Form.Item>
                     <Form.Item<Discount>
                         label="Ngày Kết Thúc"
                         name="end"
                         rules={[{ required: true, message: 'Vui lòng nhập ngày kết thúc !' }]}
                     >
-                        <DatePicker />
+
+                        <Input type='date' style={{ width: 200 }} />
+
                     </Form.Item>
                     <Form.Item<Discount>
                         label="Mức Giảm (%)"

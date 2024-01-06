@@ -19,18 +19,21 @@ use App\Http\Controllers\FoodController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TypeFoodController;
 use App\Http\Controllers\PaymentController;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('web')->group(function () {
-    Route::get('/sanctum/csrf-cookie', function (Request $request) {
-        return response()->json(['message' => 'CSRF cookie set']);
-    });
-});
+// Route::middleware('web')->group(function () {
+//     Route::get('/sanctum/csrf-cookie', function (Request $request) {
+//         return response()->json(['message' => 'CSRF cookie set']);
+//     });
+// });
 
 Route::match(['GET', 'POST'], '/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
 Route::get('/movie_home', [HomeController::class, 'index'])->name('movie_home');
+Route::get('/comingSoon', [HomeController::class, 'comingSoon'])->name('comingSoon');
+Route::get('/showing', [HomeController::class, 'showing'])->name('showing');
 
 Route::Post('/Payment', [PaymentController::class, 'vnpay_payment']);
 Route::post('/check_payment', [PaymentController::class, 'check_payment']);
@@ -39,7 +42,13 @@ Route::get('/movie_show_time/{id}', [HomeController::class, 'show_time_movie'])-
 Route::get('/show_seat_room/{id}', [HomeController::class, 'show_seat_room'])->name('show_seat_room');
 Route::get('/voucher', [HomeController::class, 'voucher'])->name('voucher');
 
-Route::prefix('admin')->middleware('checkrole')->group(function () {
+
+//lịch sử đặt vé
+Route::post('/booking_history', [HomeController::class, 'booking_history'])->name('booking_history')->middleware('auth:sanctum');
+// send mail
+Route::post('/send_mail', [HomeController::class, 'send_mail'])->name('send_mail');
+
+Route::prefix('admin')->group(function () {
     Route::resource('bill', BillController::class);
     Route::resource('food', FoodController::class);
     Route::resource('food_type', TypeFoodController::class);
@@ -47,9 +56,11 @@ Route::prefix('admin')->middleware('checkrole')->group(function () {
     Route::prefix('movies')->group(function () {
         Route::get('/', [ApiMovieController::class, 'index']);
         Route::post('/', [ApiMovieController::class, 'store']);
+
         Route::get('/{id}', [ApiMovieController::class, 'edit']);
         Route::put('/{id}', [ApiMovieController::class, 'update']);
         Route::delete('/{id}', [ApiMovieController::class, 'destroy']);
+
     });
 
     Route::prefix('movie_genres')->group(function () {
@@ -59,6 +70,14 @@ Route::prefix('admin')->middleware('checkrole')->group(function () {
         Route::put('/{id}', [ApiMovieGenreController::class, 'update']);
         Route::delete('/{id}', [ApiMovieGenreController::class, 'destroy']);
     });
+
+    // Route::prefix('food')->group(function () {
+    //     Route::get('/', [FoodController::class, 'index']);
+    //     Route::post('/', [FoodController::class, 'store']);
+    //     Route::get('/{id}', [FoodController::class, 'show']);
+    //     Route::put('/{id}', [FoodController::class, 'update']);
+    //     Route::delete('/{id}', [FoodController::class, 'destroy']);
+    // });
 
     Route::prefix('movie_type')->group(function () {
         Route::get('/', [ApiMovieTypeController::class, 'index']);
@@ -136,4 +155,5 @@ Route::prefix('admin')->middleware('checkrole')->group(function () {
         Route::put('/{id}', [PersonnelController::class, 'update']);
         Route::delete('/{id}', [PersonnelController::class, 'destroy']);
     });
+
 });

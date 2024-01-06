@@ -15,6 +15,7 @@ import bookingApi from './booking/booking'
 import foodsApi from './qlSp/qlSp'
 import billApi from './bill/bill'
 import VoucherApi from './voucher/voucher'
+
 export const store = configureStore({
     reducer: {
         phongChieu: phongChieuApi.reducer,
@@ -31,7 +32,10 @@ export const store = configureStore({
         booking: bookingApi.reducer,
         food: foodsApi.reducer,
         bill: billApi.reducer,
+      
         voucher: VoucherApi.reducer
+        promotions: discountApi.reducer
+
 
     },
     middleware: (getDefaultMiddleware) =>
@@ -48,9 +52,12 @@ export const store = configureStore({
             .concat(genresApi.middleware)
             .concat(moviesApiPerson.middleware)
             .concat(bookingApi.middleware)
+
             .concat(foodsApi.middleware)
             .concat(billApi.middleware)
             .concat(VoucherApi.middleware)
+            .concat(discountApi.middleware)
+
 });
 
 

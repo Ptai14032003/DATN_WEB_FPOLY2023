@@ -5,16 +5,19 @@ namespace App\Http\Controllers;
 use App\Http\Resources\MovieShowtimeResource;
 use App\Http\Resources\ShowtimeResource;
 use App\Models\Actor;
+use App\Models\Bill;
 use App\Models\Food;
 use App\Models\Movie;
 use App\Models\Movie_Genre;
 use App\Models\Seat;
 use App\Models\Showtime;
 use App\Models\Promotion;
+use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
 {
@@ -24,23 +27,45 @@ class HomeController extends Controller
     public function index()
     {
 
-        $movie =  Movie::join('countries', 'movies.country_id', '=', 'countries.id')
-            ->join('producers', 'movies.producer_id', '=', 'producers.id')
-            ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
-            ->select('movies.*', 'countries.country_name', 'producers.producer_name', 'movie_types.type_name')
+        $movie =  Movie::join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+            ->select('movies.*', 'movie_types.type_name')
             ->whereNull('movies.deleted_at')
             ->OrderBy('movies.id', 'asc')
             ->get();
         return response()->json($movie);
     }
+    public function comingSoon()
+    {
+        $currentDate = Carbon::now();
 
+        $movies = Movie::join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+            ->select('movies.*', 'movie_types.type_name')
+            ->whereNull('movies.deleted_at')
+            ->where('movies.start_date', '>', $currentDate) // Filter movies with start_date greater than the current date
+            ->orderBy('movies.id', 'asc')
+            ->get();
 
+        return response()->json($movies);
+    }
+
+    public function showing()
+    {
+        $currentDate = Carbon::now();
+
+        $movies = Movie::join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+            ->select('movies.*', 'movie_types.type_name')
+            ->whereNull('movies.deleted_at')
+            ->where('movies.start_date', '<=', $currentDate)
+            ->where('movies.end_date', '>=', $currentDate)
+            ->orderBy('movies.id', 'asc')
+            ->get();
+
+        return response()->json($movies);
+    }
     public function show_time_movie(string $id)
     {
         $st_movie = Movie::join('showtimes', 'showtimes.movie_id', '=', 'movies.id')
             ->join('rooms', 'showtimes.room_id', '=', 'rooms.id')
-            ->join('producers', 'producers.id', '=', 'movies.producer_id')
-            ->join('countries', 'countries.id', '=', 'movies.country_id')
             ->join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
             ->select(
                 'showtimes.show_date',
@@ -50,8 +75,10 @@ class HomeController extends Controller
             )
             ->where('movies.id', $id)
             ->get();
-        $movies = Movie::where('movies.id', $id)->select('movies.*')->first();
-
+        $movies = Movie::
+        join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
+        ->where('movies.id', $id)->select('movies.*', 'movie_types.type_name')->first();
+        $movies->makeHidden([ 'movie_type_id']);
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         foreach ($st_movie as $movie) {
 
@@ -89,16 +116,7 @@ class HomeController extends Controller
         }
         $st_movie = $st_movie->toArray();
         if ($st_movie) {
-            $actor = Actor::join('movies', 'actors.movie_id', '=', 'movies.id')
-                ->where('movie_id', $id)
-                ->select('actors.actor_name')
-                ->get();
-            $movieGenre = Movie_Genre::join('movies', 'movie_genres.movie_id', '=', 'movies.id')
-                ->join('list_genres', 'movie_genres.list_genre_id', '=', 'list_genres.id')
-                ->where('movie_id', $id)
-                ->select('list_genres.genre')
-                ->get();
-            return response()->json(['movie' => $movies, 'st_movie' => $st_movie, 'actor' => $actor, 'movie_genres' => $movieGenre]);
+            return response()->json(['movie' => $movies, 'st_movie' => $st_movie]);
         } else {
             return response()->json(['messages' => 'Không tồn tại suất chiếu theo phim này'], 404);
         }
@@ -116,7 +134,7 @@ class HomeController extends Controller
                 'seats.type_seat_id',
                 'type_seats.type_name',
                 'rooms.name as room_name',
-                \DB::raw("(
+                DB::raw("(
                 CASE
                     WHEN NOT EXISTS (
                         SELECT 1
@@ -150,7 +168,6 @@ class HomeController extends Controller
             ->where('showtimes.id', $id)
             ->groupBy('seats.id', 'seats.seat_code', 'seats.type_seat_id', 'type_seats.type_name', 'room_name')
             ->get();
-
         $movie = Movie::join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
             ->join('showtimes', 'showtimes.movie_id', '=', 'movies.id')
             ->where('showtimes.id', $id)
@@ -162,12 +179,14 @@ class HomeController extends Controller
             ->where('showtimes.id', '=', $id)
             ->first();
         date_default_timezone_set('Asia/Ho_Chi_Minh');
+
         foreach ($seats as $seat) {
             //nếu phim 2d thì vé thường 45k 3d thì ghế thường 60k
             if ($movie->movie_type == '2D') {
                 $seat->price = 45000; //mặc định ghế thường là 45k - phòng 2D
             } else {
                 $seat->price = 60000; //mặc định ghế thường là 60k - phòng 3D
+
             }
             $show_date = new DateTime($showtime->show_date); //lấy ra ngày chiếu
             if ($show_date->format('N') == '7' || $show_date->format('N') == '6') { //nếu thứ 7 hoặc chủ nhật thì tăng giá vé lên 10k
@@ -188,6 +207,95 @@ class HomeController extends Controller
     {
         $promotion = Promotion::all();
         return response()->json($promotion);
-
     }
+
+    public function booking_history(Request $request)
+    {
+        $booking_history = Bill::leftjoin('users', 'users.user_code', '=', 'bills.user_code')
+            ->join('tickets', 'tickets.bill_id', '=', 'bills.id')
+            ->join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
+            ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
+            ->where('bills.user_code', $request->user_code)
+            ->select(
+                'bills.id',
+                'bills.user_code',
+                'users.name as user_name',
+                'bills.total_ticket',
+                'bills.total_combo',
+                'bills.additional_fee',
+                'bills.total_money',
+                'movies.movie_name',
+                'movies.image',
+                \DB::raw('DATE_FORMAT(bills.created_at, "%d-%m-%Y") as booking_date'),
+                \DB::raw('DATE_FORMAT(showtimes.show_date, "%d-%m-%Y") as show_date'),
+                \DB::raw('CASE 
+                    WHEN bills.status = 0 THEN "Đang chờ thanh toán" 
+                    WHEN bills.status = 1 THEN "Đã thanh toán" 
+                    WHEN bills.status = 2 THEN "Đã hủy" 
+                    END as payment_status')
+            )
+            ->groupBy(
+                'bills.id',
+                'bills.user_code',
+                'users.name',
+                'bills.total_ticket',
+                'bills.total_combo',
+                'bills.additional_fee',
+                'bills.total_money',
+                'movies.movie_name',
+                'movies.image',
+                'booking_date',
+                'show_date',
+                'payment_status'
+            )
+            ->get();
+        return response()->json($booking_history);
+    }
+
+    public function send_mail(Request $request)
+    {
+        $bill = Bill::where('id', $request->bill_id)->first();
+        //thông tin người nhận mail
+        $user = User::where('user_code', $bill->user_code)->first();
+
+        $movie = Bill::join('tickets', 'tickets.bill_id', '=', 'bills.id')
+            ->join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
+            ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
+            ->join('seats', 'seats.id', '=', 'tickets.id_seat')
+            ->leftJoin('ticket_foods', 'ticket_foods.bill_id', '=', 'bills.id')
+            ->leftJoin('foods', 'foods.id', '=', 'ticket_foods.food_id')
+            ->where('bills.id', $request->bill_id)
+            ->select(
+                'showtimes.show_date as show_date',
+                'movies.movie_name as movie_name',
+                \DB::raw('DATE_FORMAT(showtimes.show_time, "%H:%i") as show_time'), // Định dạng show_time chỉ theo giờ phút
+                'movies.movie_time as movie_time',
+                \DB::raw('GROUP_CONCAT(DISTINCT seats.seat_code) as seat'),
+                \DB::raw('GROUP_CONCAT(DISTINCT IFNULL(CONCAT(ticket_foods.quantity, "-", foods.food_name), "")) as food')
+            )
+            ->groupBy('show_date', 'movie_name', 'show_time', 'movie_time')
+            ->first();
+        // send mail
+        $to_name = "Wonder Cenima"; //tên người gửi
+        $to_email = $user->email;
+
+        $data = array(
+            "name" => $user->name,
+            "movie_name" => $movie->movie_name,
+            "show_date" => $movie->show_date,
+            "show_time" => $movie->show_time,
+            "movie_time" => $movie->movie_time,
+            "seat" => $movie->seat,
+            "food" => $movie->food,
+            "to_name" => $to_name
+        );
+
+        Mail::send('send_mail', $data, function ($message) use ($to_name, $to_email) {
+            $message->to($to_email)->subject("[Wonder Cenima] Xác nhận thanh toán thành công");
+
+            $message->from($to_email, $to_name);
+        });
+        return response()->json("thành công");
+    }
+
 }

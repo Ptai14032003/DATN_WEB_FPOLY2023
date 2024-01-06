@@ -3,8 +3,10 @@ import { Table, Input, Button, message, Popconfirm } from 'antd';
 import { useFetchGuestsQuery } from '../../rtk/qlGuest/qlGuest';
 import { Waveform } from '@uiball/loaders';
 
-import { checkApiStatus }  from "../checkApiStatus"; // Import hàm trợ giúp
+import Fuse from 'fuse.js';
+import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
 import { useNavigate } from 'react-router-dom';
+
 
 const { Column } = Table;
 interface Guest {
@@ -19,11 +21,11 @@ interface Guest {
     gender: string;
 }
 const AdminQlGuest: React.FC = () => {
-    const { data: dataGuest, isLoading,error } = useFetchGuestsQuery()
-    console.log(dataGuest);
 
+    const { data: dataGuest, isLoading, error } = useFetchGuestsQuery()
     const navigate = useNavigate();
     const status = error?.status;
+
 
     const [dataTable, setDataTable] = useState<Guest[]>([])
     const [searchTerm, setSearchTerm] = useState('');
@@ -41,8 +43,19 @@ const AdminQlGuest: React.FC = () => {
         onChange: onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
+
+    const fuseOptions = {
+        includeScore: true,
+        isCaseSensitive: true,
+        findAllMatches: true,
+        useExtendedSearch: true,
+        includeMatches: true,
+        keys: ["user_code", "name", "email"]
+    }
+    const fuse = new Fuse(dataGuest?.data, fuseOptions)
+
     const searchProject = (value: string) => {
-        console.log(value);
+
         setSearchTerm(value);
     };
     useEffect(() => {
@@ -61,10 +74,49 @@ const AdminQlGuest: React.FC = () => {
             }))
             setDataTable(mapMovies)
         }
+
         if (status) {
-            checkApiStatus(status,navigate);
-          }
-    }, [dataGuest,status])
+            checkApiStatus(status, navigate);
+        }
+    }, [dataGuest, status])
+    useEffect(() => {
+        if (searchTerm.length > 0) {
+            const results = fuse?.search(searchTerm);
+            const newData = results?.map((result) => result.item);
+            if (Array.isArray(newData)) {
+                const mapGuest = newData.map((item: any) => ({
+                    key: item.id,
+                    user_code: item.user_code,
+                    name: item.name,
+                    email: item.email,
+                    phone_number: item.phone_number,
+                    password: item.password,
+                    address: item.address,
+                    birthday: item.birthday,
+                    gender: item.gender,
+                }))
+                setDataTable(mapGuest)
+            }
+        }
+        if (searchTerm.length === 0) {
+            const dataMap = dataGuest?.data
+            if (Array.isArray(dataMap)) {
+                const mapMovies = dataMap.map((item: any) => ({
+                    key: item.id,
+                    user_code: item.user_code,
+                    name: item.name,
+                    email: item.email,
+                    phone_number: item.phone_number,
+                    password: item.password,
+                    address: item.address,
+                    birthday: item.birthday,
+                    gender: item.gender,
+                }))
+                setDataTable(mapMovies)
+            }
+        }
+    }, [searchTerm, dataGuest])
+
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý khách hàng</div>
