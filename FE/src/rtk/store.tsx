@@ -33,7 +33,7 @@ export const store = configureStore({
         food: foodsApi.reducer,
         bill: billApi.reducer,
       
-        voucher: VoucherApi.reducer
+        voucher: VoucherApi.reducer,
         promotions: discountApi.reducer
 
 

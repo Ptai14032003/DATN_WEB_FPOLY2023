@@ -8,10 +8,7 @@ import * as Yup from 'yup';
 type TypeInputs = {
   name: string,
   email: string,
-  address: string,
-  birthday: Date,
   password: string,
-  gender: number,
   password_confirmation: string,
   phone_number: number
 }
@@ -39,7 +36,6 @@ const Signup = () => {
   const onSubmit = (data: any) => {
     signup(data)
     console.log(data);
-
   }
   return (
     <div className='User-box'>
