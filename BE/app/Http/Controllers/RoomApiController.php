@@ -23,15 +23,17 @@ class RoomApiController extends Controller
     {
         $data = $request->all();
         foreach($data as $roomData){
-            $theater = Room::create([
-            "name"=>$roomData['name'],
-            "total_seat" => $roomData['total_seat'],
-            "row" => $roomData['row'],
-            "col" => $roomData['col']
-            ]);
+            if(isset($roomData['name'])){
+                $theater = Room::create([
+                    "name"=>$roomData['name'],
+                    "total_seat" => $roomData['total_seat'],
+                    "row" => $roomData['row'],
+                    "col" => $roomData['col']
+                ]);
+            }
         }
-        if($theater){
-            foreach($data as $seats){
+        foreach($data as $seats){
+            if(isset($seats['seat_code'])){
                 Seat::create([
                     'seat_code' => $seats['seat_code'],
                     'type_seat_id'=> $seats['type_seat_id'],
