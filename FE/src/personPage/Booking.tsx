@@ -13,7 +13,7 @@ const Booking = () => {
     const { search } = useLocation();
     const show_time = new URLSearchParams(search).get('show_seat');
     const { id } = useParams();
-    const { data: Foods } = useFetchFoodsQuery()
+    // const { data: Foods } = useFetchFoodsQuery()
     const { data: seatBooking } = useFetchSeatRoomIdQuery(show_time);
     const { data: movie } = useFetchMovieIdPersonQuery(id);
     const [activeTab, setActiveTab] = useState(1);
@@ -26,6 +26,7 @@ const Booking = () => {
     const priceTong = money + priceFood;
     const dataTong = (Number(priceTong))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     const seats = seatBooking?.seats;
+    const Foods = seatBooking?.combo;
     const movieBooking = movie?.movie
     const [messageApi, contextHolder] = message.useMessage();
     const checkUser = localStorage.getItem("user")

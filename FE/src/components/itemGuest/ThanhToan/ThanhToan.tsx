@@ -48,6 +48,9 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
         ,
         total_money: priceTong
     }
+
+    console.log(dataBill);
+    
     const setThanhToan = () => {
         data(dataBill)
             .then((response) => {
