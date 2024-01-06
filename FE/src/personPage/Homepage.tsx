@@ -23,7 +23,6 @@ const HomePage = () => {
   const userString = localStorage.getItem('user');
   const user = userString ? JSON.parse(userString) : null;
   const Navigate = useNavigate()
-  
   // console.log(user.role);
   // if (user.role === 'admin') {
 
@@ -111,7 +110,7 @@ const HomePage = () => {
                   <div className="grid grid-cols-5 font-semibold text-[#B6B4B4] my-1 text-sm">
                     <p className='col-span-2'>{item.movie_time} phút</p>
                     <p className='text-center'>|</p>
-                    <p className='col-span-2'>{item.start_date}</p>
+                    <p className='col-span-2'>{item.director}</p>
                   </div>
                 </div>
               </Link>
