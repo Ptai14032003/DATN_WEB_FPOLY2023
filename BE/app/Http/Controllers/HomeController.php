@@ -27,10 +27,8 @@ class HomeController extends Controller
     public function index()
     {
 
-        $movie =  Movie::join('countries', 'movies.country_id', '=', 'countries.id')
-            ->join('producers', 'movies.producer_id', '=', 'producers.id')
-            ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
-            ->select('movies.*', 'countries.country_name', 'producers.producer_name', 'movie_types.type_name')
+        $movie =  Movie::join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+            ->select('movies.*', 'movie_types.type_name')
             ->whereNull('movies.deleted_at')
             ->OrderBy('movies.id', 'asc')
             ->get();
@@ -40,10 +38,8 @@ class HomeController extends Controller
     {
         $currentDate = Carbon::now();
 
-        $movies = Movie::join('countries', 'movies.country_id', '=', 'countries.id')
-            ->join('producers', 'movies.producer_id', '=', 'producers.id')
-            ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
-            ->select('movies.*', 'countries.country_name', 'producers.producer_name', 'movie_types.type_name')
+        $movies = Movie::join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+            ->select('movies.*', 'movie_types.type_name')
             ->whereNull('movies.deleted_at')
             ->where('movies.start_date', '>', $currentDate) // Filter movies with start_date greater than the current date
             ->orderBy('movies.id', 'asc')
@@ -56,10 +52,8 @@ class HomeController extends Controller
     {
         $currentDate = Carbon::now();
 
-        $movies = Movie::join('countries', 'movies.country_id', '=', 'countries.id')
-            ->join('producers', 'movies.producer_id', '=', 'producers.id')
-            ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
-            ->select('movies.*', 'countries.country_name', 'producers.producer_name', 'movie_types.type_name')
+        $movies = Movie::join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+            ->select('movies.*', 'movie_types.type_name')
             ->whereNull('movies.deleted_at')
             ->where('movies.start_date', '<=', $currentDate)
             ->where('movies.end_date', '>=', $currentDate)

@@ -51,11 +51,6 @@ const Signin = () => {
             <input type="password" placeholder="password" {...register("password", { required: true })} required />
           </div>
 
-          <div className="remember-forgot">
-            <label><input type="checkbox" /> Remember me</label>
-            <a href="#">Forgot password?</a>
-          </div>
-
           <button type="submit" className="btn">Login</button>
 
           <div className="register-link">

@@ -67,6 +67,14 @@ Route::prefix('admin')->middleware('checkrole')->group(function () {
         Route::delete('/{id}', [ApiMovieGenreController::class, 'destroy']);
     });
 
+    // Route::prefix('food')->group(function () {
+    //     Route::get('/', [FoodController::class, 'index']);
+    //     Route::post('/', [FoodController::class, 'store']);
+    //     Route::get('/{id}', [FoodController::class, 'show']);
+    //     Route::put('/{id}', [FoodController::class, 'update']);
+    //     Route::delete('/{id}', [FoodController::class, 'destroy']);
+    // });
+
     Route::prefix('movie_type')->group(function () {
         Route::get('/', [ApiMovieTypeController::class, 'index']);
         Route::post('/', [ApiMovieTypeController::class, 'store']);
