@@ -20,7 +20,6 @@ class ApiMovieGenreController extends Controller
         ->select('movie_genres.*')
         ->get();
         return response()->json($movieGenre);
-
     }
 
     /**
@@ -30,15 +29,15 @@ class ApiMovieGenreController extends Controller
     {
         $movieGenre = Movie_Genre::create($request->all());
         // Lưu trữ các thể loại đã chọn
-        // $genres = $request->input('genres');
+        $genres = $request->input('genres');
     
-        // // Thêm từng thể loại vào bảng movie_genre
-        // foreach ($genres as $genre) {
-        //     Movie_Genre::create([
-        //         'movie_id' => $movieGenre->id,
-        //         'genre_id' => $genre,
-        //     ]);
-        // }
+        // Thêm từng thể loại vào bảng movie_genre
+        foreach ($genres as $genre) {
+            Movie_Genre::create([
+                'movie_id' => $movieGenre->id,
+                'genre_id' => $genre,
+            ]);
+        }
 //        trả về thông vừa thêm
 return response()->json($movieGenre);
     }
