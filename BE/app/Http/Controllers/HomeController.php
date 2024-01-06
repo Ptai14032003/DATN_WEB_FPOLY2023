@@ -66,8 +66,6 @@ class HomeController extends Controller
     {
         $st_movie = Movie::join('showtimes', 'showtimes.movie_id', '=', 'movies.id')
             ->join('rooms', 'showtimes.room_id', '=', 'rooms.id')
-            ->join('producers', 'producers.id', '=', 'movies.producer_id')
-            ->join('countries', 'countries.id', '=', 'movies.country_id')
             ->join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
             ->select(
                 'showtimes.show_date',
@@ -116,16 +114,7 @@ class HomeController extends Controller
         }
         $st_movie = $st_movie->toArray();
         if ($st_movie) {
-            $actor = Actor::join('movies', 'actors.movie_id', '=', 'movies.id')
-                ->where('movie_id', $id)
-                ->select('actors.actor_name')
-                ->get();
-            $movieGenre = Movie_Genre::join('movies', 'movie_genres.movie_id', '=', 'movies.id')
-                ->join('list_genres', 'movie_genres.list_genre_id', '=', 'list_genres.id')
-                ->where('movie_id', $id)
-                ->select('list_genres.genre')
-                ->get();
-            return response()->json(['movie' => $movies, 'st_movie' => $st_movie, 'actor' => $actor, 'movie_genres' => $movieGenre]);
+            return response()->json(['movie' => $movies, 'st_movie' => $st_movie]);
         } else {
             return response()->json(['messages' => 'Không tồn tại suất chiếu theo phim này'], 404);
         }
