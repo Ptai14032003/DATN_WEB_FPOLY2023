@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import "./page.css"
 import { useSetBillMutation } from '../../../rtk/bill/bill';
 import { Button, Modal } from 'antd'
+import { useFetchVoucherQuery } from '../../../rtk/voucher/voucher';
 type Props = {
     data: {
         selectedSeats: string[]
@@ -23,7 +24,12 @@ type Props = {
 }
 const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, show_time, movieBooking, idGhe } }: Props) => {
     const [data] = useSetBillMutation()
+    const { data: voucher } = useFetchVoucherQuery()
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [VoucherCode, setVoucherCode] = useState("");
+    const [DiscountPercent, setDiscountPercent] = useState(0);
+    const [active, setActive] = useState(false);
+
     const [activeTab, setActiveTab] = useState(1);
     const checkLocal = localStorage.getItem("user");
     const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
@@ -31,6 +37,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
     const handleClick = (tabNumber: number) => {
         setActiveTab(tabNumber);
     };
+
     const dataBill = {
         show_time: show_time,
         seat:
@@ -79,7 +86,18 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
     const handleCancel = () => {
         setIsModalOpen(true);
     };
+
+    const handleSelectVoucher = (voucherCode: any, percent: any) => {
+        setVoucherCode(voucherCode);
+        setDiscountPercent(percent)
+        setActive(true)
+    };
+
     const dataTong = (Number(priceTong))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    const discountAmount = (priceTong * DiscountPercent) / 100;
+    const formattedDiscountAmount = discountAmount.toLocaleString();
+    const totalAmount = priceTong - discountAmount;
+    const formattedtotalAmount = totalAmount.toLocaleString();
     return (
         <>
             <a href=""></a>
@@ -134,43 +152,50 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                     <div className='block border-b-2'>
                         <div className='sale-code'>
                             <div className='grid grid-cols-3 space-x-2'>
-                                <input type="text" className='voucher-code cursor-not-allowed h-[30px] outline-none col-span-2' />
+                                <input type="text" className='voucher-code cursor-not-allowed h-[30px] outline-none col-span-2 text-black pl-2 font-medium' value={VoucherCode} />
                                 <Button type="primary" onClick={showModal} className='bg-teal-400 mb-3'>
-                                    Discount code
+                                    Choose discount
                                 </Button>
                             </div>
                             <div className='flex justify-between mb-3'>
-                                <p>Discount</p>
-                                <p>0</p>
+                                <p>Giảm giá</p>
+                                <p>{DiscountPercent}%</p>
                             </div>
                             <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                                 <div className='space-y-3'>
-                                    <button
-                                        onClick={() => handleClick(2)}
-                                        className={activeTab === 2 ? 'block bg-[#1ACAAC] text-black w-full rounded-md py-3' : 'block bg-[#797373] text-white w-full rounded-md hover:bg-[#464444] py-3'}
-                                    >
-                                        <h3 className='text-3xl font-medium'>GXHKTD4LJ</h3>
-                                        <p>Giảm 20% tổng giá trị đơn hàng</p>
-                                        <p>Thời gian áp dụng: 09/12/2023</p>
-                                        <p>Thời gian hết hạn: vô hạn</p>
-                                    </button>
-                                    <button
-                                        onClick={() => handleClick(3)}
-                                        className={activeTab === 3 ? 'block bg-[#1ACAAC] text-black w-full rounded-md py-3' : 'block bg-[#797373] text-white w-full rounded-md hover:bg-[#464444] py-3'}
-                                    >
-                                        <h3 className='text-3xl font-medium'>AS5FGS8HC</h3>
-                                        <p>Giảm 10% tổng giá trị đơn hàng</p>
-                                        <p>Thời gian áp dụng: 09/12/2023</p>
-                                        <p>Thời gian hết hạn: vô hạn</p>
-                                    </button>
+                                    {voucher?.map((item: any) => (
+                                        <button className={active ? 'block bg-teal-400 text-black w-full rounded-md py-3': 'block bg-[#a9aead] text-black w-full rounded-md py-3'} id={item.id}
+                                            onClick={() => handleSelectVoucher(item.discount_code, item.discount_percent)}
+                                        >
+                                            <h3 className='text-3xl font-medium'>{item.discount_code}</h3>
+                                            <p>Nhân dịp {item.event}</p>
+                                            <p>Giảm {item.discount_percent}% tổng giá trị đơn hàng</p>
+                                            <p>Thời gian áp dụng: {item.start}</p>
+                                            <p>Thời gian hết hạn: {item.end}</p>
+                                        </button>
+                                    ))}
                                 </div>
                             </Modal>
                         </div>
                     </div>
+                    <div className='block my-3'>
+                        <div className='info-card'>
+                            <div>Giá gốc</div>
+                            <div className='item-info-card'>{dataTong} đ</div>
+                            {/* <div className='item-info-card'>số tiền giảm giá: {formattedDiscountAmount}</div>
+                            <div className='item-info-card'>số tiền đã giảm giá: {totalAmount}</div> */}
+                        </div>
+                    </div>
+                    <div className='block my-3'>
+                        <div className='info-card'>
+                            <div>Số tiền được giảm</div>
+                            <div className='item-info-card'>-{formattedDiscountAmount} đ</div>
+                        </div>
+                    </div>
                     <div className='block'>
                         <div className='info-card'>
-                            <div>Tổng tiền</div>
-                            <div className='item-info-card'>{dataTong} đ</div>
+                            <div>Tổng thanh toán</div>
+                            <div className='item-info-card'>{formattedtotalAmount}</div>
                         </div>
                     </div>
                 </div >
