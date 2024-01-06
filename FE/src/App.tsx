@@ -58,6 +58,7 @@ function App() {
       <Route path='movie_show_time/:id' element={<Detail />}></Route>
       <Route path='booking/:id' element={<Booking />} />
       <Route path='payment' element={<Payment />} />
+      <Route path="listvnp" element={<CheckPay />} />
       {checkRoleAdmin ? (
         <Route path='/admin' element={<LayoutAdmin />}>
           <Route path='qlPhim' element={<AdminQlPhim />}></Route>
@@ -76,8 +77,6 @@ function App() {
         <Route path='/notfound' element={<NotFound />}></Route>
       )}
       <Route path='*' element={<Navigate to='/notfound' />} />
-      <Route path="listvnp" element={<CheckPay />} />
-
     </Routes>
   </BrowserRouter>
 }

@@ -129,13 +129,13 @@ const Booking = () => {
                                 if (isSelected) {
                                     setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[dataOderSeat + 1]?.seat_code));
                                     setMoney(money - price);
-                                } else {
+                                } else if (selectedSeats.length < 5) {
                                     setSelectedSeats([...selectedSeats, item[dataOderSeat + 1]?.seat_code, seatId_code]);
                                     setMoney(money + price);
                                 }
                                 if (checkId) {
                                     setidGhe(() => idGhe.filter((item: any) => item.id !== dataSeat1.id && item.id !== dataSeat2.id));
-                                } else {
+                                } else if (selectedSeats.length < 5) {
                                     setidGhe([...idGhe, dataSeat1, dataSeat2]);
                                 }
                             } else {
@@ -148,14 +148,14 @@ const Booking = () => {
                                 if (isSelected) {
                                     setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[dataOderSeat - 1]?.seat_code));
                                     setMoney(money - price);
-                                } else {
+                                } else if (selectedSeats.length < 5) {
                                     setSelectedSeats([...selectedSeats, item[dataOderSeat - 1]?.seat_code, seatId_code]);
                                     setMoney(money + price);
 
                                 }
                                 if (checkId) {
                                     setidGhe(() => idGhe.filter((item: any) => item.id !== dataSeat1.id && item.id !== dataSeat2.id));
-                                } else {
+                                } else if (selectedSeats.length < 5) {
                                     setidGhe([...idGhe, dataSeat1, dataSeat2]);
                                 }
                             }
@@ -181,7 +181,7 @@ const Booking = () => {
                             if (checkFull && !mapExecuted && checkId && !checkSeatDelete) {
                                 messageApi.error({
                                     type: 'error',
-                                    content: 'Quý khách nên hủy ghế lần lượt theo thứ tự ngu',
+                                    content: 'Quý khách nên hủy ghế lần lượt theo thứ tự',
                                     className: "h-[20%] mt-[20px]",
                                     duration: 2
                                 });
@@ -191,7 +191,7 @@ const Booking = () => {
                             if (checkedLeft && !mapExecuted && checkId && !checkedRight && !checkSeatDelete) {
                                 messageApi.error({
                                     type: 'error',
-                                    content: `Quý khách nên hủy ghế lần lượt theo thứ tự l`,
+                                    content: `Quý khách nên hủy ghế lần lượt theo thứ tự`,
                                     className: "h-[20%] mt-[20px]",
                                     duration: 2
                                 });
@@ -201,7 +201,7 @@ const Booking = () => {
                             if (checkedRight && !mapExecuted && checkId && !checkedLeft && !checkSeatDelete) {
                                 messageApi.error({
                                     type: 'error',
-                                    content: `Quý khách nên hủy ghế lần lượt theo thứ tự r`,
+                                    content: `Quý khách nên hủy ghế lần lượt theo thứ tự`,
                                     className: "h-[20%] mt-[20px]",
                                     duration: 2
                                 });
@@ -213,7 +213,7 @@ const Booking = () => {
                                 setidGhe(() => idGhe.filter((item: any) => item.id !== data.id));
                                 setMoney(money - price);
                             }
-                        } else {
+                        } else if (selectedSeats.length < 6) {
                             setSelectedSeats([...selectedSeats, seatId_code]);
                             setMoney(money + price);
                             setidGhe([...idGhe, data]);
@@ -225,10 +225,6 @@ const Booking = () => {
     };
     const getCombo = (quantity: number, price: number, foodName: any) => {
         let soLuong = parseInt(quantity.toString(), 10);
-
-        //const getCombo = async (data: { target: { value: any } }, price: number, foodName: any) => {
-        //let soLuong = parseInt(data.target.value, 10);
-
         soLuong = isNaN(soLuong) || soLuong < 0 ? 0 : soLuong;
 
         const comboObject = {
@@ -236,7 +232,6 @@ const Booking = () => {
             price: price,
             food_name: foodName,
         };
-
         setCombo((prevCombo: any) => {
             const comboExists = prevCombo.some((comboObjectInArray: any) => comboObjectInArray.food_name === comboObject.food_name);
 

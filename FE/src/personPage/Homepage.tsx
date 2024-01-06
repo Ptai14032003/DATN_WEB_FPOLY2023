@@ -23,7 +23,6 @@ const HomePage = () => {
   const userString = localStorage.getItem('user');
   const user = userString ? JSON.parse(userString) : null;
   const Navigate = useNavigate()
-
   // console.log(user.role);
   // if (user.role === 'admin') {
 
