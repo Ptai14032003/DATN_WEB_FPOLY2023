@@ -13,6 +13,8 @@ import { useForm } from "react-hook-form";
 export default function Detail() {
     const { id } = useParams()
     const { data: movieBooking } = useFetchMovieIdPersonQuery(id);
+    console.log(movieBooking);
+
     const { register, handleSubmit, formState: { errors }, } = useForm<FormComment>({
         resolver: yupResolver(formComment),
     })
@@ -78,27 +80,19 @@ export default function Detail() {
                     </div>
                 </div>
                 <div className="flex justify-around">
-                    <div className="w-[65%] mr-[50px]">
+                    <div className="w-[1600px] pr-[50px]">
                         <div className="detail-content">
                             <div>Đạo diễn</div>
                             <div>{movie?.director}</div>
                         </div>
                         <div className="detail-content">
-                            <div>Diễn Viên</div>
-                            <div>
-                                {actor?.map((item: any) => (
-                                    <span className="mx-[5px]" key={item.actor_name}>{item?.actor_name},</span>
-                                ))}
-                            </div>
+                            <div className="w-[100px]">Diễn Viên</div>
+                            <span>{movie?.actor_name}</span>
 
                         </div>
                         <div className="detail-content">
                             <div>Thể loại</div>
-                            <div>
-                                {genres?.map((item: any) => (
-                                    <span className="mx-[5px]" key={item?.genre}>{item?.genre},</span>
-                                ))}
-                            </div>
+                            <div></div>
                         </div>
                         <div className="detail-content">
                             <div>Khởi chiếu</div>
@@ -106,11 +100,7 @@ export default function Detail() {
                         </div>
                         <div className="detail-content">
                             <div>Thời lượng</div>
-                            <div>104 phút</div>
-                        </div>
-                        <div className="detail-content">
-                            <div>Ngôn ngữ</div>
-                            <div>Tiếng Anh - Phụ đề Tiếng Việt</div>
+                            <div>{movie?.movie_time} phút</div>
                         </div>
                         <div className="detail-content">
                             <div>Rated</div>
@@ -118,11 +108,11 @@ export default function Detail() {
                         </div>
                     </div>
                     <div className="mt-[20px]">
-                        <span>Một huyền thoại Marvel mới sắp lộ diện. Là ác nhân hay anh hùng? Sẽ phá hủy hay chữa lành thế giới này? Morbius khởi chiếu 01.07.2023</span>
+                        <span>{movie?.describe}</span>
                     </div>
                 </div>
             </div>
-            <div className="w-[90%] mx-auto bg-white text-black px-[25px] py-[15px]">
+            {/* <div className="w-[90%] mx-auto bg-white text-black px-[25px] py-[15px]">
                 <h2 className="mb-[15px]">Bình luận</h2>
                 <div className="flex gap-10 rounder">
                     <div><img src="/avata.jpg" alt="" width={56} height={48} /></div>
@@ -161,7 +151,7 @@ export default function Detail() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
             <footer>
                 <Footer />
             </footer>

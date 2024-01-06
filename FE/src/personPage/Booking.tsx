@@ -65,169 +65,176 @@ const Booking = () => {
             price: price
         };
         let mapExecuted = false;
-        groupSeats?.map((item: any) => {
-            item?.map((item2: any) => {
-                const dataOderSeat: number = item.findIndex((seat: any) => seat.seat_code === seatId_code);
-                if (dataOderSeat >= 0) {
-                    const checkSeat = (selectedSeats.includes(item[dataOderSeat + 2]?.seat_code) || selectedSeats.includes(item[dataOderSeat - 2]?.seat_code)) && !(selectedSeats.includes(item[dataOderSeat + 1]?.seat_code) || selectedSeats.includes(item[dataOderSeat - 1]?.seat_code))
-                    const checkLeft = (dataOderSeat === 1) && !selectedSeats.includes(item[0]?.seat_code) && !selectedSeats.includes(item[dataOderSeat + 1]?.seat_code)
-                    const checkRight = (item[dataOderSeat + 1]?.seat_code === item[item.length - 1]?.seat_code && !(selectedSeats.includes(item[dataOderSeat - 1]?.seat_code) || selectedSeats.includes(item[dataOderSeat + 1]?.seat_code)));
-                    if (checkRight && !mapExecuted && typeName !== 'Đôi') {
-                        messageApi.error({
-                            type: 'error',
-                            content: 'Vẫn còn ghế trống bên phải không thể mua ghế vừa chọn',
-                            className: "h-[20%] mt-[20px]",
-                            duration: 2
-                        });
-                        mapExecuted = true;
-                        return;
-                    }
-                    if (checkLeft && !mapExecuted && typeName !== 'Đôi') {
-                        messageApi.error({
-                            type: 'error',
-                            content: 'Vẫn còn ghế trống bên trái không thể mua ghế vừa chọn',
-                            className: "h-[20%] mt-[20px]",
-                            duration: 2
-                        });
-                        mapExecuted = true;
-                        return;
-                    }
-                    if (!item[dataOderSeat + 2] && !mapExecuted && typeName !== 'Đôi' && checkSeat) {
-                        messageApi.error({
-                            type: 'error',
-                            content: 'Vẫn còn ghế trống bên phải không thể mua ghế vừa chọn',
-                            className: "h-[20%] mt-[20px]",
-                            duration: 2
-                        });
-                        mapExecuted = true;
-                        return;
-                    }
-                    if (selectedSeats.length > 0 && checkSeat && !mapExecuted && typeName !== 'Đôi') {
-                        messageApi.error({
-                            type: 'error',
-                            content: 'Quý khách nên chọn ghế bên cạnh',
-                            className: "h-[20%] mt-[20px]",
-                            duration: 2
-                        });
-                        mapExecuted = true;
-                        return;
-                    }
-                    if (typeName === 'Đôi') {
-                        if (item2.type_name === "Đôi") {
-                            const dataSeat1 = {
-                                id: item[dataOderSeat]?.id,
-                                price: item[dataOderSeat]?.price
+        if (selectedSeats.length < 6 && !mapExecuted) {
+            groupSeats?.map((item: any) => {
+                item?.map((item2: any) => {
+                    const dataOderSeat: number = item.findIndex((seat: any) => seat.seat_code === seatId_code);
+                    if (dataOderSeat >= 0) {
+                        const checkSeat = (selectedSeats.includes(item[dataOderSeat + 2]?.seat_code) || selectedSeats.includes(item[dataOderSeat - 2]?.seat_code)) && !(selectedSeats.includes(item[dataOderSeat + 1]?.seat_code) || selectedSeats.includes(item[dataOderSeat - 1]?.seat_code))
+                        const checkLeft = (dataOderSeat === 1) && !selectedSeats.includes(item[0]?.seat_code) && !selectedSeats.includes(item[dataOderSeat + 1]?.seat_code)
+                        const checkRight = (item[dataOderSeat + 1]?.seat_code === item[item.length - 1]?.seat_code && !(selectedSeats.includes(item[dataOderSeat - 1]?.seat_code) || selectedSeats.includes(item[dataOderSeat + 1]?.seat_code)));
+                        if (checkRight && !mapExecuted && typeName !== 'Đôi') {
+                            messageApi.error({
+                                type: 'error',
+                                content: 'Vẫn còn ghế trống bên phải không thể mua ghế vừa chọn',
+                                className: "h-[20%] mt-[20px]",
+                                duration: 2
+                            });
+                            mapExecuted = true;
+                            return;
+                        }
+                        if (checkLeft && !mapExecuted && typeName !== 'Đôi') {
+                            messageApi.error({
+                                type: 'error',
+                                content: 'Vẫn còn ghế trống bên trái không thể mua ghế vừa chọn',
+                                className: "h-[20%] mt-[20px]",
+                                duration: 2
+                            });
+                            mapExecuted = true;
+                            return;
+                        }
+                        if (!item[dataOderSeat + 2] && !mapExecuted && typeName !== 'Đôi' && checkSeat) {
+                            messageApi.error({
+                                type: 'error',
+                                content: 'Vẫn còn ghế trống bên phải không thể mua ghế vừa chọn',
+                                className: "h-[20%] mt-[20px]",
+                                duration: 2
+                            });
+                            mapExecuted = true;
+                            return;
+                        }
+                        if (selectedSeats.length > 0 && checkSeat && !mapExecuted && typeName !== 'Đôi') {
+                            messageApi.error({
+                                type: 'error',
+                                content: 'Quý khách nên chọn ghế bên cạnh',
+                                className: "h-[20%] mt-[20px]",
+                                duration: 2
+                            });
+                            mapExecuted = true;
+                            return;
+                        }
+                        if (typeName === 'Đôi') {
+                            if (item2.type_name === "Đôi") {
+                                const dataSeat1 = {
+                                    id: item[dataOderSeat]?.id,
+                                    price: item[dataOderSeat]?.price
+                                }
+                                if (dataOderSeat % 2 === 0) {
+                                    const dataSeat2 = {
+                                        id: item[dataOderSeat + 1]?.id,
+                                        price: item[dataOderSeat + 1]?.price
+                                    }
+                                    const checkId = idGhe.some((item: any) => item.id === dataSeat1?.id || item.id === dataSeat2?.id);
+                                    const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[dataOderSeat + 1]?.seat_code);
+                                    if (isSelected) {
+                                        setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[dataOderSeat + 1]?.seat_code));
+                                        setMoney(money - price);
+                                    } else {
+                                        setSelectedSeats([...selectedSeats, item[dataOderSeat + 1]?.seat_code, seatId_code]);
+                                        setMoney(money + price);
+                                    }
+                                    if (checkId) {
+                                        setidGhe(() => idGhe.filter((item: any) => item.id !== dataSeat1.id && item.id !== dataSeat2.id));
+                                    } else {
+                                        setidGhe([...idGhe, dataSeat1, dataSeat2]);
+                                    }
+                                } else {
+                                    const dataSeat2 = {
+                                        id: item[dataOderSeat - 1]?.id,
+                                        price: item[dataOderSeat - 1]?.price
+                                    }
+                                    const checkId = idGhe.some((item: any) => item.id === dataSeat1.id);
+                                    const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[dataOderSeat - 1]?.seat_code);
+                                    if (isSelected) {
+                                        setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[dataOderSeat - 1]?.seat_code));
+                                        setMoney(money - price);
+                                    } else {
+                                        setSelectedSeats([...selectedSeats, item[dataOderSeat - 1]?.seat_code, seatId_code]);
+                                        setMoney(money + price);
+
+                                    }
+                                    if (checkId) {
+                                        setidGhe(() => idGhe.filter((item: any) => item.id !== dataSeat1.id && item.id !== dataSeat2.id));
+                                    } else {
+                                        setidGhe([...idGhe, dataSeat1, dataSeat2]);
+                                    }
+                                }
                             }
-                            if (dataOderSeat % 2 === 0) {
-                                const dataSeat2 = {
-                                    id: item[dataOderSeat + 1]?.id,
-                                    price: item[dataOderSeat + 1]?.price
+                        }
+                        if (typeName !== 'Đôi' && !checkSeat && !checkRight && !checkLeft) {
+                            const checkSeatDelete = (selectedSeats.includes(item[dataOderSeat + 1]?.seat_code) && selectedSeats.includes(item[dataOderSeat - 1]?.seat_code))
+                            const checkedRight = (dataOderSeat === item.length - 1) && selectedSeats.includes(item[item.length - 1]?.seat_code) && selectedSeats.includes(item[item.length - 2]?.seat_code)
+                            const checkedLeft = ((dataOderSeat) === 0) && selectedSeats.includes(item[0]?.seat_code) && selectedSeats.includes(item[1]?.seat_code)
+                            const checkFull = selectedSeats.includes(item[0]?.seat_code) && selectedSeats.includes(item[item.length - 1]?.seat_code)
+                            const checkId = idGhe.some((item: any) => item.id === data.id);
+                            if (selectedSeats.includes(seatId_code)) {
+                                if (checkSeatDelete && !mapExecuted && checkId) {
+                                    messageApi.error({
+                                        type: 'error',
+                                        content: 'Quý khách nên hủy ghế lần lượt theo thứ tự',
+                                        className: "h-[20%] mt-[20px]",
+                                        duration: 2
+                                    });
+                                    mapExecuted = true;
+                                    return;
                                 }
-                                const checkId = idGhe.some((item: any) => item.id === dataSeat1?.id || item.id === dataSeat2?.id);
-                                const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[dataOderSeat + 1]?.seat_code);
-                                if (isSelected) {
-                                    setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[dataOderSeat + 1]?.seat_code));
+                                if (checkFull && !mapExecuted && checkId && !checkSeatDelete) {
+                                    messageApi.error({
+                                        type: 'error',
+                                        content: 'Quý khách nên hủy ghế lần lượt theo thứ tự',
+                                        className: "h-[20%] mt-[20px]",
+                                        duration: 2
+                                    });
+                                    mapExecuted = true;
+                                    return;
+                                }
+                                if (checkedLeft && !mapExecuted && checkId && !checkedRight && !checkSeatDelete) {
+                                    messageApi.error({
+                                        type: 'error',
+                                        content: `Quý khách nên hủy ghế lần lượt theo thứ tự`,
+                                        className: "h-[20%] mt-[20px]",
+                                        duration: 2
+                                    });
+                                    mapExecuted = true;
+                                    return;
+                                }
+                                if (checkedRight && !mapExecuted && checkId && !checkedLeft && !checkSeatDelete) {
+                                    messageApi.error({
+                                        type: 'error',
+                                        content: `Quý khách nên hủy ghế lần lượt theo thứ tự`,
+                                        className: "h-[20%] mt-[20px]",
+                                        duration: 2
+                                    });
+                                    mapExecuted = true;
+                                    return;
+                                }
+                                if (!(checkSeatDelete || checkedLeft || checkedRight) && checkId) {
+                                    setSelectedSeats(selectedSeats.filter((id) => id !== seatId_code));
+                                    setidGhe(() => idGhe.filter((item: any) => item.id !== data.id));
                                     setMoney(money - price);
-                                } else {
-                                    setSelectedSeats([...selectedSeats, item[dataOderSeat + 1]?.seat_code, seatId_code]);
-                                    setMoney(money + price);
-                                }
-                                if (checkId) {
-                                    setidGhe(() => idGhe.filter((item: any) => item.id !== dataSeat1.id && item.id !== dataSeat2.id));
-                                } else {
-                                    setidGhe([...idGhe, dataSeat1, dataSeat2]);
                                 }
                             } else {
-                                const dataSeat2 = {
-                                    id: item[dataOderSeat - 1]?.id,
-                                    price: item[dataOderSeat - 1]?.price
-                                }
-                                const checkId = idGhe.some((item: any) => item.id === dataSeat1.id);
-                                const isSelected = selectedSeats.includes(seatId_code) || selectedSeats.includes(item[dataOderSeat - 1]?.seat_code);
-                                if (isSelected) {
-                                    setSelectedSeats(selectedSeats.filter((seat_code) => seat_code !== seatId_code && seat_code !== item[dataOderSeat - 1]?.seat_code));
-                                    setMoney(money - price);
-                                } else {
-                                    setSelectedSeats([...selectedSeats, item[dataOderSeat - 1]?.seat_code, seatId_code]);
-                                    setMoney(money + price);
-
-                                }
-                                if (checkId) {
-                                    setidGhe(() => idGhe.filter((item: any) => item.id !== dataSeat1.id && item.id !== dataSeat2.id));
-                                } else {
-                                    setidGhe([...idGhe, dataSeat1, dataSeat2]);
-                                }
+                                setSelectedSeats([...selectedSeats, seatId_code]);
+                                setMoney(money + price);
+                                setidGhe([...idGhe, data]);
                             }
                         }
                     }
-                    if (typeName !== 'Đôi' && !checkSeat && !checkRight && !checkLeft) {
-                        const checkSeatDelete = (selectedSeats.includes(item[dataOderSeat + 1]?.seat_code) && selectedSeats.includes(item[dataOderSeat - 1]?.seat_code))
-                        const checkedRight = (dataOderSeat === item.length - 1) && selectedSeats.includes(item[item.length - 1]?.seat_code) && selectedSeats.includes(item[item.length - 2]?.seat_code)
-                        const checkedLeft = ((dataOderSeat) === 0) && selectedSeats.includes(item[0]?.seat_code) && selectedSeats.includes(item[1]?.seat_code)
-                        const checkFull = selectedSeats.includes(item[0]?.seat_code) && selectedSeats.includes(item[item.length - 1]?.seat_code)
-                        const checkId = idGhe.some((item: any) => item.id === data.id);
-                        if (selectedSeats.includes(seatId_code)) {
-                            if (checkSeatDelete && !mapExecuted && checkId) {
-                                messageApi.error({
-                                    type: 'error',
-                                    content: 'Quý khách nên hủy ghế lần lượt theo thứ tự',
-                                    className: "h-[20%] mt-[20px]",
-                                    duration: 2
-                                });
-                                mapExecuted = true;
-                                return;
-                            }
-                            if (checkFull && !mapExecuted && checkId && !checkSeatDelete) {
-                                messageApi.error({
-                                    type: 'error',
-                                    content: 'Quý khách nên hủy ghế lần lượt theo thứ tự ngu',
-                                    className: "h-[20%] mt-[20px]",
-                                    duration: 2
-                                });
-                                mapExecuted = true;
-                                return;
-                            }
-                            if (checkedLeft && !mapExecuted && checkId && !checkedRight && !checkSeatDelete) {
-                                messageApi.error({
-                                    type: 'error',
-                                    content: `Quý khách nên hủy ghế lần lượt theo thứ tự l`,
-                                    className: "h-[20%] mt-[20px]",
-                                    duration: 2
-                                });
-                                mapExecuted = true;
-                                return;
-                            }
-                            if (checkedRight && !mapExecuted && checkId && !checkedLeft && !checkSeatDelete) {
-                                messageApi.error({
-                                    type: 'error',
-                                    content: `Quý khách nên hủy ghế lần lượt theo thứ tự r`,
-                                    className: "h-[20%] mt-[20px]",
-                                    duration: 2
-                                });
-                                mapExecuted = true;
-                                return;
-                            }
-                            if (!(checkSeatDelete || checkedLeft || checkedRight) && checkId) {
-                                setSelectedSeats(selectedSeats.filter((id) => id !== seatId_code));
-                                setidGhe(() => idGhe.filter((item: any) => item.id !== data.id));
-                                setMoney(money - price);
-                            }
-                        } else {
-                            setSelectedSeats([...selectedSeats, seatId_code]);
-                            setMoney(money + price);
-                            setidGhe([...idGhe, data]);
-                        }
-                    }
-                }
+                })
             })
-        })
+        } else {
+            messageApi.error({
+                type: 'error',
+                content: `Quý khách không thể đặt thêm ghế`,
+                className: "h-[20%] mt-[20px]",
+                duration: 2
+            });
+            mapExecuted = true;
+            return;
+        }
     };
     const getCombo = (quantity: number, price: number, foodName: any) => {
         let soLuong = parseInt(quantity.toString(), 10);
-
-        //const getCombo = async (data: { target: { value: any } }, price: number, foodName: any) => {
-        //let soLuong = parseInt(data.target.value, 10);
-
         soLuong = isNaN(soLuong) || soLuong < 0 ? 0 : soLuong;
 
         const comboObject = {
@@ -235,7 +242,6 @@ const Booking = () => {
             price: price,
             food_name: foodName,
         };
-
         setCombo((prevCombo: any) => {
             const comboExists = prevCombo.some((comboObjectInArray: any) => comboObjectInArray.food_name === comboObject.food_name);
 
