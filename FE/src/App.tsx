@@ -32,18 +32,18 @@ function App() {
   const checkLocal = localStorage.getItem("user");
   const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
   const checkRoleAdmin = checkUser?.role === "Admin"
-  // const checktab = document.addEventListener("visibilitychange", () => {
-  //   if (document.hidden && checkLocal) {
-  //     localStorage.removeItem("user")
-  //   }
-  // })
-  // useEffect(() => {
-  //   const timeUse = setInterval(() => {
-  //     checktab
-  //   }, 3600000)
-  //   clearInterval(timeUse);
-  //   return;
-  // })
+  const checktab = document.addEventListener("visibilitychange", () => {
+    if (document.hidden && checkLocal) {
+      localStorage.removeItem("user")
+    }
+  })
+  useEffect(() => {
+    const timeUse = setInterval(() => {
+      checktab
+    }, 3600000)
+    clearInterval(timeUse);
+    return;
+  })
   return <BrowserRouter>
     <Routes>
       <Route path='/' element={<LayoutPerson />}>
