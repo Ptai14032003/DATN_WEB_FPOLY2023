@@ -14,6 +14,7 @@ class Movie extends Model
         'movie_name',
         'country_name',
         'movie_type_id',
+        'genre',
         'director',
         'start_date',
         'end_date',
@@ -31,12 +32,6 @@ public function movieType()
 {
     return $this->belongsTo(Movie_Type::class, 'movie_type_id');
 }
-
-public function genres()
-{
-    return $this->belongsToMany(List_Genre::class, 'movie_genres', 'movie_id', 'list_genre_id');
-}
-
 
 
 }

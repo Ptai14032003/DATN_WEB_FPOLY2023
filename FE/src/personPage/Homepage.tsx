@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import { useCheckBillMutation } from '../rtk/bill/bill';
 import "./responsive.css"
 import Loading from '../components/layouts/layoutGuest/loading';
+import PayFail from './payFail';
 
 
 const HomePage = () => {
@@ -22,7 +23,7 @@ const HomePage = () => {
   const userString = localStorage.getItem('user');
   const user = userString ? JSON.parse(userString) : null;
   const Navigate = useNavigate()
-
+  
   // console.log(user.role);
   // if (user.role === 'admin') {
 
@@ -88,9 +89,9 @@ const HomePage = () => {
           </div>
         </div>
         <div className="btn-movie space-x-5 mb-16">
-          <button className={activeTab === 1 ? ' bg-[#1ACAAC] rounded-md w-[200px] py-2 text-lg' : 'bg-[#282727] rounded-md w-[200px] py-2 text-lg'}  onClick={() => handleClick(1)}>Đang chiếu</button>
-          <button className={activeTab === 2 ? ' bg-[#1ACAAC] rounded-md w-[200px] py-2 text-lg' : 'bg-[#282727] rounded-md w-[200px] py-2 text-lg'}  onClick={() => handleClick(2)}>Sắp chiếu</button>
-          <button className={activeTab === 3 ? ' bg-[#1ACAAC] rounded-md w-[200px] py-2 text-lg' : 'bg-[#282727] rounded-md w-[200px] py-2 text-lg'}  onClick={() => handleClick(3)}>Đặc biệt</button>
+          <button className={activeTab === 1 ? ' bg-[#1ACAAC] rounded-md w-[200px] py-2 text-lg' : 'bg-[#282727] rounded-md w-[200px] py-2 text-lg'}  onClick={() => handleClick(1)}>All Movies</button>
+          <button className={activeTab === 2 ? ' bg-[#1ACAAC] rounded-md w-[200px] py-2 text-lg' : 'bg-[#282727] rounded-md w-[200px] py-2 text-lg'}  onClick={() => handleClick(2)}>Showing</button>
+          <button className={activeTab === 3 ? ' bg-[#1ACAAC] rounded-md w-[200px] py-2 text-lg' : 'bg-[#282727] rounded-md w-[200px] py-2 text-lg'}  onClick={() => handleClick(3)}>Coming soon</button>
         </div>
       </div>
       {/*  */}
@@ -108,10 +109,9 @@ const HomePage = () => {
                 <div className="text my-2 px-3">
                   <h1 className='text-xl font-semibold'>{item.movie_name}</h1>
                   <div className="grid grid-cols-5 font-semibold text-[#B6B4B4] my-1 text-sm">
-                    <p className='col-span-2'>{item.start_date}</p>
+                    <p className='col-span-2'>{item.movie_time} phút</p>
                     <p className='text-center'>|</p>
-                    <p className='col-span-2'>{item.director}</p>
-
+                    <p className='col-span-2'>{item.start_date}</p>
                   </div>
                 </div>
               </Link>
@@ -122,11 +122,10 @@ const HomePage = () => {
         </div>
       )}
       <div className={`Coming-soon-movies ${activeTab === 2 ? "max-w-[1420px] mx-auto p-5 grid grid-cols-5 gap-10 mb-8" : "hidden"}`}>
-        <h1>Coming-soon-movies</h1>
+        <h1>Showing</h1>
       </div>
       <div className={`Special ${activeTab === 3 ? "max-w-[1420px] mx-auto p-5 grid grid-cols-5 gap-10 mb-8" : "hidden"}`}>
-        <h1>Special</h1>
-
+        <h1>Coming-soon-movies</h1>
       </div>
     </div>
 

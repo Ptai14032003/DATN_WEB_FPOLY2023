@@ -17,6 +17,7 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
 {
@@ -26,10 +27,8 @@ class HomeController extends Controller
     public function index()
     {
 
-        $movie =  Movie::join('countries', 'movies.country_id', '=', 'countries.id')
-            ->join('producers', 'movies.producer_id', '=', 'producers.id')
-            ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
-            ->select('movies.*', 'countries.country_name', 'producers.producer_name', 'movie_types.type_name')
+        $movie =  Movie::join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+            ->select('movies.*', 'movie_types.type_name')
             ->whereNull('movies.deleted_at')
             ->OrderBy('movies.id', 'asc')
             ->get();
@@ -39,10 +38,8 @@ class HomeController extends Controller
     {
         $currentDate = Carbon::now();
 
-        $movies = Movie::join('countries', 'movies.country_id', '=', 'countries.id')
-            ->join('producers', 'movies.producer_id', '=', 'producers.id')
-            ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
-            ->select('movies.*', 'countries.country_name', 'producers.producer_name', 'movie_types.type_name')
+        $movies = Movie::join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+            ->select('movies.*', 'movie_types.type_name')
             ->whereNull('movies.deleted_at')
             ->where('movies.start_date', '>', $currentDate) // Filter movies with start_date greater than the current date
             ->orderBy('movies.id', 'asc')
@@ -55,10 +52,8 @@ class HomeController extends Controller
     {
         $currentDate = Carbon::now();
 
-        $movies = Movie::join('countries', 'movies.country_id', '=', 'countries.id')
-            ->join('producers', 'movies.producer_id', '=', 'producers.id')
-            ->join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
-            ->select('movies.*', 'countries.country_name', 'producers.producer_name', 'movie_types.type_name')
+        $movies = Movie::join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+            ->select('movies.*', 'movie_types.type_name')
             ->whereNull('movies.deleted_at')
             ->where('movies.start_date', '<=', $currentDate)
             ->where('movies.end_date', '>=', $currentDate)
@@ -267,12 +262,48 @@ class HomeController extends Controller
 
     public function send_mail(Request $request)
     {
+        $bill = Bill::where('id', $request->bill_id)->first();
         //thông tin người nhận mail
-        $user = User::where('user_code', $request->user_code)->get();
+        $user = User::where('user_code', $bill->user_code)->first();
 
+        $movie = Bill::join('tickets', 'tickets.bill_id', '=', 'bills.id')
+            ->join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
+            ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
+            ->join('seats', 'seats.id', '=', 'tickets.id_seat')
+            ->leftJoin('ticket_foods', 'ticket_foods.bill_id', '=', 'bills.id')
+            ->leftJoin('foods', 'foods.id', '=', 'ticket_foods.food_id')
+            ->where('bills.id', $request->bill_id)
+            ->select(
+                'showtimes.show_date as show_date',
+                'movies.movie_name as movie_name',
+                \DB::raw('DATE_FORMAT(showtimes.show_time, "%H:%i") as show_time'), // Định dạng show_time chỉ theo giờ phút
+                'movies.movie_time as movie_time',
+                \DB::raw('GROUP_CONCAT(DISTINCT seats.seat_code) as seat'),
+                \DB::raw('GROUP_CONCAT(DISTINCT IFNULL(CONCAT(ticket_foods.quantity, "-", foods.food_name), "")) as food')
+            )
+            ->groupBy('show_date', 'movie_name', 'show_time', 'movie_time')
+            ->first();
         // send mail
-        $to_name = $user->name;
-        $to_mail = $user->email;
+        $to_name = "Wonder Cenima"; //tên người gửi
+        $to_email = $user->email;
+
+        $data = array(
+            "name" => $user->name,
+            "movie_name" => $movie->movie_name,
+            "show_date" => $movie->show_date,
+            "show_time" => $movie->show_time,
+            "movie_time" => $movie->movie_time,
+            "seat" => $movie->seat,
+            "food" => $movie->food,
+            "to_name" => $to_name
+        );
+
+        Mail::send('send_mail', $data, function ($message) use ($to_name, $to_email) {
+            $message->to($to_email)->subject("[Wonder Cenima] Xác nhận thanh toán thành công");
+
+            $message->from($to_email, $to_name);
+        });
+        return response()->json("thành công");
     }
 
 }
