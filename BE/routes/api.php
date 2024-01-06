@@ -44,7 +44,7 @@ Route::get('/voucher', [HomeController::class, 'voucher'])->name('voucher');
 //lịch sử đặt vé
 Route::post('/booking_history', [HomeController::class, 'booking_history'])->name('booking_history')->middleware('auth:sanctum');
 // send mail
-Route::post('/send_mail', [HomeController::class, 'send_mail'])->name('send_mail')->middleware('auth:sanctum');
+Route::post('/send_mail', [HomeController::class, 'send_mail'])->name('send_mail');
 
 Route::prefix('admin')->middleware('checkrole')->group(function () {
     Route::resource('bill', BillController::class);
