@@ -20,9 +20,6 @@ const formSchema = Yup.object({
   ).required(),
   email: Yup.string().email("Lỗi email"
   ).required(),
-  address: Yup.string().max(255, "Lỗi address",
-  ).required(),
-  birthday: Yup.string().required(),
   password: Yup.string().min(8, "lỗi password",
   ).required(),
   gender: Yup.number().min(1, "lỗi password",
@@ -63,24 +60,11 @@ const Signup = () => {
               {errors.email && <p>{errors.email?.message}</p>}
 
               <div className="input-box">
-                <input type="text" placeholder="Address" {...register('address')} />
-              </div>
-              {errors.address && <p>{errors.address?.message}</p>}
-
-              <div className="input-box">
                 <input type="text" placeholder="Phone_number" {...register('phone_number')} />
               </div>
               {errors.phone_number && <p>{errors.phone_number?.message}</p>}
             </div>
             <div>
-              <div className="input-box">
-                <input type="text" placeholder="Birthday" {...register('birthday')} />
-              </div>
-              {errors.birthday && <p>{errors.birthday?.message}</p>}
-              <div className="input">
-                <input type="text" className='text-black' {...register("gender")} />
-              </div>
-              {errors.gender && <p>{errors.gender?.message}</p>}
               <div className="input-box">
                 <input type="password" placeholder="Password" {...register('password')} />
               </div>
@@ -90,10 +74,6 @@ const Signup = () => {
               </div>
               {errors.password_confirmation && <p>{errors.password_confirmation?.message}</p>}
             </div>
-          </div>
-          <div className="remember-forgot">
-            <label><input type="checkbox" /> Remember me</label>
-            <a href="#">Forgot password?</a>
           </div>
 
           <button type="submit" className="btn">Signup</button>
