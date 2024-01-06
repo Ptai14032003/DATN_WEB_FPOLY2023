@@ -10,7 +10,15 @@ const foodsApi = createApi({
             query: () => "/food/",
             providesTags: ["food"]
         }),
+        fetchFoodID: builder.query<any, string>({
+            query: (id) => `/food/${id}`,
+            providesTags: ["food"]
+        }),
+        deleteFoodID: builder.query<any, string>({
+            query: (id) => `/food/${id}`,
+            providesTags: ["food"]
+        }),
     })
 })
-export const { useFetchFoodsQuery } = foodsApi
+export const { useFetchFoodsQuery, useFetchFoodIDQuery } = foodsApi
 export default foodsApi

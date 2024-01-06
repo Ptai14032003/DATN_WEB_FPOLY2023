@@ -16,8 +16,8 @@ class ApiPromotionController extends Controller
         // lấy ra toàn bộ danh danh sách
         $promotion = Promotion::all();
 //        Trả về danh sách dưới dạng json
-        return response()->json($promotion);
 
+        return response()->json($promotion);
     }
 
     /**

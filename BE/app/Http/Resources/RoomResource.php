@@ -17,7 +17,10 @@ class RoomResource extends JsonResource
         return [
             "id"=> $this->id,
             "name"=>$this->name,
-            "total_seat" => $this->total_seat
+            "total_seat" => $this->total_seat,
+            "row" => $this->row,
+            "col" => $this->col,
+            
         ];
     }
 }

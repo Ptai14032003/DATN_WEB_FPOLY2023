@@ -4,9 +4,11 @@ import EditQlNhanSu from './edit';
 import CreateQlNhanSu from './create';
 import { useDeleteNhanSuMutation, useFetchNhanSuQuery } from '../../rtk/qlNhanSu/qlNhanSu';
 import { Waveform } from '@uiball/loaders';
+
 import Fuse from 'fuse.js';
 import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
 import { useNavigate } from 'react-router-dom';
+
 
 const { Column } = Table;
 export interface QlNhanSu {
@@ -22,10 +24,12 @@ export interface QlNhanSu {
     role: string
 }
 const AdminQlNhanSu: React.FC = () => {
+
     const { data: dataNhanSu, isLoading, error } = useFetchNhanSuQuery()
 
     const navigate = useNavigate();
     const status = error?.status;
+
 
     const [dataTable, setDataTable] = useState<QlNhanSu[]>([])
     const [searchTerm, setSearchTerm] = useState('');
@@ -44,6 +48,7 @@ const AdminQlNhanSu: React.FC = () => {
         onChange: onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
+
     const fuseOptions = {
         includeScore: true,
         includeMatches: true,
@@ -53,6 +58,7 @@ const AdminQlNhanSu: React.FC = () => {
         keys: ["user_code", "name", "email"]
     }
     const fuse = new Fuse(dataNhanSu?.data, fuseOptions)
+
 
     const searchProject = (value: string) => {
         console.log(value);
@@ -78,6 +84,7 @@ const AdminQlNhanSu: React.FC = () => {
             }))
             setDataTable(mapNhanSu)
         }
+
         if (status) {
             checkApiStatus(status, navigate);
         }
@@ -121,6 +128,7 @@ const AdminQlNhanSu: React.FC = () => {
             }
         }
     }, [searchTerm, dataNhanSu])
+
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Danh sách nhân sự</div>

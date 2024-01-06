@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useFetchSeatRoomIdQuery } from '../rtk/booking/booking';
@@ -207,16 +208,6 @@ const Booking = () => {
                                 mapExecuted = true;
                                 return;
                             }
-                            // if (checkFull && !mapExecuted && checkId) {
-                            //     messageApi.error({
-                            //         type: 'error',
-                            //         content: `Quý khách nên hủy ghế lần lượt theo thứ tự ngu`,
-                            //         className: "h-[20%] mt-[20px]",
-                            //         duration: 2
-                            //     });
-                            //     mapExecuted = true;
-                            //     return;
-                            // }
                             if (!(checkSeatDelete || checkedLeft || checkedRight) && checkId) {
                                 setSelectedSeats(selectedSeats.filter((id) => id !== seatId_code));
                                 setidGhe(() => idGhe.filter((item: any) => item.id !== data.id));
@@ -334,6 +325,7 @@ const Booking = () => {
             getCombo(updatedItems[foodName], price, foodName); // Tính toán giá tiền
             return updatedItems;
         });
+
     };
 
 
@@ -342,10 +334,12 @@ const Booking = () => {
             <div className="backdrop">
                 <img src={seatBooking?.movie?.image} className='backdrop-img w-full h-[550px] relative'></img>
             </div>
+
             <div className="movies-title absolute flex justify-between items-center translate-x-[28rem] -translate-y-[4rem] text-white w-[63.875rem]">
                 <h3 className='text-3xl'>{seatBooking?.movie?.movie_name}</h3>
                 <div className="time flex text-lg items-center space-x-10">
                     <p>{seatBooking?.movie?.time}</p>
+
                 </div>
             </div>
 
@@ -382,12 +376,13 @@ const Booking = () => {
                                     <span>2</span> Combo
                                 </li>
                                 <li className={activeTab === 3 ? 'active' : ''}>
+
                                     <span>3</span> Thanh toán
                                 </li>
                             </ul>
                         </div>
 
-                        <div className="w-[230px] h-[42px] border-[2px] rounded-md mt-[50px] px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
+                        <div className="w-[250px] h-[42px] border-[2px] rounded-md mt-[50px] px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
                         <form action="" method='POST'>
 
                             <div className={`Booking-content ${activeTab === 1 ? "" : "hidden"}`}>
@@ -451,7 +446,7 @@ const Booking = () => {
                         <div className={`Booking-combo grid ${activeTab === 2 ? "" : "hidden"}`}>
                             <div className='mt-[7rem] mx-[4rem]'>
                                 <div className='grid grid-cols-2 gap-12'>
-                                    {Foods?.map((item) => (
+                                    {Foods?.map((item: any) => (
                                         <div className='Combo grid grid-cols-3 border-2 border-white rounded-md bg-[#2f9c8a] p-3 gap-5' key={item?.id}>
                                             <img src={item?.image} alt="" className='col-span-1 h-full w-full rounded-md' />
                                             <div className="col-span-2 flex flex-col justify-between">
@@ -493,6 +488,7 @@ const Booking = () => {
                 <Footer />
             </footer>
         </div >
+
     )
 }
 export default Booking

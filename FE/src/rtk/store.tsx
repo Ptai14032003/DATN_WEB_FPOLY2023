@@ -14,6 +14,7 @@ import moviesApiPerson from './moviesPerson/moviesPerson'
 import bookingApi from './booking/booking'
 import foodsApi from './qlSp/qlSp'
 import billApi from './bill/bill'
+
 export const store = configureStore({
     reducer: {
         phongChieu: phongChieuApi.reducer,
@@ -47,9 +48,11 @@ export const store = configureStore({
             .concat(genresApi.middleware)
             .concat(moviesApiPerson.middleware)
             .concat(bookingApi.middleware)
+
             .concat(foodsApi.middleware)
             .concat(billApi.middleware)
             .concat(discountApi.middleware)
+
 });
 
 

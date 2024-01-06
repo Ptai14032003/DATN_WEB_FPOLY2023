@@ -6,6 +6,7 @@ import { useFetchMoviesQuery } from '../../rtk/movies/movies';
 import { useFetchPhongChieuQuery } from '../../rtk/qlPhongChieu/qlPhongChieu';
 import { SuatChieu } from '../../type';
 import { QlSuatChieu } from './page';
+
 import { useFetchMoviesPersonQuery } from '../../rtk/moviesPerson/moviesPerson';
 const CreateQlSc: React.FC = () => {
     const [addSc] = useAddSuatChieuMutation()
@@ -15,6 +16,7 @@ const CreateQlSc: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const movieOptions = dataMovie?.map((movie: any) => ({
+
         value: movie.id,
         label: movie.movie_name,
     })) || [];
@@ -60,6 +62,7 @@ const CreateQlSc: React.FC = () => {
                     >
                         <Select
                             placeholder="Chọn tên phim"
+
                             style={{ width: 200 }}
                             options={movieOptions}
                         />
@@ -71,7 +74,9 @@ const CreateQlSc: React.FC = () => {
                         rules={[{ required: true, message: 'Vui lòng nhập tên phòng !' }]}
                     >
                         <Select
+
                             placeholder="Chọn tên phòng"
+
                             style={{ width: 200 }}
                             options={roomOptions}
                         />
