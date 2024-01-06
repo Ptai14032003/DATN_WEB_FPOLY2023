@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('movie_name');
             $table->string('country_name');
             $table->unsignedBigInteger('movie_type_id');
+            $table->string('genre');
             $table->string('director');
             $table->string('actor_name');
             $table->date('start_date');
