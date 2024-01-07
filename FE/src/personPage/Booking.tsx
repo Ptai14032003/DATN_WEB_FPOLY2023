@@ -9,6 +9,7 @@ import { MdChair } from "react-icons/md";
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 import Footer from '../components/layouts/layoutGuest/footer';
+import Menu from '../components/layouts/layoutGuest/menu';
 
 const Booking = () => {
     const { search } = useLocation();
@@ -330,6 +331,9 @@ const Booking = () => {
 
     return (
         <div className='bg-black text-white'>
+            <div>
+                <Menu/>
+            </div>
             <div className="backdrop">
                 <img src={seatBooking?.movie?.image} className='backdrop-img w-full h-[550px] relative'></img>
             </div>

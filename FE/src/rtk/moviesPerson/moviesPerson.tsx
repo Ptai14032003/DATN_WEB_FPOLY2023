@@ -11,11 +11,19 @@ const moviesApiPerson = createApi({
             query: () => "/movie_home",
             providesTags: ["moviesPerson"]
         }),
+        fetchComingSoonMovies: builder.query<any, void>({
+            query: () => "/comingSoon",
+            providesTags: ["moviesPerson"]
+        }),
+        fetchShowingMovies: builder.query<any, void>({
+            query: () => "/showing",
+            providesTags: ["moviesPerson"]
+        }),
         fetchMovieIdPerson: builder.query<any, any>({
             query: (id) => `/movie_show_time/${id}`,
-            providesTags: ["moviesPerson"]
+            providesTags: ["moviesPerson"] 
         })
     })
 })
-export const { useFetchMovieIdPersonQuery, useFetchMoviesPersonQuery} = moviesApiPerson
+export const { useFetchMovieIdPersonQuery, useFetchMoviesPersonQuery, useFetchComingSoonMoviesQuery, useFetchShowingMoviesQuery} = moviesApiPerson
 export default moviesApiPerson
