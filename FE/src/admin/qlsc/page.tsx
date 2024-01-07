@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
 import CreateQlSc from './create';
 import { useDeleteSuatChieuMutation, useFetchSuatChieuQuery } from '../../rtk/qlSc/qlSc';
-
+import "./page.css"
 import { Waveform } from '@uiball/loaders';
 
-import { checkApiStatus }  from "../checkApiStatus"; // Import hàm trợ giúp
+import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
 import { useNavigate } from 'react-router-dom';
 
 
@@ -23,7 +23,7 @@ export type QlSuatChieu = {
 }
 const AdminQlSc: React.FC = () => {
     const { data: dataSuatChieu, isLoading, error } = useFetchSuatChieuQuery()
-    
+
     const navigate = useNavigate();
     const status = error?.status;
 
@@ -68,10 +68,10 @@ const AdminQlSc: React.FC = () => {
             setDataTable(mapSuatChieu);
         }
         if (status) {
-            checkApiStatus(status,navigate);
+            checkApiStatus(status, navigate);
         }
-        
-    }, [dataSuatChieu,status]);
+
+    }, [dataSuatChieu, status]);
 
     return (
         <div>
