@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 const CheckPay = () => {
     const [checkBill] = useCheckBillMutation()
     const [sendEmail] = useSendMailMutation()
+    const [checkRequest, setRequest] = useState(false)
     const [mess, setMess] = useState("")
     const url = new URL(window.location.href);
     const urlSearchParams = new URLSearchParams(new URL(window.location.href).search);
@@ -22,9 +23,16 @@ const CheckPay = () => {
     const dataSend_email = {
         bill_id: vnp_TxnRef
     }
+    const sendEmailUser = async () => {
+        if (checkRequest === false) {
+            sendEmail(dataSend_email)
+        }
+    }
     useEffect(() => {
-
-        if (url.pathname === "/listvnp") {
+        sendEmailUser()
+    }, [])
+    useEffect(() => {
+        if (url.pathname === "/listvnp" && checkRequest === false) {
             const data = {
                 vnp_Amount: vnp_Amount,
                 vnp_BankCode: vnp_BankCode,
@@ -39,11 +47,15 @@ const CheckPay = () => {
                 vnp_SecureHash: vnp_SecureHash,
                 vnp_CardType: vnp_CardType
             }
-            checkBill(data).then((req: any) => { setMess(req?.data?.Message); sendEmail(dataSend_email) }
-
+            checkBill(data).then((req: any) => {
+                setMess(req?.data?.Message);
+            }
             )
+            return;
         }
     }, [])
+    console.log(checkRequest);
+
     const moneny = (Number(vnp_Amount) / 100)?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     const date: Array<number> = vnp_PayDate?.split("").map(Number) as [];
     const year = date.slice(0, 4).join("");
