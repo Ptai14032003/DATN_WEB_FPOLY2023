@@ -12,25 +12,12 @@ export interface QlGenre {
 }
 const CreateQlPhim: React.FC = () => {
     const [addMovies] = useAddMoviesMutation()
-    const { data: dataGenres } = useFetchGenresQuery()
-    const countryName = ["Hoa Kỳ", "Canada", "Việt Nam", "United States"]
-    const countryOptions = countryName.map((country) => ({
-        value: country,
-        label: country,
-    }));
-
     const typeMovies = ["2D", "3D"];
 
     const typeOptions = typeMovies.map((type) => ({
         value: type,
         label: type,
     }));
-
-    const genreOptions = dataGenres?.map((genre: QlGenre) => ({
-        value: genre.id,
-        label: genre.genre,
-
-    }))
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {

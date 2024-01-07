@@ -63,21 +63,9 @@ Route::prefix('admin')->group(function () {
 
     });
 
-    Route::prefix('movie_genres')->group(function () {
-        Route::get('/', [ApiMovieGenreController::class, 'index']);
-        Route::post('/', [ApiMovieGenreController::class, 'store']);
-        Route::get('/{id}', [ApiMovieGenreController::class, 'show']);
-        Route::put('/{id}', [ApiMovieGenreController::class, 'update']);
-        Route::delete('/{id}', [ApiMovieGenreController::class, 'destroy']);
-    });
 
-    // Route::prefix('food')->group(function () {
-    //     Route::get('/', [FoodController::class, 'index']);
-    //     Route::post('/', [FoodController::class, 'store']);
-    //     Route::get('/{id}', [FoodController::class, 'show']);
-    //     Route::put('/{id}', [FoodController::class, 'update']);
-    //     Route::delete('/{id}', [FoodController::class, 'destroy']);
-    // });
+
+
 
     Route::prefix('movie_type')->group(function () {
         Route::get('/', [ApiMovieTypeController::class, 'index']);
@@ -87,13 +75,7 @@ Route::prefix('admin')->group(function () {
         Route::delete('/{id}', [ApiMovieTypeController::class, 'destroy']);
     });
 
-    Route::prefix('list_genres')->group(function () {
-        Route::get('/', [ApiListGenreController::class, 'index']);
-        Route::post('/', [ApiListGenreController::class, 'store']);
-        Route::get('/{id}', [ApiListGenreController::class, 'show']);
-        Route::put('/{id}', [ApiListGenreController::class, 'update']);
-        Route::delete('/{id}', [ApiListGenreController::class, 'destroy']);
-    });
+   
 
     Route::prefix('promotions')->group(function () {
         Route::get('/', [ApiPromotionController::class, 'index']);
