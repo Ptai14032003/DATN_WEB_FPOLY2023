@@ -52,7 +52,7 @@ function App() {
         <Route path="new" element={<NewFilm />} />
         <Route path="seat" element={<Seat />} />
       </Route>
-      <Route path="ticket-price" element={<TicketPrice />} />
+      <Route path="ticket-price" element={<TicketPrice />}/>
       <Route path="ticket-history" element={<TicketHistory/>} />
       <Route path="profile" element={<Profile />} />
       <Route path="signin" element={<Signin />} />

@@ -64,7 +64,7 @@ const Menu = () => {
                   {user.role === 'Admin' && (
                     <li>
                       <a href="admin">Admin</a>
-                    </li>
+                    </li> 
                   )}
                   <li><a href={homeLink + 'profile'} className='block'>Profile</a></li>
                   <li onClick={() => Logout()}><div className='block'>Logout</div></li>

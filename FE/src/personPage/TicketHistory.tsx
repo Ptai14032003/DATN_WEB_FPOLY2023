@@ -10,7 +10,7 @@ const TicketHistory = () => {
             </div>
             <div className='h-[1000px] text-white'>
               <h1>TicketHistory</h1>
-            </div>
+            </div> 
             <footer className='text-white'>
                 <Footer/>
             </footer>

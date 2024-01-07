@@ -21,7 +21,7 @@ const moviesApiPerson = createApi({
         }),
         fetchMovieIdPerson: builder.query<any, any>({
             query: (id) => `/movie_show_time/${id}`,
-            providesTags: ["moviesPerson"]
+            providesTags: ["moviesPerson"] 
         })
     })
 })
