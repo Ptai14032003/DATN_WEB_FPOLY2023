@@ -27,12 +27,23 @@ import Profile from './personPage/Profile.tsx'
 import CheckPay from './personPage/checkPay.tsx'
 import Payment from './personPage/Payment.tsx'
 import NotFound from './personPage/404.tsx'
-
-
+import { useEffect } from 'react'
 function App() {
   const checkLocal = localStorage.getItem("user");
   const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
   const checkRoleAdmin = checkUser?.role === "Admin"
+  const checktab = document.addEventListener("visibilitychange", () => {
+    if (document.hidden && checkLocal) {
+      localStorage.removeItem("user")
+    }
+  })
+  useEffect(() => {
+    const timeUse = setInterval(() => {
+      checktab
+    }, 3600000)
+    clearInterval(timeUse);
+    return;
+  })
   return <BrowserRouter>
     <Routes>
       <Route path='/' element={<LayoutPerson />}>
@@ -47,6 +58,7 @@ function App() {
       <Route path='movie_show_time/:id' element={<Detail />}></Route>
       <Route path='booking/:id' element={<Booking />} />
       <Route path='payment' element={<Payment />} />
+      <Route path="listvnp" element={<CheckPay />} />
       {checkRoleAdmin ? (
         <Route path='/admin' element={<LayoutAdmin />}>
           <Route path='qlPhim' element={<AdminQlPhim />}></Route>
@@ -65,8 +77,6 @@ function App() {
         <Route path='/notfound' element={<NotFound />}></Route>
       )}
       <Route path='*' element={<Navigate to='/notfound' />} />
-      <Route path="listvnp" element={<CheckPay />} />
-
     </Routes>
   </BrowserRouter>
 }

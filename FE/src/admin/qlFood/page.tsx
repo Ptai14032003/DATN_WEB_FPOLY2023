@@ -10,7 +10,7 @@ import Fuse from 'fuse.js';
 import { Waveform } from '@uiball/loaders';
 const { Column } = Table;
 
-interface QlFood {
+export interface QlFood {
     key: string;
     food_name: string,
     name: string,
@@ -33,6 +33,8 @@ interface FetchFoods {
 }
 const AdminQlSp: React.FC = () => {
     const { data: dataFood, isLoading, error } = useFetchFoodsQuery()
+    console.log(error);
+
     const navigate = useNavigate();
     const status = error?.status;
     const [dataTable, setDataTable] = useState<QlFood[]>([])
@@ -86,9 +88,9 @@ const AdminQlSp: React.FC = () => {
             }))
             setDataTable(mapFood)
         }
-        if (status) {
-            checkApiStatus(status, navigate);
-        }
+        // if (status) {
+        //     checkApiStatus(status, navigate);
+        // }
     }, [dataFood, status])
     useEffect(() => {
         if (searchTerm.length > 0) {
@@ -179,8 +181,8 @@ const AdminQlSp: React.FC = () => {
                                 <a><EditQlPhim key={record.key} projects={record.key} /> </a>
                                 <a>
                                     <Popconfirm
-                                        title="Delete the task"
-                                        description="Are you sure to delete this task?"
+                                        title="Xoá"
+                                        description="Bạn có muốn xoá sản phẩm này không?"
                                         onConfirm={() => {
                                             deleteOne(record.key);
                                         }}

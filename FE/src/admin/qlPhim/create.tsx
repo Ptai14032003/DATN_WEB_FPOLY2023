@@ -1,21 +1,18 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, Modal, Select, Upload } from 'antd';
+import { Button, Form, Input, Modal, Select, Upload, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
 import { QlPhim } from './page';
 import { useAddMoviesMutation } from '../../rtk/movies/movies';
 
 import { useFetchGenresQuery } from '../../rtk/genres/genres';
-interface QlGenre {
+export interface QlGenre {
     id: string;
     genre: string
 }
 const CreateQlPhim: React.FC = () => {
     const [addMovies] = useAddMoviesMutation()
     const { data: dataGenres } = useFetchGenresQuery()
-    console.log(dataGenres);
-
-
     const countryName = ["Hoa Kỳ", "Canada", "Việt Nam", "United States"]
     const countryOptions = countryName.map((country) => ({
         value: country,
@@ -29,7 +26,7 @@ const CreateQlPhim: React.FC = () => {
         label: type,
     }));
 
-    const genreOptions = dataGenres?.data?.map((genre: QlGenre) => ({
+    const genreOptions = dataGenres?.map((genre: QlGenre) => ({
         value: genre.id,
         label: genre.genre,
 
@@ -84,13 +81,6 @@ const CreateQlPhim: React.FC = () => {
                         />
                     </Form.Item>
                     <Form.Item<QlPhim>
-                        label="Nhà sản xuất"
-                        name="producer_name"
-                        rules={[{ required: true, message: 'Vui lòng nhập nhà sản xuất !' }]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item<QlPhim>
                         label="Diễn viên"
                         name="actor_name"
                         rules={[{ required: true, message: 'Vui lòng nhập tên các diễn viên !' }]}
@@ -103,7 +93,6 @@ const CreateQlPhim: React.FC = () => {
                         rules={[{ required: true, message: 'Vui lòng nhập dạng phim !' }]}
                     >
                         <Select className='ml-[-72px]'
-                            mode='multiple'
                             placeholder={"Chọn dạng phim"}
                             style={{ width: 200 }}
                             options={typeOptions}
@@ -133,8 +122,16 @@ const CreateQlPhim: React.FC = () => {
                         name="image"
                         rules={[{ required: true, message: 'Vui lòng nhập ảnh !' }]}
                     >
-                        <Upload>
-                            <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                        <Upload listType='picture' beforeUpload={(file) => {
+                            return new Promise((resolve, reject) => {
+                                if (file.type === 'image/jpg' || file.type === 'image/png') {
+                                    reject();
+                                } else {
+                                    message.error("Vui lòng thêm ảnh đúng định dạng")
+                                }
+                            })
+                        }} maxCount={1} multiple>
+                            <Button icon={<UploadOutlined />}>Click to Upload </Button>
                         </Upload>
                     </Form.Item>
                     <Form.Item<QlPhim>

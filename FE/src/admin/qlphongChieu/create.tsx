@@ -11,17 +11,18 @@ const CreateQlPhongChieu: React.FC = () => {
     const [addPhongChieu] = useAddPhongChieuMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
-
     const [dataSeat, setDataSeat] = useState<any>([]);
+    const [tongGhe, setTongGhe] = useState<any>();
     const [seat, setSeat] = useState<any>([])
     const [buttonClick, setButtonClick] = useState<any>(0)
     const [messageApi, contextHolder] = message.useMessage();
     console.log(dataSeat);
-
+    
     const onFinish = (values: any) => {
+
         const newDataSeat = [];
-        for (let i = 0; i < values.total_seat_doc; i++) {
-            for (let j = 0; j < values.total_seat_ngang; j++) {
+        for (let i = 0; i < values.col; i++) {
+            for (let j = 0; j < values.row; j++) {
                 newDataSeat.push({
                     seat_code: String.fromCharCode(65 + i) + (j + 1),
                     hidden: 0,
@@ -32,6 +33,7 @@ const CreateQlPhongChieu: React.FC = () => {
             }
         }
         setDataSeat(newDataSeat);
+        setTongGhe(values.col * values.row)
 
     };
     const onFinishFailed = (errorInfo: any) => {
@@ -167,7 +169,9 @@ const CreateQlPhongChieu: React.FC = () => {
         }
     }, [dataSeat],)
     const addPhong = () => {
-        addPhongChieu(dataSeat).then(() => { setIsModalOpen(false); message.success("Tạo mới thành công"); formRef.current?.resetFields() })
+        console.log(dataSeat);
+
+        // addPhongChieu(dataSeat).then(() => { setIsModalOpen(false); message.success("Tạo mới thành công"); formRef.current?.resetFields() })
     }
     return (
         <>
@@ -197,21 +201,21 @@ const CreateQlPhongChieu: React.FC = () => {
 
                     <Form.Item<PhongChieu1>
                         label="Số ghế hàng ngang"
-                        name="total_seat_ngang"
+                        name="row"
                         rules={[{ required: true, message: 'Vui lòng nhập số ghế hàng ngang !' }]}
                     >
                         <InputNumber min="1" max="15" />
                     </Form.Item>
                     <Form.Item<PhongChieu1>
                         label="Số ghế hàng dọc"
-                        name="total_seat_doc"
+                        name="col"
                         rules={[{ required: true, message: 'Vui lòng nhập số ghế hàng dọc !' }]}
                     >
                         <InputNumber min="1" max="15" />
                     </Form.Item>
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button htmlType="submit" className='mr-[80px]'>
-                            Check
+                            Tạo ghế
                         </Button>
                     </Form.Item>
                 </Form>
@@ -236,6 +240,7 @@ const CreateQlPhongChieu: React.FC = () => {
                                 ))}
                             </div>
                             <div className="text-center w-[15%] ml-[140px] ">
+                                <div className="text-xl ml-[-55px]">Tổng số ghế : {tongGhe}</div>
                                 <div className='ml-[-55px]'>Lựa chọn loại ghế :</div>
                                 <div className={`seat flex border-2 rounded-lg w-[120px] mt-4 ${buttonClick === 0 ? "bg-green-500" : ""}`} onClick={() => setButtonClick(0)}>
                                     <div><MdChair className="text-[#797373]" size={40} /></div>

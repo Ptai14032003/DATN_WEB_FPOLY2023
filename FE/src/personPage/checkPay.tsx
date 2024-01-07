@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { useCheckBillMutation } from '../rtk/bill/bill';
+import { useCheckBillMutation, useSendMailMutation } from '../rtk/bill/bill';
 import { Link } from 'react-router-dom';
 const CheckPay = () => {
     const [checkBill] = useCheckBillMutation()
+    const [sendEmail] = useSendMailMutation()
     const [mess, setMess] = useState("")
     const url = new URL(window.location.href);
     const urlSearchParams = new URLSearchParams(new URL(window.location.href).search);
@@ -18,7 +19,11 @@ const CheckPay = () => {
     const vnp_TransactionStatus = urlSearchParams.get('vnp_TransactionStatus');
     const vnp_TxnRef = urlSearchParams.get('vnp_TxnRef');
     const vnp_SecureHash = urlSearchParams.get('vnp_SecureHash');
+    const dataSend_email = {
+        bill_id: vnp_TxnRef
+    }
     useEffect(() => {
+
         if (url.pathname === "/listvnp") {
             const data = {
                 vnp_Amount: vnp_Amount,
@@ -34,7 +39,7 @@ const CheckPay = () => {
                 vnp_SecureHash: vnp_SecureHash,
                 vnp_CardType: vnp_CardType
             }
-            checkBill(data).then((req: any) => setMess(req?.data?.Message)
+            checkBill(data).then((req: any) => { setMess(req?.data?.Message); sendEmail(dataSend_email) }
 
             )
         }

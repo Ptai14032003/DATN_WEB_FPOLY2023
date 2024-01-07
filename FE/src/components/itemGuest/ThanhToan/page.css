@@ -23,3 +23,9 @@ display: none;
    color: #1ACAAC;
    font-weight: 600;
 }
+:where(.css-dev-only-do-not-override-nllxry).ant-modal .ant-modal-footer .ant-btn+.ant-btn:not(.ant-dropdown-trigger){
+    background-color: #1677ff!important;
+}
+:where(.css-dev-only-do-not-override-nllxry).ant-btn-default{
+    display: none!important;
+}

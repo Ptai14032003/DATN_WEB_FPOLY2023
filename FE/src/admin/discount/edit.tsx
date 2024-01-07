@@ -29,7 +29,7 @@ const EditQlDiscount: React.FC<Props> = ({ projects }: Props) => {
     };
     return (
         <>
-            <Button onClick={showModal}>Sửa khuyến mãi</Button>
+            <Button onClick={showModal}>Sửa</Button>
             <Modal title="Sửa khuyến mãi" open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
                 {data ? (
                     <Form className='mr-[60px]'
