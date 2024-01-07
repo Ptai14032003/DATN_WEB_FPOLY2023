@@ -51,7 +51,7 @@ const Booking = () => {
     }, [seats])
     const handleClick = (tabNumber: number) => {
         if (checkUser) {
-            setActiveTab(tabNumber);
+        setActiveTab(tabNumber);
         } else {
             messageApi.error({
                 type: 'error',
@@ -225,6 +225,10 @@ const Booking = () => {
     };
     const getCombo = (quantity: number, price: number, foodName: any) => {
         let soLuong = parseInt(quantity.toString(), 10);
+
+        //const getCombo = async (data: { target: { value: any } }, price: number, foodName: any) => {
+        //let soLuong = parseInt(data.target.value, 10);
+
         soLuong = isNaN(soLuong) || soLuong < 0 ? 0 : soLuong;
 
         const comboObject = {
@@ -376,8 +380,8 @@ const Booking = () => {
                                 </li>
                             </ul>
                         </div>
-
-                        <div className="w-[250px] h-[42px] border-[2px] rounded-md mt-[50px] px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
+                      
+                        <div className="w-[230px] h-[42px] border-[2px] rounded-md mt-[50px] px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
                         <form action="" method='POST'>
 
                             <div className={`Booking-content ${activeTab === 1 ? "" : "hidden"}`}>

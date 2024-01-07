@@ -95,30 +95,6 @@ Route::prefix('admin')->group(function () {
         Route::delete('/{id}', [ApiListGenreController::class, 'destroy']);
     });
 
-    Route::prefix('actors')->group(function () {
-        Route::get('/', [ApiActorController::class, 'index']);
-        Route::post('/', [ApiActorController::class, 'store']);
-        Route::get('/{id}', [ApiActorController::class, 'show']);
-        Route::put('/{id}', [ApiActorController::class, 'update']);
-        Route::delete('/{id}', [ApiActorController::class, 'destroy']);
-    });
-
-    Route::prefix('countries')->group(function () {
-        Route::get('/', [ApiCountryController::class, 'index']);
-        Route::post('/', [ApiCountryController::class, 'store']);
-        Route::get('/{id}', [ApiCountryController::class, 'show']);
-        Route::put('/{id}', [ApiCountryController::class, 'update']);
-        Route::delete('/{id}', [ApiCountryController::class, 'destroy']);
-    });
-
-    Route::prefix('producers')->group(function () {
-        Route::get('/', [ApiProducerController::class, 'index']);
-        Route::post('/', [ApiProducerController::class, 'store']);
-        Route::get('/{id}', [ApiProducerController::class, 'show']);
-        Route::put('/{id}', [ApiProducerController::class, 'update']);
-        Route::delete('/{id}', [ApiProducerController::class, 'destroy']);
-    });
-
     Route::prefix('promotions')->group(function () {
         Route::get('/', [ApiPromotionController::class, 'index']);
         Route::post('/', [ApiPromotionController::class, 'store']);
