@@ -25,14 +25,11 @@ export const store = configureStore({
         movies: moviesApi.reducer,
         auth: authApi.reducer,
         users: guestApi.reducer,
-        actor: actorApi.reducer,
         countries: countryApi.reducer,
-        list_genres: genresApi.reducer,
         moviesPerson: moviesApiPerson.reducer,
         booking: bookingApi.reducer,
         food: foodsApi.reducer,
         bill: billApi.reducer,
-      
         voucher: VoucherApi.reducer,
         promotions: discountApi.reducer
 
@@ -47,12 +44,9 @@ export const store = configureStore({
             .concat(suatChieuApi.middleware)
             .concat(discountApi.middleware)
             .concat(authApi.middleware)
-            .concat(actorApi.middleware)
             .concat(countryApi.middleware)
-            .concat(genresApi.middleware)
             .concat(moviesApiPerson.middleware)
             .concat(bookingApi.middleware)
-
             .concat(foodsApi.middleware)
             .concat(billApi.middleware)
             .concat(VoucherApi.middleware)
