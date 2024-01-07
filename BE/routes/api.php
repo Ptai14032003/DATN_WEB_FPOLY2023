@@ -66,6 +66,7 @@ Route::prefix('admin')->group(function () {
 
 
 
+
     Route::prefix('movie_type')->group(function () {
         Route::get('/', [ApiMovieTypeController::class, 'index']);
         Route::post('/', [ApiMovieTypeController::class, 'store']);
@@ -74,6 +75,7 @@ Route::prefix('admin')->group(function () {
         Route::delete('/{id}', [ApiMovieTypeController::class, 'destroy']);
     });
 
+   
 
     Route::prefix('promotions')->group(function () {
         Route::get('/', [ApiPromotionController::class, 'index']);
