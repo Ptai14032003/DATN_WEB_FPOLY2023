@@ -39,7 +39,7 @@ const Menu = () => {
           <li><a href="">News & Preferential</a></li>
           <li><a href="ticket-price">Ticket Price</a></li>
           <li><a href="">About us</a></li>
-          <li><a href="">Ticket</a></li>
+          <li><a href="ticket-history">Ticket</a></li>
           {!user && (
             <><li onClick={handleClick}><a>User</a></li>
               {dropDown ?
