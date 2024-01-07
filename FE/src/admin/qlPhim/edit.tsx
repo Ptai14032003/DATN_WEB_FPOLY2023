@@ -3,10 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Form, Image, Input, Modal, Select, Upload, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
-import { QlPhim } from './page';
 import { useFetchMovieIdQuery, useUpdateMoviesMutation } from '../../rtk/movies/movies';
-import { useFetchGenresQuery } from '../../rtk/genres/genres';
-import { QlGenre } from './create';
 type Props = {
     projects: string
 }
@@ -46,13 +43,6 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
     const [patchMovie] = useUpdateMoviesMutation();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
-
-    const countryName = ["Hoa Kỳ", "Canada", "Việt Nam", "United States"]
-    const countryOptions = countryName.map((country) => ({
-        value: country,
-        label: country,
-    }));
-
     const typeMovies = ["2D", "3D"];
 
     const typeOptions = typeMovies.map((type) => ({
