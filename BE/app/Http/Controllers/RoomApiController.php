@@ -22,33 +22,33 @@ class RoomApiController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        foreach($data as $roomData){
-            if(isset($roomData['name'])){
+        foreach ($data as $roomData) {
+            if (isset($roomData['name'])) {
                 $theater = Room::create([
-                    "name"=>$roomData['name'],
+                    "name" => $roomData['name'],
                     "total_seat" => $roomData['total_seat'],
                     "row" => $roomData['row'],
                     "col" => $roomData['col']
                 ]);
             }
         }
-        foreach($data as $seats){
-            if(isset($seats['seat_code'])){
+        foreach ($data as $seats) {
+            if (isset($seats['seat_code'])) {
                 Seat::create([
                     'seat_code' => $seats['seat_code'],
-                    'type_seat_id'=> $seats['type_seat_id'],
+                    'type_seat_id' => $seats['type_seat_id'],
                     'room_id' => $theater->id,
-                    'hidden'=>$seats['hidden']
+                    'hidden' => $seats['hidden']
                 ]);
-            }   
+            }
         }
     }
     public function show(string $id)
     {
         $theater = Room::find($id);
-        $seats = Seat::where('room_id','=',$id)->get();
-        if($theater){
-            if($seats){
+        $seats = Seat::where('room_id', '=', $id)->get();
+        if ($theater) {
+            if ($seats) {
                 $response = [
                     'theaters' => $theater,
                     'seats' => $seats
@@ -60,14 +60,33 @@ class RoomApiController extends Controller
         }
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
         $theater = Room::find($id);
-        if ($theater) {
-            $theater->update($request->all());
-            return response()->json(['message' => 'Cap nhat thanh cong'], 202);
-        } else {
-            return response()->json(['message' => 'Khach hang khong ton tai'], 404);
+        $data = $request->all();
+        foreach ($data as $roomData) {
+            if (isset($roomData['name'])) {
+                $theater->update([
+                    "name" => $roomData['name'],
+                    "total_seat" => $roomData['total_seat'],
+                    "row" => $roomData['row'],
+                    "col" => $roomData['col']
+                ]);
+            }
+        }
+        foreach ($data['seats'] as $seat) {
+            if (isset($seat['id'])) {
+                $seatModel = Seat::find($seat['id']);
+                
+                if ($seatModel) {
+                    $seatModel->update([
+                        'seat_code' => $seat['seat_code'],
+                        'type_seat_id' => $seat['type_seat_id'],
+                        'room_id' => $theater->id,
+                        'hidden' => $seat['hidden']
+                    ]);
+                }
+            }
         }
     }
 
@@ -76,7 +95,7 @@ class RoomApiController extends Controller
         $theater = Room::find($id);
         if ($theater) {
             $theater->delete();
-            Seat::where('room_id','=',$id)->delete();
+            Seat::where('room_id', '=', $id)->delete();
             return response()->json(['message' => 'Xoa thanh cong'], 202);
         } else {
             return response()->json(['message' => 'Khach hang khong ton tai'], 404);
