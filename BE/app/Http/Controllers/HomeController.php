@@ -112,7 +112,7 @@ class HomeController extends Controller
             }
             $movie->weekday = $weekday;
             $movie->show_date = Carbon::parse($movie->show_date)->format('d-m');
-            $movie->show_time = Carbon::parse($movie->show_time)->format('h:i');
+            $movie->show_time = Carbon::parse($movie->show_time)->format('H:i');
         }
         $st_movie = $st_movie->toArray();
         if ($st_movie) {
