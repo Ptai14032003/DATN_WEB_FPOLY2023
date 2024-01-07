@@ -18,14 +18,13 @@ type QlPhimEdit = {
     producer_name: string;
     actor_name: string;
     type_name: string;
-    genres: [];
+    genre: string;
     director: string;
     image: string;
     trailer: string;
 }
 const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
     const { data: dataMovies } = useFetchMovieIdQuery(projects);
-    const { data: dataGenres } = useFetchGenresQuery()
     useEffect(() => {
         if (dataMovies) {
             const newData: QlPhimEdit = {
@@ -35,7 +34,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                 producer_name: dataMovies?.producer_name,
                 actor_name: dataMovies?.actor_name,
                 type_name: dataMovies?.type_name,
-                genres: dataMovies?.genres,
+                genre: dataMovies?.genre,
                 director: dataMovies?.director,
                 image: dataMovies?.image,
                 trailer: dataMovies?.trailer
@@ -60,11 +59,6 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
         value: type,
         label: type,
     }));
-    const genreOptions = dataGenres?.map((genre: QlGenre) => ({
-        value: genre.id,
-        label: genre.genre,
-
-    }))
     const onFinish = (values: any) => {
         console.log(values);
         // patchMovie({ body: values, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
@@ -117,13 +111,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                             name="country_name"
                             rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
                         >
-                            <Select className='ml-[-72px]'
-
-                                placeholder="Chọn nước sản xuất"
-
-                                style={{ width: 200 }}
-                                options={countryOptions}
-                            />
+                            <Input />
                         </Form.Item>
                         <Form.Item<QlPhimEdit>
 
@@ -149,16 +137,10 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                         <Form.Item<QlPhimEdit>
 
                             label="Thể loại"
-                            name="genres"
+                            name="genre"
                             rules={[{ required: true, message: 'Vui lòng nhập thể loại!' }]}
                         >
-
-                            <Select className='ml-[-72px]'
-                                mode='multiple'
-                                placeholder="Chọn dạng phim"
-                                style={{ width: 200 }}
-                                options={genreOptions}
-                            />
+                            <Input />
                         </Form.Item>
                         <Form.Item<QlPhimEdit>
 

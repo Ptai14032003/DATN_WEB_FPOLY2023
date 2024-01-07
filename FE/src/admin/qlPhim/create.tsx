@@ -34,6 +34,8 @@ const CreateQlPhim: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
+        console.log(values);
+
         addMovies(values).then(() => setIsModalOpen(false))
     };
     const onFinishFailed = (errorInfo: any) => {
@@ -72,13 +74,7 @@ const CreateQlPhim: React.FC = () => {
                         name="country_name"
                         rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
                     >
-                        <Select className='ml-[-72px]'
-
-                            placeholder="Chọn nước sản xuất"
-
-                            style={{ width: 200 }}
-                            options={countryOptions}
-                        />
+                        <Input />
                     </Form.Item>
                     <Form.Item<QlPhim>
                         label="Diễn viên"
@@ -103,12 +99,7 @@ const CreateQlPhim: React.FC = () => {
                         name="genre"
                         rules={[{ required: true, message: 'Vui lòng nhập thể loại!' }]}
                     >
-                        <Select className='ml-[-72px]'
-                            mode='multiple'
-                            placeholder={"Chọn thể loại phim"}
-                            style={{ width: 200 }}
-                            options={genreOptions}
-                        />
+                        <Input />
                     </Form.Item>
                     <Form.Item<QlPhim>
                         label="Đạo diễn"

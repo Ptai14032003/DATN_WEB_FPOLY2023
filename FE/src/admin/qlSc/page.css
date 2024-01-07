@@ -1,0 +1,8 @@
+.ant-picker-ok>.ant-btn{
+    background-color: #1677ff;
+    color: white;
+}
+.ant-picker-ok>.ant-btn :disabled{
+    background-color: lightslategrey;
+    color: black;
+}
