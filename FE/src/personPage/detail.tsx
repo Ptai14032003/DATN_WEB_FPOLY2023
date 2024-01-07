@@ -4,6 +4,7 @@ import { useFetchMovieIdPersonQuery } from "../rtk/moviesPerson/moviesPerson"
 import Footer from "../components/layouts/layoutGuest/footer";
 import { useEffect, useState } from "react";
 import { message } from "antd";
+import Menu from "../components/layouts/layoutGuest/menu";
 
 export default function Detail() {
     const { id } = useParams()
@@ -26,7 +27,9 @@ export default function Detail() {
     }, [error, checkError])
     return (
         <div className="container-detail text-white">
-
+            <div>
+                <Menu/>
+            </div>
             <div>
                 <iframe width="100%" height="700" src={movie?.trailer} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
             </div>
