@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react'
-import logoweb from "/logo-web.png"
-import { Navigate, useNavigate } from 'react-router-dom';
+import logoweb from "/Wonder-logo-1.png"
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { FaUserCircle } from "react-icons/fa";
 import { message } from 'antd';
 const Menu = () => {
@@ -9,6 +9,8 @@ const Menu = () => {
   const [dropDown, setDropDown] = useState(false);
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
+
+  const homeLink = 'http://localhost:5173/'
   const handleClick = () => {
     setDropDown(!dropDown)
   }
@@ -30,22 +32,22 @@ const Menu = () => {
     <div className="menu flex items-center justify-between px-16 fixed z-10 w-full">
       {contextHolder}
       <div className="logo-web">
-        <img src={logoweb} alt="" className='w-[70%]' />
+        <img src={logoweb} alt="" className='w-[100px] h-[80px]'/>
       </div>
       <nav>
         <ul className='menu-content flex text-white'>
-          <li><a href="/">Home</a></li>
-          <li><a href="">Movie</a></li>
-          <li><a href="">News & Preferential</a></li>
-          <li><a href="ticket-price">Ticket Price</a></li>
-          <li><a href="">About us</a></li>
-          <li><a href="ticket-history">Ticket</a></li>
+          <li><a href={homeLink}>Home</a></li>
+          <li><a href={homeLink}>Movie</a></li>
+          <li><a href={homeLink}>News & Preferential</a></li>
+          <li><a href={homeLink + 'ticket-price'}>Ticket Price</a></li>
+          <li><a href={homeLink}>About us</a></li>
+          <li><a href={homeLink + 'ticket-history'}>Ticket</a></li>
           {!user && (
             <><li onClick={handleClick}><a>User</a></li>
               {dropDown ?
                 <ul className="dropdown-content absolute translate-y-[4.8rem] right-6 w-[160px] text-center">
-                  <li><a href="signin" className='block'>Signin</a></li>
-                  <li><a href="signup" className='block'>Signup</a></li>
+                  <li><a href={homeLink + 'signin'} className='block'>Signin</a></li>
+                  <li><a href={homeLink + 'signup'} className='block'>Signup</a></li>
                 </ul>
                 : ""
               }
@@ -64,7 +66,7 @@ const Menu = () => {
                       <a href="admin">Admin</a>
                     </li>
                   )}
-                  <li><a href="profile" className='block'>Profile</a></li>
+                  <li><a href={homeLink + 'profile'} className='block'>Profile</a></li>
                   <li onClick={() => Logout()}><div className='block'>Logout</div></li>
                 </ul>
                 : ""

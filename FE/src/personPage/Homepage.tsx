@@ -138,7 +138,21 @@ const HomePage = () => {
               ))}
             </div>
             <div className={`Coming-soon-movies ${activeTab === 3 ? "max-w-[1420px] mx-auto p-5 grid grid-cols-5 gap-10 mb-8" : "hidden"}`}>
-              
+            {comingSoon?.map((item: any) => (
+                <div key={item.id} className="movie-item">
+                  <Link to={'/movie_show_time/' + item?.id}>
+                    <img src={item.image} alt="" className='h-[370px] w-full rounded-lg' />
+                    <div className="text my-2 px-3">
+                      <h1 className='text-xl font-semibold'>{item.movie_name}</h1>
+                      <div className="grid grid-cols-5 font-semibold text-[#B6B4B4] my-1 text-sm">
+                        <p className='col-span-2'>{item.movie_time} phút</p>
+                        <p className='text-center'>|</p>
+                        <p className='col-span-2'>{item.director}</p>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              ))}
             </div>
             </>
       )}

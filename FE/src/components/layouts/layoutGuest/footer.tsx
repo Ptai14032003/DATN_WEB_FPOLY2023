@@ -1,5 +1,5 @@
 import React from 'react'
-import logoweb from "/logo-web.png"
+import logoweb from "/Wonder-logo-1.png"
 import fb from "/facebook-icon.png"
 import yt from "/youtube-icon.png"
 import zl from "/zalo-icon.png"
@@ -17,8 +17,8 @@ const Footer = () => {
           <li><a href="">Liên hệ</a></li>
         </ul>
       </nav>
-      <div className='flex justify-center space-x-5 items-center my-4'>
-        <img src={logoweb} alt="" className='w-[6%]' />
+      <div className='flex justify-center space-x-5 items-center my-1'>
+        <img src={logoweb} alt="" className='w-[10%]' />
         <h2 className=' text-2xl'>Wonder Cinema Việt Nam</h2>
       </div>
       <div className='max-w-4xl mx-auto'>

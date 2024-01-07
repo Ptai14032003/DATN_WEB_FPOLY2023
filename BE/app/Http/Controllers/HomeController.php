@@ -226,9 +226,9 @@ class HomeController extends Controller
                 'bills.total_money',
                 'movies.movie_name',
                 'movies.image',
-                \DB::raw('DATE_FORMAT(bills.created_at, "%d-%m-%Y") as booking_date'),
-                \DB::raw('DATE_FORMAT(showtimes.show_date, "%d-%m-%Y") as show_date'),
-                \DB::raw('CASE 
+                DB::raw('DATE_FORMAT(bills.created_at, "%d-%m-%Y") as booking_date'),
+                DB::raw('DATE_FORMAT(showtimes.show_date, "%d-%m-%Y") as show_date'),
+                DB::raw('CASE 
                     WHEN bills.status = 0 THEN "Đang chờ thanh toán" 
                     WHEN bills.status = 1 THEN "Đã thanh toán" 
                     WHEN bills.status = 2 THEN "Đã hủy" 
@@ -268,10 +268,10 @@ class HomeController extends Controller
             ->select(
                 'showtimes.show_date as show_date',
                 'movies.movie_name as movie_name',
-                \DB::raw('DATE_FORMAT(showtimes.show_time, "%H:%i") as show_time'), // Định dạng show_time chỉ theo giờ phút
+                DB::raw('DATE_FORMAT(showtimes.show_time, "%H:%i") as show_time'), // Định dạng show_time chỉ theo giờ phút
                 'movies.movie_time as movie_time',
-                \DB::raw('GROUP_CONCAT(DISTINCT seats.seat_code) as seat'),
-                \DB::raw('GROUP_CONCAT(DISTINCT IFNULL(CONCAT(ticket_foods.quantity, "-", foods.food_name), "")) as food')
+                DB::raw('GROUP_CONCAT(DISTINCT seats.seat_code) as seat'),
+                DB::raw('GROUP_CONCAT(DISTINCT IFNULL(CONCAT(ticket_foods.quantity, "-", foods.food_name), "")) as food')
             )
             ->groupBy('show_date', 'movie_name', 'show_time', 'movie_time')
             ->first();
