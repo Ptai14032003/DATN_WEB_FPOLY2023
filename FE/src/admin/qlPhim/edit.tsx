@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Image, Input, Modal, Select, Upload, message } from 'antd';
+import { Button, Form, Image, Input, InputNumber, Modal, Select, Upload, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
 import { useFetchMovieIdQuery, useUpdateMoviesMutation } from '../../rtk/movies/movies';
@@ -40,7 +40,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
         }
     }, [dataMovies])
     const [newData, setNewData] = useState({})
-    const [patchMovie] = useUpdateMoviesMutation();
+    const [putMovie] = useUpdateMoviesMutation();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const typeMovies = ["2D", "3D"];
@@ -87,45 +87,13 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                         initialValues={newData}
                     >
                         <Form.Item<QlPhimEdit>
-
                             label="Tên phim"
                             name="movie_name"
                             rules={[{ required: true, message: 'Vui lòng nhập tên !' }]}
                         >
                             <Input />
                         </Form.Item>
-
                         <Form.Item<QlPhimEdit>
-
-                            label="Nước sản xuất"
-                            name="country_name"
-                            rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item<QlPhimEdit>
-
-                            label="Diễn viên"
-                            name="actor_name"
-                            rules={[{ required: true, message: 'Vui lòng nhập tên các diễn viên !' }]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item<QlPhimEdit>
-
-                            label="Dạng phim"
-                            name="type_name"
-                            rules={[{ required: true, message: 'Vui lòng nhập dang phim !' }]}
-                        >
-                            <Select className='ml-[-72px]'
-                                placeholder="Chọn dạng phim"
-                                style={{ width: 200 }}
-                                options={typeOptions}
-                            />
-                        </Form.Item>
-
-                        <Form.Item<QlPhimEdit>
-
                             label="Thể loại"
                             name="genre"
                             rules={[{ required: true, message: 'Vui lòng nhập thể loại!' }]}
@@ -133,18 +101,43 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                             <Input />
                         </Form.Item>
                         <Form.Item<QlPhimEdit>
-
-                            label="Đạo diễn"
-                            name="director"
+                            label="Dạng phim"
+                            name="type_name"
+                            rules={[{ required: true, message: 'Vui lòng nhập dạng phim !' }]}
+                        >
+                            <Select className='ml-[-72px]'
+                                placeholder={"Chọn dạng phim"}
+                                style={{ width: 200 }}
+                                options={typeOptions}
+                            />
+                        </Form.Item>
+                        <Form.Item<QlPhimEdit>
+                            label="Thời lượng"
+                            name="country_name"
+                            rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
+                        >
+                            <InputNumber min={0} />
+                        </Form.Item>
+                        <Form.Item<QlPhimEdit>
+                            label="Nước sản xuất"
+                            name="country_name"
                             rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
                         >
                             <Input />
                         </Form.Item>
-                        <Form.Item<QlPhimEdit>>
-                            <div className='mx-[60%]'>
-                                <Image className='' width={150}
-                                    src={dataMovies?.image} />
-                            </div>
+                        <Form.Item<QlPhimEdit>
+                            label="Đạo diễn"
+                            name="director"
+                            rules={[{ required: true, message: 'Vui lòng nhập tên đạo diễn !' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item<QlPhimEdit>
+                            label="Diễn viên"
+                            name="actor_name"
+                            rules={[{ required: true, message: 'Vui lòng nhập tên các diễn viên !' }]}
+                        >
+                            <Input />
                         </Form.Item>
                         <Form.Item<QlPhimEdit>
                             label="Poster"
@@ -164,7 +157,6 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                             </Upload>
                         </Form.Item>
                         <Form.Item<QlPhimEdit>
-
                             label="Trailer"
                             name="trailer"
                             rules={[{ required: true, message: 'Vui lòng nhập trailer !' }, { type: "url", message: 'Vui lòng nhập đúng định dạng !' }]}

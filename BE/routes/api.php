@@ -42,6 +42,10 @@ Route::get('/movie_show_time/{id}', [HomeController::class, 'show_time_movie'])-
 Route::get('/show_seat_room/{id}', [HomeController::class, 'show_seat_room'])->name('show_seat_room');
 Route::get('/voucher', [HomeController::class, 'voucher'])->name('voucher');
 
+//quên mật khẩu
+
+Route::post('/forgot_password', [UserController::class, 'forgot_password'])->name('forgot_password');
+Route::post('/update_new_pass', [UserController::class, 'update_new_pass'])->name('update_new_pass');
 
 //lịch sử đặt vé
 Route::post('/booking_history', [HomeController::class, 'booking_history'])->name('booking_history')->middleware('auth:sanctum');
@@ -60,12 +64,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/{id}', [ApiMovieController::class, 'edit']);
         Route::put('/{id}', [ApiMovieController::class, 'update']);
         Route::delete('/{id}', [ApiMovieController::class, 'destroy']);
-
     });
-
-
-
-
 
     Route::prefix('movie_type')->group(function () {
         Route::get('/', [ApiMovieTypeController::class, 'index']);
@@ -113,5 +112,4 @@ Route::prefix('admin')->group(function () {
         Route::put('/{id}', [PersonnelController::class, 'update']);
         Route::delete('/{id}', [PersonnelController::class, 'destroy']);
     });
-
 });
