@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useFetchSeatRoomIdQuery } from '../rtk/booking/booking';
 import ThanhToan from '../components/itemGuest/ThanhToan/ThanhToan';
-import { useFetchFoodsQuery } from '../rtk/qlSp/qlSp';
 import { useFetchMovieIdPersonQuery } from '../rtk/moviesPerson/moviesPerson';
 import { MdChair } from "react-icons/md";
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
@@ -52,7 +51,7 @@ const Booking = () => {
     }, [seats])
     const handleClick = (tabNumber: number) => {
         if (checkUser) {
-        setActiveTab(tabNumber);
+            setActiveTab(tabNumber);
         } else {
             messageApi.error({
                 type: 'error',
@@ -139,6 +138,17 @@ const Booking = () => {
                                 } else if (selectedSeats.length < 5) {
                                     setidGhe([...idGhe, dataSeat1, dataSeat2]);
                                 }
+                                else if (!mapExecuted) {
+                                    messageApi.error({
+                                        type: 'error',
+                                        content: `Bạn chỉ có thể đặt tối đa 6 ghế 1 lần`,
+                                        className: "h-[20%] mt-[20px]",
+                                        duration: 2
+                                    });
+                                    mapExecuted = true;
+                                    return;
+
+                                }
                             } else {
                                 const dataSeat2 = {
                                     id: item[dataOderSeat - 1]?.id,
@@ -158,6 +168,17 @@ const Booking = () => {
                                     setidGhe(() => idGhe.filter((item: any) => item.id !== dataSeat1.id && item.id !== dataSeat2.id));
                                 } else if (selectedSeats.length < 5) {
                                     setidGhe([...idGhe, dataSeat1, dataSeat2]);
+                                }
+                                else if (!mapExecuted) {
+                                    messageApi.error({
+                                        type: 'error',
+                                        content: `Bạn chỉ có thể đặt tối đa 6 ghế 1 lần`,
+                                        className: "h-[20%] mt-[20px]",
+                                        duration: 2
+                                    });
+                                    mapExecuted = true;
+                                    return;
+
                                 }
                             }
                         }
@@ -214,11 +235,22 @@ const Booking = () => {
                                 setidGhe(() => idGhe.filter((item: any) => item.id !== data.id));
                                 setMoney(money - price);
                             }
-                        } else if (selectedSeats.length < 6) {
-                            setSelectedSeats([...selectedSeats, seatId_code]);
-                            setMoney(money + price);
-                            setidGhe([...idGhe, data]);
-                        }
+                        } else
+                            if (selectedSeats.length < 6) {
+                                setSelectedSeats([...selectedSeats, seatId_code]);
+                                setMoney(money + price);
+                                setidGhe([...idGhe, data]);
+                            } else if (!mapExecuted) {
+                                messageApi.error({
+                                    type: 'error',
+                                    content: `Bạn chỉ có thể đặt tối đa 6 ghế 1 lần`,
+                                    className: "h-[20%] mt-[20px]",
+                                    duration: 2
+                                });
+                                mapExecuted = true;
+                                return;
+
+                            }
                     }
                 }
             })
@@ -332,7 +364,7 @@ const Booking = () => {
     return (
         <div className='bg-black text-white'>
             <div>
-                <Menu/>
+                <Menu />
             </div>
             <div className="backdrop">
                 <img src={seatBooking?.movie?.image} className='backdrop-img w-full h-[550px] relative'></img>
@@ -384,7 +416,7 @@ const Booking = () => {
                                 </li>
                             </ul>
                         </div>
-                      
+
                         <div className="w-[250px] h-[42px] border-[2px] rounded-md mt-[50px] px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
                         <form action="" method='POST'>
 
