@@ -8,191 +8,15 @@ import { MdChair } from 'react-icons/md';
 type Props = {
     projects: string
 }
-const dataSeatEdit = [
-    {
-        "seat_code": "A1",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "A2",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "A3",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "A4",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "A5",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "B1",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "B2",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "B3",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "B4",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "B5",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "C1",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "C2",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "C3",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "C4",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "C5",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "D1",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "D2",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "D3",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "D4",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "D5",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "E1",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "E2",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "E3",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "E4",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    },
-    {
-        "seat_code": "E5",
-        "hidden": 0,
-        "type_name": 0,
-        "status": 0,
-        "room_name": "12"
-    }
-]
 const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
     const { data: dataRoom, isLoading, isFetching } = useFetchPhongChieuIDQuery(projects);
-    const [data, setData] = useState<any>(dataRoom?.theaters)
-    const [tongGhe, setTongGhe] = useState<any>(dataRoom?.theaters?.total_seat)
+    const [newDataRoom, setDataRoom] = useState<any>({})
+    const theaters = dataRoom?.theaters
+    const dataseats = dataRoom?.seats
     const [updatePhongChieu] = usePatchPhongChieuMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
-    const [dataSeat, setDataSeat] = useState<any>(dataSeatEdit);
+    const [dataSeat, setDataSeat] = useState<any>(dataseats);
     const [seat, setSeat] = useState<any>([])
     const [buttonClick, setButtonClick] = useState<any>(0)
     const [messageApi, contextHolder] = message.useMessage();
@@ -224,9 +48,8 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
                 }
             }
             setDataSeat(newDataSeat);
-            setTongGhe(values.col * values.row)
+            setDataRoom(values)
         }
-        // updatePhongChieu({ body: values, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
 
     };
 
@@ -350,13 +173,25 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
             setDataArraySeat()
         }
     }, [dataSeat],)
+    const updatePhong = () => {
+        const newData = {
+            theaters: {
+                "id": projects,
+                "name": newDataRoom?.name,
+                "row": newDataRoom?.row,
+                "col": newDataRoom?.col,
+            },
+            seats: dataSeat
+        }
+        updatePhongChieu({ body: newData, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
+    }
     return (
         <>
             {contextHolder}
             <Button onClick={showModal}>Sửa</Button>
             <Modal title="Sửa phòng chiếu " open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} width={1200} className="text-center">
 
-                {data ? (
+                {theaters ? (
                     <Form className='mr-[60px]'
                         name='formLogin'
                         ref={formRef}
@@ -366,7 +201,7 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
                         onFinish={onFinish}
                         onFinishFailed={onFinishFailed}
                         autoComplete="off"
-                        initialValues={data}
+                        initialValues={theaters}
                     >
 
                         <Form.Item<PhongChieu1>
@@ -391,11 +226,6 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
                             rules={[{ required: true, message: 'Vui lòng nhập số ghế hàng dọc !' }]}
                         >
                             <InputNumber min="1" max="15" />
-                        </Form.Item>
-                        <Form.Item<PhongChieu1>
-                            label="Tổng số ghế"
-                        >
-                            <InputNumber value={tongGhe} disabled />
                         </Form.Item>
                         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                             <Button htmlType="submit" className='mr-[80px]'>
@@ -429,7 +259,7 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
                                 ))}
                             </div>
                             <div className="text-center w-[15%] ml-[140px] ">
-                                <div className="text-xl ml-[-55px]">Tổng số ghế : {tongGhe}</div>
+                                {/* <div className="text-xl ml-[-55px]">Tổng số ghế : {tongGhe}</div> */}
                                 <div className='ml-[-55px]'>Lựa chọn loại ghế :</div>
                                 <div className={`seat flex border-2 rounded-lg w-[120px] mt-4 ${buttonClick === 0 ? "bg-green-500" : ""}`} onClick={() => setButtonClick(0)}>
                                     <div><MdChair className="text-[#797373]" size={40} /></div>
@@ -449,7 +279,7 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
                                 </div>
                             </div>
                         </div>
-                        <Button className="w-[80px] mt-[20px]">
+                        <Button className="w-[80px] mt-[20px]" onClick={() => updatePhong()}>
                             Lưu
                         </Button>
                     </div>

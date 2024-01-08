@@ -1,5 +1,5 @@
 
-import React, {useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
 import CreateQlPhongChieu from './create';
@@ -161,8 +161,8 @@ const AdminQlPhongChieu: React.FC = () => {
                                 <a><EditQlPhongChieu key={record.key} projects={record.key} /> </a>
                                 <a>
                                     <Popconfirm
-                                        title="Delete the task"
-                                        description="Are you sure to delete this task?"
+                                        title="Xoá"
+                                        description="Bạn có muốn xoá phòng này không ?"
                                         onConfirm={() => {
                                             deleteOne(record.key);
                                         }}
