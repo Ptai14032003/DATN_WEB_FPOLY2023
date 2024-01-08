@@ -28,6 +28,7 @@ import CheckPay from './personPage/checkPay.tsx'
 import Payment from './personPage/Payment.tsx'
 import NotFound from './personPage/404.tsx'
 import { useEffect } from 'react'
+import TicketHistory from './personPage/TicketHistory.tsx'
 function App() {
   const checkLocal = localStorage.getItem("user");
   const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
@@ -51,7 +52,8 @@ function App() {
         <Route path="new" element={<NewFilm />} />
         <Route path="seat" element={<Seat />} />
       </Route>
-      <Route path="ticket-price" element={<TicketPrice />} />
+      <Route path="ticket-price" element={<TicketPrice />}/>
+      <Route path="ticket-history" element={<TicketHistory/>} />
       <Route path="profile" element={<Profile />} />
       <Route path="signin" element={<Signin />} />
       <Route path="signup" element={<Signup />} />

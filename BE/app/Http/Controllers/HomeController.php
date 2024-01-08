@@ -226,9 +226,9 @@ class HomeController extends Controller
                 'bills.total_money',
                 'movies.movie_name',
                 'movies.image',
-                \DB::raw('DATE_FORMAT(bills.created_at, "%d-%m-%Y") as booking_date'),
-                \DB::raw('DATE_FORMAT(showtimes.show_date, "%d-%m-%Y") as show_date'),
-                \DB::raw('CASE 
+                DB::raw('DATE_FORMAT(bills.created_at, "%d-%m-%Y") as booking_date'),
+                DB::raw('DATE_FORMAT(showtimes.show_date, "%d-%m-%Y") as show_date'),
+                DB::raw('CASE 
                     WHEN bills.status = 0 THEN "Đang chờ thanh toán" 
                     WHEN bills.status = 1 THEN "Đã thanh toán" 
                     WHEN bills.status = 2 THEN "Đã hủy" 
@@ -262,18 +262,20 @@ class HomeController extends Controller
             ->join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
             ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
             ->join('seats', 'seats.id', '=', 'tickets.id_seat')
+            ->join('rooms','rooms.id','=','showtimes.room_id')
             ->leftJoin('ticket_foods', 'ticket_foods.bill_id', '=', 'bills.id')
             ->leftJoin('foods', 'foods.id', '=', 'ticket_foods.food_id')
             ->where('bills.id', $request->bill_id)
             ->select(
                 'showtimes.show_date as show_date',
                 'movies.movie_name as movie_name',
-                \DB::raw('DATE_FORMAT(showtimes.show_time, "%H:%i") as show_time'), // Định dạng show_time chỉ theo giờ phút
+                'rooms.name as room_name',
+                DB::raw('DATE_FORMAT(showtimes.show_time, "%H:%i") as show_time'), // Định dạng show_time chỉ theo giờ phút
                 'movies.movie_time as movie_time',
-                \DB::raw('GROUP_CONCAT(DISTINCT seats.seat_code) as seat'),
-                \DB::raw('GROUP_CONCAT(DISTINCT IFNULL(CONCAT(ticket_foods.quantity, "-", foods.food_name), "")) as food')
+                DB::raw('GROUP_CONCAT(DISTINCT seats.seat_code) as seat'),
+                DB::raw('GROUP_CONCAT(DISTINCT IFNULL(CONCAT(ticket_foods.quantity, "-", foods.food_name), "")) as food')
             )
-            ->groupBy('show_date', 'movie_name', 'show_time', 'movie_time')
+            ->groupBy('show_date', 'movie_name','room_name', 'show_time', 'movie_time')
             ->first();
         // send mail
         $to_name = "Wonder Cenima"; //tên người gửi
@@ -287,7 +289,8 @@ class HomeController extends Controller
             "movie_time" => $movie->movie_time,
             "seat" => $movie->seat,
             "food" => $movie->food,
-            "to_name" => $to_name
+            "to_name" => $to_name,
+            "room_name" => $movie->room_name
         );
 
         Mail::send('send_mail', $data, function ($message) use ($to_name, $to_email) {
