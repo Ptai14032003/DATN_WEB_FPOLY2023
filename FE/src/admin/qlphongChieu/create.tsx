@@ -73,7 +73,7 @@ const CreateQlPhongChieu: React.FC = () => {
                     });
                     return;
                 }
-                if (buttonClick === 2) {
+                if (buttonClick === 3) {
                     seat?.map((seatItem: any) => {
                         seatItem.map((item2: any) => {
                             if (item2 && item2?.seat_code === seat_code) {
@@ -120,7 +120,7 @@ const CreateQlPhongChieu: React.FC = () => {
                         })
                     })
                 }
-                if (buttonClick === 3) {
+                if (buttonClick === 4) {
                     if (hidden === 0 && type_seat_id === 2) {
                         messageApi.error({
                             type: 'error',
@@ -238,19 +238,19 @@ const CreateQlPhongChieu: React.FC = () => {
                             <div className="text-center w-[15%] ml-[140px] ">
                                 <div className="text-xl ml-[-55px]">Tổng số ghế : {tongGhe}</div>
                                 <div className='ml-[-55px]'>Lựa chọn loại ghế :</div>
-                                <div className={`seat flex border-2 rounded-lg w-[120px] mt-4 ${buttonClick === 1 ? "bg-green-500" : ""}`} onClick={() => setButtonClick(0)}>
+                                <div className={`seat flex border-2 rounded-lg w-[120px] mt-4 ${buttonClick === 1 ? "bg-green-500" : ""}`} onClick={() => setButtonClick(1)}>
                                     <div><MdChair className="text-[#797373]" size={40} /></div>
                                     <p className='ml-2 py-2'>Thường</p>
                                 </div>
-                                <div className={`seat flex border-2 rounded-lg w-[120px] mt-4 ${buttonClick === 2 ? "bg-green-500" : ""}`} onClick={() => setButtonClick(1)}>
+                                <div className={`seat flex border-2 rounded-lg w-[120px] mt-4 ${buttonClick === 2 ? "bg-green-500" : ""}`} onClick={() => setButtonClick(2)}>
                                     <div><MdChair className="text-[#8f4747]" size={40} /></div>
                                     <p className='ml-2 py-2'>Vip</p>
                                 </div>
-                                <div className={`seat flex border-2 rounded-lg w-[120px] mt-4 ${buttonClick === 3 ? "bg-green-500" : ""}`} onClick={() => setButtonClick(2)}>
+                                <div className={`seat flex border-2 rounded-lg w-[120px] mt-4 ${buttonClick === 3 ? "bg-green-500" : ""}`} onClick={() => setButtonClick(3)}>
                                     <div><MdChair className="text-[#8f355a]" size={40} /></div>
                                     <p className='ml-2 py-2'>Sweet-box</p>
                                 </div>
-                                <div className={`seat flex border-2 rounded-lg w-[120px] mt-4 ${buttonClick === 4 ? "bg-green-500" : ""}`} onClick={() => setButtonClick(3)}>
+                                <div className={`seat flex border-2 rounded-lg w-[120px] mt-4 ${buttonClick === 4 ? "bg-green-500" : ""}`} onClick={() => setButtonClick(4)}>
                                     <div><MdChair className="text-black" size={40} /></div>
                                     <p className='ml-2 py-2'>Huỷ ghế</p>
                                 </div>
