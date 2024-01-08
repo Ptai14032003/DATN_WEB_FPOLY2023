@@ -1,5 +1,5 @@
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {useEffect, useState } from 'react';
 
 import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
 import CreateQlPhongChieu from './create';
@@ -18,7 +18,6 @@ export type PhongChieu = {
     name: string;
     row: number;
     col: number;
-    total_seat: number
 }
 
 
@@ -27,7 +26,6 @@ export type PhongChieu1 = {
     name: string;
     row: number;
     col: number;
-    total_seat: number
 }
 const AdminQlPhongChieu: React.FC = () => {
     const { data: dataPhongChieu, isLoading, error } = useFetchPhongChieuQuery()
@@ -66,9 +64,6 @@ const AdminQlPhongChieu: React.FC = () => {
     const searchProject = (value: string) => {
         setSearchTerm(value)
     };
-    console.log(dataTable);
-
-
     const deleteOne = (key: string) => {
         deletePhongChieu(key).then(() => message.success("Xóa thành công"))
     }
@@ -80,7 +75,6 @@ const AdminQlPhongChieu: React.FC = () => {
                 name: item.name,
                 row: item.row,
                 col: item.col,
-                total_seat: item.total_seat
             }))
             setDataTable(mapPhongChieu)
         }
@@ -99,7 +93,6 @@ const AdminQlPhongChieu: React.FC = () => {
                     name: item.name,
                     row: item.row,
                     col: item.col,
-                    total_seat: item.total_seat
                 }))
                 setDataTable(mapPhongChieu)
             }
@@ -112,7 +105,6 @@ const AdminQlPhongChieu: React.FC = () => {
                     name: item.name,
                     row: item.row,
                     col: item.col,
-                    total_seat: item.total_seat
                 }))
                 setDataTable(mapPhongChieu)
             }
@@ -161,7 +153,6 @@ const AdminQlPhongChieu: React.FC = () => {
                     <Column title="Phòng" dataIndex="name" key="name" />
                     <Column title="Hàng ngang" dataIndex="row" key="row" />
                     <Column title="Hàng dọc" dataIndex="col" key="col" />
-                    <Column title="Tổng số ghế" dataIndex="total_seat" key="total_seat" />
                     <Column
                         title="Action"
                         key="action"

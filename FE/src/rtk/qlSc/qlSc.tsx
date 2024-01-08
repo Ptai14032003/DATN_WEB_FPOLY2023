@@ -38,7 +38,7 @@ const suatChieuApi = createApi({
         patchSuatChieu: builder.mutation<void, { body: any, id: string }>({
             query: ({ body, id }) => ({
                 url: `/showtimes/${id}`,
-                method: "PATCH",
+                method: "PUT",
                 body
             }),
             invalidatesTags: ["showtimes"]

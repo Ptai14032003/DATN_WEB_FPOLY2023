@@ -16,10 +16,8 @@ const CreateQlPhongChieu: React.FC = () => {
     const [seat, setSeat] = useState<any>([])
     const [buttonClick, setButtonClick] = useState<any>(0)
     const [messageApi, contextHolder] = message.useMessage();
-    console.log(dataSeat);
-    
+    const [dataRoom, setDataRoom] = useState<any>({})
     const onFinish = (values: any) => {
-
         const newDataSeat = [];
         for (let i = 0; i < values.col; i++) {
             for (let j = 0; j < values.row; j++) {
@@ -34,6 +32,7 @@ const CreateQlPhongChieu: React.FC = () => {
         }
         setDataSeat(newDataSeat);
         setTongGhe(values.col * values.row)
+        setDataRoom(values)
 
     };
     const onFinishFailed = (errorInfo: any) => {
@@ -169,9 +168,8 @@ const CreateQlPhongChieu: React.FC = () => {
         }
     }, [dataSeat],)
     const addPhong = () => {
-        console.log(dataSeat);
-
-        // addPhongChieu(dataSeat).then(() => { setIsModalOpen(false); message.success("Tạo mới thành công"); formRef.current?.resetFields() })
+        const newData = [...dataSeat, dataRoom]
+        addPhongChieu(newData).then(() => { setIsModalOpen(false); message.success("Tạo mới thành công"); formRef.current?.resetFields() })
     }
     return (
         <>
