@@ -49,6 +49,7 @@ const CheckPay = () => {
             }
             checkBill(data).then((req: any) => {
                 setMess(req?.data?.Message);
+                setRequest(true)
             }
             )
             return;
