@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('seat_code');
             $table->unsignedBigInteger('type_seat_id');
             $table->unsignedBigInteger('room_id');
-            $table->tinyInteger('status');
+            $table->tinyInteger('hidden');
             $table->timestamps();
             $table->foreign('type_seat_id')->references('id')->on('type_seats');
             $table->foreign('room_id')->references('id')->on('rooms');

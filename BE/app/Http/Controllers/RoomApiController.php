@@ -26,7 +26,6 @@ class RoomApiController extends Controller
             if (isset($roomData['name'])) {
                 $theater = Room::create([
                     "name" => $roomData['name'],
-                    "total_seat" => $roomData['total_seat'],
                     "row" => $roomData['row'],
                     "col" => $roomData['col']
                 ]);
@@ -68,7 +67,6 @@ class RoomApiController extends Controller
             if (isset($roomData['name'])) {
                 $theater->update([
                     "name" => $roomData['name'],
-                    "total_seat" => $roomData['total_seat'],
                     "row" => $roomData['row'],
                     "col" => $roomData['col']
                 ]);
