@@ -43,7 +43,7 @@ const moviesApi = createApi({
         updateMovies: builder.mutation<any, { body: any, id: string }>({
             query: ({ body, id }) => ({
                 url: `/movies/${id}`,
-                method: "PATCH",
+                method: "PUT",
                 body
             }),
             invalidatesTags: ["movies"]

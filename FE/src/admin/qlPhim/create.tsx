@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, Modal, Select, Upload, message } from 'antd';
+import { Button, Form, Input, InputNumber, Modal, Select, Upload, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
 import { QlPhim } from './page';
 import { useAddMoviesMutation } from '../../rtk/movies/movies';
-
-import { useFetchGenresQuery } from '../../rtk/genres/genres';
 export interface QlGenre {
     id: string;
     genre: string
@@ -57,16 +55,9 @@ const CreateQlPhim: React.FC = () => {
                         <Input />
                     </Form.Item>
                     <Form.Item<QlPhim>
-                        label="Nước sản xuất"
-                        name="country_name"
-                        rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item<QlPhim>
-                        label="Diễn viên"
-                        name="actor_name"
-                        rules={[{ required: true, message: 'Vui lòng nhập tên các diễn viên !' }]}
+                        label="Thể loại"
+                        name="genre"
+                        rules={[{ required: true, message: 'Vui lòng nhập thể loại!' }]}
                     >
                         <Input />
                     </Form.Item>
@@ -82,9 +73,16 @@ const CreateQlPhim: React.FC = () => {
                         />
                     </Form.Item>
                     <Form.Item<QlPhim>
-                        label="Thể loại"
-                        name="genre"
-                        rules={[{ required: true, message: 'Vui lòng nhập thể loại!' }]}
+                        label="Thời lượng"
+                        name="country_name"
+                        rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
+                    >
+                        <InputNumber min={0} />
+                    </Form.Item>
+                    <Form.Item<QlPhim>
+                        label="Nước sản xuất"
+                        name="country_name"
+                        rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
                     >
                         <Input />
                     </Form.Item>
@@ -92,6 +90,13 @@ const CreateQlPhim: React.FC = () => {
                         label="Đạo diễn"
                         name="director"
                         rules={[{ required: true, message: 'Vui lòng nhập tên đạo diễn !' }]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item<QlPhim>
+                        label="Diễn viên"
+                        name="actor_name"
+                        rules={[{ required: true, message: 'Vui lòng nhập tên các diễn viên !' }]}
                     >
                         <Input />
                     </Form.Item>

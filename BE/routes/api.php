@@ -74,6 +74,7 @@ Route::prefix('admin')->group(function () {
         Route::delete('/{id}', [ApiMovieTypeController::class, 'destroy']);
     });
 
+   
 
     Route::prefix('promotions')->group(function () {
         Route::get('/', [ApiPromotionController::class, 'index']);
