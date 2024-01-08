@@ -84,7 +84,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
     };
 
     const handleCancel = () => {
-        setIsModalOpen(true);
+        setIsModalOpen(false);
     };
 
     const handleSelectVoucher = (voucherCode: any, percent: any) => {
@@ -164,7 +164,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                             <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                                 <div className='space-y-3'>
                                     {voucher?.map((item: any) => (
-                                        <button className={active ? 'block bg-teal-400 text-black w-full rounded-md py-3': 'block bg-[#a9aead] text-black w-full rounded-md py-3'} id={item.id}
+                                        <button className={active ? 'block bg-teal-400 text-black w-full rounded-md py-3' : 'block bg-[#a9aead] text-black w-full rounded-md py-3'} id={item.id}
                                             onClick={() => handleSelectVoucher(item.discount_code, item.discount_percent)}
                                         >
                                             <h3 className='text-3xl font-medium'>{item.discount_code}</h3>
