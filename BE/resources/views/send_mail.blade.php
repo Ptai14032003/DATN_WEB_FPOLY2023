@@ -25,9 +25,10 @@
         <h3>Xuất chiếu: {{ $show_time }}</h3>
         <h3>Thời lượng: {{ $movie_time }} phút</h3>
         <h3>Số ghế: {{ $seat }}</h3>
+        <h3>Phòng chiếu: {{ $room_name }}</h3>
         <h3 {{ $food !="" ? "" : "hidden" }}>Đồ ăn (nước, bỏng,...): {{ $food }}</h3>
         <h3>Cảm ơn quý khách đã đặt vé xem phim tại <strong style="color:blue">{{ $to_name }}</strong></h3>
-        <h3>CHÚC QUÝ KHÁCH CÓ MỘT BUỔI XEM PHIM VUI VẺ</h3>
+        <h1 style="color: red">CHÚC QUÝ KHÁCH CÓ MỘT BUỔI XEM PHIM VUI VẺ</h1>
     </div>
 
 </body>
