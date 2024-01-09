@@ -1,10 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 interface AuthSignup {
-    email: string;
-    password: string;
-    name: string;
-    confirmPassword: string
+    name: string,
+    email: string,
+    password: string,
+    password_confirmation: string,
+    phone_number: string
 }
 interface AuthSignin {
     email: string;
@@ -13,9 +14,9 @@ interface AuthSignin {
 const authApi = createApi({
     reducerPath: "auth",
     baseQuery: fetchBaseQuery({
-        baseUrl:"http://127.0.0.1:8000"
+        baseUrl: "http://127.0.0.1:8000"
     }),
-    endpoints:(builder)=>(
+    endpoints: (builder) => (
         {
             signin: builder.mutation<{ message: string; accessToken: string; user: {} }, AuthSignin>({
                 query: (user) => ({
@@ -34,14 +35,14 @@ const authApi = createApi({
                     return { message, accessToken, user };
                 },
             }),
-            signup: builder.mutation<{ message: string, accessToken: string, user: {} },any>({
-             query:(user)=>({
-                 url: 'api/register',
-                 method:"POST",
-                 body:user
-             })
+            signup: builder.mutation<{ message: string, user: {} }, AuthSignup>({
+                query: (user) => ({
+                    url: '/api/register',
+                    method: "POST",
+                    body: user,
+                })
             })
-         }
+        }
     )
 })
 export const { useSignupMutation, useSigninMutation } = authApi;
