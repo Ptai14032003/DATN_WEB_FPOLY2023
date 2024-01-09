@@ -28,6 +28,8 @@ const CreateQlNhanSu: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
+        console.log(values);
+        
         addNhanSu(values).then(() => setIsModalOpen(false))
     };
     const onFinishFailed = (errorInfo: any) => {
@@ -70,7 +72,7 @@ const CreateQlNhanSu: React.FC = () => {
                     <Form.Item<QlNhanSuAdd>
                         label="Số điện thoại"
                         name="phone_number"
-                        rules={[{ required: true, message: 'Vui lòng nhập số điện thoại !' }, { type: 'number', message: "Vui long nhập đúng định dạng !" }]}
+                        rules={[{ required: true, message: 'Vui lòng nhập số điện thoại !' }]}
                     >
                         <Input />
                     </Form.Item>
