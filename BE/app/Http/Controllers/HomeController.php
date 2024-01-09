@@ -63,97 +63,97 @@ class HomeController extends Controller
         return response()->json($movies);
     }
     public function show_time_movie(string $id, $selectedDay = null)
-{
-    $st_movieQuery = Movie::join('showtimes', 'showtimes.movie_id', '=', 'movies.id')
-        ->join('rooms', 'showtimes.room_id', '=', 'rooms.id')
-        ->join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
-        ->select(
-            'showtimes.show_date',
-            'showtimes.show_time',
-            'rooms.name as room',
-            'showtimes.id as showtime_id'
-        )
-        ->where('movies.id', $id);
+    {
+        $st_movieQuery = Movie::join('showtimes', 'showtimes.movie_id', '=', 'movies.id')
+            ->join('rooms', 'showtimes.room_id', '=', 'rooms.id')
+            ->join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
+            ->select(
+                'showtimes.show_date',
+                'showtimes.show_time',
+                'rooms.name as room',
+                'showtimes.id as showtime_id'
+            )
+            ->where('movies.id', $id);
 
-    if ($selectedDay) {
-        // Chuyển ngày được chọn thành ngày trong tuần (ví dụ: Monday, Tuesday)
-        $selectedDay = strtolower(date('l', strtotime($selectedDay)));
+        if ($selectedDay) {
+            // Chuyển ngày được chọn thành ngày trong tuần (ví dụ: Monday, Tuesday)
+            $selectedDay = strtolower(date('l', strtotime($selectedDay)));
 
-        // Thêm điều kiện để chỉ lấy suất chiếu cho ngày được chọn
-        $st_movieQuery->whereRaw("LOWER(DAYNAME(showtimes.show_date)) = '{$selectedDay}'");
-    }
-
-    $st_movie = $st_movieQuery->get();
-
-    $movies = Movie::
-        join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
-        ->where('movies.id', $id)->select('movies.*', 'movie_types.type_name')->first();
-    $movies->makeHidden([ 'movie_type_id']);
-
-    date_default_timezone_set('Asia/Ho_Chi_Minh');
-
-    // Sử dụng Eloquent Collection để nhóm các suất chiếu theo ngày
-    $groupedStMovie = $st_movie->groupBy('show_date');
-
-    $result = [];
-    foreach ($groupedStMovie as $date => $showtimes) {
-        foreach ($showtimes as $index => $showtime) {
-            // Thêm thông tin ngày trong tuần và định dạng ngày, giờ
-            $weekday = date('l', strtotime($date));
-            $weekday = strtolower($weekday);
-            switch ($weekday) {
-                case 'monday':
-                    $weekday = 'Thứ hai';
-                    break;
-                case 'tuesday':
-                    $weekday = 'Thứ ba';
-                    break;
-                case 'wednesday':
-                    $weekday = 'Thứ tư';
-                    break;
-                case 'thursday':
-                    $weekday = 'Thứ năm';
-                    break;
-                case 'friday':
-                    $weekday = 'Thứ sáu';
-                    break;
-                case 'saturday':
-                    $weekday = 'Thứ bảy';
-                    break;
-                default:
-                    $weekday = 'Chủ nhật';
-                    break;
-            }
-
-            $showtime->weekday = $weekday;
-            $showtime->show_date = Carbon::parse($date)->format('d-m');
-            $showtime->show_time = Carbon::parse($showtime->show_time)->format('H:i');
-
-            // So sánh thời gian hiện tại với show_time
-            $currentTime = Carbon::now();
-            $showTime = Carbon::parse($date . ' ' . $showtime->show_time);
-
-            // Nếu thời gian hiện tại lớn hơn show_time, ẩn suất chiếu
-            if ($currentTime->gt($showTime)) {
-                $showtime->makeHidden(['show_date', 'weekday']);
-            }
+            // Thêm điều kiện để chỉ lấy suất chiếu cho ngày được chọn
+            $st_movieQuery->whereRaw("LOWER(DAYNAME(showtimes.show_date)) = '{$selectedDay}'");
         }
-        // Ẩn trường show_date trong các suất chiếu
-        $showtimes->makeHidden(['show_date','weekday']);
 
-        $result[] = [
-            'date' => Carbon::parse($date)->format('d-m'),
-            'weekday' => $weekday,
-            'showtimes' => $showtimes->toArray(),
-        ];
-    }
+        $st_movie = $st_movieQuery->get();
 
-    if ($result) {
-        return response()->json(['movie' => $movies, 'st_movie' => $result]);
-    } else {
-        return response()->json(['messages' => 'Không tồn tại suất chiếu theo phim này'], 404);
+        $movies = Movie::join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
+            ->where('movies.id', $id)->select('movies.*', 'movie_types.type_name')->first();
+        $movies->makeHidden(['movie_type_id']);
+
+
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+
+        // Sử dụng Eloquent Collection để nhóm các suất chiếu theo ngày
+        $groupedStMovie = $st_movie->groupBy('show_date');
+
+        $result = [];
+        foreach ($groupedStMovie as $date => $showtimes) {
+            foreach ($showtimes as $index => $showtime) {
+                // Thêm thông tin ngày trong tuần và định dạng ngày, giờ
+                $weekday = date('l', strtotime($date));
+                $weekday = strtolower($weekday);
+                switch ($weekday) {
+                    case 'monday':
+                        $weekday = 'Thứ hai';
+                        break;
+                    case 'tuesday':
+                        $weekday = 'Thứ ba';
+                        break;
+                    case 'wednesday':
+                        $weekday = 'Thứ tư';
+                        break;
+                    case 'thursday':
+                        $weekday = 'Thứ năm';
+                        break;
+                    case 'friday':
+                        $weekday = 'Thứ sáu';
+                        break;
+                    case 'saturday':
+                        $weekday = 'Thứ bảy';
+                        break;
+                    default:
+                        $weekday = 'Chủ nhật';
+                        break;
+                }
+
+                $showtime->weekday = $weekday;
+                $showtime->show_date = Carbon::parse($date)->format('d-m');
+                $showtime->show_time = Carbon::parse($showtime->show_time)->format('H:i');
+
+                // So sánh thời gian hiện tại với show_time
+                $currentTime = Carbon::now();
+                $showTime = Carbon::parse($date . ' ' . $showtime->show_time);
+
+                // Nếu thời gian hiện tại lớn hơn show_time, ẩn suất chiếu
+                if ($currentTime->gt($showTime)) {
+                    $showtime->makeHidden(['show_date', 'weekday']);
+                }
+            }
+            // Ẩn trường show_date trong các suất chiếu
+            $showtimes->makeHidden(['show_date', 'weekday']);
+
+            $result[] = [
+                'date' => Carbon::parse($date)->format('d-m'),
+                'weekday' => $weekday,
+                'showtimes' => $showtimes->toArray(),
+            ];
+        }
+
+        if ($result) {
+            return response()->json(['movie' => $movies, 'st_movie' => $result]);
+        } else {
+            return response()->json(['messages' => 'Không tồn tại suất chiếu theo phim này'], 404);
+        }
     }
-}
 
 
     public function show_seat_room($id)
@@ -168,39 +168,32 @@ class HomeController extends Controller
                 'type_seats.type_name',
                 'rooms.name as room_name',
                 DB::raw("(
-                CASE
-                    WHEN NOT EXISTS (
-                        SELECT 1
-                        FROM tickets t
-                        WHERE t.id_seat = seats.id AND t.showtime_id = $id
-                    ) THEN 2
-                    WHEN EXISTS (
-                        SELECT 1
-                        FROM tickets t
-                        JOIN bills b ON b.id = t.bill_id
-                        WHERE t.id_seat = seats.id AND b.status IN (0, 1) AND t.showtime_id = $id
-                    ) THEN (
-                        SELECT b.status
-                        FROM tickets t
-                        JOIN bills b ON b.id = t.bill_id
-                        WHERE t.id_seat = seats.id AND b.status IN (0, 1) AND t.showtime_id = $id
-                        LIMIT 1
-                    )
-                    WHEN EXISTS (
-                        SELECT 1
-                        FROM tickets t
-                        JOIN bills b ON b.id = t.bill_id
-                        WHERE t.id_seat = seats.id AND b.status = 2 AND t.showtime_id = $id
-                        GROUP BY t.id_seat
-                        HAVING COUNT(DISTINCT b.status) = 1
-                    ) THEN 2
-                    ELSE 2
-                END
-            ) as status")
+            CASE
+                WHEN NOT EXISTS (
+                    SELECT 1
+                    FROM tickets t
+                    WHERE t.id_seat = seats.id AND t.showtime_id = $id
+                ) THEN 2
+                WHEN EXISTS (
+                    SELECT 1
+                    FROM tickets t
+                    JOIN bills b ON b.id = t.bill_id
+                    WHERE t.id_seat = seats.id AND b.status = 1 AND t.showtime_id = $id
+                ) THEN 1
+                WHEN EXISTS (
+                    SELECT 1
+                    FROM tickets t
+                    JOIN bills b ON b.id = t.bill_id
+                    WHERE t.id_seat = seats.id AND b.status = 0 AND t.showtime_id = $id
+                ) THEN 0
+                ELSE 2
+            END
+        ) as status")
             )
             ->where('showtimes.id', $id)
             ->groupBy('seats.id', 'seats.seat_code', 'seats.type_seat_id', 'type_seats.type_name', 'room_name')
             ->get();
+
         $movie = Movie::join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
             ->join('showtimes', 'showtimes.movie_id', '=', 'movies.id')
             ->where('showtimes.id', $id)
@@ -211,6 +204,7 @@ class HomeController extends Controller
             ->select('showtimes.*', 'movies.movie_name', 'rooms.name')
             ->where('showtimes.id', '=', $id)
             ->first();
+
         date_default_timezone_set('Asia/Ho_Chi_Minh');
 
         foreach ($seats as $seat) {
@@ -295,7 +289,7 @@ class HomeController extends Controller
             ->join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
             ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
             ->join('seats', 'seats.id', '=', 'tickets.id_seat')
-            ->join('rooms','rooms.id','=','showtimes.room_id')
+            ->join('rooms', 'rooms.id', '=', 'showtimes.room_id')
             ->leftJoin('ticket_foods', 'ticket_foods.bill_id', '=', 'bills.id')
             ->leftJoin('foods', 'foods.id', '=', 'ticket_foods.food_id')
             ->where('bills.id', $request->bill_id)
@@ -308,7 +302,7 @@ class HomeController extends Controller
                 DB::raw('GROUP_CONCAT(DISTINCT seats.seat_code) as seat'),
                 DB::raw('GROUP_CONCAT(DISTINCT IFNULL(CONCAT(ticket_foods.quantity, "-", foods.food_name), "")) as food')
             )
-            ->groupBy('show_date', 'movie_name','room_name', 'show_time', 'movie_time')
+            ->groupBy('show_date', 'movie_name', 'room_name', 'show_time', 'movie_time')
             ->first();
         // send mail
         $to_name = "Wonder Cenima"; //tên người gửi
@@ -333,5 +327,4 @@ class HomeController extends Controller
         });
         return response()->json("thành công");
     }
-
 }

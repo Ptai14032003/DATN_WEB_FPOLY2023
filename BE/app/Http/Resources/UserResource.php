@@ -24,7 +24,7 @@ class UserResource extends JsonResource
             'phone_number' => $this->phone_number,
             'password' => $this->password,
             'address' => $this->address,
-            'birthday' =>Carbon::parse($this->birthday)->format('d-m-Y'),
+            'birthday' =>$this->birthday,
             'gender' => $this->gender == 0 ? 'Nữ' : 'Nam'
         ];
     }

@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
 import { Button, Form, Input, Modal, Select } from 'antd';
 import type { FormInstance } from 'antd/es/form';
-import { QlNhanSu } from './page';
 import { useAddNhanSuMutation } from '../../rtk/qlNhanSu/qlNhanSu';
+export interface QlNhanSuAdd {
+    key: string;
+    name: string;
+    email: string;
+    phone_number: string;
+    password: string;
+    address: string;
+    birthday: string;
+    gender: string;
+    role: string
+}
 const CreateQlNhanSu: React.FC = () => {
     const [addNhanSu] = useAddNhanSuMutation()
     const selectGender = ["Nam", "Nữ", "Không muốn trả lời"]
@@ -18,6 +28,8 @@ const CreateQlNhanSu: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
+        console.log(values);
+        
         addNhanSu(values).then(() => setIsModalOpen(false))
     };
     const onFinishFailed = (errorInfo: any) => {
@@ -43,57 +55,49 @@ const CreateQlNhanSu: React.FC = () => {
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
                 >
-                    <Form.Item<QlNhanSu>
-                        label="Mã nhân viên"
-                        name="personnel_code"
-                        rules={[{ required: true, message: 'Vui lòng nhập tên !' }]}
-                    >
-                        <Input />
-                    </Form.Item>
-
-                    <Form.Item<QlNhanSu>
+                    <Form.Item<QlNhanSuAdd>
                         label="Tên nhân viên"
                         name="name"
                         rules={[{ required: true, message: 'Vui lòng nhập mô tả !' }]}
                     >
                         <Input />
                     </Form.Item>
-                    <Form.Item<QlNhanSu>
+                    <Form.Item<QlNhanSuAdd>
                         label="Email"
                         name="email"
                         rules={[{ required: true, message: 'Vui lòng nhập email !' }, { type: 'email', message: "Vui lòng nhập đúng định dạng !" }]}
                     >
                         <Input />
                     </Form.Item>
-                    <Form.Item<QlNhanSu>
+                    <Form.Item<QlNhanSuAdd>
                         label="Số điện thoại"
                         name="phone_number"
-                        rules={[{ required: true, message: 'Vui lòng nhập số điện thoại !' }, { type: 'number', message: "Vui long nhập đúng định dạng !" }]}
+                        rules={[{ required: true, message: 'Vui lòng nhập số điện thoại !' }]}
                     >
                         <Input />
                     </Form.Item>
-                    <Form.Item<QlNhanSu>
+                    <Form.Item<QlNhanSuAdd>
                         label="Mật khẩu"
                         name="password"
                         rules={[{ required: true, message: 'Vui lòng nhập mật khẩu !' }]}
                     >
                         <Input type="password" />
                     </Form.Item>
-                    <Form.Item<QlNhanSu>
+                    <Form.Item<QlNhanSuAdd>
                         label="Địa chỉ"
                         name="address"
                         rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}
                     >
                         <Input />
                     </Form.Item>
-                    <Form.Item<QlNhanSu>
+                    <Form.Item<QlNhanSuAdd>
                         label="Ngày sinh"
                         name="birthday"
                         rules={[{ required: true, message: 'Vui lòng nhập ngày sinh!' }]}
                     >
                         <Input type='date' style={{ width: 200 }} />
                     </Form.Item>
-                    <Form.Item<QlNhanSu>
+                    <Form.Item<QlNhanSuAdd>
                         label="Giới tính"
                         name="gender"
                         rules={[{ required: true, message: 'Vui lòng nhập giới tính !' }]}
@@ -104,7 +108,7 @@ const CreateQlNhanSu: React.FC = () => {
                             options={GenderOptions}
                         />
                     </Form.Item>
-                    <Form.Item<QlNhanSu>
+                    <Form.Item<QlNhanSuAdd>
                         label="Chức vụ"
                         name="role"
                         rules={[{ required: true, message: 'Vui lòng nhập mô tả !' }]}
