@@ -8,6 +8,7 @@ const CreateQlSp: React.FC = () => {
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
         console.log('Success:', values);
+        console.log(values.image.file);
     };
 
     const onFinishFailed = (errorInfo: any) => {

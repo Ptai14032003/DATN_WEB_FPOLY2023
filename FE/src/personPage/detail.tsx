@@ -5,8 +5,6 @@ import Footer from "../components/layouts/layoutGuest/footer";
 import { useEffect, useState } from "react";
 import { message } from "antd";
 import Menu from "../components/layouts/layoutGuest/menu";
-import DetailTime from "../components/itemGuest/detailTime/page";
-
 export default function Detail() {
     const { id } = useParams()
     const { data: movieBooking, error } = useFetchMovieIdPersonQuery(id);
@@ -65,7 +63,7 @@ export default function Detail() {
                             <div className="flex gap-20">
                                 {dataTime?.map((data: any) => (
                                     <div key={data?.show_time} className="w-[70%] mt-[20px] text-black">
-                                        <button className="detail-time w-[90px] h-[40px] bg-white rounded-sm" >
+                                        <button className="detail-time w-[90px] h-[40px] bg-white rounded-sm" onClick={() => redirectToLink('/booking/' + movie?.id + `?show_seat=${data?.showtime_id}`)}>
                                             <p className="font-bold text-sm">{data?.show_time}</p>
                                         </button>
                                     </div>

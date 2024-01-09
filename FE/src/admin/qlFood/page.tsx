@@ -33,12 +33,9 @@ interface FetchFoods {
 }
 const AdminQlSp: React.FC = () => {
     const { data: dataFood, isLoading, error } = useFetchFoodsQuery()
-    console.log(error);
-
     const navigate = useNavigate();
     const status = error?.status;
     const [dataTable, setDataTable] = useState<QlFood[]>([])
-
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
