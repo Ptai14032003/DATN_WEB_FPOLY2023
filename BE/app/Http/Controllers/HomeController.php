@@ -81,10 +81,16 @@ class HomeController extends Controller
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         foreach ($st_movie as $movie) {
 
-            //tính ra ngày trong tuần
+    date_default_timezone_set('Asia/Ho_Chi_Minh');
 
-            $weekday = date('l', strtotime($movie->show_date));
+    // Sử dụng Eloquent Collection để nhóm các suất chiếu theo ngày
+    $groupedStMovie = $st_movie->groupBy('show_date');
 
+    $result = [];
+    foreach ($groupedStMovie as $date => $showtimes) {
+        foreach ($showtimes as $index => $showtime) {
+            // Thêm thông tin ngày trong tuần và định dạng ngày, giờ
+            $weekday = date('l', strtotime($date));
             $weekday = strtolower($weekday);
             switch ($weekday) {
                 case 'monday':
@@ -109,18 +115,28 @@ class HomeController extends Controller
                     $weekday = 'Chủ nhật';
                     break;
             }
-            $movie->weekday = $weekday;
-            $movie->show_date = Carbon::parse($movie->show_date)->format('d-m');
-            $movie->show_time = Carbon::parse($movie->show_time)->format('H:i');
+
+            $showtime->weekday = $weekday;
+            $showtime->show_date = Carbon::parse($date)->format('d-m');
+            $showtime->show_time = Carbon::parse($showtime->show_time)->format('H:i');
         }
-        $st_movie = $st_movie->toArray();
-        if ($st_movie) {
-            return response()->json(['movie' => $movies, 'st_movie' => $st_movie]);
-        } else {
-            return response()->json(['messages' => 'Không tồn tại suất chiếu theo phim này'], 404);
-        }
-        // return response()->json([$st_movie]);
+        // Ẩn trường show_date trong các suất chiếu
+        $showtimes->makeHidden(['show_date','weekday']);
+
+        $result[] = [
+            'date' => Carbon::parse($date)->format('d-m'),
+            'weekday' => $weekday,
+            'showtimes' => $showtimes->toArray(),
+        ];
     }
+
+    if ($result) {
+        return response()->json(['movie' => $movies, 'st_movie' => $result]);
+    } else {
+        return response()->json(['messages' => 'Không tồn tại suất chiếu theo phim này'], 404);
+    }
+}
+
 
     public function show_seat_room($id)
     {
