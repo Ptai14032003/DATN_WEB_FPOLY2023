@@ -11,7 +11,8 @@ export interface QlNhanSuAdd {
     address: string;
     birthday: string;
     gender: string;
-    role: string
+    role: string,
+    date_start: string
 }
 const CreateQlNhanSu: React.FC = () => {
     const [addNhanSu] = useAddNhanSuMutation()
@@ -70,7 +71,7 @@ const CreateQlNhanSu: React.FC = () => {
                     <Form.Item<QlNhanSuAdd>
                         label="Số điện thoại"
                         name="phone_number"
-                        rules={[{ required: true, message: 'Vui lòng nhập số điện thoại !' }, { type: 'number', message: "Vui long nhập đúng định dạng !" }]}
+                        rules={[{ required: true, message: 'Vui lòng nhập số điện thoại !' }]}
                     >
                         <Input />
                     </Form.Item>
@@ -105,6 +106,13 @@ const CreateQlNhanSu: React.FC = () => {
                             style={{ width: 200 }}
                             options={GenderOptions}
                         />
+                    </Form.Item>
+                    <Form.Item<QlNhanSuAdd>
+                        label="Ngày bắt đầu"
+                        name="date_start"
+                        rules={[{ required: true, message: 'Vui lòng nhập ngày bắt đầu!' }]}
+                    >
+                        <Input type='date' style={{ width: 200 }} />
                     </Form.Item>
                     <Form.Item<QlNhanSuAdd>
                         label="Chức vụ"

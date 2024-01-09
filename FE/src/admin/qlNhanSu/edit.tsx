@@ -18,6 +18,7 @@ export interface QlNhanSuEdit {
     birthday: string;
     gender: string;
     role: string
+    date_start: string
 }
 const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
     const { data } = useFetchNhanSuIdQuery(projects);
@@ -38,7 +39,9 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
-        updateNhanSu({ body: values, id: projects })
+        console.log(values);
+        
+        // updateNhanSu({ body: values, id: projects })
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -130,9 +133,16 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
                             />
                         </Form.Item>
                         <Form.Item<QlNhanSuEdit>
+                            label="Ngày bắt đầu"
+                            name="date_start"
+                            rules={[{ required: true, message: 'Vui lòng nhập ngày bắt đầu!' }]}
+                        >
+                            <Input type='date' style={{ width: 200 }} />
+                        </Form.Item>
+                        <Form.Item<QlNhanSuEdit>
                             label="Chức vụ"
                             name="role"
-                            rules={[{ required: true, message: 'Vui lòng nhập mô tả !' }]}
+                            rules={[{ required: true, message: 'Vui lòng chọn chức vụ !' }]}
                         >
                             <Select className='ml-[-72px]'
                                 defaultValue="Chọn chức vụ"
