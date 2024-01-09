@@ -20,7 +20,7 @@ const CreateQlNhanSu: React.FC = () => {
         value: gender,
         label: gender,
     }));
-    const selectRole = ["Sếp", "Nhân viên"]
+    const selectRole = ["Admin", "Nhân viên"]
     const RoleOptions = selectRole.map((role) => ({
         value: role,
         label: role,
