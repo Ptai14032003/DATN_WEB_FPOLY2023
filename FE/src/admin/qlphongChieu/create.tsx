@@ -14,7 +14,7 @@ const CreateQlPhongChieu: React.FC = () => {
     const [dataSeat, setDataSeat] = useState<any>([]);
     const [tongGhe, setTongGhe] = useState<any>();
     const [seat, setSeat] = useState<any>([])
-    const [buttonClick, setButtonClick] = useState<any>(0)
+    const [buttonClick, setButtonClick] = useState<any>(1)
     const [messageApi, contextHolder] = message.useMessage();
     const [dataRoom, setDataRoom] = useState<any>({})
     const onFinish = (values: any) => {

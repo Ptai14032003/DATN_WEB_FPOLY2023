@@ -115,7 +115,7 @@ const AdminQlSc: React.FC = () => {
                     <Column title="Tên phim" dataIndex="movie_id" key="movie_name" />
                     <Column title="Tên phòng" dataIndex="room_id" key="room_id" />
                     <Column title="Ngày chiếu" dataIndex="show_date" key="show_date" />
-                    <Column title="Thời gian chiếu" dataIndex="show_time" key="show_time" />
+                        <Column title="Thời gian chiếu" dataIndex="show_time" key="show_time"  />
                     <Column title="Tổng doanh thu" dataIndex="total_money" key="total_money" />
                     <Column
                         title="Action"

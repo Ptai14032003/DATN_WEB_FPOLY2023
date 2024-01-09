@@ -16,9 +16,9 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
     const [updatePhongChieu] = usePatchPhongChieuMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
-    const [dataSeat, setDataSeat] = useState<any>(dataseats);
+    const [dataSeat, setDataSeat] = useState<any>([]);
     const [seat, setSeat] = useState<any>([])
-    const [buttonClick, setButtonClick] = useState<any>(0)
+    const [buttonClick, setButtonClick] = useState<any>(1)
     const [messageApi, contextHolder] = message.useMessage();
     const setDataArraySeat = () => {
         const groupedSeats = dataSeat.reduce((acc: any, seat: any) => {
@@ -35,18 +35,7 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
     const onFinish = (values: any) => {
         const checkConfirm = confirm("Bạn có chắc muốn cập nhật lại ghế không ?")
         if (checkConfirm) {
-            const newDataSeat = [];
-            for (let i = 0; i < values.col; i++) {
-                for (let j = 0; j < values.row; j++) {
-                    newDataSeat.push({
-                        seat_code: String.fromCharCode(65 + i) + (j + 1),
-                        room_id: projects,
-                        hidden: 0,
-                        type_seat_id: 1,
-                    });
-                }
-            }
-            setDataSeat(newDataSeat);
+            setDataSeat(dataseats)
             setDataRoom(values)
         }
 
@@ -64,8 +53,8 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
         if (isconfirm) {
             setIsModalOpen(false);
             formRef.current?.resetFields();
-            // setDataSeat([])
-            // setSeat([])
+            setDataSeat([])
+            setSeat([])
         }
     };
     const changeSeat = (seat_code: any, type_seat_id: any, hidden: any) => {
@@ -73,12 +62,15 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
             if (item && item?.seat_code === seat_code) {
                 if ((buttonClick === 1 || buttonClick === 2) && type_seat_id !== 3) {
                     if (buttonClick === item?.type_seat_id) {
-                        item.type_seat_id = 1
+                        const newItem = { ...item, type_seat_id: 1 };
+                        const newSeat = dataSeat.map((obj: any) => (obj.seat_code === newItem.seat_code ? newItem : obj))
+                        setDataSeat(newSeat);
                         setDataArraySeat()
-                        return;
+                        return newItem;
                     } else {
-                        item.type_seat_id = buttonClick
-                        setDataSeat(dataSeat);
+                        const newItem = { ...item, type_seat_id: buttonClick };
+                        const newSeat = dataSeat.map((obj: any) => (obj.seat_code === newItem.seat_code ? newItem : obj))
+                        setDataSeat(newSeat);
                         setDataArraySeat()
                         return;
                     }
@@ -100,36 +92,114 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
                                 const dataOderSeat: number = seatItem.findIndex((seat: any) => seat?.seat_code === seat_code);
                                 if (dataOderSeat % 2 === 0 && (seat_code !== seatItem[dataLength - 1]?.seat_code)) {
                                     if (buttonClick === seatItem[dataOderSeat]?.type_seat_id || buttonClick === seatItem[dataOderSeat + 1]?.type_seat_id) {
-                                        seatItem[dataOderSeat + 1].type_seat_id = 0
-                                        seatItem[dataOderSeat].type_seat_id = 0
-                                        seatItem[dataOderSeat + 1].hidden = 0
-                                        seatItem[dataOderSeat].hidden = 0
+                                        const newItem1 = {
+                                            id: seatItem[dataOderSeat + 1]?.id,
+                                            seat_code: seatItem[dataOderSeat + 1]?.seat_code,
+                                            type_seat_id: 1,
+                                            room_id: seatItem[dataOderSeat + 1]?.room_id,
+                                            hidden: 0,
+                                        }
+                                        const newItem2 = {
+                                            id: seatItem[dataOderSeat]?.id,
+                                            seat_code: seatItem[dataOderSeat]?.seat_code,
+                                            type_seat_id: 1,
+                                            room_id: seatItem[dataOderSeat + 1]?.room_id,
+                                            hidden: 0,
+                                        }
+                                        const newSeat = dataSeat.map((obj: any) => {
+                                            if (obj.seat_code === newItem1.seat_code) {
+                                                return newItem1;
+                                            } else if (obj.seat_code === newItem2.seat_code) {
+                                                return newItem2;
+                                            } else {
+                                                return obj;
+                                            }
+                                        });
+                                        setDataSeat(newSeat);
                                         setDataArraySeat()
                                         return;
                                     } else {
-                                        seatItem[dataOderSeat + 1].type_seat_id = buttonClick
-                                        seatItem[dataOderSeat].type_seat_id = buttonClick
-                                        seatItem[dataOderSeat + 1].hidden = 0
-                                        seatItem[dataOderSeat].hidden = 0
-                                        setDataSeat(dataSeat);
+                                        const newItem1 = {
+                                            id: seatItem[dataOderSeat + 1]?.id,
+                                            seat_code: seatItem[dataOderSeat + 1]?.seat_code,
+                                            type_seat_id: buttonClick,
+                                            room_id: seatItem[dataOderSeat + 1]?.room_id,
+                                            hidden: 0,
+                                        }
+                                        const newItem2 = {
+                                            id: seatItem[dataOderSeat]?.id,
+                                            seat_code: seatItem[dataOderSeat]?.seat_code,
+                                            type_seat_id: buttonClick,
+                                            room_id: seatItem[dataOderSeat + 1]?.room_id,
+                                            hidden: 0,
+                                        }
+                                        const newSeat = dataSeat.map((obj: any) => {
+                                            if (obj.seat_code === newItem1.seat_code) {
+                                                return newItem1;
+                                            } else if (obj.seat_code === newItem2.seat_code) {
+                                                return newItem2;
+                                            } else {
+                                                return obj;
+                                            }
+                                        });
+                                        setDataSeat(newSeat);
                                         setDataArraySeat()
                                         return;
                                     }
                                 }
                                 if (dataOderSeat % 2 !== 0) {
                                     if (buttonClick === seatItem[dataOderSeat]?.type_seat_id || buttonClick === seatItem[dataOderSeat - 1]?.type_seat_id) {
-                                        seatItem[dataOderSeat - 1].type_seat_id = 0
-                                        seatItem[dataOderSeat].type_seat_id = 0
-                                        seatItem[dataOderSeat - 1].hidden = 0
-                                        seatItem[dataOderSeat].hidden = 0
+                                        const newItem1 = {
+                                            id: seatItem[dataOderSeat - 1]?.id,
+                                            seat_code: seatItem[dataOderSeat - 1]?.seat_code,
+                                            type_seat_id: 1,
+                                            room_id: seatItem[dataOderSeat - 1]?.room_id,
+                                            hidden: 0,
+                                        }
+                                        const newItem2 = {
+                                            id: seatItem[dataOderSeat]?.id,
+                                            seat_code: seatItem[dataOderSeat]?.seat_code,
+                                            type_seat_id: 1,
+                                            room_id: seatItem[dataOderSeat - 1]?.room_id,
+                                            hidden: 0,
+                                        }
+                                        const newSeat = dataSeat.map((obj: any) => {
+                                            if (obj.seat_code === newItem1.seat_code) {
+                                                return newItem1;
+                                            } else if (obj.seat_code === newItem2.seat_code) {
+                                                return newItem2;
+                                            } else {
+                                                return obj;
+                                            }
+                                        });
+                                        setDataSeat(newSeat);
                                         setDataArraySeat()
                                         return;
                                     } else {
-                                        seatItem[dataOderSeat - 1].type_seat_id = buttonClick
-                                        seatItem[dataOderSeat].type_seat_id = buttonClick
-                                        seatItem[dataOderSeat - 1].hidden = 0
-                                        seatItem[dataOderSeat].hidden = 0
-                                        setDataSeat(dataSeat);
+                                        const newItem1 = {
+                                            id: seatItem[dataOderSeat - 1]?.id,
+                                            seat_code: seatItem[dataOderSeat - 1]?.seat_code,
+                                            type_seat_id: buttonClick,
+                                            room_id: seatItem[dataOderSeat - 1]?.room_id,
+                                            hidden: 0,
+                                        }
+                                        const newItem2 = {
+                                            id: seatItem[dataOderSeat]?.id,
+                                            seat_code: seatItem[dataOderSeat]?.seat_code,
+                                            type_seat_id: buttonClick,
+                                            room_id: seatItem[dataOderSeat - 1]?.room_id,
+                                            hidden: 0,
+                                        }
+                                        const newSeat = dataSeat.map((obj: any) => {
+                                            if (obj.seat_code === newItem1.seat_code) {
+                                                return newItem1;
+                                            } else if (obj.seat_code === newItem2.seat_code) {
+                                                return newItem2;
+                                            } else {
+                                                return obj;
+                                            }
+                                        });
+                                        setDataSeat(newSeat);
                                         setDataArraySeat()
                                         return;
                                     }
@@ -140,7 +210,7 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
                     })
                 }
                 if (buttonClick === 4) {
-                    if (hidden === 0 && type_seat_id === 2) {
+                    if (hidden === 0 && type_seat_id === 3) {
                         messageApi.error({
                             type: 'error',
                             content: 'Vui lòng huỷ trạng thái ghế đôi',
@@ -150,14 +220,16 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
                         return;
                     }
                     if (hidden === 0 && type_seat_id !== 2) {
-                        item.hidden = 1
-                        setDataSeat(dataSeat);
+                        const newItem = { ...item, hidden: 1 };
+                        const newSeat = dataSeat.map((obj: any) => (obj.seat_code === newItem.seat_code ? newItem : obj))
+                        setDataSeat(newSeat);
                         setDataArraySeat()
                         return;
                     }
                     if (hidden === 1) {
-                        item.hidden = 0
-                        setDataSeat(dataSeat);
+                        const newItem = { ...item, hidden: 0 };
+                        const newSeat = dataSeat.map((obj: any) => (obj.seat_code === newItem.seat_code ? newItem : obj))
+                        setDataSeat(newSeat);
                         setDataArraySeat()
                         return;
                     }
@@ -180,9 +252,10 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
             },
             seats: dataSeat
         }
-        console.log(newData);
-
-        updatePhongChieu({ body: newData, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
+        updatePhongChieu({ body: newData, id: projects }).then(() => {
+            setIsModalOpen(false); message.success("Sửa thành công"); formRef.current?.resetFields(); setDataSeat([])
+            setSeat([])
+        })
     }
     return (
         <>
@@ -209,7 +282,7 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
                             name="name"
                             rules={[{ required: true, message: 'Vui lòng nhập tên phòng !' }]}
                         >
-                            <Input />
+                            <Input disabled />
                         </Form.Item>
 
                         <Form.Item<PhongChieu1>
