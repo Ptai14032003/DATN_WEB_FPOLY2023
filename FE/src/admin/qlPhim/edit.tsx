@@ -65,11 +65,8 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
         setIsModalOpen(false);
         formRef.current?.resetFields();
     };
-    console.log(newData);
-
     return (
         <>
-
             <Button onClick={showModal}>Sửa</Button>
             <Modal title="Sửa phim " open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
                 {newData ? (
@@ -138,6 +135,12 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                             rules={[{ required: true, message: 'Vui lòng nhập tên các diễn viên !' }]}
                         >
                             <Input />
+                        </Form.Item>
+                        <Form.Item<QlPhimEdit>>
+                            <div className='mx-[60%]'>
+                                <Image className='' width={150}
+                                    src={dataMovies?.image} />
+                            </div>
                         </Form.Item>
                         <Form.Item<QlPhimEdit>
                             label="Poster"

@@ -32,7 +32,7 @@ const Menu = () => {
     <div className="menu flex items-center justify-between px-16 fixed z-10 w-full">
       {contextHolder}
       <div className="logo-web">
-        <img src={logoweb} alt="" className='w-[100px] h-[80px]'/>
+        <img src={logoweb} alt="" className='w-[100px] h-[80px]' />
       </div>
       <nav>
         <ul className='menu-content flex text-white'>
@@ -63,8 +63,8 @@ const Menu = () => {
                 <ul className="dropdown-content absolute translate-y-[5.1rem] -translate-x-[2rem] right-6 w-[160px] text-center">
                   {user.role === 'Admin' && (
                     <li>
-                      <a href="admin">Admin</a>
-                    </li> 
+                      <a href={homeLink + "admin"}>Admin</a>
+                    </li>
                   )}
                   <li><a href={homeLink + 'profile'} className='block'>Profile</a></li>
                   <li onClick={() => Logout()}><div className='block'>Logout</div></li>

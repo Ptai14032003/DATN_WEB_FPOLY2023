@@ -14,11 +14,19 @@ const foodsApi = createApi({
             query: (id) => `/food/${id}`,
             providesTags: ["food"]
         }),
+        updateFood: builder.mutation<any, { body: any, id: string }>({
+            query: ({ body, id }) => ({
+                url: `/food/${id}`,
+                method: "PUT",
+                body
+            }),
+            invalidatesTags: ["food"]
+        }),
         deleteFoodID: builder.query<any, string>({
             query: (id) => `/food/${id}`,
             providesTags: ["food"]
         }),
     })
 })
-export const { useFetchFoodsQuery, useFetchFoodIDQuery } = foodsApi
+export const { useFetchFoodsQuery, useFetchFoodIDQuery, useUpdateFoodMutation } = foodsApi
 export default foodsApi
