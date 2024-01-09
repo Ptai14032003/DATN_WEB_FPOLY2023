@@ -75,10 +75,9 @@ class HomeController extends Controller
             )
             ->where('movies.id', $id)
             ->get();
-        $movies = Movie::
-        join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
-        ->where('movies.id', $id)->select('movies.*', 'movie_types.type_name')->first();
-        $movies->makeHidden([ 'movie_type_id']);
+        $movies = Movie::join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
+            ->where('movies.id', $id)->select('movies.*', 'movie_types.type_name')->first();
+        $movies->makeHidden(['movie_type_id']);
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         foreach ($st_movie as $movie) {
 
@@ -135,39 +134,32 @@ class HomeController extends Controller
                 'type_seats.type_name',
                 'rooms.name as room_name',
                 DB::raw("(
-                CASE
-                    WHEN NOT EXISTS (
-                        SELECT 1
-                        FROM tickets t
-                        WHERE t.id_seat = seats.id AND t.showtime_id = $id
-                    ) THEN 2
-                    WHEN EXISTS (
-                        SELECT 1
-                        FROM tickets t
-                        JOIN bills b ON b.id = t.bill_id
-                        WHERE t.id_seat = seats.id AND b.status IN (0, 1) AND t.showtime_id = $id
-                    ) THEN (
-                        SELECT b.status
-                        FROM tickets t
-                        JOIN bills b ON b.id = t.bill_id
-                        WHERE t.id_seat = seats.id AND b.status IN (0, 1) AND t.showtime_id = $id
-                        LIMIT 1
-                    )
-                    WHEN EXISTS (
-                        SELECT 1
-                        FROM tickets t
-                        JOIN bills b ON b.id = t.bill_id
-                        WHERE t.id_seat = seats.id AND b.status = 2 AND t.showtime_id = $id
-                        GROUP BY t.id_seat
-                        HAVING COUNT(DISTINCT b.status) = 1
-                    ) THEN 2
-                    ELSE 2
-                END
-            ) as status")
+            CASE
+                WHEN NOT EXISTS (
+                    SELECT 1
+                    FROM tickets t
+                    WHERE t.id_seat = seats.id AND t.showtime_id = $id
+                ) THEN 2
+                WHEN EXISTS (
+                    SELECT 1
+                    FROM tickets t
+                    JOIN bills b ON b.id = t.bill_id
+                    WHERE t.id_seat = seats.id AND b.status = 1 AND t.showtime_id = $id
+                ) THEN 1
+                WHEN EXISTS (
+                    SELECT 1
+                    FROM tickets t
+                    JOIN bills b ON b.id = t.bill_id
+                    WHERE t.id_seat = seats.id AND b.status = 0 AND t.showtime_id = $id
+                ) THEN 0
+                ELSE 2
+            END
+        ) as status")
             )
             ->where('showtimes.id', $id)
             ->groupBy('seats.id', 'seats.seat_code', 'seats.type_seat_id', 'type_seats.type_name', 'room_name')
             ->get();
+
         $movie = Movie::join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
             ->join('showtimes', 'showtimes.movie_id', '=', 'movies.id')
             ->where('showtimes.id', $id)
@@ -178,6 +170,7 @@ class HomeController extends Controller
             ->select('showtimes.*', 'movies.movie_name', 'rooms.name')
             ->where('showtimes.id', '=', $id)
             ->first();
+
         date_default_timezone_set('Asia/Ho_Chi_Minh');
 
         foreach ($seats as $seat) {
@@ -262,18 +255,20 @@ class HomeController extends Controller
             ->join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
             ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
             ->join('seats', 'seats.id', '=', 'tickets.id_seat')
+            ->join('rooms', 'rooms.id', '=', 'showtimes.room_id')
             ->leftJoin('ticket_foods', 'ticket_foods.bill_id', '=', 'bills.id')
             ->leftJoin('foods', 'foods.id', '=', 'ticket_foods.food_id')
             ->where('bills.id', $request->bill_id)
             ->select(
                 'showtimes.show_date as show_date',
                 'movies.movie_name as movie_name',
+                'rooms.name as room_name',
                 DB::raw('DATE_FORMAT(showtimes.show_time, "%H:%i") as show_time'), // Định dạng show_time chỉ theo giờ phút
                 'movies.movie_time as movie_time',
                 DB::raw('GROUP_CONCAT(DISTINCT seats.seat_code) as seat'),
                 DB::raw('GROUP_CONCAT(DISTINCT IFNULL(CONCAT(ticket_foods.quantity, "-", foods.food_name), "")) as food')
             )
-            ->groupBy('show_date', 'movie_name', 'show_time', 'movie_time')
+            ->groupBy('show_date', 'movie_name', 'room_name', 'show_time', 'movie_time')
             ->first();
         // send mail
         $to_name = "Wonder Cenima"; //tên người gửi
@@ -287,7 +282,8 @@ class HomeController extends Controller
             "movie_time" => $movie->movie_time,
             "seat" => $movie->seat,
             "food" => $movie->food,
-            "to_name" => $to_name
+            "to_name" => $to_name,
+            "room_name" => $movie->room_name
         );
 
         Mail::send('send_mail', $data, function ($message) use ($to_name, $to_email) {
@@ -297,5 +293,4 @@ class HomeController extends Controller
         });
         return response()->json("thành công");
     }
-
 }

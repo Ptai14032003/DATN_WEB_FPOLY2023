@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bill;
 use App\Models\Food;
+use App\Models\Seat;
 use App\Models\Ticket;
 use App\Models\Ticket_Food;
 use Exception;
@@ -29,11 +30,12 @@ class PaymentController extends Controller
         ];
         $bill_add = Bill::create($bill);
         for ($i = 0; $i < count($seat); $i++) {
+            $type_seat = Seat::join("type_seats", "type_seats.id", "=", "seats.type_seat_id")->where("seats.id",$seat[$i]['id'])->first();
             $ticket = [
                 'id_seat' => $seat[$i]['id'],
                 'showtime_id' => $showtime_id,
                 'bill_id' => $bill_add->id,
-                'price' => $seat[$i]['price']
+                'price' => $type_seat->type_name == "Đôi" ? $seat[$i]['price']/2 : $seat[$i]['price']
             ];
             Ticket::create($ticket);
         }
