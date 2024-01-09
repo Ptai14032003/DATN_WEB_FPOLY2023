@@ -19,7 +19,7 @@ class ShowtimeResource extends JsonResource
             "id" => $this->id,
             "movie_name" =>  $this->movie_name,
             "room_name" => $this->name,
-            "show_date" => Carbon::parse($this->show_date),
+            "show_date" => Carbon::parse($this->show_date)->format('Y-m-d'),
             "show_time" => Carbon::parse($this->show_time)->format('H:i'),
             "total_ticket_sold" => $this->total_ticket_sold,
             "total_money" => $this->total_money
