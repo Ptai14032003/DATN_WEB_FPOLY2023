@@ -128,6 +128,15 @@ class HomeController extends Controller
             $showtime->weekday = $weekday;
             $showtime->show_date = Carbon::parse($date)->format('d-m');
             $showtime->show_time = Carbon::parse($showtime->show_time)->format('H:i');
+
+            // So sánh thời gian hiện tại với show_time
+            $currentTime = Carbon::now();
+            $showTime = Carbon::parse($date . ' ' . $showtime->show_time);
+
+            // Nếu thời gian hiện tại lớn hơn show_time, ẩn suất chiếu
+            if ($currentTime->gt($showTime)) {
+                $showtime->makeHidden(['show_date', 'weekday']);
+            }
         }
         // Ẩn trường show_date trong các suất chiếu
         $showtimes->makeHidden(['show_date','weekday']);
