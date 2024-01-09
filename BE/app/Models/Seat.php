@@ -14,6 +14,6 @@ class Seat extends Model
         'seat_code',
         'type_seat_id',
         'room_id',
-        'status'//0 là còn trống,1 là đang chọn, 2 là đã đặt
+        'hidden'//0 là còn trống,1 là đang chọn, 2 là đã đặt
     ];
 }

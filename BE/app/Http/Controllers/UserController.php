@@ -88,7 +88,7 @@ class UserController extends Controller
             $user_rs->user_token = $token_random;
             $user_rs->save();
 
-            $link_rs_pass = url('/reset_password?email=' . $to_email . '&token=' . $token_random);
+            $link_rs_pass = url('http://localhost:5173/reset_password?email=' . $to_email . '&token=' . $token_random);
 
             $data = array("name" => $title_email, "body" => $link_rs_pass, "email" => $to_email);
 
@@ -106,7 +106,7 @@ class UserController extends Controller
     public function update_new_pass(Request $request)
     {
         $data = $request->all();
-        
+
         $token_random = Str::random();
         $user = User::where('email', $data['email'])->where('user_token', $data['token'])->first();
         if ($user) {
@@ -134,7 +134,7 @@ class UserController extends Controller
                 $reset->user_token = $token_random;
                 $reset->save();
                 return response()->json(["message" => "Đổi mật khẩu thành công. Vui lòng đăng nhập lại"]);
-            }  
+            }
         } else {
             return response()->json(["error" => "Vui lòng thực hiện lại vì link đã quá hạn"]);
         }

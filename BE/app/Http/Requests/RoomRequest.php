@@ -29,7 +29,10 @@ class RoomRequest extends FormRequest
                     case 'add':
                         $rules = [
                             'name' => 'required',
-                            'total_seat' => 'required'
+                            'name'=>'unique',
+                            'total_seat' => 'required',
+                            'row' => 'required',
+                            'col' => 'required'
                         ];
                         break;
                     case 'edit':
@@ -47,6 +50,7 @@ class RoomRequest extends FormRequest
     {
         return [
             'name.required' => "Hãy nhập tên phòng",
+            'name.unique' => "Phòng đã có tên. Hãy nhập tên khác",
             'total_seat' => "Hãy nhập tổng số ghế"
         ];
     }

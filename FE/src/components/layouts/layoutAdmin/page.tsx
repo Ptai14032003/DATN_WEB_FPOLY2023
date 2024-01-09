@@ -36,7 +36,7 @@ const items: MenuItem[] = [
     getItem('Quản lý sản phẩm', '5', <NavLink to="/admin/qlSanPham"><img src="/qlfood.png" alt="" width={10} /></NavLink>),
     getItem('Quản lý nhân sự', '6', <NavLink to="/admin/qlNhanSu"><img src="/qlnv.png" alt="" width={10} /></NavLink>),
     getItem('Quản lý khách hàng', '7', <NavLink to="/admin/qlGuest"><img src="/qlkh.png" alt="" width={10} /></NavLink >),
-    getItem('Thống kê', '8', <img src="/tke.png" alt="" width={10} />),
+    getItem('Thống kê', '8', <NavLink to="/admin/thongKe"><img src="/tke.png" alt="" width={10} /></NavLink>),
     getItem('Lịch sử', '9', <img src="/ls.png" alt="" width={10} />),
     getItem('Voucher', '10', <NavLink to="/admin/voucher" > <img src="/voucher.png" alt="" width={10} /></NavLink >),
     getItem('Sự cố', '11', <img src="/error.png" alt="" width={10} />)

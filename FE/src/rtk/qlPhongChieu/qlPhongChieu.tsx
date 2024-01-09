@@ -21,7 +21,7 @@ const phongChieuApi = createApi({
             query: () => "/rooms/",
             providesTags: ["rooms"]
         }),
-        addPhongChieu: builder.mutation<void, { body: any }>({
+        addPhongChieu: builder.mutation<void, any>({
             query: (body) => ({
                 url: "/rooms/",
                 method: "POST",

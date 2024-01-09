@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bill;
 use App\Models\Food;
+use App\Models\Seat;
 use App\Models\Ticket;
 use App\Models\Ticket_Food;
 use Exception;
@@ -19,21 +20,24 @@ class PaymentController extends Controller
         $combo = $request->combo;
         $total_money = $request->total_money;
         $user_code = $request->user_code ?? null;
+        $discount_code = $request->discount_code;
         $bill = [
             "user_code" => $user_code,
             "total_ticket" => count($seat),
             "total_combo" => count($combo),
             "total_money" => $total_money,
             "payment_time" => date("Y-m-d H:i:s"),
-            "status" => 0
+            "status" => 0,
+            "discount_code"=>$discount_code
         ];
         $bill_add = Bill::create($bill);
         for ($i = 0; $i < count($seat); $i++) {
+            $type_seat = Seat::join("type_seats", "type_seats.id", "=", "seats.type_seat_id")->where("seats.id",$seat[$i]['id'])->first();
             $ticket = [
                 'id_seat' => $seat[$i]['id'],
                 'showtime_id' => $showtime_id,
                 'bill_id' => $bill_add->id,
-                'price' => $seat[$i]['price']
+                'price' => $type_seat->type_name == "Đôi" ? $seat[$i]['price']/2 : $seat[$i]['price']
             ];
             Ticket::create($ticket);
         }

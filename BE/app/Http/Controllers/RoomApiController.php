@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RoomRequest;
 use App\Http\Resources\RoomResource;
 use App\Http\Resources\SeatResource;
 use App\Models\Room;
 use App\Models\Seat;
 use App\Models\Type_Seat;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class RoomApiController extends Controller
 {
@@ -20,178 +23,52 @@ class RoomApiController extends Controller
     }
     public function store(Request $request)
     {
-        $list = array();
-        if ($request->type_seat_id == 1) {
-            // Thêm ghế vào mảng
-            array_push($list, $request->seat_code);
-        } else if ($request->type_seat_id == 2) {
-            // Thêm ghế vào mảng
-            array_push($list, $request->seat_code);
-        } else if ($request->type_seat_id == 3) {
-            // Thêm ghế vào mảng
-            array_push($list, $request->seat_code);
+        $data = $request->all();
+        $validate=$data[0];
+        $validator = Validator::make(
+            $validate,
+            [
+                'name' => 'required | unique:rooms,name',
+                'row' => 'required',
+                'col' => 'required'
+            ],
+            [
+                'name.required' => "Chưa nhập tên phòng",
+                'name.unique' => "Phòng đã có tên. Hãy nhập tên khác",
+                'row.required' => "Chưa nhập số hàng",
+                'col.required' => "Chưa nhập số cột"
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json($validator->messages());
         } else {
-            echo "Loại ghế không hợp lệ!";
+            foreach ($data as $roomData) {
+                if (isset($roomData['name'])) {
+                    $theater = Room::create([
+                        "name" => $roomData['name'],
+                        "row" => $roomData['row'],
+                        "col" => $roomData['col']
+                    ]);
+                }
+            }
+            foreach ($data as $seats) {
+                if (isset($seats['seat_code'])) {
+                    Seat::create([
+                        'seat_code' => $seats['seat_code'],
+                        'type_seat_id' => $seats['type_seat_id'],
+                        'room_id' => $theater->id,
+                        'hidden' => $seats['hidden']
+                    ]);
+                }
+            }
         }
-
-        $length = count($list);
-        for ($i = 0; $i<$length;$i++){
-            $re = [
-                'list' => $list,
-                'seats' => Seat::create([
-                    'seat_code' => $list[$i],
-                    'type_seat_id' => $request->type_seat_id,
-                    'room_id' => $request->room_id,
-                    'status' => $request->status
-                ])
-            ];
-            
-            return response()->json(['list'=>$re]);
-        }
-        //     if($request->type_seat == 1){
-        //         $seats = Seat::create([
-        //             'seat_code' => $request->seat_code,
-        //             'type_seat_id'=> $request->type_seat,
-        //             'room_id' => $request->room_id,
-        //             'status'=>$request->status
-        //         ]);
-        //         if($seats){
-        //             return response()->json(['seats'=>$seats]);
-        //         }
-        //     }else{
-        //         return response()->json(['seat'=>'fail']);
-            
-        // }
     }
-        // if ($theater) {
-        //     foreach ($type_seats as $type_seat) {
-        //         // if($request->type_seat == 1){}
-        //         if ($type_seat->id == 1) {
-        //             for ($i = 1; $i < 2; $i++) {
-        //                 for ($y = 1; $y < 11; $y++) {
-        //                     Seat::create(
-        //                         [
-        //                             'seat_code' => 'A' . $y,
-        //                             'type_seat_id' => $type_seat->id,
-        //                             'room_id' => $theater->id,
-        //                             'status' => 0
-        //                         ],
-        //                     );
-        //                 }
-        //             }
-        //             for ($i = 1; $i < 2; $i++) {
-        //                 for ($y = 1; $y < 11; $y++) {
-        //                     Seat::create(
-        //                         [
-        //                             'seat_code' => 'B' . $y,
-        //                             'type_seat_id' => $type_seat->id,
-        //                             'room_id' => $theater->id,
-        //                             'status' => 0
-        //                         ],
-        //                     );
-        //                 }
-        //             }
-        //             for ($i = 1; $i < 2; $i++) {
-        //                 for ($y = 1; $y < 11; $y++) {
-        //                     Seat::create(
-        //                         [
-        //                             'seat_code' => 'C' . $y,
-        //                             'type_seat_id' => $type_seat->id,
-        //                             'room_id' => $theater->id,
-        //                             'status' => 0
-        //                         ],
-        //                     );
-        //                 }
-        //             }
-        //             for ($i = 1; $i < 2; $i++) {
-        //                 for ($y = 1; $y < 11; $y++) {
-        //                     Seat::create(
-        //                         [
-        //                             'seat_code' => 'D' . $y,
-        //                             'type_seat_id' => $type_seat->id,
-        //                             'room_id' => $theater->id,
-        //                             'status' => 0
-        //                         ],
-        //                     );
-        //                 }
-        //             }
-        //         }
-        //     // if($request->type_seat == 2){}
-        //         if ($type_seat->id == 2) {
-        //             for ($i = 1; $i < 2; $i++) {
-        //                 for ($y = 1; $y < 11; $y++) {
-        //                     Seat::create(
-        //                         [
-        //                             'seat_code' => 'E' . $y,
-        //                             'type_seat_id' => $type_seat->id,
-        //                             'room_id' => $theater->id,
-        //                             'status' => 0
-        //                         ],
-        //                     );
-        //                 }
-        //             }
-        //             for ($i = 1; $i < 2; $i++) {
-        //                 for ($y = 1; $y < 11; $y++) {
-        //                     Seat::create(
-        //                         [
-        //                             'seat_code' => 'F' . $y,
-        //                             'type_seat_id' => $type_seat->id,
-        //                             'room_id' => $theater->id,
-        //                             'status' => 0
-        //                         ],
-        //                     );
-        //                 }
-        //             }
-        //             for ($i = 1; $i < 2; $i++) {
-        //                 for ($y = 1; $y < 11; $y++) {
-        //                     Seat::create(
-        //                         [
-        //                             'seat_code' => 'G' . $y,
-        //                             'type_seat_id' => $type_seat->id,
-        //                             'room_id' => $theater->id,
-        //                             'status' => 0
-        //                         ],
-        //                     );
-        //                 }
-        //             }
-        //             for ($i = 1; $i < 2; $i++) {
-        //                 for ($y = 1; $y < 11; $y++) {
-        //                     Seat::create(
-        //                         [
-        //                             'seat_code' => 'H' . $y,
-        //                             'type_seat_id' => $type_seat->id,
-        //                             'room_id' => $theater->id,
-        //                             'status' => 0
-        //                         ],
-        //                     );
-        //                 }
-        //             }
-        //         }
-        //     // if($request->type_seat == 3){}
-        //         if($type_seat->id == 3){
-        //             for ($i = 1; $i <2; $i++){
-        //                 for ($y = 1; $y < 9; $y++) {
-        //                     Seat::create(
-        //                         [
-        //                             'seat_code' => 'I'.$y,
-        //                             'type_seat_id' => $type_seat->id,
-        //                             'room_id' => $theater->id,
-        //                             'status' => 0
-        //                         ],
-        //                     );
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-        // return new RoomResource($theater);
-    
     public function show(string $id)
     {
         $theater = Room::find($id);
-        $seats = Seat::where('room_id','=',$id)->get();
-        if($theater){
-            if($seats){
+        $seats = Seat::where('room_id', '=', $id)->get();
+        if ($theater) {
+            if ($seats) {
                 $response = [
                     'theaters' => $theater,
                     'seats' => $seats
@@ -203,14 +80,32 @@ class RoomApiController extends Controller
         }
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
         $theater = Room::find($id);
-        if ($theater) {
-            $theater->update($request->all());
-            return response()->json(['message' => 'Cap nhat thanh cong'], 202);
-        } else {
-            return response()->json(['message' => 'Khach hang khong ton tai'], 404);
+        $data = $request->all();
+        foreach ($data as $roomData) {
+            if (isset($roomData['name'])) {
+                $theater->update([
+                    "name" => $roomData['name'],
+                    "row" => $roomData['row'],
+                    "col" => $roomData['col']
+                ]);
+            }
+        }
+        foreach ($data['seats'] as $seat) {
+            if (isset($seat['id'])) {
+                $seatModel = Seat::find($seat['id']);
+
+                if ($seatModel) {
+                    $seatModel->update([
+                        'seat_code' => $seat['seat_code'],
+                        'type_seat_id' => $seat['type_seat_id'],
+                        'room_id' => $theater->id,
+                        'hidden' => $seat['hidden']
+                    ]);
+                }
+            }
         }
     }
 
@@ -219,7 +114,7 @@ class RoomApiController extends Controller
         $theater = Room::find($id);
         if ($theater) {
             $theater->delete();
-            Seat::where('room_id','=',$id)->delete();
+            Seat::where('room_id', '=', $id)->delete();
             return response()->json(['message' => 'Xoa thanh cong'], 202);
         } else {
             return response()->json(['message' => 'Khach hang khong ton tai'], 404);
