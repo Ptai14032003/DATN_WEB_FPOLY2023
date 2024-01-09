@@ -8,6 +8,7 @@ import { Waveform } from '@uiball/loaders';
 import Fuse from 'fuse.js';
 import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
 const { Column } = Table;
 export interface Discount {
     id: string;
@@ -151,8 +152,8 @@ const AdminQlDiscount: React.FC = () => {
                 <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
                     <Column title="Mã khuyến mãi" dataIndex="discount_code" key="discount_code" />
                     <Column title="Sự Kiện Áp Dụng" dataIndex="event" key="event" />
-                    <Column title="Ngày Áp Dụng" dataIndex="start" key="start" />
-                    <Column title="Ngày Kết Thúc" dataIndex="end" key="end" />
+                    <Column title="Ngày Áp Dụng" dataIndex="start" key="start" render={(text) => moment(text).format("DD-MM-YYYY")} />
+                    <Column title="Ngày Kết Thúc" dataIndex="end" key="end" render={(text) => moment(text).format("DD-MM-YYYY")} />
                     <Column title="Mức Giảm (%)" dataIndex="discount_percent" key="discount_percent" />
                     <Column
                         title="Action"

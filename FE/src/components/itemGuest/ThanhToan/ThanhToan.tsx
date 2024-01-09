@@ -29,7 +29,6 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
     const [VoucherCode, setVoucherCode] = useState("");
     const [DiscountPercent, setDiscountPercent] = useState(0);
     const [active, setActive] = useState(false);
-
     const [activeTab, setActiveTab] = useState(1);
     const checkLocal = localStorage.getItem("user");
     const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
@@ -37,7 +36,8 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
     const handleClick = (tabNumber: number) => {
         setActiveTab(tabNumber);
     };
-
+    const discountAmount = (priceTong * DiscountPercent) / 100;
+    const totalAmount = priceTong - discountAmount;
     const dataBill = {
         show_time: show_time,
         seat:
@@ -56,7 +56,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                 }
             ))
         ,
-        total_money: priceTong,
+        total_money: totalAmount,
         user_code: userCode
     }
     const setThanhToan = () => {
@@ -94,9 +94,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
     };
 
     const dataTong = (Number(priceTong))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-    const discountAmount = (priceTong * DiscountPercent) / 100;
     const formattedDiscountAmount = discountAmount.toLocaleString();
-    const totalAmount = priceTong - discountAmount;
     const formattedtotalAmount = totalAmount.toLocaleString();
     return (
         <>
