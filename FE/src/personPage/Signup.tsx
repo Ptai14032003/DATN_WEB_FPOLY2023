@@ -48,7 +48,6 @@ const newData ={
         }  
       })
         .catch(()=> message.success("Đăng kí thành công"))
-        navigate('/signin')
   };
   return (
     <div className='User-box'>

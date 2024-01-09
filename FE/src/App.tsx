@@ -30,6 +30,7 @@ import NotFound from './personPage/404.tsx'
 import { useEffect } from 'react'
 import TicketHistory from './personPage/TicketHistory.tsx'
 import ForgotPassword from './personPage/forgotPassword.tsx'
+import ResetPassword from './personPage/ResetPassword.tsx'
 function App() {
   const checkLocal = localStorage.getItem("user");
   const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
@@ -57,6 +58,7 @@ function App() {
       <Route path="ticket-history" element={<TicketHistory/>} />
       <Route path="profile" element={<Profile />} />
       <Route path="forgot-password" element={<ForgotPassword />}/>
+      <Route path="reset_password?" element={<ResetPassword />}/>
       <Route path="signin" element={<Signin />} />
       <Route path="signup" element={<Signup />} />
       <Route path='movie_show_time/:id' element={<Detail />}></Route>
