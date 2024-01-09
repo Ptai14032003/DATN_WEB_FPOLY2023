@@ -4,7 +4,7 @@ import EditQlNhanSu from './edit';
 import CreateQlNhanSu from './create';
 import { useDeleteNhanSuMutation, useFetchNhanSuQuery } from '../../rtk/qlNhanSu/qlNhanSu';
 import { Waveform } from '@uiball/loaders';
-
+import moment from 'moment';
 import Fuse from 'fuse.js';
 import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
 import { useNavigate } from 'react-router-dom';
@@ -22,6 +22,7 @@ export interface QlNhanSu {
     birthday: string;
     gender: string;
     role: string
+    date_start: string
 }
 const AdminQlNhanSu: React.FC = () => {
 
@@ -81,6 +82,7 @@ const AdminQlNhanSu: React.FC = () => {
                 birthday: item.birthday,
                 gender: item.gender,
                 role: item.role,
+                date_start: item.date_start
             }))
             setDataTable(mapNhanSu)
         }
@@ -105,6 +107,7 @@ const AdminQlNhanSu: React.FC = () => {
                     birthday: item.birthday,
                     gender: item.gender,
                     role: item.role,
+                    date_start: item.date_start
                 }))
                 setDataTable(mapGuest)
             }
@@ -123,6 +126,7 @@ const AdminQlNhanSu: React.FC = () => {
                     birthday: item.birthday,
                     gender: item.gender,
                     role: item.role,
+                    date_start: item.date_start
                 }))
                 setDataTable(mapMovies)
             }
@@ -172,11 +176,11 @@ const AdminQlNhanSu: React.FC = () => {
                     <Column title="Tên nhân viên" dataIndex="name" key="name" />
                     <Column title="Email" dataIndex="email" key="email" />
                     <Column title="Số điện thoại" dataIndex="phone_number" key="phone_number" />
-                    <Column title="Mật khẩu" dataIndex="password" key="password" render={(_: any) => (`***********`)} />
                     <Column title="Địa chỉ" dataIndex="address" key="address" />
                     <Column title="Ngày sinh" dataIndex="birthday" key="birthday" />
                     <Column title="Giới tính" dataIndex="gender" key="gender" />
                     <Column title="Chức vụ" dataIndex="role" key="role" />
+                        <Column title="Ngày bắt đầu" dataIndex="date_start" key="date_start" render={(text) => moment(text).format("DD-MM-YYYY")} />
                     <Column
                         title="Action"
                         key="action"

@@ -9,8 +9,10 @@ use App\Http\Resources\SeatResource;
 use App\Models\Room;
 use App\Models\Seat;
 use App\Models\Type_Seat;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class RoomApiController extends Controller
 {
@@ -22,23 +24,42 @@ class RoomApiController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        foreach ($data as $roomData) {
-            if (isset($roomData['name'])) {
-                $theater = Room::create([
-                    "name" => $roomData['name'],
-                    "row" => $roomData['row'],
-                    "col" => $roomData['col']
-                ]);
+        $validate=$data[0];
+        $validator = Validator::make(
+            $validate,
+            [
+                'name' => 'required | unique:rooms,name',
+                'row' => 'required',
+                'col' => 'required'
+            ],
+            [
+                'name.required' => "Chưa nhập tên phòng",
+                'name.unique' => "Phòng đã có tên. Hãy nhập tên khác",
+                'row.required' => "Chưa nhập số hàng",
+                'col.required' => "Chưa nhập số cột"
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json($validator->messages());
+        } else {
+            foreach ($data as $roomData) {
+                if (isset($roomData['name'])) {
+                    $theater = Room::create([
+                        "name" => $roomData['name'],
+                        "row" => $roomData['row'],
+                        "col" => $roomData['col']
+                    ]);
+                }
             }
-        }
-        foreach ($data as $seats) {
-            if (isset($seats['seat_code'])) {
-                Seat::create([
-                    'seat_code' => $seats['seat_code'],
-                    'type_seat_id' => $seats['type_seat_id'],
-                    'room_id' => $theater->id,
-                    'hidden' => $seats['hidden']
-                ]);
+            foreach ($data as $seats) {
+                if (isset($seats['seat_code'])) {
+                    Seat::create([
+                        'seat_code' => $seats['seat_code'],
+                        'type_seat_id' => $seats['type_seat_id'],
+                        'room_id' => $theater->id,
+                        'hidden' => $seats['hidden']
+                    ]);
+                }
             }
         }
     }
@@ -75,7 +96,7 @@ class RoomApiController extends Controller
         foreach ($data['seats'] as $seat) {
             if (isset($seat['id'])) {
                 $seatModel = Seat::find($seat['id']);
-                
+
                 if ($seatModel) {
                     $seatModel->update([
                         'seat_code' => $seat['seat_code'],

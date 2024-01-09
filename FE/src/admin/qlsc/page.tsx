@@ -7,6 +7,7 @@ import { Waveform } from '@uiball/loaders';
 
 import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
 
 
 const { Column } = Table;
@@ -18,8 +19,6 @@ export type QlSuatChieu = {
     show_date: string;
     show_time: string;
     total_ticket_sold?: number;
-
-    total_money?: string
 }
 const AdminQlSc: React.FC = () => {
     const { data: dataSuatChieu, isLoading, error } = useFetchSuatChieuQuery()
@@ -62,8 +61,6 @@ const AdminQlSc: React.FC = () => {
                 show_date: item.show_date,
                 show_time: item.show_time,
                 total_ticket_sold: item.total_ticket_sold,
-
-                total_money: (Number(item.total_money))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
             }));
             setDataTable(mapSuatChieu);
         }
@@ -114,9 +111,8 @@ const AdminQlSc: React.FC = () => {
                 <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
                     <Column title="Tên phim" dataIndex="movie_id" key="movie_name" />
                     <Column title="Tên phòng" dataIndex="room_id" key="room_id" />
-                    <Column title="Ngày chiếu" dataIndex="show_date" key="show_date" />
-                        <Column title="Thời gian chiếu" dataIndex="show_time" key="show_time"  />
-                    <Column title="Tổng doanh thu" dataIndex="total_money" key="total_money" />
+                    <Column title="Ngày chiếu" dataIndex="show_date" key="show_date" render={(text) => moment(text).format("DD-MM-YYYY")} />
+                    <Column title="Thời gian chiếu" dataIndex="show_time" key="show_time" />
                     <Column
                         title="Action"
                         key="action"
