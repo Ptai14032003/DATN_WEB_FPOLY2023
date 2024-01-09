@@ -67,9 +67,12 @@ class ApiMovieController extends Controller
                 'describe' => $describe
             ];
             Movie::create($data); 
-        }else{
-            return $this->returnError(202, 'file is required');
+            return response()->json(['messages' => 'Them phim thành công'], 200);
         }
+        // }else{
+        //     return $this->returnError(202, 'file is required');
+        // }
+       
     }
 
     public function edit(string $id)

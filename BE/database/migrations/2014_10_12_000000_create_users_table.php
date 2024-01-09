@@ -22,7 +22,7 @@ return new class extends Migration
             $table->date('birthday')->nullable();
             $table->tinyInteger('gender')->nullable();
             $table->rememberToken();
-            $table->string('user_token');
+            $table->string('user_token')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
