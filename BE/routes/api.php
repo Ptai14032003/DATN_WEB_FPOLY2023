@@ -19,6 +19,7 @@ use App\Http\Controllers\FoodController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TypeFoodController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\StatisticalController;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -46,6 +47,10 @@ Route::get('/voucher', [HomeController::class, 'voucher'])->name('voucher');
 
 Route::post('/forgot_password', [UserController::class, 'forgot_password'])->name('forgot_password');
 Route::post('/update_new_pass', [UserController::class, 'update_new_pass'])->name('update_new_pass');
+
+//thống kê
+Route::post('/revenue_movie',[StatisticalController::class,"revenue_movie"])->name('revenue_movie');
+Route::post('/total_revenue',[StatisticalController::class,"total_revenue"])->name('total_revenue');
 
 //lịch sử đặt vé
 Route::post('/booking_history', [HomeController::class, 'booking_history'])->name('booking_history')->middleware('auth:sanctum');
