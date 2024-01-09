@@ -14,19 +14,17 @@ const { Column } = Table;
 
 export type QlSuatChieu = {
     key: string;
-    movie_id: string;
-    room_id: string;
+    movie_name: string;
+    room_name: string;
     show_date: string;
     show_time: string;
-    total_ticket_sold?: number;
 }
 const AdminQlSc: React.FC = () => {
     const { data: dataSuatChieu, isLoading, error } = useFetchSuatChieuQuery()
+    console.log(dataSuatChieu);
 
     const navigate = useNavigate();
     const status = error?.status;
-
-
     const [deleteSuatChieu] = useDeleteSuatChieuMutation()
     const [dataTable, setDataTable] = useState<QlSuatChieu[]>([])
     const [searchTerm, setSearchTerm] = useState('');
@@ -56,11 +54,10 @@ const AdminQlSc: React.FC = () => {
         if (Array.isArray(dataMap)) {
             const mapSuatChieu = dataMap?.map((item: any) => ({
                 key: item.id,
-                movie_id: item.movie_id?.movie_name,
-                room_id: item.room_id?.name,
+                movie_name: item.movie_name,
+                room_name: item.room_name,
                 show_date: item.show_date,
                 show_time: item.show_time,
-                total_ticket_sold: item.total_ticket_sold,
             }));
             setDataTable(mapSuatChieu);
         }
@@ -109,8 +106,8 @@ const AdminQlSc: React.FC = () => {
                 />
             ) : (
                 <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
-                    <Column title="Tên phim" dataIndex="movie_id" key="movie_name" />
-                    <Column title="Tên phòng" dataIndex="room_id" key="room_id" />
+                    <Column title="Tên phim" dataIndex="movie_name" key="movie_name" />
+                    <Column title="Tên phòng" dataIndex="room_name" key="room_name" />
                     <Column title="Ngày chiếu" dataIndex="show_date" key="show_date" render={(text) => moment(text).format("DD-MM-YYYY")} />
                     <Column title="Thời gian chiếu" dataIndex="show_time" key="show_time" />
                     <Column
