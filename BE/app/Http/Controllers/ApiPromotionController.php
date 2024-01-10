@@ -72,4 +72,13 @@ class ApiPromotionController extends Controller
             return  response()->json(['message'=>'Không tồn tại'], 404);
         }
     }
+
+    public function destroyMultiplePromotion(Request $request){
+    
+        $ids = $request->input('ids');
+
+        Promotion::whereIn('id', $ids)->delete();
+        
+        return response()->json(['success' => 'Xóa nhiều khuyến mãi thành công']);
+    }
 }

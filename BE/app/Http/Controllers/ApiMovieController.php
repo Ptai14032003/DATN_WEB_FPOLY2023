@@ -120,6 +120,7 @@ class ApiMovieController extends Controller
         //     $genreID = DB::table('list_genres')->where('genre' , $new)->first();
         //     Movie_Genre::create(['movie_id' => $id, 'list_genre_id' => $genreID->id]);
         // }
+  
      
         if ($request->hasFile('image')) {
             // Upload the new image to Cloudinary
@@ -150,4 +151,13 @@ class ApiMovieController extends Controller
             'message'=> 'Xóa Phim Thành Công'
         ]);
     }    
+
+    public function destroyMultipleMovie(Request $request){
+        // Lấy danh sách id của các phim cần xóa
+        $ids = $request->input('ids');
+        // Xóa các phim có id trong danh sách
+        Movie::whereIn('id', $ids)->delete();
+        // Trả về kết quả thành công
+        return response()->json(['success' => 'Xóa nhiều phim thành công']);
+    }
 }

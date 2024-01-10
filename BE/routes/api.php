@@ -57,7 +57,7 @@ Route::post('/booking_history', [HomeController::class, 'booking_history'])->nam
 // send mail
 Route::post('/send_mail', [HomeController::class, 'send_mail'])->name('send_mail');
 
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware('checkrole')->group(function () {
     Route::resource('bill', BillController::class);
     Route::resource('food', FoodController::class);
     Route::resource('food_type', TypeFoodController::class);
@@ -69,7 +69,11 @@ Route::prefix('admin')->group(function () {
         Route::get('/{id}', [ApiMovieController::class, 'edit']);
         Route::put('/{id}', [ApiMovieController::class, 'update']);
         Route::delete('/{id}', [ApiMovieController::class, 'destroy']);
+       
     });
+    Route::delete('/destroyMultipleMovie', [ApiMovieController::class, 'destroyMultipleMovie']);
+    Route::delete('/destroyMultiplePromotion', [ApiPromotionController::class, 'destroyMultiplePromotion']);
+    Route::delete('/destroyMultipleFood', [ApiFoodController::class, 'destroyMultipleFood']);
 
     Route::prefix('movie_type')->group(function () {
         Route::get('/', [ApiMovieTypeController::class, 'index']);
