@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bill;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BillController extends Controller
 {
@@ -16,7 +17,6 @@ class BillController extends Controller
     {
         $bills = Bill::all();
         return response()->json($bills);
-        
     }
 
     /**
@@ -54,17 +54,17 @@ class BillController extends Controller
             'personnal_id' => $personnel_id,
             'total_ticket' => $total_ticket,
             'total_drink' => $total_drink,
-            'total_popcorn'=>$total_popcorn,
+            'total_popcorn' => $total_popcorn,
             'total_combo' => $total_combo,
             'discount_code' => $discount_code,
-             'additional_fee' => $additional_fee,
-             'total_money' => $total_money,
-             'payment_time'=>$payment_time,
-             'status' => $status,
+            'additional_fee' => $additional_fee,
+            'total_money' => $total_money,
+            'payment_time' => $payment_time,
+            'status' => $status,
         ];
 
         $newBill = Bill::create($data);
-        return response()->json($newBill,["message" =>  "create successfully"]);
+        return response()->json($newBill, ["message" =>  "create successfully"]);
     }
 
     /**
@@ -76,7 +76,7 @@ class BillController extends Controller
     public function show($id)
     {
         $bill = Bill::find($id);
-        if(!empty($bill)){
+        if (!empty($bill)) {
             return response()->json($bill);
         } else {
             return response()->json([
@@ -126,5 +126,55 @@ class BillController extends Controller
         return response()->json([
             "message" => "delete successfully"
         ]);
+    }
+
+
+    //lịch sử đặt vé
+
+    public function history(Request $request)
+    {
+        $bills = Bill::leftjoin('users', 'users.user_code', '=', 'bills.user_code')
+            ->leftjoin('personnels','personnels.personnel_code','=','bills.personnel_code')
+            ->join('tickets', 'tickets.bill_id', '=', 'bills.id')
+            ->join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
+            ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
+            ->select(
+                'bills.id',
+                'bills.user_code',
+                'users.name as user_name',
+                'bills.personnel_code',
+                'personnels.name as personnel_name',
+                'bills.total_ticket',
+                'bills.total_combo',
+                'bills.additional_fee',
+                'bills.total_money',
+                'movies.movie_name',
+                'movies.image',
+                DB::raw('DATE_FORMAT(bills.created_at, "%d-%m-%Y") as booking_date'),
+                DB::raw('DATE_FORMAT(showtimes.show_date, "%d-%m-%Y") as show_date'),
+                DB::raw('CASE 
+                WHEN bills.status = 0 THEN "Đang chờ thanh toán" 
+                WHEN bills.status = 1 THEN "Đã thanh toán" 
+                WHEN bills.status = 2 THEN "Đã hủy" 
+                END as payment_status')
+            )
+            ->groupBy(
+                'bills.id',
+                'bills.user_code',
+                'users.name',
+                'bills.personnel_code',
+                'personnels.name',
+                'bills.total_ticket',
+                'bills.total_combo',
+                'bills.additional_fee',
+                'bills.total_money',
+                'movies.movie_name',
+                'movies.image',
+                'booking_date',
+                'show_date',
+                'payment_status'
+            )
+            ->get();
+        return response()->json($bills);
     }
 }

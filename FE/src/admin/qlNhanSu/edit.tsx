@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, Modal, Select } from 'antd';
+import { Button, Form, Input, Modal, Select, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { QlNhanSu } from './page';
 import { useFetchNhanSuIdQuery, useUpdateNhanSuMutation } from '../../rtk/qlNhanSu/qlNhanSu';
@@ -41,7 +41,7 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
     const onFinish = (values: any) => {
         console.log(values);
         
-        // updateNhanSu({ body: values, id: projects })
+         updateNhanSu({ body: values, id: projects }).then(()=>{setIsModalOpen(false), message.success("Sửa thành công")})
     };
 
     const onFinishFailed = (errorInfo: any) => {

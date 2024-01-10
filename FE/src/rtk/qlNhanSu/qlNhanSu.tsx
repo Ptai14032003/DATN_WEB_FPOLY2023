@@ -36,7 +36,7 @@ const nhanSuApi = createApi({
         updateNhanSu: builder.mutation<void, { id: string, body: any }>({
             query: ({ id, body }) => ({
                 url: `/personnels/${id}`,
-                method: "PATCH",
+                method: "PUT",
                 body
             }),
             invalidatesTags: ["personnels"]
