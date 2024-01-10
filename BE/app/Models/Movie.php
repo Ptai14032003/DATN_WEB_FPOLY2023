@@ -18,7 +18,6 @@ class Movie extends Model
         'director',
         'start_date',
         'end_date',
-        'total_revenue',
         'image',
         'trailer',
         'movie_time',
