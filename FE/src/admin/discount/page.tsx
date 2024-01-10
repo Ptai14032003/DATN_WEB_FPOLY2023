@@ -117,7 +117,7 @@ const AdminQlDiscount: React.FC = () => {
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Khuyến mãi</div>
             <div className='flex justify-between mb-[10px]'>
-                <Input style={{ width: '20%' }} placeholder='Tìm kiếm dự án'
+                <Input style={{ width: '20%' }} placeholder='Tìm kiếm khuyến mãi'
                     value={searchTerm}
                     onChange={(e) => searchProject(e.target.value)} />
                 <CreateQlDiscount />
