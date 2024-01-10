@@ -47,18 +47,20 @@ const Signin = () => {
     <div className='User-box'>
       <div className="FormSignin">
         <form action="" onSubmit={handleSubmit(onFinish)}>
-          <h1>Signin</h1>
+          <h1>Đăng nhập</h1>
           <div className="input-box">
             <input type="email" placeholder="email" {...register("email", { required: true })} required />
           </div>
           <div className="input-box">
-            <input type="password" placeholder="password" {...register("password", { required: true })} required />
+            <input type="password" placeholder="Mật khẩu" {...register("password", { required: true })} required />
           </div>
-
-          <button type="submit" className="btn">Login</button>
+          <div className='float-right text-sm my-3 underline'>
+            <a href="forgot-password"><p>Quên mật khẩu?</p></a>
+          </div>
+          <button type="submit" className="btn">Đăng nhập</button>
 
           <div className="register-link">
-            <p>You don't have an account? <a href="signup">Register here!</a></p>
+            <p>Bạn chưa có tài khoản? <a href="signup" className='underline'>Đăng kí tại đây!</a></p>
           </div>
         </form>
       </div>

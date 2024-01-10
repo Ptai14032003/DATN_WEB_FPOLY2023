@@ -17,15 +17,15 @@ import Signin from './personPage/Signin'
 import Signup from './personPage/Signup'
 import Booking from './personPage/Booking'
 import Detail from './personPage/detail.tsx'
-
 import Seat from './components/itemAdmin/Seat/page.tsx'
 import TicketPrice from './personPage/TicketPrice.tsx'
 import Profile from './personPage/Profile.tsx'
 import CheckPay from './personPage/checkPay.tsx'
 import Payment from './personPage/Payment.tsx'
 import NotFound from './personPage/404.tsx'
-import { useEffect } from 'react'
 import TicketHistory from './personPage/TicketHistory.tsx'
+import ResetPassword from './personPage/ResetPassword.tsx'
+import ForgotPassword from './personPage/ForgotPassword.tsx'
 import AdminQlBill from './admin/bill/page.tsx'
 function App() {
   const checkLocal = localStorage.getItem("user");
@@ -53,6 +53,8 @@ function App() {
       <Route path="ticket-price" element={<TicketPrice />} />
       <Route path="ticket-history" element={<TicketHistory />} />
       <Route path="profile" element={<Profile />} />
+      <Route path="forgot-password" element={<ForgotPassword />} />
+      <Route path="reset_password?" element={<ResetPassword />} />
       <Route path="signin" element={<Signin />} />
       <Route path="signup" element={<Signup />} />
       <Route path='movie_show_time/:id' element={<Detail />}></Route>

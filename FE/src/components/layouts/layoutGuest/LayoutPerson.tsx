@@ -3,44 +3,28 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import "./layout.css"
 import { Carousel} from 'antd'
 // import { BiSearch } from 'react-icons/bi'
-import Menu from './menu'; 
-
+import Menu from './menu';
 import Footer from './footer';
+import { useFetchMoviesPersonQuery } from '../../../rtk/moviesPerson/moviesPerson';
 
 
 
 const LayoutPerson = () => {
-const Navigate = useNavigate()
-  
-  const onChange = (currentSlide: number) => {
-    console.log(currentSlide);
-  };
-  const contentStyle: React.CSSProperties = {
-    margin: 0,
-    height: '750px',
-  };
-
-
-  
-
+  const { data: movies } = useFetchMoviesPersonQuery();
+  console.log(movies);
+  const firstFiveMovies = movies?.slice(0, 5);
   return (
     <div className='bg-black h-full text-white'>
-      <header>
+      <header className='h-creen'>
         <Menu/>
          {/* carousel */}
-      <Carousel afterChange={onChange} >
-        <div>
-          <img src="https://i.ytimg.com/vi/fw-wLR6xxwE/maxresdefault.jpg" alt="" style={contentStyle} className='w-full' />
-        </div>
-        <div>
-          <img src="https://i.ytimg.com/vi/37dy0pIhQkI/maxresdefault.jpg" alt="" style={contentStyle} className='w-full' />
-        </div>
-        <div>
-          <img src="https://i.ytimg.com/vi/maq_YK88Xnw/maxresdefault.jpg" alt="" style={contentStyle} className='w-full' />
-        </div>
-        <div>
-          <img src="https://pic-bstarstatic.akamaized.net/ugc/507eb0ab45de539003c20b4c6c00f0f5.jpg" alt="" style={contentStyle} className='w-full' />
-        </div>
+      <Carousel>
+        {firstFiveMovies?.map((item:any)=>(
+        <><div key={item?.id}>
+            <iframe width="100%" height="700" src={item?.trailer} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
+          </div>
+        </>
+        ))}
       </Carousel>
       </header>
       <main>
