@@ -22,7 +22,7 @@ const ForgotPassword = () => {
     <div className='User-box'>
       <div className="FormSignin" onSubmit={handleSubmit(onSubmit)}>
         <form action="">
-          <h1>Quên mật khẩu</h1>
+          <h1>Quên mật khẩu</h1> 
           <div className="input-box mb-[10px]">
             <input type="email" placeholder="email" {...register('email')} name='email'/>
           </div>
