@@ -39,89 +39,109 @@ class StatisticalController extends Controller
     public function total_revenue(Request $request)
     {
         $data = $request->all();
-        if ($data['timeline'] == "year") {
-            $total_revenue = [];
-            $currentYear = Carbon::now()->year;
-            $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+        $currentMonth = Carbon::now()->month;
 
-            $bills = Bill::where("status", 1)
-                ->whereYear("bills.updated_at", '=', $data['year'])
-                ->select(
-                    DB::raw("SUM(total_money) as total"),
-                    DB::raw("COUNT(bills.id) as quantity")
-                )
-                ->first();
-
-            if ($bills->quantity > 0) {
-                $total_revenue['quantity_bill'] = $bills->quantity;
-                $total_revenue['total_money'] = $bills->total;
-                $tickets = Ticket::join("bills", "bills.id", "=", "tickets.bill_id")
-                    ->where("bills.status", 1)
-                    ->whereYear("bills.updated_at", '=', $data['year'])
-                    ->select(
-                        DB::raw("SUM(price) as total")
-                    )
-                    ->first();
-
-                $total_revenue['total_money_ticket'] = $tickets->total;
-                $total_revenue['percent_ticket'] = round($tickets->total / $bills->total * 100, 2);
-
-                $foods = Ticket_Food::join("bills", "bills.id", "=", "ticket_foods.bill_id")
-                    ->where("bills.status", 1)
-                    ->whereYear("bills.updated_at", '=', $data['year'])
-                    ->select(
-                        DB::raw("SUM(ticket_foods.total_money) as total")
-                    )
-                    ->first();
-
-                $total_revenue['total_money_food'] = $foods->total;
-                $total_revenue['percent_food'] = round($foods->total / $bills->total * 100, 2);
-
-                if ($data['year'] == $currentYear) {
-                    $monthlyRevenue = [];
-
-                    for ($month = 1; $month <= $currentMonth; $month++) {
-                        $firstDay = Carbon::create($currentYear, $month, 1);
-
-                        $lastDay = $firstDay->copy()->endOfMonth();
-
-                        $sum = Bill::whereBetween('updated_at', [$firstDay, $lastDay])
-                            ->where('status', 1)
-                            ->select(DB::raw('COALESCE(SUM(total_money), 0) as total_money'))
-                            ->value('total_money');
-
-                        $monthlyRevenue[] = [
-                            'month' => $month,
-                            'total_money' => $sum
-                        ];
-                    }
-                } else {
-                    $allMonths = range(1, 12);
-
-                    $year = $data['year'];
-
-                    // Tính toán doanh thu từng tháng
-                    $monthlyRevenue = DB::table(DB::raw('(SELECT 1 as month) as months'))
-                        ->crossJoin(DB::raw('(SELECT DISTINCT 1 as month UNION SELECT 2 UNION SELECT 3 UNION 
-                        SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 
-                        UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) as all_months'))
-                        ->leftJoin('bills', function ($join) use ($year) {
-                            $join->on(DB::raw('MONTH(bills.updated_at)'), '=', 'all_months.month')
-                                ->whereYear('bills.updated_at', $year);
-                        })
-                        ->select('all_months.month', DB::raw('COALESCE(SUM(bills.total_money), 0) as total_money'))
-                        ->whereIn("all_months.month", $allMonths)
-                        ->groupBy('all_months.month')
-                        ->orderBy('all_months.month')
-                        ->get();
-                }
-                $total_revenue['monthlyRevenue'] = $monthlyRevenue;
-                return response()->json($total_revenue);
-            } else {
-                return response()->json(["message" => "Không có dữ liệu thống kê của năm " . $data['year']]);
-            }
-        } elseif ($data['timeline'] == "month") {
-            
+        //kiểm tra nếu năm > hiện tại, hoặc tháng >tháng hiện tại (tháng cần thống kê của năm hiện tại)
+        if (($data['timeline'] == 'year' && $data['year'] > $currentYear) || 
+            ($data['timeline'] == 'month' && ($data['year'] > $currentYear || ($data['year'] == $currentYear && $data['month'] > $currentMonth)))) {
+            return response()->json(['error' => 'Không thể xuất doanh thu.']);
         }
+        $total_revenue = [];
+        $bills = Bill::where("status", 1)
+            ->when(isset($data['month']), function ($query) use ($data) {
+                return $query->whereYear("bills.updated_at", $data['year'])
+                    ->whereMonth("bills.updated_at", $data['month']);
+            }, function ($query) use ($data) {
+                return $query->whereYear("bills.updated_at", $data['year']);
+            })
+            ->select(
+                DB::raw("SUM(total_money) as total"),
+                DB::raw("COUNT(bills.id) as quantity")
+            )
+            ->first();
+
+        $total_revenue['quantity_bill'] = $bills->quantity;
+        $total_revenue['total_money'] = $bills->total ?? 0;
+
+        $tickets = Ticket::join("bills", "bills.id", "=", "tickets.bill_id")
+            ->where("bills.status", 1)
+            ->when(isset($data['month']), function ($query) use ($data) {
+                return $query->whereYear("bills.updated_at", $data['year'])
+                    ->whereMonth("bills.updated_at", $data['month']);
+            }, function ($query) use ($data) {
+                return $query->whereYear("bills.updated_at", $data['year']);
+            })
+            ->select(DB::raw("SUM(price) as total"))
+            ->first();
+
+        $foods = Ticket_Food::join("bills", "bills.id", "=", "ticket_foods.bill_id")
+            ->where("bills.status", 1)
+            ->when(isset($data['month']), function ($query) use ($data) {
+                return $query->whereYear("bills.updated_at", $data['year'])
+                    ->whereMonth("bills.updated_at", $data['month']);
+            }, function ($query) use ($data) {
+                return $query->whereYear("bills.updated_at", $data['year']);
+            })
+            ->select(DB::raw("SUM(ticket_foods.total_money) as total"))
+            ->first();
+
+        if ($bills->quantity > 0) {
+            $total_revenue['total_money_ticket'] = $tickets->total;
+            $total_revenue['percent_ticket'] = round($tickets->total / $bills->total * 100, 2);
+            $total_revenue['total_money_food'] = $foods->total;
+            $total_revenue['percent_food'] = round($foods->total / $bills->total * 100, 2);
+        } else {
+            $total_revenue += [
+                'total_money_ticket' => 0,
+                'percent_ticket' => 0,
+                'total_money_food' => 0,
+                'percent_food' => 0,
+            ];
+        }
+
+        if ($data['timeline'] == 'year') {
+            $selectedMonths = $data['year'] == $currentYear ? range(1, $currentMonth) : range(1, 12);
+
+            $monthlyRevenue = [];
+
+            foreach ($selectedMonths as $month) {
+                $firstDay = Carbon::create($data['year'], $month, 1);
+                $lastDay = $firstDay->copy()->endOfMonth();
+
+                $sum = Bill::whereBetween('updated_at', [$firstDay, $lastDay])
+                    ->where('status', 1)
+                    ->select(DB::raw('COALESCE(SUM(total_money), 0) as total_money'))
+                    ->value('total_money');
+
+                $monthlyRevenue[] = ['month' => $month, 'total_money' => $sum];
+            }
+
+            $total_revenue['monthlyRevenue'] = $monthlyRevenue;
+        }
+
+        if ($data['timeline'] == 'month') {
+            $firstDay = Carbon::createFromDate($data['year'], $data['month'], 1);
+            $lastDay = now()->endOfMonth();
+
+            if ($firstDay->isCurrentMonth() && now()->isToday()) {
+                $lastDay = now(); // Nếu là tháng hiện tại và ngày hiện tại, sẽ đặt $lastDay thành now()
+            }
+
+            $dailyRevenue = [];
+
+            while ($firstDay->lte($lastDay) && $firstDay->month == $data['month']) {
+                $dailySum = Bill::whereDate('updated_at', $firstDay)
+                    ->where('status', 1)
+                    ->sum('total_money');
+
+                $dailyRevenue[] = ['date' => $firstDay->day, 'total_money' => $dailySum];
+                $firstDay->addDay();
+            }
+
+            $total_revenue['dailyRevenue'] = $dailyRevenue;
+        }
+
+        return response()->json($total_revenue);
     }
 }

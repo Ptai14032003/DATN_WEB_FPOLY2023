@@ -23,10 +23,10 @@ class PersonnelResource extends JsonResource
             'phone_number' => $this->phone_number,
             'password' => $this->password,
             'address' => $this->address,
-            'birthday' => Carbon::parse($this->birthday)->format('d-m-Y'),
+            'birthday' => $this->birthday,
             'gender' => $this->gender == 0 ? 'Nữ' : 'Nam',
             'role' => $this->role == 0 ? 'Nhân Viên' : 'Admin',
-            'date_start' => Carbon::parse($this->date_start)->format('d-m-Y')
+            'date_start' => $this->date_start
         ];
     }
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, InputNumber, Modal, Select, Upload, message } from 'antd';
+import { Button, Form, Input, InputNumber, Modal, Select, Upload, message, Image } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
 import { QlPhim } from './page';

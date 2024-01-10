@@ -165,7 +165,7 @@ const AdminQlSp: React.FC = () => {
             ) : (
                 <Table dataSource={dataTable} rowSelection={rowSelection} >
                     <Column title="Sản phẩm" dataIndex="food_name" key="food_name" />
-                    <Column title="Giá" dataIndex="price" key="price" />
+                    <Column title="Giá (VNĐ)" dataIndex="price" key="price" render={(price: any) => (Number(price))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} />
                     <Column title="Ảnh" dataIndex="image" key="image" render={(_: any, record: QlFood) => (
                         <Image
                             width={100}
