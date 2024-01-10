@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Input, Button, message, Popconfirm } from 'antd';
+import { Table, Input, Button, message, Popconfirm, Space } from 'antd';
 import { useFetchGuestsQuery } from '../../rtk/qlGuest/qlGuest';
 import { Waveform } from '@uiball/loaders';
 
@@ -37,6 +37,9 @@ const AdminQlGuest: React.FC = () => {
     const DeleteAll = () => {
         console.log(selectedRowKeys);
         message.success("Xóa thành công");
+    }
+    const deleteOne = (key: string) => {
+        message.success("Xóa thành công")
     }
     const rowSelection = {
         selectedRowKeys,
@@ -121,7 +124,7 @@ const AdminQlGuest: React.FC = () => {
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Quản lý khách hàng</div>
             <div className='flex justify-between mb-[10px]'>
-                <Input style={{ width: '20%' }} placeholder='Tìm kiếm dự án'
+                <Input style={{ width: '20%' }} placeholder='Tìm kiếm khách hàng'
                     value={searchTerm}
                     onChange={(e) => searchProject(e.target.value)} />
             </div>
@@ -159,10 +162,32 @@ const AdminQlGuest: React.FC = () => {
                     <Column title="Tên khách hàng" dataIndex="name" key="name" />
                     <Column title="Email" dataIndex="email" key="email" />
                     <Column title="Số điện thoại" dataIndex="phone_number" key="phone_number" />
-                    <Column title="Mật khẩu" dataIndex="password" key="password" render={(_: any) => (`***********`)} />
                     <Column title="Địa chỉ" dataIndex="address" key="address" />
                     <Column title="Ngày sinh" dataIndex="birthday" key="birthday" />
                     <Column title="Giới tính" dataIndex="gender" key="gender" />
+                    <Column
+                        title="Action"
+                        key="action"
+                        render={(_: any, record: any) => (
+                            <Space size="middle">
+                                <a>
+                                    <Popconfirm
+                                        title="Delete the task"
+                                        description="Are you sure to delete this task?"
+                                        onConfirm={() => {
+                                            deleteOne(record.key);
+                                        }}
+                                        okButtonProps={{
+                                            style: { backgroundColor: "#007bff" },
+                                        }}
+                                        okText="Yes"
+                                        cancelText="No"
+                                    >
+                                        <Button danger>Delete</Button>
+                                    </Popconfirm></a>
+                            </Space>
+                        )}
+                    />
                 </Table>
             )}
         </div>
