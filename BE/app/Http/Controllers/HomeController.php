@@ -137,6 +137,7 @@ class HomeController extends Controller
     }
 }
 
+    }
 
     public function show_seat_room($id)
     {

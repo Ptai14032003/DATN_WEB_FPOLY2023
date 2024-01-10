@@ -107,5 +107,15 @@ class FoodController extends Controller
         "message" => "delete successfully"
        ]);
     }
+
+    
+    public function destroyMultipleFood(Request $request){
+    
+        $ids = $request->input('ids');
+
+        Food::whereIn('id', $ids)->delete();
+        
+        return response()->json(['success' => 'Xóa nhiều sản phẩm thành công']);
+    }
 }
 
