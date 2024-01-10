@@ -48,16 +48,20 @@ Route::get('/voucher', [HomeController::class, 'voucher'])->name('voucher');
 Route::post('/forgot_password', [UserController::class, 'forgot_password'])->name('forgot_password');
 Route::post('/update_new_pass', [UserController::class, 'update_new_pass'])->name('update_new_pass');
 
-//thống kê
-Route::post('/revenue_movie',[StatisticalController::class,"revenue_movie"])->name('revenue_movie');
-Route::post('/total_revenue',[StatisticalController::class,"total_revenue"])->name('total_revenue');
 
-//lịch sử đặt vé
+//lịch sử đặt vé người dùng
 Route::post('/booking_history', [HomeController::class, 'booking_history'])->name('booking_history')->middleware('auth:sanctum');
 // send mail
 Route::post('/send_mail', [HomeController::class, 'send_mail'])->name('send_mail');
 
-Route::prefix('admin')->middleware('checkrole')->group(function () {
+Route::prefix('admin')->group(function () {
+    //thống kê
+    Route::post('/revenue_movie', [StatisticalController::class, "revenue_movie"])->name('revenue_movie');
+    Route::post('/total_revenue', [StatisticalController::class, "total_revenue"])->name('total_revenue');
+    //lịch sử đặt vé trang admin
+    Route::get('/history_bills', [BillController::class, "history"])->name('history_bills');
+
+
     Route::resource('bill', BillController::class);
     Route::resource('food', FoodController::class);
     Route::resource('food_type', TypeFoodController::class);
@@ -83,7 +87,7 @@ Route::prefix('admin')->middleware('checkrole')->group(function () {
         Route::delete('/{id}', [ApiMovieTypeController::class, 'destroy']);
     });
 
-   
+
 
     Route::prefix('promotions')->group(function () {
         Route::get('/', [ApiPromotionController::class, 'index']);
