@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
 import CreateQlDiscount from './create';
 import EditQlDiscount from './edit';
-import { useDeleteDiscountMutation, useFetchDiscountsQuery } from '../../rtk/discount/discount';
+import { useDeleteDiscountMutation, useDeleteMultiplePromotionMutation, useFetchDiscountsQuery } from '../../rtk/discount/discount';
 
 import { Waveform } from '@uiball/loaders';
 import Fuse from 'fuse.js';
@@ -20,7 +20,7 @@ export interface Discount {
 }
 const AdminQlDiscount: React.FC = () => {
     const { data: dataDiscounts, isLoading, error } = useFetchDiscountsQuery()
-
+    const [deleteMultiple] = useDeleteMultiplePromotionMutation()
     const [deleteDiscount] = useDeleteDiscountMutation()
     const [dataTable, setDataTable] = useState<Discount[]>([])
     const [searchTerm, setSearchTerm] = useState('');
@@ -35,9 +35,12 @@ const AdminQlDiscount: React.FC = () => {
     };
     const DeleteAll = () => {
         console.log(selectedRowKeys);
-
-        message.success("Xóa thành công", 2);
-
+        const data = {
+            ids: selectedRowKeys
+        }
+        // deleteMultiple(data).then(() => {
+        //     message.success("Xóa thành công");
+        // })
     }
     const rowSelection = {
         selectedRowKeys,

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
 import CreateQlPhim from './create';
 import EditQlPhim from './edit';
-import { useDeleteMoviesMutation, useFetchMoviesQuery } from '../../rtk/movies/movies';
+import { useDeleteMoviesMutation, useDeleteMultipleMovieMutation, useFetchMoviesQuery } from '../../rtk/movies/movies';
 import { Waveform } from '@uiball/loaders';
 import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
 import { useNavigate } from 'react-router-dom';
@@ -28,6 +28,7 @@ export type QlPhim = {
 }
 const AdminQlPhim: React.FC = () => {
     const { data: dataMovies, isLoading, error } = useFetchMoviesQuery()
+    const [deleteMultiple] = useDeleteMultipleMovieMutation()
     const navigate = useNavigate();
     const status = error?.status;
     //checkApiStatus(status);
@@ -40,7 +41,13 @@ const AdminQlPhim: React.FC = () => {
     };
     const DeleteAll = () => {
         console.log(selectedRowKeys);
-        message.success("Xóa thành công");
+        const data = {
+            ids: selectedRowKeys
+        }
+        // deleteMultiple(data).then(() => {
+        //     message.success("Xóa thành công");
+        // })
+
     }
     const rowSelection = {
         selectedRowKeys,
@@ -142,8 +149,8 @@ const AdminQlPhim: React.FC = () => {
             <span style={{ marginLeft: 8 }}>
                 {hasSelected ? (
                     <Popconfirm
-                        title="Delete the task"
-                        description="Are you sure to delete this task?"
+                        title=""
+                        description={`Bạn có muốn xoá  ${selectedRowKeys.length} items không?`}
                         onConfirm={() => {
                             DeleteAll();
                         }}

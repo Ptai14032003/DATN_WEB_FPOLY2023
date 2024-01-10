@@ -26,9 +26,9 @@
 .btn-date::after{
     content:"";
     position: absolute;
-    width: 0;
+    width: 100%;
     height: 2px;
-    background:#1ACAAC;
+    background:white;
     top: 100%;
     left: 0;
     transition: 2s;
@@ -41,7 +41,7 @@
     position: absolute;
     width: 100%;
     height: 2px;
-    background:#1ACAAC;
+    background:red;
     top: 100%;
     left: 0;
 

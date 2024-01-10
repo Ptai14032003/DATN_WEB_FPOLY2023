@@ -1,11 +1,23 @@
 import React, { useState } from 'react';
-import { Button, Form, Image, Input, InputNumber, Modal, Upload, message } from 'antd';
+import { Button, Form, Image, Input, InputNumber, Modal, Select, Upload, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
 import { QlFood } from './page';
+import { useFetchTypeFoodsQuery } from '../../rtk/qlSp/qlSp';
+interface QlFoodCreate {
+    food_name: string,
+    price: number,
+    image: File,
+    food_type_id: string
+}
 const CreateQlSp: React.FC = () => {
+    const { data: dataTypeFood } = useFetchTypeFoodsQuery()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
+    const selectTypeFood = dataTypeFood?.map((food: any) => ({
+        value: food?.id,
+        label: food?.name,
+    }));
     const onFinish = (values: any) => {
         console.log('Success:', values);
     };
@@ -34,8 +46,9 @@ const CreateQlSp: React.FC = () => {
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
+                    encType='multiple/form-data'
                 >
-                    <Form.Item<QlFood>
+                    <Form.Item<QlFoodCreate>
                         label="Sản phẩm"
                         name="food_name"
                         rules={[{ required: true, message: 'Vui lòng nhập tên sản phẩm !' }]}
@@ -43,26 +56,30 @@ const CreateQlSp: React.FC = () => {
                         <Input />
                     </Form.Item>
 
-                    <Form.Item<QlFood>
+                    <Form.Item<QlFoodCreate>
                         label="Giá"
                         name="price"
                         rules={[{ required: true, message: 'Vui lòng nhập giá sản phẩm !' }]}
                     >
                         <InputNumber min={0} />
                     </Form.Item>
-                    <Form.Item<QlFood>
+                    <Form.Item<QlFoodCreate>
                         label="Loại sản phẩm"
-                        name="name"
-                        rules={[{ required: true, message: 'Vui lòng nhập loại sản phẩm !' }]}
+                        name="food_type_id"
+                        rules={[{ required: true, message: 'Vui lòng nhập loại sản phẩm  !' }]}
                     >
-                        <Input />
+                        <Select className='ml-[-72px]'
+                            placeholder="Chọn loại sản phẩm"
+                            style={{ width: 200 }}
+                            options={selectTypeFood}
+                        />
                     </Form.Item>
-                    <Form.Item<QlFood>
+                    <Form.Item<QlFoodCreate>
                         label="Ảnh"
                         name="image"
                         rules={[{ required: true, message: 'Vui lòng nhập ảnh !' }]}
                     >
-                        <Upload listType='picture' beforeUpload={(file) => {
+                        {/* <Upload listType='picture' beforeUpload={(file) => {
                             return new Promise((resolve, reject) => {
                                 if (file.type === 'image/jpg' || file.type === 'image/png') {
                                     reject();
@@ -72,7 +89,8 @@ const CreateQlSp: React.FC = () => {
                             })
                         }} maxCount={1} multiple>
                             <Button icon={<UploadOutlined />}>Click to Upload </Button>
-                        </Upload>
+                        </Upload> */}
+                        <input type="file" name="" id="" />
                     </Form.Item>
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button htmlType="submit">
