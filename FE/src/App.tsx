@@ -9,9 +9,6 @@ import AdminQlGuest from './admin/qlGuest/page'
 import AdminQlDiscount from './admin/discount/page'
 import AdminQlPhongChieu from './admin/qlphongChieu/page'
 import AdminQlPhim from './admin/qlPhim/page'
-import AdminQlActors from './admin/itemAdmin/actors/page'
-import DsCountry from './admin/itemAdmin/countries/page'
-import DsGenres from './admin/itemAdmin/listGenres/page'
 import ThongKe from './admin/thongKe/page'
 import LayoutPerson from './components/layouts/layoutGuest/LayoutPerson'
 import NewFilm from './personPage/newFilm'
@@ -29,6 +26,7 @@ import Payment from './personPage/Payment.tsx'
 import NotFound from './personPage/404.tsx'
 import { useEffect } from 'react'
 import TicketHistory from './personPage/TicketHistory.tsx'
+import AdminQlBill from './admin/bill/page.tsx'
 function App() {
   const checkLocal = localStorage.getItem("user");
   const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
@@ -52,8 +50,8 @@ function App() {
         <Route path="new" element={<NewFilm />} />
         <Route path="seat" element={<Seat />} />
       </Route>
-      <Route path="ticket-price" element={<TicketPrice />}/>
-      <Route path="ticket-history" element={<TicketHistory/>} />
+      <Route path="ticket-price" element={<TicketPrice />} />
+      <Route path="ticket-history" element={<TicketHistory />} />
       <Route path="profile" element={<Profile />} />
       <Route path="signin" element={<Signin />} />
       <Route path="signup" element={<Signup />} />
@@ -70,9 +68,7 @@ function App() {
           <Route path='qlGuest' element={<AdminQlGuest />}></Route>
           <Route path='qlPhongChieu' element={<AdminQlPhongChieu />}></Route>
           <Route path='voucher' element={<AdminQlDiscount />}></Route>
-          <Route path='actors' element={<AdminQlActors />}></Route>
-          <Route path='country' element={<DsCountry />}></Route>
-          <Route path='listGenres' element={<DsGenres />}></Route>
+          <Route path='bill_history' element={<AdminQlBill />}></Route>
           <Route path='thongKe' element={<ThongKe />}></Route>
         </Route>
       ) : (
