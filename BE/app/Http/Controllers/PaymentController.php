@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Bill;
 use App\Models\Food;
+use App\Models\Promotion;
 use App\Models\Seat;
+use App\Models\Showtime;
 use App\Models\Ticket;
 use App\Models\Ticket_Food;
 use Exception;
@@ -20,7 +22,13 @@ class PaymentController extends Controller
         $combo = $request->combo;
         $total_money = $request->total_money;
         $user_code = $request->user_code ?? null;
-        $discount_code = $request->discount_code;
+        $discount_code = $request->discount_code ?? null;
+        if ($discount_code) {
+            $promotion = Promotion::where("discount_code", $discount_code)->first();
+            $discount_percent = $promotion->discount_percent;
+        }else{
+            $discount_percent = 0;
+        }
         $bill = [
             "user_code" => $user_code,
             "total_ticket" => count($seat),
@@ -28,33 +36,34 @@ class PaymentController extends Controller
             "total_money" => $total_money,
             "payment_time" => date("Y-m-d H:i:s"),
             "status" => 0,
-            "discount_code"=>$discount_code
+            "discount_code" => $discount_code
         ];
         $bill_add = Bill::create($bill);
+
         for ($i = 0; $i < count($seat); $i++) {
-            $type_seat = Seat::join("type_seats", "type_seats.id", "=", "seats.type_seat_id")->where("seats.id",$seat[$i]['id'])->first();
+            $type_seat = Seat::join("type_seats", "type_seats.id", "=", "seats.type_seat_id")->where("seats.id", $seat[$i]['id'])->first();
             $ticket = [
                 'id_seat' => $seat[$i]['id'],
                 'showtime_id' => $showtime_id,
                 'bill_id' => $bill_add->id,
-                'price' => $type_seat->type_name == "Đôi" ? $seat[$i]['price']/2 : $seat[$i]['price']
+                'price' => ($type_seat->type_name == "Đôi" ? ($seat[$i]['price'] / 2)* ((100 - $discount_percent) / 100) : $seat[$i]['price']* ((100 - $discount_percent) / 100))
             ];
+
             Ticket::create($ticket);
         }
+
         for ($i = 0; $i < count($combo); $i++) {
             $food = Food::where('food_name', 'like', $combo[$i]['name'])->first();
 
             $food = [
                 'quantity' => $combo[$i]['quantity'],
-                'total_money' => $food->price * $combo[$i]['quantity'],
+                'total_money' => ($food->price * $combo[$i]['quantity']) *( (100 - $discount_percent) / 100),
                 'food_id' => $food->id,
                 'bill_id' => $bill_add->id
             ];
             Ticket_Food::create($food);
         }
-        // return response()->json(
-        //     $bill_add
-        // );
+
 
         // thanh toán
         // $id_code = generateRandomString();
@@ -147,14 +156,14 @@ class PaymentController extends Controller
         $i = 0;
         $hashData = "";
         foreach ($inputData as $key => $value) {
-            if($value != null){
+            if ($value != null) {
                 if ($i == 1) {
                     $hashData = $hashData . '&' . urlencode($key) . "=" . urlencode($value);
                 } else {
                     $hashData = $hashData . urlencode($key) . "=" . urlencode($value);
                     $i = 1;
                 }
-            } 
+            }
         }
 
         $secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
@@ -164,6 +173,7 @@ class PaymentController extends Controller
 
         $Status = 0; // Là trạng thái thanh toán của giao dịch chưa có IPN lưu tại hệ thống của merchant chiều khởi tạo URL thanh toán.
         $bill_id = $inputData['vnp_TxnRef'];
+
         try {
             //Check Orderid    
             //Kiểm tra checksum của dữ liệu
@@ -181,6 +191,17 @@ class PaymentController extends Controller
                                 $Status = 1; // Trạng thái thanh toán thành công
                                 $returnData['RspCode'] = '00';
                                 $returnData['Message'] = 'Thanh toán thành công';
+                                $showtimes = Showtime::join("tickets", "tickets.showtime_id", "=", "showtimes.id")
+                                    ->join("bills", "bills.id", "=", "tickets.bill_id")
+                                    ->where("bills.id", $bill_id)
+                                    ->get();
+                                Showtime::where('id', $showtimes[0]->bill_id)->update(['total_ticket_sold' =>
+                                $showtimes[0]->total_ticket_sold + $showtimes[0]->total_ticket]);
+
+                                foreach ($showtimes as $st) {
+                                    Showtime::where('id', $st->bill_id)->update(['total_money' =>
+                                    $st->total_money + $st->price]);
+                                }
                             } else {
                                 $Status = 2; // Trạng thái thanh toán thất bại / lỗi
                                 $returnData['RspCode'] = '99';

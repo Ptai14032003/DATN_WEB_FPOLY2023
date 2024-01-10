@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class HomeController extends Controller
 {
@@ -81,61 +82,61 @@ class HomeController extends Controller
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         foreach ($st_movie as $movie) {
 
-    date_default_timezone_set('Asia/Ho_Chi_Minh');
+            date_default_timezone_set('Asia/Ho_Chi_Minh');
 
-    // Sử dụng Eloquent Collection để nhóm các suất chiếu theo ngày
-    $groupedStMovie = $st_movie->groupBy('show_date');
+            // Sử dụng Eloquent Collection để nhóm các suất chiếu theo ngày
+            $groupedStMovie = $st_movie->groupBy('show_date');
 
-    $result = [];
-    foreach ($groupedStMovie as $date => $showtimes) {
-        foreach ($showtimes as $index => $showtime) {
-            // Thêm thông tin ngày trong tuần và định dạng ngày, giờ
-            $weekday = date('l', strtotime($date));
-            $weekday = strtolower($weekday);
-            switch ($weekday) {
-                case 'monday':
-                    $weekday = 'Thứ hai';
-                    break;
-                case 'tuesday':
-                    $weekday = 'Thứ ba';
-                    break;
-                case 'wednesday':
-                    $weekday = 'Thứ tư';
-                    break;
-                case 'thursday':
-                    $weekday = 'Thứ năm';
-                    break;
-                case 'friday':
-                    $weekday = 'Thứ sáu';
-                    break;
-                case 'saturday':
-                    $weekday = 'Thứ bảy';
-                    break;
-                default:
-                    $weekday = 'Chủ nhật';
-                    break;
+            $result = [];
+            foreach ($groupedStMovie as $date => $showtimes) {
+                foreach ($showtimes as $index => $showtime) {
+                    // Thêm thông tin ngày trong tuần và định dạng ngày, giờ
+                    $weekday = date('l', strtotime($date));
+                    $weekday = strtolower($weekday);
+                    switch ($weekday) {
+                        case 'monday':
+                            $weekday = 'Thứ hai';
+                            break;
+                        case 'tuesday':
+                            $weekday = 'Thứ ba';
+                            break;
+                        case 'wednesday':
+                            $weekday = 'Thứ tư';
+                            break;
+                        case 'thursday':
+                            $weekday = 'Thứ năm';
+                            break;
+                        case 'friday':
+                            $weekday = 'Thứ sáu';
+                            break;
+                        case 'saturday':
+                            $weekday = 'Thứ bảy';
+                            break;
+                        default:
+                            $weekday = 'Chủ nhật';
+                            break;
+                    }
+
+                    $showtime->weekday = $weekday;
+                    $showtime->show_date = Carbon::parse($date)->format('d-m');
+                    $showtime->show_time = Carbon::parse($showtime->show_time)->format('H:i');
+                }
+                // Ẩn trường show_date trong các suất chiếu
+                $showtimes->makeHidden(['show_date', 'weekday']);
+
+                $result[] = [
+                    'date' => Carbon::parse($date)->format('d-m'),
+                    'weekday' => $weekday,
+                    'showtimes' => $showtimes->toArray(),
+                ];
             }
 
-            $showtime->weekday = $weekday;
-            $showtime->show_date = Carbon::parse($date)->format('d-m');
-            $showtime->show_time = Carbon::parse($showtime->show_time)->format('H:i');
+            if ($result) {
+                return response()->json(['movie' => $movies, 'st_movie' => $result]);
+            } else {
+                return response()->json(['messages' => 'Không tồn tại suất chiếu theo phim này'], 404);
+            }
         }
-        // Ẩn trường show_date trong các suất chiếu
-        $showtimes->makeHidden(['show_date','weekday']);
-
-        $result[] = [
-            'date' => Carbon::parse($date)->format('d-m'),
-            'weekday' => $weekday,
-            'showtimes' => $showtimes->toArray(),
-        ];
-    }
-
-    if ($result) {
-        return response()->json(['movie' => $movies, 'st_movie' => $result]);
-    } else {
-        return response()->json(['messages' => 'Không tồn tại suất chiếu theo phim này'], 404);
-    }
-}
     }
 
     public function show_seat_room($id)
@@ -190,32 +191,63 @@ class HomeController extends Controller
         date_default_timezone_set('Asia/Ho_Chi_Minh');
 
         foreach ($seats as $seat) {
-            //nếu phim 2d thì vé thường 45k 3d thì ghế thường 60k
+            // Nếu phim 2d thì vé thường 45k, 3d thì ghế thường 60k
             if ($movie->movie_type == '2D') {
-                $seat->price = 45000; //mặc định ghế thường là 45k - phòng 2D
+                $seat->price = 45000; // Mặc định ghế thường là 45k - phòng 2D
             } else {
-                $seat->price = 60000; //mặc định ghế thường là 60k - phòng 3D
-
+                $seat->price = 60000; // Mặc định ghế thường là 60k - phòng 3D
             }
-            $show_date = new DateTime($showtime->show_date); //lấy ra ngày chiếu
-            if ($show_date->format('N') == '7' || $show_date->format('N') == '6') { //nếu thứ 7 hoặc chủ nhật thì tăng giá vé lên 10k
+
+            // Lấy ra ngày chiếu
+            $show_date = Carbon::parse($showtime->show_date);
+
+            // Nếu thứ 7 hoặc chủ nhật thì tăng giá vé lên 10k
+            if ($show_date->isWeekend()) {
                 $seat->price += 10000;
             }
-            // nếu ghế thường thì giữ nguyên ghế vip thì tăng 5k/ vé ghế đôi =2 ghế vip
+
+            // Nếu ghế thường thì giữ nguyên, ghế vip thì tăng 5k/ vé, ghế đôi = 2 ghế vip
             if (strcasecmp($seat->type_name, 'VIP') == 0) {
                 $seat->price += 5000;
             } elseif (strcasecmp($seat->type_name, 'Đôi') == 0) {
                 $seat->price = ($seat->price + 5000) * 2;
             }
+
+            // Kiểm tra giờ xuất chiếu và giảm giá nếu sau 22:00 (10h tối) theo múi giờ Việt Nam
+            $show_time = Carbon::parse($showtime->show_time);
+            $ten_pm = Carbon::createFromTime(22, 0, 0, 'Asia/Ho_Chi_Minh'); // 10 giờ tối
+
+            if ($show_time->greaterThan($ten_pm)) {
+                // Giảm giá 10%
+                $seat->price -= $seat->price * 0.1;
+            }
         }
+
         $combo = Food::all();
-        return response()->json(['seats' => $seats, 'movie' => $movie, 'combo' => $combo]);
+        return response()->json(['seats' => $seats, 'movie' => $movie, 'combo' => $combo, 'showtime' => $showtime->show_time]);
     }
 
-    public function voucher()
+    public function voucher(Request $request)
     {
-        $promotion = Promotion::all();
-        return response()->json($promotion);
+        
+        $token = $request->bearerToken();
+        $entropy = PersonalAccessToken::findToken($token);
+        $user = User::find($entropy->tokenable_id);
+        $promotion_used = Bill::where("user_code", $user->user_code)->where('discount_code', '!=', null)->get();
+        $promotions_use = [];
+        foreach ($promotion_used as $promotion) {
+            $promotions_use[] = $promotion->discount_code;
+        }
+        $currentDateTime = Carbon::now('Asia/Ho_Chi_Minh');
+        $promotions = DB::table('promotions')
+            ->whereNotIn('discount_code', $promotions_use)
+            ->where('deleted_at','=',null)
+            ->where(function ($query) use ($currentDateTime) {
+                $query->where('start', '<=', $currentDateTime)
+                    ->where('end', '>=', $currentDateTime);
+            })
+            ->get();
+        return response()->json($promotions);
     }
 
     public function booking_history(Request $request)
