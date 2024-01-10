@@ -136,7 +136,6 @@ class HomeController extends Controller
         return response()->json(['messages' => 'Không tồn tại suất chiếu theo phim này'], 404);
     }
 }
-
     }
 
     public function show_seat_room($id)
