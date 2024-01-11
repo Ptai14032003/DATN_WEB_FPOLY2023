@@ -15,6 +15,7 @@ class Bill extends Model
         'personnel_id',
         'total_ticket',
         'total_combo',
+        'discount_code',
         'additional_fee',
         'total_money',
         'payment_time',
