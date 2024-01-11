@@ -3,7 +3,7 @@ import { Button, Form, Image, Input, InputNumber, Modal, Select, Upload, message
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
 import { QlFood } from './page';
-import { useFetchTypeFoodsQuery } from '../../rtk/qlSp/qlSp';
+import { useAddFoodMutation, useFetchTypeFoodsQuery } from '../../rtk/qlSp/qlSp';
 interface QlFoodCreate {
     food_name: string,
     price: number,
@@ -12,14 +12,25 @@ interface QlFoodCreate {
 }
 const CreateQlSp: React.FC = () => {
     const { data: dataTypeFood } = useFetchTypeFoodsQuery()
+    const [addFood] = useAddFoodMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
+    const [selectedImage, setSelectedImage] = useState(null);
     const selectTypeFood = dataTypeFood?.map((food: any) => ({
         value: food?.id,
         label: food?.name,
     }));
+    // const handleImageChange = (e) => {
+    //     const file = e.target.files[0];
+    //     setSelectedImage(file);
+    // };
     const onFinish = (values: any) => {
-        console.log('Success:', values);
+        const newData = {
+            ...values,
+            image: values.image.file
+        }
+        console.log(newData);
+
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -79,7 +90,7 @@ const CreateQlSp: React.FC = () => {
                         name="image"
                         rules={[{ required: true, message: 'Vui lòng nhập ảnh !' }]}
                     >
-                        {/* <Upload listType='picture' beforeUpload={(file) => {
+                        <Upload listType='picture' beforeUpload={(file) => {
                             return new Promise((resolve, reject) => {
                                 if (file.type === 'image/jpg' || file.type === 'image/png') {
                                     reject();
@@ -89,8 +100,7 @@ const CreateQlSp: React.FC = () => {
                             })
                         }} maxCount={1} multiple>
                             <Button icon={<UploadOutlined />}>Click to Upload </Button>
-                        </Upload> */}
-                        <input type="file" name="" id="" />
+                        </Upload>
                     </Form.Item>
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button htmlType="submit">

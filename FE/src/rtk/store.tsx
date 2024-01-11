@@ -7,14 +7,13 @@ import discountApi from './discount/discount'
 import nhanSuApi from './qlNhanSu/qlNhanSu'
 import suatChieuApi from './qlSc/qlSc'
 import authApi from './auth/auth'
-import actorApi from './actors/actors'
 import countryApi from './countries/countries'
-import genresApi from './genres/genres'
 import moviesApiPerson from './moviesPerson/moviesPerson'
 import bookingApi from './booking/booking'
 import foodsApi from './qlSp/qlSp'
 import billApi from './bill/bill'
 import VoucherApi from './voucher/voucher'
+import statisticsApi from './statistics/statistics'
 
 export const store = configureStore({
     reducer: {
@@ -31,7 +30,8 @@ export const store = configureStore({
         food: foodsApi.reducer,
         bill: billApi.reducer,
         voucher: VoucherApi.reducer,
-        promotions: discountApi.reducer
+        promotions: discountApi.reducer,
+        statistics: statisticsApi.reducer
 
 
     },
@@ -51,6 +51,7 @@ export const store = configureStore({
             .concat(billApi.middleware)
             .concat(VoucherApi.middleware)
             .concat(discountApi.middleware)
+            .concat(statisticsApi.middleware)
 
 });
 
