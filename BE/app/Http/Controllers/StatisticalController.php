@@ -53,7 +53,7 @@ class StatisticalController extends Controller
         $total_revenue = [];
         //lấy ra tổng doanh thu của tháng hoặc năm
         $bills = Bill::where("status", 1)
-            ->when(isset($data['month']), function ($query) use ($data) {
+            ->when(($data['timeline']=="month"), function ($query) use ($data) {
                 return $query->whereYear("bills.updated_at", $data['year'])
                     ->whereMonth("bills.updated_at", $data['month']);
             }, function ($query) use ($data) {
@@ -69,7 +69,7 @@ class StatisticalController extends Controller
 
         $tickets = Ticket::join("bills", "bills.id", "=", "tickets.bill_id")
             ->where("bills.status", 1)
-            ->when(isset($data['month']), function ($query) use ($data) {
+            ->when(($data['timeline']=="month"), function ($query) use ($data) {
                 return $query->whereYear("bills.updated_at", $data['year'])
                     ->whereMonth("bills.updated_at", $data['month']);
             }, function ($query) use ($data) {
@@ -80,7 +80,7 @@ class StatisticalController extends Controller
 
         $foods = Ticket_Food::join("bills", "bills.id", "=", "ticket_foods.bill_id")
             ->where("bills.status", 1)
-            ->when(isset($data['month']), function ($query) use ($data) {
+            ->when(($data['timeline']=="month"), function ($query) use ($data) {
                 return $query->whereYear("bills.updated_at", $data['year'])
                     ->whereMonth("bills.updated_at", $data['month']);
             }, function ($query) use ($data) {
