@@ -103,9 +103,19 @@ const ThongKe = () => {
                 })
             }
     }, [data])
+    const ContentRechart = ({ active, payload, label }) => {
+        if (active) {
+            return (
+                <div className="box-border rounded border-2 bg-slate-300 px-[10px]">
+                    <h4>{`${type === "month" ? `Ngày ${label}` : `Tháng ${label}`}`}</h4>
+                    <h4>{`${(Number(payload[0]?.value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}(VNĐ)`}</h4>
+                </div>
+            )
+        }
+    }
     return (
         <>
-            <div className="flex gap-20 mt-[5%]">
+            <div className="flex gap-10 ml-[4%] mt-[5%]">
                 <div>
                     <Space direction="vertical" size={12}>
                         <div className="flex gap-[40px]">
@@ -113,7 +123,7 @@ const ThongKe = () => {
                                 <Option value="month">Month</Option>
                                 <Option value="year">Year</Option>
                             </Select>
-                            <DatePicker picker={type} onChange={onChange} format={`${type === 'month' ? "MM / YYYY" : "YYYY"}`} />
+                            <DatePicker picker={type} onChange={onChange} format={`${type === 'month' ? "MM / YYYY" : "YYYY"}`} className='w-[100px]' />
                             <Button onClick={() => handleSelect()}>Tra cứu</Button>
                         </div>
                     </Space>
@@ -138,22 +148,21 @@ const ThongKe = () => {
                         </div>
                     </div>
                 </div>
-                <div>
+                <div className="ml-[35px] mt-[50px]">
                     <LineChart
-                        width={800}
+                        width={780}
                         height={350}
                         data={dataChart}
                         margin={{
                             top: 10,
                             right: 30,
-                            left: 20,
                             bottom: 5,
                         }}
                     >
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey={`${type === "month" ? "date" : "month"}`} />
-                        <YAxis />
-                        <Tooltip />
+                        <XAxis dataKey={`${type === "month" ? "date" : "month"}`} tickFormatter={(value) => `${type === "month" ? `Ngày ${value}` : `Tháng ${value}`}`} />
+                        <YAxis axisLine={false} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} />
+                        <Tooltip content={<ContentRechart />} />
                         <Legend />
                         <Line type="monotone" dataKey="total_money" stroke="#82ca9d" />
                     </LineChart>
