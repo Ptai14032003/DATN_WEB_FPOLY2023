@@ -47,10 +47,7 @@ Route::get('/voucher', [HomeController::class, 'voucher'])->name('voucher')->mid
 Route::post('/forgot_password', [UserController::class, 'forgot_password'])->name('forgot_password');
 Route::post('/update_new_pass', [UserController::class, 'update_new_pass'])->name('update_new_pass');
 
-//top 5 doanh thu, bán chạy
-Route::post('/get_top5_movie', [StatisticalController::class, 'get_top5_movie'])->name('get_top5_movie');
-Route::post('/get_top5_food', [StatisticalController::class, 'get_top5_food'])->name('get_top5_food');
-Route::post('/get_top5_user', [StatisticalController::class, 'get_top5_user'])->name('get_top5_user');
+
 
 //lịch sử đặt vé người dùng
 Route::post('/booking_history', [HomeController::class, 'booking_history'])->name('booking_history')->middleware('auth:sanctum');
@@ -61,6 +58,10 @@ Route::prefix('admin')->group(function () {
     //thống kê
     Route::post('/revenue_movie', [StatisticalController::class, "revenue_movie"])->name('revenue_movie');
     Route::post('/total_revenue', [StatisticalController::class, "total_revenue"])->name('total_revenue');
+    //top 5 doanh thu, bán chạy
+    Route::post('/get_top5_movie', [StatisticalController::class, 'get_top5_movie'])->name('get_top5_movie');
+    Route::post('/get_top5_food', [StatisticalController::class, 'get_top5_food'])->name('get_top5_food');
+    Route::post('/get_top5_user', [StatisticalController::class, 'get_top5_user'])->name('get_top5_user');
     //lịch sử đặt vé trang admin
     Route::get('/history_bills', [BillController::class, "history"])->name('history_bills');
 
@@ -76,7 +77,6 @@ Route::prefix('admin')->group(function () {
         Route::get('/{id}', [ApiMovieController::class, 'edit']);
         Route::put('/{id}', [ApiMovieController::class, 'update']);
         Route::delete('/{id}', [ApiMovieController::class, 'destroy']);
-       
     });
     Route::delete('/destroyMultipleMovie', [ApiMovieController::class, 'destroyMultipleMovie']);
     Route::delete('/destroyMultiplePromotion', [ApiPromotionController::class, 'destroyMultiplePromotion']);
