@@ -41,13 +41,16 @@ Route::post('/check_payment', [PaymentController::class, 'check_payment']);
 Route::post('/book_ticket', [TicketController::class, 'book_ticket'])->name('book_ticket');
 Route::get('/movie_show_time/{id}', [HomeController::class, 'show_time_movie'])->name('movie_show_time');
 Route::get('/show_seat_room/{id}', [HomeController::class, 'show_seat_room'])->name('show_seat_room');
-Route::get('/voucher', [HomeController::class, 'voucher'])->name('voucher');
+Route::get('/voucher', [HomeController::class, 'voucher'])->name('voucher')->middleware('auth:sanctum');
 
 //quên mật khẩu
-
 Route::post('/forgot_password', [UserController::class, 'forgot_password'])->name('forgot_password');
 Route::post('/update_new_pass', [UserController::class, 'update_new_pass'])->name('update_new_pass');
 
+//top 5 doanh thu, bán chạy
+Route::post('/get_top5_movie', [StatisticalController::class, 'get_top5_movie'])->name('get_top5_movie');
+Route::post('/get_top5_food', [StatisticalController::class, 'get_top5_food'])->name('get_top5_food');
+Route::post('/get_top5_user', [StatisticalController::class, 'get_top5_user'])->name('get_top5_user');
 
 //lịch sử đặt vé người dùng
 Route::post('/booking_history', [HomeController::class, 'booking_history'])->name('booking_history')->middleware('auth:sanctum');

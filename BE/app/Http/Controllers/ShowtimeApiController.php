@@ -25,7 +25,9 @@ class ShowtimeApiController extends Controller
     {
 
         $show_time = Showtime::create($request->all());
-        return new ShowtimeResource($show_time);
+        if($show_time){
+            return response()->json(['messages' => 'Thêm Suất chiếu thành công']);
+        }
     }
     public function show(string $id)
     {
