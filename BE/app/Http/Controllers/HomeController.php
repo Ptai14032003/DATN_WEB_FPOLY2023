@@ -26,13 +26,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-
-        $movie =  Movie::join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
+        $currentDate = now(); // Get the current date and time
+    
+        $movies = Movie::join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
             ->select('movies.*', 'movie_types.type_name')
             ->whereNull('movies.deleted_at')
-            ->OrderBy('movies.id', 'asc')
+            ->where('movies.end_date', '>=', $currentDate) // Filter out movies with end_date smaller than the current date
+            ->orderBy('movies.id', 'asc')
             ->get();
-        return response()->json($movie);
+    
+        return response()->json($movies);
     }
     public function comingSoon()
     {
@@ -62,8 +65,16 @@ class HomeController extends Controller
 
         return response()->json($movies);
     }
+
     public function show_time_movie(string $id)
     {
+        $movie = Movie::find($id);
+
+        // Check if the movie is still in the "coming soon" phase
+        if ($movie && $movie->start_date > Carbon::now()) {
+            // return response()->json(['messages' => 'Phim này đang trong giai đoạn "Sắp chiếu"'], 404);
+            return response()->json(['movie' => $movies, 'st_movie' => []]);
+        }
         $st_movie = Movie::join('showtimes', 'showtimes.movie_id', '=', 'movies.id')
             ->join('rooms', 'showtimes.room_id', '=', 'rooms.id')
             ->join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
