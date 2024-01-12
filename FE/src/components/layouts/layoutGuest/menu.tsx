@@ -36,18 +36,16 @@ const Menu = () => {
       </div>
       <nav>
         <ul className='menu-content flex text-white'>
-          <li><a href={homeLink}>Home</a></li>
-          <li><a href={homeLink}>Movie</a></li>
-          <li><a href={homeLink}>News & Preferential</a></li>
-          <li><a href={homeLink + 'ticket-price'}>Ticket Price</a></li>
-          <li><a href={homeLink}>About us</a></li>
-          <li><a href={homeLink + 'ticket-history'}>Ticket</a></li>
+          <li><a href={homeLink}>Trang chủ</a></li>
+          <li><a href={homeLink + 'ticket-price'}>Giá vé</a></li>
+          <li><a href={homeLink}>Giới thiệu</a></li>
+          <li><a href={homeLink + 'ticket-history'}>Lịch sử đặt vé</a></li>
           {!user && (
             <><li onClick={handleClick}><a>User</a></li>
               {dropDown ?
                 <ul className="dropdown-content absolute translate-y-[4.8rem] right-6 w-[160px] text-center">
-                  <li><a href={homeLink + 'signin'} className='block'>Signin</a></li>
-                  <li><a href={homeLink + 'signup'} className='block'>Signup</a></li>
+                  <li><a href={homeLink + 'signin'} className='block'>Đăng nhập</a></li>
+                  <li><a href={homeLink + 'signup'} className='block'>Đăng kí</a></li>
                 </ul>
                 : ""
               }
@@ -66,8 +64,8 @@ const Menu = () => {
                       <a href={homeLink + "admin"}>Admin</a>
                     </li>
                   )}
-                  <li><a href={homeLink + 'profile'} className='block'>Profile</a></li>
-                  <li onClick={() => Logout()}><div className='block'>Logout</div></li>
+                  <li><a href={homeLink + 'profile'} className='block'>Thông tin cá nhân</a></li>
+                  <li onClick={() => Logout()}><div className='block'>Đăng xuất</div></li>
                 </ul>
                 : ""
               }

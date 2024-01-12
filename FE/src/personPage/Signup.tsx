@@ -88,6 +88,7 @@ const Signup = () => {
                 </div>
                 <p className='text-red-500'>{errors.password_confirmation && <p>{errors.password_confirmation?.message}</p>}</p>
               </div>
+
             </div>
 
             <button type="submit" className="btn">Đăng kí</button>
@@ -97,6 +98,7 @@ const Signup = () => {
             </div>
           </form>
         </div>
+
       </div>
     </div>
   )

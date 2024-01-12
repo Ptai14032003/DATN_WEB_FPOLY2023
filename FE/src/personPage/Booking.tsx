@@ -371,7 +371,6 @@ const Booking = () => {
             </div>
 
             <div className="movies-title absolute flex justify-between items-center translate-x-[28rem] -translate-y-[4rem] text-white w-[63.875rem]">
-                <h3 className='text-3xl'>{seatBooking?.movie?.movie_name}</h3>
                 <div className="time flex text-lg items-center space-x-10">
                     <p>{seatBooking?.movie?.time}</p>
 
