@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
 import CreateQlDiscount from './create';
 import EditQlDiscount from './edit';
-import { useDeleteDiscountMutation, useFetchDiscountsQuery } from '../../rtk/discount/discount';
+import { useDeleteDiscountMutation, useDeleteMultiplePromotionMutation, useFetchDiscountsQuery } from '../../rtk/discount/discount';
 
 import { Waveform } from '@uiball/loaders';
 import Fuse from 'fuse.js';
@@ -20,7 +20,7 @@ export interface Discount {
 }
 const AdminQlDiscount: React.FC = () => {
     const { data: dataDiscounts, isLoading, error } = useFetchDiscountsQuery()
-
+    const [deleteMultiple] = useDeleteMultiplePromotionMutation()
     const [deleteDiscount] = useDeleteDiscountMutation()
     const [dataTable, setDataTable] = useState<Discount[]>([])
     const [searchTerm, setSearchTerm] = useState('');
@@ -35,9 +35,12 @@ const AdminQlDiscount: React.FC = () => {
     };
     const DeleteAll = () => {
         console.log(selectedRowKeys);
-
-        message.success("Xóa thành công", 2);
-
+        const data = {
+            ids: selectedRowKeys
+        }
+        // deleteMultiple(data).then(() => {
+        //     message.success("Xóa thành công");
+        // })
     }
     const rowSelection = {
         selectedRowKeys,
@@ -114,7 +117,7 @@ const AdminQlDiscount: React.FC = () => {
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Khuyến mãi</div>
             <div className='flex justify-between mb-[10px]'>
-                <Input style={{ width: '20%' }} placeholder='Tìm kiếm dự án'
+                <Input style={{ width: '20%' }} placeholder='Tìm kiếm khuyến mãi'
                     value={searchTerm}
                     onChange={(e) => searchProject(e.target.value)} />
                 <CreateQlDiscount />

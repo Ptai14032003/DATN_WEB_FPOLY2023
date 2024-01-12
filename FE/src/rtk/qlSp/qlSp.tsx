@@ -10,9 +10,29 @@ const foodsApi = createApi({
             query: () => "/food/",
             providesTags: ["food"]
         }),
+        fetchTypeFoods: builder.query<any, void>({
+            query: () => "/food_type/",
+            providesTags: ["food"]
+        }),
         fetchFoodID: builder.query<any, string>({
             query: (id) => `/food/${id}`,
             providesTags: ["food"]
+        }),
+        addFood: builder.mutation<any, any>({
+            query: (body ) => ({
+                url: `/food`,
+                method: "POST",
+                body
+            }),
+            invalidatesTags: ["food"]
+        }),
+        deleteMultipleFood: builder.mutation<void, any>({
+            query: (body ) => ({
+                url: `/deleteMultipleFood`,
+                method: "POST",
+                body
+            }),
+            invalidatesTags: ["food"]
         }),
         updateFood: builder.mutation<any, { body: any, id: string }>({
             query: ({ body, id }) => ({
@@ -22,11 +42,14 @@ const foodsApi = createApi({
             }),
             invalidatesTags: ["food"]
         }),
-        deleteFoodID: builder.query<any, string>({
-            query: (id) => `/food/${id}`,
-            providesTags: ["food"]
+        deleteFoodID: builder.mutation<any, string>({
+            query: (id) => ({
+                url: `/food/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["food"]
         }),
     })
 })
-export const { useFetchFoodsQuery, useFetchFoodIDQuery, useUpdateFoodMutation } = foodsApi
+export const { useFetchFoodsQuery, useFetchFoodIDQuery, useUpdateFoodMutation, useDeleteMultipleFoodMutation, useDeleteFoodIDMutation, useFetchTypeFoodsQuery,useAddFoodMutation } = foodsApi
 export default foodsApi
