@@ -1,8 +1,8 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-
-import type { DatePickerProps } from 'antd';
+import dayjs from 'dayjs';
+import type { DatePickerProps, TimePickerProps } from 'antd';
 import { useRevenueAllAPIMutation } from '../../rtk/statistics/statistics';
-import { Space, DatePicker, DatePickerProps, Select, Button } from 'antd';
+import { Space, DatePicker, DatePickerProps, Select, Button, message } from 'antd';
 import { useEffect, useState } from 'react';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -20,25 +20,29 @@ const ThongKe = () => {
     const [total_money, setData_money] = useState<any>("0")
     const [total_money_food, setData_food] = useState<any>("0")
     const [total_money_ticket, setData_ticket] = useState<any>("0")
-    const [type, setType] = useState<any>('year');
-    const [valueDate, setvalueDate] = useState<any>((new Date)?.getFullYear())
-    console.log();
-
+    const [typeSearch, setType] = useState<any>('year');
+    const [valueDate, setValueDate] = useState<any>(dayjs().year())
     const [dataChart, setDataChart] = useState<any>()
+    const [tbTime, setTbTime] = useState<any>(dayjs().year())
     const [traCuu, setTraCuu] = useState<any>()
     const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-        setvalueDate(dateString)
-        if (date) {
-            const dateData = {
-                timeline: type,
-                year: date?.year(),
-                month: Number(date?.month() + 1),
-            }
-            setTraCuu(dateData)
-        }
+        setValueDate(dateString)
+        setTraCuu({
+            timeline: typeSearch,
+            year: date?.year(),
+            month: Number(date?.month()) + 1,
+        })
     };
     const handleSelect = () => {
+        if (valueDate === null) {
+            message.error("Vui lòng nhập lại thời gian khi thay đổi trạng thái");
+            return;
+        }
         if (traCuu) {
+            setTbTime({
+                chuKi: typeSearch,
+                time: valueDate
+            })
             getRevenueAll(traCuu).then((fetchdata: any) => {
                 if (fetchdata?.data?.error) {
                     setData({
@@ -47,14 +51,15 @@ const ThongKe = () => {
                         total_money_ticket: 0,
                         total_money_food: 0
                     })
-                    if (type === "month") {
+                    if (typeSearch === "month") {
                         setDataChart(fetchdata?.data?.dailyRevenue)
                     } else {
                         setDataChart(fetchdata?.data?.monthlyRevenue)
                     }
                 } else {
                     setData(fetchdata?.data)
-                    if (type === "month") {
+                    if (typeSearch === "month") {
+
                         setDataChart(fetchdata?.data?.dailyRevenue)
                     } else {
                         setDataChart(fetchdata?.data?.monthlyRevenue)
@@ -76,10 +81,14 @@ const ThongKe = () => {
         } else
             if (!data) {
                 const dateData = {
-                    timeline: "momth",
+                    timeline: "year",
                     year: currentTime?.getFullYear(),
                     month: currentTime?.getMonth() + 1,
                 }
+                setTbTime({
+                    chuKi: typeSearch,
+                    time: valueDate
+                })
                 getRevenueAll(dateData).then((fetchdata: any) => {
                     if (fetchdata?.data?.error) {
                         setData({
@@ -88,14 +97,14 @@ const ThongKe = () => {
                             total_money_ticket: 0,
                             total_money_food: 0
                         })
-                        if (type === "month") {
+                        if (typeSearch === "month") {
                             setDataChart(fetchdata?.data?.dailyRevenue)
                         } else {
                             setDataChart(fetchdata?.data?.monthlyRevenue)
                         }
                     } else {
                         setData(fetchdata?.data)
-                        if (type === "month") {
+                        if (typeSearch === "month") {
                             setDataChart(fetchdata?.data?.dailyRevenue)
                         } else {
                             setDataChart(fetchdata?.data?.monthlyRevenue)
@@ -108,11 +117,15 @@ const ThongKe = () => {
         if (active) {
             return (
                 <div className="box-border rounded border-2 bg-slate-300 px-[10px]">
-                    <h4>{`${type === "month" ? `Ngày ${label}` : `Tháng ${label}`}`}</h4>
+                    <h4>{`${typeSearch === "month" ? `Ngày ${label}` : `Tháng ${label}`}`}</h4>
                     <h4>{`${(Number(payload[0]?.value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}(VNĐ)`}</h4>
                 </div>
             )
         }
+    }
+    const setTypeChange = (type: string) => {
+        setType(type)
+        setValueDate(null)
     }
     return (
         <>
@@ -120,11 +133,11 @@ const ThongKe = () => {
                 <div>
                     <Space direction="vertical" size={12}>
                         <div className="flex gap-[40px]">
-                            <Select value={type} onChange={setType}>
+                            <Select value={typeSearch} onChange={(e) => setTypeChange(e)}>
                                 <Option value="month">Month</Option>
                                 <Option value="year">Year</Option>
                             </Select>
-                            <DatePicker picker={type} onChange={onChange} format={`${type === 'month' ? "MM / YYYY" : "YYYY"}`} className='w-[100px]' />
+                            <DatePicker picker={typeSearch} onChange={onChange} defaultValue={dayjs(`${valueDate}`, `${typeSearch === 'month' ? "MM / YYYY" : "YYYY"}`)} format={`${typeSearch === 'month' ? "MM / YYYY" : "YYYY"}`} className='w-[100px]' />
                             <Button onClick={() => handleSelect()}>Tra cứu</Button>
                         </div>
                     </Space>
@@ -143,8 +156,8 @@ const ThongKe = () => {
                             <div>{total_money_food}</div>
                         </div>
                         <div>
-                            <div>Chu kì : {type === "month" ? "Theo tháng" : "Theo năm"}</div>
-                            <div className="py-2">Thời gian : {valueDate}</div>
+                            <div>Chu kì : {tbTime.chuKi === "month" ? "Theo tháng" : "Theo năm"}</div>
+                            <div className="py-2">Thời gian : {tbTime?.time}</div>
                             <div>Số hoá đơn : {data?.quantity_bill}</div>
                         </div>
                     </div>
@@ -162,11 +175,11 @@ const ThongKe = () => {
                         }}
                     >
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey={`${type === "month" ? "date" : "month"}`} tickFormatter={(value) => `${type === "month" ? `Ngày ${value}` : `Tháng ${value}`}`} />
+                        <XAxis dataKey={`${tbTime.chuKi === "month" ? "date" : "month"}`} tickFormatter={(value) => `${tbTime.chuKi === "month" ? `Ngày ${value}` : `Tháng ${value}`}`} />
                         <YAxis axisLine={false} domain={[0, Number(data?.total_money_ticket)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
                         <Tooltip content={<ContentRechart />} />
                         <Legend />
-                        <Line type="monotone" dataKey="total_money" stroke="#82ca9d" />
+                        <Line type="monotone" dataKey="total_money" stroke="#82ca9d" format="ngu" />
                     </LineChart>
                 </div>
             </div>
