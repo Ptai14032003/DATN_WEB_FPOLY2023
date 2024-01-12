@@ -55,7 +55,7 @@ export default function Detail() {
                                     <button key={item.date} className={`btn-date ${dataDate === item?.date ? "btn-date-action text-red-400" : ""}`} onClick={() => onClick(item?.date)}>
                                         <div className="w-[90px] h-full flex flex-col items-center justify-center text-xs transition-colors">
                                             <span>{item.weekday}</span>
-<!--                                            <span className="text-xl font-bold">{item?.show_date}</span> -->
+                                            {/* <span className="text-xl font-bold">{item?.show_date}</span> */}
 
                                             <span className="text-xl font-bold">{item?.date}</span>
                                         </div>
