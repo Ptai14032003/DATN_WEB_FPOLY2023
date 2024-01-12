@@ -57,6 +57,7 @@ const ResetPassword = () => {
                     <div className="input-box">
                         <label htmlFor="">Xác nhận lại mật khẩu</label>
                         <input type="password" placeholder="Xác nhận lại mật khẩu" {...register('password_confirmation')} name="password_confirmation" autoComplete='on'/>
+
                     </div>
                     <p className='text-red-500 text-sm mt-2 mb-5'>{errors.password_confirmation && errors.password_confirmation?.message}</p>
                     <button type="submit" className="btn">Lấy lại mật khẩu</button>

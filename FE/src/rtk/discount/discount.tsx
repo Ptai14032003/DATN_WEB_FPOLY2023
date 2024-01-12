@@ -41,6 +41,14 @@ const discountApi = createApi({
             }),
             invalidatesTags: ["promotions"]
         }),
+        deleteMultiplePromotion: builder.mutation<void, any>({
+            query: (body) => ({
+                url: "/deleteMultiplePromotion",
+                method: "POST",
+                body
+            }),
+            invalidatesTags: ["promotions"]
+        }),
         deleteDiscount: builder.mutation<void, string>({
             query: (id) => ({
                 url: `/promotions/${id}`,
@@ -50,5 +58,5 @@ const discountApi = createApi({
         }),
     })
 })
-export const { useFetchDiscountsQuery, useFetchDiscountIDQuery, useAddDiscountMutation, useDeleteDiscountMutation, useUpdateDiscountMutation } = discountApi
+export const { useFetchDiscountsQuery, useFetchDiscountIDQuery, useAddDiscountMutation, useDeleteDiscountMutation, useUpdateDiscountMutation, useDeleteMultiplePromotionMutation } = discountApi
 export default discountApi

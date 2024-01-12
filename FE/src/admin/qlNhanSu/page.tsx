@@ -177,10 +177,10 @@ const AdminQlNhanSu: React.FC = () => {
                     <Column title="Email" dataIndex="email" key="email" />
                     <Column title="Số điện thoại" dataIndex="phone_number" key="phone_number" />
                     <Column title="Địa chỉ" dataIndex="address" key="address" />
-                    <Column title="Ngày sinh" dataIndex="birthday" key="birthday" />
+                    <Column title="Ngày sinh" dataIndex="birthday" key="birthday" render={(text) => moment(text).format("DD-MM-YYYY")} />
                     <Column title="Giới tính" dataIndex="gender" key="gender" />
                     <Column title="Chức vụ" dataIndex="role" key="role" />
-                        <Column title="Ngày bắt đầu" dataIndex="date_start" key="date_start" render={(text) => moment(text).format("DD-MM-YYYY")} />
+                    <Column title="Ngày bắt đầu" dataIndex="date_start" key="date_start" render={(text) => moment(text).format("DD-MM-YYYY")} />
                     <Column
                         title="Action"
                         key="action"

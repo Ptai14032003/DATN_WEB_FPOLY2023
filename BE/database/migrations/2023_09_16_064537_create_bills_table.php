@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('personnel_code')->nullable();
             $table->integer('total_ticket');
             $table->integer('total_combo')->nullable();
-            // $table->string('discount_code')->nullable();
+            $table->string('discount_code')->nullable();
             $table->integer('additional_fee')->nullable();
             $table->integer('total_money');
             $table->dateTime('payment_time');

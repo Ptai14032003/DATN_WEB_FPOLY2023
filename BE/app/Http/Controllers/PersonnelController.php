@@ -148,7 +148,7 @@ class PersonnelController extends Controller
                 'birthday' => 'required',
                 'gender' => 'required',
                 'role' => 'required',
-                'date_start' => 'required|date|after_or_equal:today',
+                'date_start' => 'required|date',
             ],
             [
                 'name.required' => "Tên không được để trống",
@@ -164,8 +164,7 @@ class PersonnelController extends Controller
                 'birthday.required' => "Ngày sinh không được để trống",
                 'gender.required' => "Giới tính chưa được chọn",
                 'role.required' => "Chức vụ chưa được chọn",
-                'date_start.required' => "Ngày bắt đầu làm không được bỏ trống",
-                'date_start.after_or_equal' => "Ngày bắt đầu làm phải bằng hoặc sau ngày hôm nay"
+                'date_start.required' => "Ngày bắt đầu làm không được bỏ trống"
             ]
         );
         if ($validator->fails()) {
