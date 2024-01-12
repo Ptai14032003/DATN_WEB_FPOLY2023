@@ -28,7 +28,7 @@ dependencies:
     version: 3.3.0(react@18.2.0)
   antd:
     specifier: ^5.9.0
-    version: 5.9.0(react-dom@18.2.0)(react@18.2.0)
+    version: 5.9.0(moment@2.30.1)(react-dom@18.2.0)(react@18.2.0)
   autoprefixer:
     specifier: ^10.4.15
     version: 10.4.15(postcss@8.4.29)
@@ -53,6 +53,9 @@ dependencies:
   json-server-auth:
     specifier: ^2.1.0
     version: 2.1.0(json-server@0.17.4)
+  moment:
+    specifier: ^2.30.1
+    version: 2.30.1
   postcss:
     specifier: ^8.4.29
     version: 8.4.29
@@ -1176,7 +1179,7 @@ packages:
     dependencies:
       color-convert: 2.0.1
 
-  /antd@5.9.0(react-dom@18.2.0)(react@18.2.0):
+  /antd@5.9.0(moment@2.30.1)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-YgLGtz+GbzrQws+R7siXolUN89ERH2Kbcu8Bz98VY4fwwMSDKKhbCGkIjw9mnIhcrXpHT+FXwrqjAV3j9eakSA==}
     peerDependencies:
       react: '>=16.9.0'
@@ -1212,7 +1215,7 @@ packages:
       rc-motion: 2.9.0(react-dom@18.2.0)(react@18.2.0)
       rc-notification: 5.1.1(react-dom@18.2.0)(react@18.2.0)
       rc-pagination: 3.6.1(react-dom@18.2.0)(react@18.2.0)
-      rc-picker: 3.13.2(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
+      rc-picker: 3.13.2(dayjs@1.11.10)(moment@2.30.1)(react-dom@18.2.0)(react@18.2.0)
       rc-progress: 3.5.1(react-dom@18.2.0)(react@18.2.0)
       rc-rate: 2.12.0(react-dom@18.2.0)(react@18.2.0)
       rc-resize-observer: 1.4.0(react-dom@18.2.0)(react@18.2.0)
@@ -2897,6 +2900,10 @@ packages:
       brace-expansion: 1.1.11
     dev: true
 
+  /moment@2.30.1:
+    resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
+    dev: false
+
   /morgan@1.10.0:
     resolution: {integrity: sha512-AbegBVI4sh6El+1gNwvD5YIck7nSA36weD7xvIxG4in80j/UoK8AEGaWnnz8v1GxonMCltmlNs5ZKbGvl9b1XQ==}
     engines: {node: '>= 0.8.0'}
@@ -3490,7 +3497,7 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /rc-picker@3.13.2(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0):
+  /rc-picker@3.13.2(dayjs@1.11.10)(moment@2.30.1)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-jvmmwo9d2/rUJXx8dydmcReAGF7f2wzbR7GDUgZXymbw0cqxNqXen5GGQIsX0x92JJROKyKb+J/E7bn967Ok9A==}
     engines: {node: '>=8.x'}
     peerDependencies:
@@ -3514,6 +3521,7 @@ packages:
       '@rc-component/trigger': 1.17.2(react-dom@18.2.0)(react@18.2.0)
       classnames: 2.3.2
       dayjs: 1.11.10
+      moment: 2.30.1
       rc-util: 5.38.0(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -4556,4 +4564,8 @@ packages:
       tiny-case: 1.0.3
       toposort: 2.0.2
       type-fest: 2.19.0
+    dev: false
+
+  /zod@3.22.4:
+    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false

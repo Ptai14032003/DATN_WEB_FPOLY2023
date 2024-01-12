@@ -91,9 +91,9 @@ const HomePage = () => {
           </div>
         </div>
         <div className="btn-movie space-x-5 mb-16">
-          <button className={activeTab === 1 ? ' bg-[#1ACAAC] rounded-md w-[200px] py-2 text-lg' : 'bg-[#282727] rounded-md w-[200px] py-2 text-lg'} onClick={() => handleClick(1)}>All Movies</button>
-          <button className={activeTab === 2 ? ' bg-[#1ACAAC] rounded-md w-[200px] py-2 text-lg' : 'bg-[#282727] rounded-md w-[200px] py-2 text-lg'} onClick={() => handleClick(2)}>Showing</button>
-          <button className={activeTab === 3 ? ' bg-[#1ACAAC] rounded-md w-[200px] py-2 text-lg' : 'bg-[#282727] rounded-md w-[200px] py-2 text-lg'} onClick={() => handleClick(3)}>Coming soon</button>
+          <button className={activeTab === 1 ? ' bg-[#1ACAAC] rounded-md w-[200px] py-2 text-lg' : 'bg-[#282727] rounded-md w-[200px] py-2 text-lg'} onClick={() => handleClick(1)}>Tất cả phim</button>
+          <button className={activeTab === 2 ? ' bg-[#1ACAAC] rounded-md w-[200px] py-2 text-lg' : 'bg-[#282727] rounded-md w-[200px] py-2 text-lg'} onClick={() => handleClick(2)}>Đang chiếu</button>
+          <button className={activeTab === 3 ? ' bg-[#1ACAAC] rounded-md w-[200px] py-2 text-lg' : 'bg-[#282727] rounded-md w-[200px] py-2 text-lg'} onClick={() => handleClick(3)}>Sắp chiếu</button>
         </div>
       </div>
       {/*  */}
