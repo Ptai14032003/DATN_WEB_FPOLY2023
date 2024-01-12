@@ -6,6 +6,7 @@ import { redirect, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
+import Menu from '../components/layouts/layoutGuest/menu';
 
 
 interface Form {
@@ -44,6 +45,8 @@ const Signin = () => {
   // if (error) {
   // }
   return (
+    <div className='Signin'>
+      <Menu/>
     <div className='User-box'>
       <div className="FormSignin">
         <form action="" onSubmit={handleSubmit(onFinish)}>
@@ -64,6 +67,7 @@ const Signin = () => {
           </div>
         </form>
       </div>
+    </div>
     </div>
   )
 }

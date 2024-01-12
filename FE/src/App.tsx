@@ -24,8 +24,8 @@ import CheckPay from './personPage/checkPay.tsx'
 import Payment from './personPage/Payment.tsx'
 import NotFound from './personPage/404.tsx'
 import TicketHistory from './personPage/TicketHistory.tsx'
+import ForgotPassword from './personPage/forgotPassword.tsx'
 import ResetPassword from './personPage/ResetPassword.tsx'
-import ForgotPassword from './personPage/ForgotPassword.tsx'
 import AdminQlBill from './admin/bill/page.tsx'
 function App() {
   const checkLocal = localStorage.getItem("user");
@@ -53,8 +53,9 @@ function App() {
       <Route path="ticket-price" element={<TicketPrice />} />
       <Route path="ticket-history" element={<TicketHistory />} />
       <Route path="profile" element={<Profile />} />
-      <Route path="forgot-password" element={<ForgotPassword />} />
-      <Route path="reset_password?" element={<ResetPassword />} />
+      <Route path="forgot-password" element={<ForgotPassword />}/>
+      <Route path="reset_password?" element={<ResetPassword />}/>
+
       <Route path="signin" element={<Signin />} />
       <Route path="signup" element={<Signup />} />
       <Route path='movie_show_time/:id' element={<Detail />}></Route>
