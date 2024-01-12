@@ -50,11 +50,13 @@ const ResetPassword = () => {
                         <input type="hidden" value={token} {...register('token')} name="token"/>
                     </div>
                     <div className="input-box">
-                        <input type="password" placeholder="Mật khẩu" {...register('password')} name="password"/>
+                        <label htmlFor="">Đặt lại mật khẩu</label>
+                        <input type="password" placeholder="Mật khẩu" {...register('password')} name="password" autoComplete='on'/>
                     </div>
                     <p className='text-red-500 text-sm mt-2'>{errors.password && errors.password?.message}</p>
                     <div className="input-box">
-                        <input type="password" placeholder="Xác nhận lại mật khẩu" {...register('password_confirmation')} name="password_confirmation"/>
+                        <label htmlFor="">Xác nhận lại mật khẩu</label>
+                        <input type="password" placeholder="Xác nhận lại mật khẩu" {...register('password_confirmation')} name="password_confirmation" autoComplete='on'/>
                     </div>
                     <p className='text-red-500 text-sm mt-2 mb-5'>{errors.password_confirmation && errors.password_confirmation?.message}</p>
                     <button type="submit" className="btn">Lấy lại mật khẩu</button>
