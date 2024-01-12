@@ -23,6 +23,8 @@ const ThongKe = () => {
     const [total_money_ticket, setData_ticket] = useState<any>("0")
     const [type, setType] = useState<any>('year');
     const [valueDate, setvalueDate] = useState<any>((new Date)?.getFullYear())
+    console.log();
+
     const [dataChart, setDataChart] = useState<any>()
     const [traCuu, setTraCuu] = useState<any>()
     const onChange: DatePickerProps['onChange'] = (date, dateString) => {
@@ -148,20 +150,21 @@ const ThongKe = () => {
                         </div>
                     </div>
                 </div>
-                <div className="ml-[35px] mt-[50px]">
+                <div className="ml-[30px] mt-[50px]">
                     <LineChart
                         width={780}
                         height={350}
                         data={dataChart}
                         margin={{
                             top: 10,
+                            left: 20,
                             right: 30,
                             bottom: 5,
                         }}
                     >
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey={`${type === "month" ? "date" : "month"}`} tickFormatter={(value) => `${type === "month" ? `Ngày ${value}` : `Tháng ${value}`}`} />
-                        <YAxis axisLine={false} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} />
+                        <YAxis axisLine={false} domain={[0, Number(data?.total_money_ticket)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
                         <Tooltip content={<ContentRechart />} />
                         <Legend />
                         <Line type="monotone" dataKey="total_money" stroke="#82ca9d" />
