@@ -10,6 +10,7 @@ import { MdChair } from 'react-icons/md';
 const CreateQlPhongChieu: React.FC = () => {
     const [addPhongChieu] = useAddPhongChieuMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [checkApi, setCheckApi] = useState(true)
     const formRef = React.useRef<FormInstance>(null);
     const [dataSeat, setDataSeat] = useState<any>([]);
     const [tongGhe, setTongGhe] = useState<any>();
@@ -37,6 +38,7 @@ const CreateQlPhongChieu: React.FC = () => {
         console.log('Failed:', errorInfo);
     };
     const showModal = () => {
+        setCheckApi(true)
         setIsModalOpen(true);
     };
     const handleCancel = () => {
@@ -165,9 +167,9 @@ const CreateQlPhongChieu: React.FC = () => {
     }, [dataSeat],)
     const addPhong = () => {
         const newData = [...dataSeat, dataRoom]
-        setTimeout(() => {
-            addPhongChieu(newData).then(() => { setIsModalOpen(false); message.success("Tạo mới thành công"); formRef.current?.resetFields() })
-        }, 3000)
+        if (checkApi) {
+            addPhongChieu(newData).then(() => { setIsModalOpen(false); message.success("Tạo mới thành công"); formRef.current?.resetFields(); setCheckApi(false) })
+        }
     }
     return (
         <>
@@ -249,10 +251,6 @@ const CreateQlPhongChieu: React.FC = () => {
                                 <div className={`seat flex border-2 rounded-lg w-[120px] mt-4 ${buttonClick === 3 ? "bg-green-500" : ""}`} onClick={() => setButtonClick(3)}>
                                     <div><MdChair className="text-[#8f355a]" size={40} /></div>
                                     <p className='ml-2 py-2'>Sweet-box</p>
-                                </div>
-                                <div className={`seat flex border-2 rounded-lg w-[120px] mt-4 ${buttonClick === 4 ? "bg-green-500" : ""}`} onClick={() => setButtonClick(4)}>
-                                    <div><MdChair className="text-black" size={40} /></div>
-                                    <p className='ml-2 py-2'>Huỷ ghế</p>
                                 </div>
                             </div>
                         </div>

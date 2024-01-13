@@ -4,8 +4,6 @@ import type { DatePickerProps, TimePickerProps } from 'antd';
 import { useTop5FoodsMutation, useTop5MoviesMutation } from '../../rtk/statistics/statistics';
 import { Space, DatePicker, DatePickerProps, Select, Button, message } from 'antd';
 import { useEffect, useState } from 'react';
-import TableTop5 from './table';
-import { Waveform } from '@uiball/loaders';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 const HomeAdmin = () => {
@@ -19,6 +17,7 @@ const HomeAdmin = () => {
     const [dataChartFoods, setDataChartFoods] = useState<any>()
     const [dataChartMovies, setDataChartMovies] = useState<any>()
     const [traCuu, setTraCuu] = useState<any>()
+    const [convert, setConvert] = useState<any>(0)
     const onChange1: DatePickerProps['onChange'] = (date, dateString) => {
         setValueDateFood(dateString)
         setTraCuu({
@@ -173,8 +172,8 @@ const HomeAdmin = () => {
     }
     return (
         <>
-            <div className='mb-[20px] text-2xl mt-[-55px]' >Xu hướng</div>
-            <div className="">
+            <div className='mb-[20px] text-2xl mt-[-55px] flex gap-5' ><div className='cursor-pointer' onClick={() => setConvert(0)}>Xu hướng</div> | <div className='cursor-pointer' onClick={() => setConvert(1)}>Bảng xếp hạng</div></div>
+            <div className={`${convert === 0 ? "" : "hidden"}`}>
                 <div className="mt-[20px] flex justify-around ">
                     <div>
                         <div className="mb-[25px] text-2xl">Top 5 Sản phẩm  </div>
@@ -281,6 +280,54 @@ const HomeAdmin = () => {
                                             <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">{index + 1}</td>
                                             <td className="whitespace-nowrap px-4 py-2 text-gray-900">{value?.movie_name}</td>
                                             <td className="whitespace-nowrap px-4 py-2 text-gray-700">{value?.total_tickets_sold}</td>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">{(Number(value?.total_revenue))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            ) : (
+                                <div className='flex items-center justify-center h-40 text-xl text-gray-500'>
+                                    Thông tin trống
+                                </div>
+                            )}
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div className={`${convert === 1 ? "" : "hidden"} mt-[10px]`}>
+                <div className="mb-[25px] text-2xl ">Top 5 người dùng </div>
+                <div className='mx-[25%]'>
+                    <BarChart width={600} height={300} data={dataChartFoods}
+                        margin={{
+                            top: 5,
+                            right: 30,
+                            left: 20,
+                            bottom: 5,
+                        }}>
+                        <XAxis dataKey="food_name" tickFormatter={(value) => ``} padding={{ left: 20 }} />
+                        <YAxis domain={[0, Number(dataFoods?.total_money_ticket)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
+                        <Tooltip content={<ContentRechart label={`food_name`} />} />
+                        <Legend content={<Content data="Foods" />} />
+                        <Bar dataKey="total_revenue" fill="#8884d8" />
+                    </BarChart>
+                </div>
+                <div>
+                    <div className="overflow-x-auto rounded-lg border border-gray-200">
+                        <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm text-center">
+                            <thead className="ltr:text-left rtl:text-right bg-gray-100">
+                                <tr>
+                                    <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">STT</th>
+                                    <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Sản phẩm</th>
+                                    <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Tổng lượng sản phẩm bán</th>
+                                    <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Tổng doanh thu</th>
+                                </tr>
+                            </thead>
+                            {dataFoods && dataFoods.length > 0 ? (
+                                <tbody className="divide-y divide-gray-200">
+                                    {dataFoods.map((value: any, index: number) => (
+                                        <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                                            <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">{index + 1}</td>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-900">{value?.food_name}</td>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">{value?.total_quantity_sold}</td>
                                             <td className="whitespace-nowrap px-4 py-2 text-gray-700">{(Number(value?.total_revenue))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                                         </tr>
                                     ))}

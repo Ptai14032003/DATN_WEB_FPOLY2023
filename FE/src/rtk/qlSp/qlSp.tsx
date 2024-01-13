@@ -1,4 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
+const formData = new FormData();
+
 const foodsApi = createApi({
     reducerPath: "food",
     baseQuery: fetchBaseQuery({
@@ -19,7 +21,7 @@ const foodsApi = createApi({
             providesTags: ["food"]
         }),
         addFood: builder.mutation<any, any>({
-            query: (body ) => ({
+            query: (body) => ({
                 url: `/food`,
                 method: "POST",
                 body
@@ -27,7 +29,7 @@ const foodsApi = createApi({
             invalidatesTags: ["food"]
         }),
         deleteMultipleFood: builder.mutation<void, any>({
-            query: (body ) => ({
+            query: (body) => ({
                 url: `/deleteMultipleFood`,
                 method: "POST",
                 body
@@ -51,5 +53,5 @@ const foodsApi = createApi({
         }),
     })
 })
-export const { useFetchFoodsQuery, useFetchFoodIDQuery, useUpdateFoodMutation, useDeleteMultipleFoodMutation, useDeleteFoodIDMutation, useFetchTypeFoodsQuery,useAddFoodMutation } = foodsApi
+export const { useFetchFoodsQuery, useFetchFoodIDQuery, useUpdateFoodMutation, useDeleteMultipleFoodMutation, useDeleteFoodIDMutation, useFetchTypeFoodsQuery, useAddFoodMutation } = foodsApi
 export default foodsApi

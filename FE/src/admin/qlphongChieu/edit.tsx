@@ -252,7 +252,7 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
             },
             seats: dataSeat
         }
-        
+
         updatePhongChieu({ body: newData, id: projects }).then(() => {
             setIsModalOpen(false); message.success("Sửa thành công"); formRef.current?.resetFields(); setDataSeat([])
             setSeat([])
@@ -344,10 +344,6 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
                                 <div className={`seat flex border-2 rounded-lg w-[120px] mt-4 ${buttonClick === 3 ? "bg-green-500" : ""}`} onClick={() => setButtonClick(3)}>
                                     <div><MdChair className="text-[#8f355a]" size={40} /></div>
                                     <p className='ml-2 py-2'>Sweet-box</p>
-                                </div>
-                                <div className={`seat flex border-2 rounded-lg w-[120px] mt-4 ${buttonClick === 4 ? "bg-green-500" : ""}`} onClick={() => setButtonClick(4)}>
-                                    <div><MdChair className="text-black" size={40} /></div>
-                                    <p className='ml-2 py-2'>Huỷ ghế</p>
                                 </div>
                             </div>
                         </div>
