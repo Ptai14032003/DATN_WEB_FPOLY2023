@@ -85,7 +85,7 @@ class PersonnelController extends Controller
             $data['date_start'] = Carbon::parse($data['date_start'])->format('Y-m-d');
             $data['personnel_code'] = Helper::IDGenerator(new Personnel, 'personnel_code', 6, 'NV');
             $personnel = Personnel::create($data);
-            return response()->json(['message'=>"Thêm nhân sự thành công"],200);
+            return response()->json(['message' => "Thêm nhân sự thành công"], 200);
         }
     }
 
@@ -181,7 +181,7 @@ class PersonnelController extends Controller
             $data['birthday'] = Carbon::parse($data['birthday'])->format('Y-m-d');
             $data['date_start'] = Carbon::parse($data['date_start'])->format('Y-m-d');
             $personnel->update($data);
-            return response()->json(['message'=>"Cập nhật thông tin nhân sự thành công"]);
+            return response()->json(['message' => "Cập nhật thông tin nhân sự thành công"]);
         }
     }
 

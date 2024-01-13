@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bill;
+use App\Models\Ticket;
+use App\Models\Ticket_Food;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -122,6 +124,8 @@ class BillController extends Controller
     public function destroy($id)
     {
         $bill = Bill::find($id);
+        $ticket = Ticket::where('bill_id',$id)->delete();
+        $ticket_food = Ticket_Food::where('bill_id',$id)->delete();
         $bill->delete();
         return response()->json([
             "message" => "xóa thành công"
