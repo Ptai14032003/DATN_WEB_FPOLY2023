@@ -16,9 +16,6 @@ interface Guest {
     email: string;
     phone_number: string;
     password: string;
-    address: string;
-    birthday: string;
-    gender: string;
 }
 const AdminQlGuest: React.FC = () => {
 
@@ -71,9 +68,6 @@ const AdminQlGuest: React.FC = () => {
                 email: item.email,
                 phone_number: item.phone_number,
                 password: item.password,
-                address: item.address,
-                birthday: item.birthday,
-                gender: item.gender,
             }))
             setDataTable(mapMovies)
         }
@@ -94,9 +88,6 @@ const AdminQlGuest: React.FC = () => {
                     email: item.email,
                     phone_number: item.phone_number,
                     password: item.password,
-                    address: item.address,
-                    birthday: item.birthday,
-                    gender: item.gender,
                 }))
                 setDataTable(mapGuest)
             }
@@ -111,9 +102,6 @@ const AdminQlGuest: React.FC = () => {
                     email: item.email,
                     phone_number: item.phone_number,
                     password: item.password,
-                    address: item.address,
-                    birthday: item.birthday,
-                    gender: item.gender,
                 }))
                 setDataTable(mapMovies)
             }
@@ -162,9 +150,6 @@ const AdminQlGuest: React.FC = () => {
                     <Column title="Tên khách hàng" dataIndex="name" key="name" />
                     <Column title="Email" dataIndex="email" key="email" />
                     <Column title="Số điện thoại" dataIndex="phone_number" key="phone_number" />
-                    <Column title="Địa chỉ" dataIndex="address" key="address" />
-                    <Column title="Ngày sinh" dataIndex="birthday" key="birthday" />
-                    <Column title="Giới tính" dataIndex="gender" key="gender" />
                     <Column
                         title="Action"
                         key="action"

@@ -24,7 +24,8 @@ class RoomApiController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        $validate=$data[0];
+        $total = count($data);
+        $validate=$data[$total-1];
         $validator = Validator::make(
             $validate,
             [

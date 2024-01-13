@@ -252,6 +252,7 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
             },
             seats: dataSeat
         }
+        
         updatePhongChieu({ body: newData, id: projects }).then(() => {
             setIsModalOpen(false); message.success("Sửa thành công"); formRef.current?.resetFields(); setDataSeat([])
             setSeat([])

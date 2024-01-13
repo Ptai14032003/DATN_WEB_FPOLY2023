@@ -1,21 +1,14 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, BarChart, Bar } from 'recharts';
 import dayjs from 'dayjs';
 import type { DatePickerProps, TimePickerProps } from 'antd';
-import { useRevenueAllAPIMutation } from '../../rtk/statistics/statistics';
+import { useTop5FoodsMutation, useTop5MoviesMutation } from '../../rtk/statistics/statistics';
 import { Space, DatePicker, DatePickerProps, Select, Button, message } from 'antd';
 import { useEffect, useState } from 'react';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
-interface TotalRevenue {
-    quantity_bill: number,
-    total_money: number,
-    total_money_ticket: number,
-    percent_ticket: number,
-    total_money_food: number,
-    percent_food: number,
-}
-const ThongKe = () => {
-    const [getRevenueAll] = useRevenueAllAPIMutation()
+const HomeAdmin = () => {
+    const [Top5Foods] = useTop5FoodsMutation()
+    const [Top5Movies] = useTop5MoviesMutation()
     const [data, setData] = useState<any>()
     const [total_money, setData_money] = useState<any>("0")
     const [total_money_food, setData_food] = useState<any>("0")
@@ -43,7 +36,7 @@ const ThongKe = () => {
                 chuKi: typeSearch,
                 time: valueDate
             })
-            getRevenueAll(traCuu).then((fetchdata: any) => {
+            Top5Foods(traCuu).then((fetchdata: any) => {
                 if (fetchdata?.data?.error) {
                     setData({
                         quantity_bill: 0,
@@ -52,17 +45,17 @@ const ThongKe = () => {
                         total_money_food: 0
                     })
                     if (typeSearch === "month") {
-                        setDataChart(fetchdata?.data?.dailyRevenue)
+                        setDataChart(fetchdata?.data)
                     } else {
-                        setDataChart(fetchdata?.data?.monthlyRevenue)
+                        setDataChart(fetchdata?.data)
                     }
                 } else {
                     setData(fetchdata?.data)
                     if (typeSearch === "month") {
 
-                        setDataChart(fetchdata?.data?.dailyRevenue)
+                        setDataChart(fetchdata?.data)
                     } else {
-                        setDataChart(fetchdata?.data?.monthlyRevenue)
+                        setDataChart(fetchdata?.data)
                     }
                 }
 
@@ -89,7 +82,9 @@ const ThongKe = () => {
                     chuKi: typeSearch,
                     time: valueDate
                 })
-                getRevenueAll(dateData).then((fetchdata: any) => {
+                Top5Foods(dateData).then((fetchdata: any) => {
+                    console.log(fetchdata);
+
                     if (fetchdata?.data?.error) {
                         setData({
                             quantity_bill: 0,
@@ -98,16 +93,16 @@ const ThongKe = () => {
                             total_money_food: 0
                         })
                         if (typeSearch === "month") {
-                            setDataChart(fetchdata?.data?.dailyRevenue)
+                            setDataChart(fetchdata?.data)
                         } else {
-                            setDataChart(fetchdata?.data?.monthlyRevenue)
+                            setDataChart(fetchdata?.data)
                         }
                     } else {
                         setData(fetchdata?.data)
                         if (typeSearch === "month") {
-                            setDataChart(fetchdata?.data?.dailyRevenue)
+                            setDataChart(fetchdata?.data)
                         } else {
-                            setDataChart(fetchdata?.data?.monthlyRevenue)
+                            setDataChart(fetchdata?.data)
                         }
                     }
                 })
@@ -123,22 +118,9 @@ const ThongKe = () => {
             )
         }
     }
-    const DataName = () => {
+    const Content = () => {
         return (
-            <div className="text-center mx-[42%] flex gap-4 w-[200px]">
-                <div className="pt-1">
-                    <svg width="14" height="14" viewBox="0 0 32 32" >
-                        <path stroke-width="4" fill="none" stroke="#82ca9d" d="M0,16h10.666666666666666
-            A5.333333333333333,5.333333333333333,0,1,1,21.333333333333332,16
-            H32M21.333333333333332,16
-            A5.333333333333333,5.333333333333333,0,1,1,10.666666666666666,16">
-                        </path>
-                    </svg>
-                </div>
-                <div>
-                    Thông tin doanh thu
-                </div>
-            </div>
+            <div className="px-[52%]">Food</div>
         )
     }
     const setTypeChange = (type: string) => {
@@ -147,7 +129,7 @@ const ThongKe = () => {
     }
     return (
         <>
-            <div className='mb-[25px] mt-[-30px] text-2xl' >Thống kê doanh thu</div>
+            <div className='mb-[25px] mt-[-30px] text-2xl' >Xu hướng</div>
             <div className="flex gap-10 ml-[4%] mt-[5%]">
                 <div>
                     <Space direction="vertical" size={12}>
@@ -160,29 +142,9 @@ const ThongKe = () => {
                             <Button onClick={() => handleSelect()}>Tra cứu</Button>
                         </div>
                     </Space>
-                    <div className="py-5">
-                        <div className="text-2xl font-bold">Doanh thu</div>
-                        <div className="py-5">
-                            <div>Tổng doanh thu :</div>
-                            <div>{total_money}</div>
-                        </div>
-                        <div className="">
-                            <div>Doanh thu phim :</div>
-                            <div>{total_money_ticket}</div>
-                        </div>
-                        <div className="py-5">
-                            <div>Doanh thu sản phẩm :</div>
-                            <div>{total_money_food}</div>
-                        </div>
-                        <div>
-                            <div>Chu kì : {tbTime.chuKi === "month" ? "Theo tháng" : "Theo năm"}</div>
-                            <div className="py-2">Thời gian : {tbTime?.time}</div>
-                            <div>Số hoá đơn : {data?.quantity_bill}</div>
-                        </div>
-                    </div>
                 </div>
                 <div className="ml-[30px] mt-[50px]">
-                    <LineChart
+                    {/* <LineChart
                         width={780}
                         height={350}
                         data={dataChart}
@@ -195,15 +157,28 @@ const ThongKe = () => {
                     >
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey={`${tbTime.chuKi === "month" ? "date" : "month"}`} tickFormatter={(value) => `${tbTime.chuKi === "month" ? `Ngày ${value}` : `Tháng ${value}`}`} />
-                        <YAxis axisLine={false} domain={[0, Number(data?.total_money_ticket)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
+                        <YAxis  />
                         <Tooltip content={<ContentRechart />} />
-                        <Legend content={<DataName />} />
+                        <Legend />
                         <Line type="monotone" dataKey="total_money" stroke="#82ca9d" format="ngu" />
-                    </LineChart>
+                    </LineChart> */}
+                    <BarChart width={300} height={300} data={dataChart}
+                        margin={{
+                            top: 5,
+                            right: 30,
+                            left: 20,
+                            bottom: 5,
+                        }}>
+                        <XAxis dataKey="name" dataKey={`${tbTime.chuKi === "month" ? "date" : "month"}`} tickFormatter={(value) => `${tbTime.chuKi === "month" ? `Ngày ${value}` : `Tháng ${value}`}`} />
+                        <YAxis domain={[0, Number(data?.total_money_ticket)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
+                        <Tooltip content={<ContentRechart />} />
+                        <Legend content={<Content />} />
+                        <Bar dataKey="total_revenue" fill="#8884d8" />
+                    </BarChart>
                 </div>
             </div>
         </>
     )
 }
 
-export default ThongKe
+export default HomeAdmin

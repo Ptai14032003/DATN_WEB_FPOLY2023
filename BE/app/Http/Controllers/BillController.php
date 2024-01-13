@@ -124,7 +124,7 @@ class BillController extends Controller
         $bill = Bill::find($id);
         $bill->delete();
         return response()->json([
-            "message" => "delete successfully"
+            "message" => "xóa thành công"
         ]);
     }
 
@@ -134,7 +134,7 @@ class BillController extends Controller
     public function history(Request $request)
     {
         $bills = Bill::leftjoin('users', 'users.user_code', '=', 'bills.user_code')
-            ->leftjoin('personnels','personnels.personnel_code','=','bills.personnel_code')
+            ->leftjoin('personnels', 'personnels.personnel_code', '=', 'bills.personnel_code')
             ->join('tickets', 'tickets.bill_id', '=', 'bills.id')
             ->join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
             ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
