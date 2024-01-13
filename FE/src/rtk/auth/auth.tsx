@@ -51,7 +51,9 @@ const authApi = createApi({
                     body: user,
                 })
             }),
-            forgotPassword: builder.mutation<{ message: string, user: {} }, ForgotPassword>({
+            forgotPassword: builder.mutation<{
+                success(message: { message: string; user: {}; }): unknown; message: string, user: {}
+            }, ForgotPassword>({
                 query: (user) => ({
                     url: '/api/forgot_password',
                     method: "POST",

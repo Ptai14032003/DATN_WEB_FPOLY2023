@@ -139,4 +139,7 @@ class UserController extends Controller
             return response()->json(["error" => "Vui lòng thực hiện lại vì link đã quá hạn"]);
         }
     }
+
+    //cập nhật thông tin người dùng
+    public function 
 }

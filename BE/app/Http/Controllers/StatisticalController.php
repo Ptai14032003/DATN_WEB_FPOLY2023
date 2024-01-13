@@ -18,11 +18,21 @@ class StatisticalController extends Controller
     public function revenue_movie(Request $request)
     {
         $data = $request->all();
+        $startTimestamp = strtotime($data['start']);
+        $endTimestamp = strtotime($data['end']);
+
+        // Kiểm tra nếu start > end
+        if ($startTimestamp > $endTimestamp) {
+            return response()->json(['error' => 'Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc.']);
+        }
         $revenue = Movie::join("showtimes", "showtimes.movie_id", "=", "movies.id")
             ->join("tickets", "tickets.showtime_id", "=", "showtimes.id")
             ->join("bills", "bills.id", "=", "tickets.bill_id")
             ->where("movies.movie_name", $data['movie_name'])
-            ->whereRaw("CONVERT_TZ(bills.updated_at, '+00:00', '+07:00') BETWEEN ? AND ?", [$data['start'], $data['end']])
+            ->where(function ($query) use ($data) {
+                $query->whereRaw("CONVERT_TZ(bills.updated_at, '+00:00', '+07:00') BETWEEN ? AND ?", [$data['start'], $data['end']])
+                    ->orWhereDate(DB::raw("CONVERT_TZ(bills.updated_at, '+00:00', '+07:00')"), $data['start']);
+            })
             ->where("bills.status", 1)
             ->select(
                 "movies.movie_name",
@@ -32,8 +42,15 @@ class StatisticalController extends Controller
             )
             ->groupBy("movies.movie_name", "movies.start_date")
             ->get();
-
-        return response()->json($revenue);
+        if (count($revenue)) {
+            return response()->json($revenue);
+        } else {
+            if ($startTimestamp == $endTimestamp) {
+                return response()->json(["message" => "Không có dữ liệu thống kê doanh thu phim " . $data['movie_name'] . " ngày " . $data['start']]);
+            } else {
+                return response()->json(["message" => "Không có dữ liệu thống kê doanh thu phim " . $data['movie_name'] . " từ ngày " . $data['start'] . " đến ngày " . $data['end']]);
+            }
+        }
     }
 
     //thống kê doanh thu phim theo tháng(từng ngày), năm(từng tháng)
@@ -53,7 +70,7 @@ class StatisticalController extends Controller
         $total_revenue = [];
         //lấy ra tổng doanh thu của tháng hoặc năm
         $bills = Bill::where("status", 1)
-            ->when(($data['timeline']=="month"), function ($query) use ($data) {
+            ->when(($data['timeline'] == "month"), function ($query) use ($data) {
                 return $query->whereYear("bills.updated_at", $data['year'])
                     ->whereMonth("bills.updated_at", $data['month']);
             }, function ($query) use ($data) {
@@ -69,7 +86,7 @@ class StatisticalController extends Controller
 
         $tickets = Ticket::join("bills", "bills.id", "=", "tickets.bill_id")
             ->where("bills.status", 1)
-            ->when(($data['timeline']=="month"), function ($query) use ($data) {
+            ->when(($data['timeline'] == "month"), function ($query) use ($data) {
                 return $query->whereYear("bills.updated_at", $data['year'])
                     ->whereMonth("bills.updated_at", $data['month']);
             }, function ($query) use ($data) {
@@ -80,7 +97,7 @@ class StatisticalController extends Controller
 
         $foods = Ticket_Food::join("bills", "bills.id", "=", "ticket_foods.bill_id")
             ->where("bills.status", 1)
-            ->when(($data['timeline']=="month"), function ($query) use ($data) {
+            ->when(($data['timeline'] == "month"), function ($query) use ($data) {
                 return $query->whereYear("bills.updated_at", $data['year'])
                     ->whereMonth("bills.updated_at", $data['month']);
             }, function ($query) use ($data) {
@@ -144,8 +161,15 @@ class StatisticalController extends Controller
 
             $total_revenue['dailyRevenue'] = $dailyRevenue;
         }
-
-        return response()->json($total_revenue);
+        if ($total_revenue['total_money'] == 0) {
+            if ($data['timeline'] == 'year') {
+                return response()->json(["message" => "Không có dữ liệu thống kê tổng doanh thu năm " . $data['year']]);
+            } else {
+                return response()->json(["message" => "Không có dữ liệu thống kê tổng doanh thu tháng " . $data['month'] . " năm " . $data['year']]);
+            }
+        } else {
+            return response()->json($total_revenue);
+        }
     }
 
     //thống kê 5 phim hot nhất (doanh thu cao nhất)
@@ -162,7 +186,8 @@ class StatisticalController extends Controller
 
         if ($timeline == 'month') {
             $month = $data['month'];
-            $movies->whereMonth("bills.updated_at", $month);
+            $movies->whereMonth("bills.updated_at", $month)
+                ->whereYear("bills.updated_at", $year);
         } elseif ($timeline == 'year') {
             $movies->whereYear("bills.updated_at", $year);
         }
@@ -177,7 +202,11 @@ class StatisticalController extends Controller
             ->take(5)
             ->get();
         if (count($result) == 0) {
-            return response()->json(["error" => "Thời điểm này không có dữ liệu để thống kê"]);
+            if ($data['timeline'] == 'year') {
+                return response()->json(["message" => "Không có dữ liệu thống kê top 5 phim có doanh thu cao nhất năm " . $data['year']]);
+            } else {
+                return response()->json(["message" => "Không có dữ liệu thống kê top 5 phim có doanh thu cao nhất tháng " . $data['month'] . " năm " . $data['year']]);
+            }
         } else {
             return response()->json($result);
         }
@@ -199,7 +228,8 @@ class StatisticalController extends Controller
 
         if ($timeline == 'month') {
             $month = $data['month'];
-            $foods->whereMonth("bills.updated_at", $month);
+            $foods->whereMonth("bills.updated_at", $month)
+                ->whereYear("bills.updated_at", $year);
         } elseif ($timeline == 'year') {
             $foods->whereYear("bills.updated_at", $year);
         }
@@ -214,7 +244,11 @@ class StatisticalController extends Controller
             ->take(5)
             ->get();
         if (count($result) == 0) {
-            return response()->json(["error" => "Thời điểm này không có dữ liệu để thống kê"]);
+            if ($data['timeline'] == 'year') {
+                return response()->json(["message" => "Không có dữ liệu thống kê top 5 sản phẩm bán chạy nhất năm " . $data['year']]);
+            } else {
+                return response()->json(["message" => "Không có dữ liệu thống kê top 5 sản phẩm bán chạy nhất tháng " . $data['month'] . " năm " . $data['year']]);
+            }
         } else {
             return response()->json($result);
         }
@@ -235,7 +269,8 @@ class StatisticalController extends Controller
 
         if ($timeline == 'month') {
             $month = $data['month'];
-            $users->whereMonth("bills.updated_at", $month);
+            $users->whereMonth("bills.updated_at", $month)
+                ->whereYear("bills.updated_at", $year);
         } elseif ($timeline == 'year') {
             $users->whereYear("bills.updated_at", $year);
         }
@@ -253,7 +288,11 @@ class StatisticalController extends Controller
             ->get();
 
         if (count($result) == 0) {
-            return response()->json(["error" => "Thời điểm này không có dữ liệu để thống kê"]);
+            if ($data['timeline'] == 'year') {
+                return response()->json(["message" => "Không có dữ liệu thống kê top 5 khách hàng chi tiêu nhiều nhất năm " . $data['year']]);
+            } else {
+                return response()->json(["message" => "Không có dữ liệu thống kê top 5 khách hàng chi tiêu nhiều nhất tháng " . $data['month'] . " năm " . $data['year']]);
+            }
         } else {
             return response()->json($result);
         }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Form, Modal, Select, Input, TimePicker } from 'antd';
 import type { FormInstance } from 'antd/es/form';
-import dayjs from 'dayjs';
+// import dayjs from 'dayjs';
 import { useAddSuatChieuMutation } from '../../rtk/qlSc/qlSc';
 import { useFetchMoviesQuery } from '../../rtk/movies/movies';
 import { useFetchPhongChieuQuery } from '../../rtk/qlPhongChieu/qlPhongChieu';
@@ -94,7 +94,7 @@ const CreateQlSc: React.FC = () => {
                         name="show_time"
                         rules={[{ required: true, message: 'Vui lòng nhập thời gian!' }]}
                     >
-                        <TimePicker style={{ width: 200 }} value={dayjs('12:08', 'HH:mm')} format={'HH:mm'} />
+                        {/* <TimePicker style={{ width: 200 }} value={dayjs('12:08', 'HH:mm')} format={'HH:mm'} /> */}
                     </Form.Item>
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button htmlType="submit" className='mr-[80px]'>
