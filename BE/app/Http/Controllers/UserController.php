@@ -7,6 +7,7 @@ use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -137,6 +138,54 @@ class UserController extends Controller
             }
         } else {
             return response()->json(["error" => "Vui lòng thực hiện lại vì link đã quá hạn"]);
+        }
+    }
+
+    //cập nhật thông tin người dùng
+    public function update_profile(Request $request)
+    {
+        $data = $request->all();
+        $user = User::where("user_code", $data['user_code'])->first();
+        if (isset($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
+        } else {
+            $data['password'] = $user->password;
+        }
+        $user->update($data);
+        return response(new UserResource($user), 201);
+    }
+
+    //đổi mật khẩu
+    public function update_password(Request $request)
+    {
+        $data = $request->all();
+        $user = User::where("user_code", $data['user_code'])->first();
+        if (!Hash::check($data['old_password'], $user->password)) {
+            return response()->json(['error' => "Mật khẩu cũ không chính xác"]);
+        } else {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'password' => [
+                        'required',
+                        'confirmed',
+                        'min:8',
+                        'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).+$/'
+                    ]
+                ],
+                [
+                    'password.required' => "Mật khẩu không được để trống",
+                    'password.confirmed' => "Mật khẩu không trùng khớp",
+                    'password.min' | 'password.regex' => "Yêu cầu mật khẩu có ít nhất 8 ký tự, chứa các chữ cái và bao gồm các ký tự đặc biệt(*@!#...)."
+                ]
+            );
+            if ($validator->fails()) {
+                return response()->json($validator->messages());
+            } else {
+                $data['password'] = bcrypt($data['password']);
+                $user->update($data);
+                return response()->json(['message' => "Cập nhật mật khẩu thành công"]);
+            }
         }
     }
 }

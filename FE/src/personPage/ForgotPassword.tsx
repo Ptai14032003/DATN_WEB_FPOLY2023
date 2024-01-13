@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { message } from 'antd';
+import Menu from '../components/layouts/layoutGuest/menu';
 
 const formSchema = Yup.object({
     email: Yup.string().email("Lỗi email"
@@ -16,10 +17,19 @@ const ForgotPassword = () => {
     const [forgotPassword, { error }] = useForgotPasswordMutation();
 
   const onSubmit = async (values: any) => {
-    await forgotPassword(values);
+      await forgotPassword(values).unwrap()
+      .then((req:any)=>{
+        message.success(`${req.message}`); 
+      }
+      )
+      .catch((req)=>
+      message.error(req.data.error)
+      )
   };
   return (
-    <div className='User-box'>
+    <div className="forgot_password">
+      <Menu/>
+      <div className='User-box'>
       <div className="FormSignin" onSubmit={handleSubmit(onSubmit)}>
         <form action="">
           <h1>Quên mật khẩu</h1> 
@@ -30,6 +40,7 @@ const ForgotPassword = () => {
           <button type="submit" className="btn">Lấy lại mật khẩu</button>
         </form>
       </div>
+    </div>
     </div>
   )
 }
