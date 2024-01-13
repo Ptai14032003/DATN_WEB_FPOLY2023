@@ -165,9 +165,9 @@ const CreateQlPhongChieu: React.FC = () => {
     }, [dataSeat],)
     const addPhong = () => {
         const newData = [...dataSeat, dataRoom]
-        console.log(newData);
-
-        addPhongChieu(newData).then(() => { setIsModalOpen(false); message.success("Tạo mới thành công"); formRef.current?.resetFields() })
+        setTimeout(() => {
+            addPhongChieu(newData).then(() => { setIsModalOpen(false); message.success("Tạo mới thành công"); formRef.current?.resetFields() })
+        }, 3000)
     }
     return (
         <>
