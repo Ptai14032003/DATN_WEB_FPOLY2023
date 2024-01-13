@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Space, Table, Input, Button, message, Popconfirm, Image } from 'antd';
 import CreateQlPhim from './create';
 import EditQlPhim from './edit';
-import { useDeleteMultipleFoodMutation, useFetchFoodsQuery } from '../../rtk/qlSp/qlSp';
+import { useDeleteFoodIDMutation, useDeleteMultipleFoodMutation, useFetchFoodsQuery } from '../../rtk/qlSp/qlSp';
 import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
 import { useNavigate } from 'react-router-dom';
 import Fuse from 'fuse.js';
@@ -34,6 +34,7 @@ interface FetchFoods {
 const AdminQlSp: React.FC = () => {
     const { data: dataFood, isLoading, error } = useFetchFoodsQuery()
     const [deleteMultiple] = useDeleteMultipleFoodMutation()
+    const [deleteId] = useDeleteFoodIDMutation()
     const navigate = useNavigate();
     const status = error?.status;
     const [dataTable, setDataTable] = useState<QlFood[]>([])
@@ -74,8 +75,9 @@ const AdminQlSp: React.FC = () => {
         setSearchTerm(value);
     };
     const deleteOne = (key: string) => {
-        console.log(key);
-        message.success("Xóa thành công");
+        deleteId(key).then(() => {
+            message.success("Xóa thành công");
+        })
     }
 
     useEffect(() => {

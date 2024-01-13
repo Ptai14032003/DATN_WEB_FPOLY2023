@@ -154,7 +154,7 @@ const AdminQlSc: React.FC = () => {
                                 <a>
                                     <Popconfirm
                                         title="Delete the task"
-                                        description="Are you sure to delete this task?"
+                                        description="Bạn có muốn xoá suất chiếu này không?"
                                         onConfirm={() => {
                                             deleteOne(record.key);
                                         }}

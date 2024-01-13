@@ -31,6 +31,8 @@ const CreateQlSp: React.FC = () => {
         }
         console.log(newData);
 
+        addFood(newData)
+
     };
 
     const onFinishFailed = (errorInfo: any) => {
