@@ -27,6 +27,7 @@ import TicketHistory from './personPage/TicketHistory.tsx'
 import ResetPassword from './personPage/ResetPassword.tsx'
 import ForgotPassword from './personPage/ForgotPassword.tsx'
 import AdminQlBill from './admin/bill/page.tsx'
+import HomeAdmin from './admin/home/page.tsx'
 function App() {
   const checkLocal = localStorage.getItem("user");
   const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
@@ -63,6 +64,7 @@ function App() {
       <Route path="listvnp" element={<CheckPay />} />
       {checkRoleAdmin ? (
         <Route path='/admin' element={<LayoutAdmin />}>
+          <Route path='' element={<HomeAdmin />}></Route>
           <Route path='qlPhim' element={<AdminQlPhim />}></Route>
           <Route path='qlSuatChieu' element={<AdminQlSc />}></Route>
           <Route path='qlSanPham' element={<AdminQlSp />}></Route>
