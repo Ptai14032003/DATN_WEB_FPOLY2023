@@ -26,7 +26,7 @@ class PaymentController extends Controller
         if ($discount_code) {
             $promotion = Promotion::where("discount_code", $discount_code)->first();
             $discount_percent = $promotion->discount_percent;
-        }else{
+        } else {
             $discount_percent = 0;
         }
         $bill = [
@@ -46,7 +46,7 @@ class PaymentController extends Controller
                 'id_seat' => $seat[$i]['id'],
                 'showtime_id' => $showtime_id,
                 'bill_id' => $bill_add->id,
-                'price' => ($type_seat->type_name == "Đôi" ? ($seat[$i]['price'] / 2)* ((100 - $discount_percent) / 100) : $seat[$i]['price']* ((100 - $discount_percent) / 100))
+                'price' => ($type_seat->type_name == "Đôi" ? ($seat[$i]['price'] / 2) * ((100 - $discount_percent) / 100) : $seat[$i]['price'] * ((100 - $discount_percent) / 100))
             ];
 
             Ticket::create($ticket);
@@ -57,7 +57,7 @@ class PaymentController extends Controller
 
             $food = [
                 'quantity' => $combo[$i]['quantity'],
-                'total_money' => ($food->price * $combo[$i]['quantity']) *( (100 - $discount_percent) / 100),
+                'total_money' => ($food->price * $combo[$i]['quantity']) * ((100 - $discount_percent) / 100),
                 'food_id' => $food->id,
                 'bill_id' => $bill_add->id
             ];
@@ -238,5 +238,40 @@ class PaymentController extends Controller
 
         //Trả lại VNPAY theo định dạng JSON
         return response()->json($returnData);
+    }
+
+
+    //QR code 
+    public function payment_QR_Code(Request $request)
+    {
+        $data = $request->all();
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://bio.ziller.vn/api/qr/add",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 2,
+            CURLOPT_TIMEOUT => 10,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_HTTPHEADER => array(
+                "Authorization: Bearer 33d5533a1270abc08e5f2e530735b916",
+                "Content-Type: application/json",
+            ),
+            CURLOPT_POSTFIELDS => json_encode(array(
+                'type' => 'text',
+                'data' => '2|99|' . $data['phone_number'] . '|Wonder Cinema||0|0|' . $data['total_money'] . '|Thanh toán hóa đơn đặt vé xem phim|transfer_myqr',
+                'background' => 'rgb(255,255,255)',
+                'foreground' => 'rgb(0,0,0)',
+                'logo' => 'C:\xampp\htdocs\datn_web_fpoly2023\FE\public\Wonder-logo-1.png',
+            )),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        $response = json_decode($response);
+        return response()->json($response);
     }
 }

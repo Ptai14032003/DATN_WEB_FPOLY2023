@@ -47,7 +47,11 @@ Route::get('/voucher', [HomeController::class, 'voucher'])->name('voucher')->mid
 Route::post('/forgot_password', [UserController::class, 'forgot_password'])->name('forgot_password');
 Route::post('/update_new_pass', [UserController::class, 'update_new_pass'])->name('update_new_pass');
 
+//update profile
+Route::post('/update_profile', [UserController::class, 'update_profile'])->name('update_profile');
+Route::post('/update_password', [UserController::class, 'update_password'])->name('update_password');
 
+Route::post('/payment_QR_Code', [PaymentController::class, 'payment_QR_Code'])->name('payment_QR_Code');
 
 //lịch sử đặt vé người dùng
 Route::post('/booking_history', [HomeController::class, 'booking_history'])->name('booking_history')->middleware('auth:sanctum');
