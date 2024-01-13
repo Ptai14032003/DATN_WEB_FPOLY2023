@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button, Form, Image, Input, InputNumber, Modal, Select, Upload, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
 import { QlFood } from './page';
+
+
 import { useAddFoodMutation, useFetchTypeFoodsQuery } from '../../rtk/qlSp/qlSp';
 interface QlFoodCreate {
     food_name: string,
@@ -12,6 +14,8 @@ interface QlFoodCreate {
 }
 const CreateQlSp: React.FC = () => {
     const { data: dataTypeFood } = useFetchTypeFoodsQuery()
+    const fileInputRef = useRef(null);
+    const [selectedFile, setSelectedFile] = useState(null);
     const [addFood] = useAddFoodMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
@@ -20,10 +24,6 @@ const CreateQlSp: React.FC = () => {
         value: food?.id,
         label: food?.name,
     }));
-    // const handleImageChange = (e) => {
-    //     const file = e.target.files[0];
-    //     setSelectedImage(file);
-    // };
     const onFinish = (values: any) => {
         const newData = {
             ...values,
@@ -31,10 +31,25 @@ const CreateQlSp: React.FC = () => {
         }
         console.log(newData);
 
-        addFood(newData)
+        // addFood(newData).then((data) => {
+
+        // })
 
     };
+    const onChange = (e) => {
+        const selectedFile = e.target.files[0];
+        console.log(selectedFile);
 
+
+    }
+    const handleFileChange = () => {
+        const file = fileInputRef.current?.files?.[0];
+        if (file) {
+            setSelectedFile(URL.createObjectURL(file));
+        }
+        console.log(URL.createObjectURL(file));
+
+    };
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
     };
@@ -92,7 +107,7 @@ const CreateQlSp: React.FC = () => {
                         name="image"
                         rules={[{ required: true, message: 'Vui lòng nhập ảnh !' }]}
                     >
-                        <Upload listType='picture' beforeUpload={(file) => {
+                        {/* <Upload listType='picture' beforeUpload={(file) => {
                             return new Promise((resolve, reject) => {
                                 if (file.type === 'image/jpg' || file.type === 'image/png') {
                                     reject();
@@ -102,7 +117,9 @@ const CreateQlSp: React.FC = () => {
                             })
                         }} maxCount={1} multiple>
                             <Button icon={<UploadOutlined />}>Click to Upload </Button>
-                        </Upload>
+                        </Upload> */}
+                        <input type="file" multiple name="" id="" onChange={handleFileChange} ref={fileInputRef} />
+                        {selectedFile && <img src={selectedFile} alt="Selected" />}
                     </Form.Item>
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button htmlType="submit">

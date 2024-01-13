@@ -34,22 +34,7 @@ const AdminQlNhanSu: React.FC = () => {
 
     const [dataTable, setDataTable] = useState<QlNhanSu[]>([])
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
     const [deleteNhanSu] = useDeleteNhanSuMutation()
-    const onSelectChange = (newSelectedRowKeys: any[]) => {
-        console.log('', newSelectedRowKeys);
-        setSelectedRowKeys(newSelectedRowKeys);
-    };
-    const DeleteAll = () => {
-        console.log(selectedRowKeys);
-        message.success("Xóa thành công");
-    }
-    const rowSelection = {
-        selectedRowKeys,
-        onChange: onSelectChange,
-    };
-    const hasSelected = selectedRowKeys.length > 0;
-
     const fuseOptions = {
         includeScore: true,
         includeMatches: true,
@@ -142,27 +127,6 @@ const AdminQlNhanSu: React.FC = () => {
                     onChange={(e) => searchProject(e.target.value)} />
                 <CreateQlNhanSu />
             </div>
-            <span style={{ marginLeft: 8 }}>
-                {hasSelected ? (
-                    <Popconfirm
-                        title="Delete the task"
-                        description="Are you sure to delete this task?"
-                        onConfirm={() => {
-                            DeleteAll();
-                        }}
-                        okButtonProps={{
-                            style: { backgroundColor: "#007bff" },
-                        }}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <Button danger>
-                            {`Delete ${selectedRowKeys.length} items`}
-                        </Button>
-                    </Popconfirm>) : (
-                    <div></div>
-                )}
-            </span>
             {isLoading ? (
                 <Waveform
                     size={40}
@@ -171,7 +135,7 @@ const AdminQlNhanSu: React.FC = () => {
                     color="black"
                 />
             ) : (
-                <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
+                <Table dataSource={dataTable} pagination={{ pageSize: 6, }}>
                     <Column title="Mã nhân viên" dataIndex="personnel_code" key="personnel_code" />
                     <Column title="Tên nhân viên" dataIndex="name" key="name" />
                     <Column title="Email" dataIndex="email" key="email" />

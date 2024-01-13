@@ -45,6 +45,7 @@ const ThongKe = () => {
             })
             getRevenueAll(traCuu).then((fetchdata: any) => {
                 if (fetchdata?.data?.error) {
+                    message.error(fetchdata?.data?.error)
                     setData({
                         quantity_bill: 0,
                         total_money: 0,
@@ -91,6 +92,7 @@ const ThongKe = () => {
                 })
                 getRevenueAll(dateData).then((fetchdata: any) => {
                     if (fetchdata?.data?.error) {
+                        message.error(fetchdata?.data?.error)
                         setData({
                             quantity_bill: 0,
                             total_money: 0,
