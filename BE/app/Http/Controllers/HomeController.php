@@ -28,14 +28,14 @@ class HomeController extends Controller
     public function index()
     {
         $currentDate = now(); // Get the current date and time
-    
+
         $movies = Movie::join('movie_types', 'movies.movie_type_id', '=', 'movie_types.id')
             ->select('movies.*', 'movie_types.type_name')
             ->whereNull('movies.deleted_at')
             ->where('movies.end_date', '>=', $currentDate) // Filter out movies with end_date smaller than the current date
             ->orderBy('movies.id', 'asc')
             ->get();
-    
+
         return response()->json($movies);
     }
     public function comingSoon()
@@ -240,7 +240,7 @@ class HomeController extends Controller
 
     public function voucher(Request $request)
     {
-        
+
         $token = $request->bearerToken();
         $entropy = PersonalAccessToken::findToken($token);
         $user = User::find($entropy->tokenable_id);
@@ -252,7 +252,7 @@ class HomeController extends Controller
         $currentDateTime = Carbon::now('Asia/Ho_Chi_Minh');
         $promotions = DB::table('promotions')
             ->whereNotIn('discount_code', $promotions_use)
-            ->where('deleted_at','=',null)
+            ->where('deleted_at', '=', null)
             ->where(function ($query) use ($currentDateTime) {
                 $query->where('start', '<=', $currentDateTime)
                     ->where('end', '>=', $currentDateTime);
@@ -265,8 +265,12 @@ class HomeController extends Controller
     {
         $booking_history = Bill::leftjoin('users', 'users.user_code', '=', 'bills.user_code')
             ->join('tickets', 'tickets.bill_id', '=', 'bills.id')
+            ->join('seats', 'tickets.id_seat', '=', 'seats.id')
             ->join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
             ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
+            ->join('rooms', 'rooms.id', '=', 'showtimes.room_id')
+            ->leftJoin('ticket_foods', 'ticket_foods.bill_id', '=', 'bills.id')
+            ->leftJoin('foods', 'foods.id', '=', 'ticket_foods.food_id')
             ->where('bills.user_code', $request->user_code)
             ->select(
                 'bills.id',
@@ -277,14 +281,17 @@ class HomeController extends Controller
                 'bills.additional_fee',
                 'bills.total_money',
                 'movies.movie_name',
+                DB::raw('GROUP_CONCAT(DISTINCT seats.seat_code) as seat_code'),
                 'movies.image',
+                'rooms.name as room_name',
                 DB::raw('DATE_FORMAT(bills.created_at, "%d-%m-%Y") as booking_date'),
                 DB::raw('DATE_FORMAT(showtimes.show_date, "%d-%m-%Y") as show_date'),
                 DB::raw('CASE 
                     WHEN bills.status = 0 THEN "Đang chờ thanh toán" 
                     WHEN bills.status = 1 THEN "Đã thanh toán" 
                     WHEN bills.status = 2 THEN "Đã hủy" 
-                    END as payment_status')
+                    END as payment_status'),
+                DB::raw('GROUP_CONCAT(DISTINCT IFNULL(CONCAT(ticket_foods.quantity, "-", foods.food_name), "")) as food_name')
             )
             ->groupBy(
                 'bills.id',
@@ -296,11 +303,13 @@ class HomeController extends Controller
                 'bills.total_money',
                 'movies.movie_name',
                 'movies.image',
+                'rooms.name',
                 'booking_date',
                 'show_date',
                 'payment_status'
             )
             ->get();
+
         return response()->json($booking_history);
     }
 
