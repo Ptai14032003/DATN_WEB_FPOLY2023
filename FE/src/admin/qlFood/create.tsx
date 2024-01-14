@@ -25,29 +25,11 @@ const CreateQlSp: React.FC = () => {
         label: food?.name,
     }));
     const onFinish = (values: any) => {
-        const newData = {
-            ...values,
-            image: values.image.file
-        }
-        console.log(newData);
-
-        addFood(newData).then((data) => {
-
+        console.log(values.image);
+        
+        addFood(values).then((data) => {
+            setIsModalOpen(false); formRef.current?.resetFields(); message.success("Tạo sản phẩm thành công")
         })
-
-    };
-    const onChange = (e) => {
-        const selectedFile = e.target.files[0];
-        console.log(selectedFile);
-
-
-    }
-    const handleFileChange = () => {
-        const file = fileInputRef.current?.files?.[0];
-        if (file) {
-            setSelectedFile(URL.createObjectURL(file));
-        }
-
 
     };
     const onFinishFailed = (errorInfo: any) => {
@@ -109,8 +91,10 @@ const CreateQlSp: React.FC = () => {
                     >
                         <Upload listType='picture' beforeUpload={(file) => {
                             return new Promise((resolve, reject) => {
-                                if (file.type === 'image/jpg' || file.type === 'image/png') {
-                                    reject();
+                                if ((file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/webp' || file.type === 'image/jpeg')) {
+                                    if(file.size < 3000000){
+                                        reject();
+                                    }
                                 } else {
                                     message.error("Vui lòng thêm ảnh đúng định dạng")
                                 }

@@ -19,8 +19,6 @@ const CreateQlPhim: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
-        console.log(values);
-
         addMovies(values).then(() => setIsModalOpen(false))
     };
     const onFinishFailed = (errorInfo: any) => {
