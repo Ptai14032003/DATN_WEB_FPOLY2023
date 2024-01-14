@@ -31,13 +31,10 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
     const [VoucherCode, setVoucherCode] = useState("");
     const [DiscountPercent, setDiscountPercent] = useState(0);
     const [active, setActive] = useState(false);
-    const [activeTab, setActiveTab] = useState(1);
+    const [selectedVoucher, setSelectedVoucher] = useState(null);
     const checkLocal = localStorage.getItem("user");
     const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
-    const userCode = checkUser?.user_code
-    const handleClick = (tabNumber: number) => {
-        setActiveTab(tabNumber);
-    };
+    const userCode = checkUser?.user_code;
     const discountAmount = (priceTong * DiscountPercent) / 100;
     const totalAmount = priceTong - discountAmount;
     const dataBill = {
@@ -90,7 +87,8 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
         setIsModalOpen(false);
     };
 
-    const handleSelectVoucher = (voucherCode: any, percent: any) => {
+    const handleSelectVoucher = (voucherCode: any, percent: any, id:any) => {
+        setSelectedVoucher(id);
         setVoucherCode(voucherCode);
         setDiscountPercent(percent)
         setActive(true)
@@ -162,17 +160,22 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                                 <p>Giảm giá</p>
                                 <p>{DiscountPercent}%</p>
                             </div>
-                            <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                            <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel} className='ModalVoucher'>
                                 <div className='space-y-3'>
                                     {voucher?.map((item: any) => (
-                                        <button className={active ? 'block bg-teal-400 text-black w-full rounded-md py-3' : 'block bg-[#a9aead] text-black w-full rounded-md py-3'} id={item.id}
-                                            onClick={() => handleSelectVoucher(item.discount_code, item.discount_percent)}
+                                        <button className={
+                                            selectedVoucher === item.id
+                                              ? 'block bg-teal-400 text-black w-full rounded-md py-3'
+                                              : 'block bg-[#a9aead] text-black w-full rounded-md py-3'
+                                          }
+                                          id={item.id}
+                                          onClick={() => handleSelectVoucher(item?.discount_code, item?.discount_percent, item?.id)}
                                         >
                                             <h3 className='text-3xl font-medium'>{item.discount_code}</h3>
-                                            <p>Nhân dịp {item.event}</p>
-                                            <p>Giảm {item.discount_percent}% tổng giá trị đơn hàng</p>
-                                            <p>Thời gian áp dụng: {item.start}</p>
-                                            <p>Thời gian hết hạn: {item.end}</p>
+                                            <p>Nhân dịp {item?.event}</p>
+                                            <p>Giảm {item?.discount_percent}% tổng giá trị đơn hàng</p>
+                                            <p>Thời gian áp dụng: {item?.start}</p>
+                                            <p>Thời gian hết hạn: {item?.end}</p>
                                         </button>
                                     ))}
                                 </div>
@@ -183,8 +186,6 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                         <div className='info-card'>
                             <div>Giá gốc</div>
                             <div className='item-info-card'>{dataTong} đ</div>
-                            {/* <div className='item-info-card'>số tiền giảm giá: {formattedDiscountAmount}</div>
-                            <div className='item-info-card'>số tiền đã giảm giá: {totalAmount}</div> */}
                         </div>
                     </div>
                     <div className='block my-3'>

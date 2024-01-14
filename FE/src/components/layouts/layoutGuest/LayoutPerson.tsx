@@ -6,6 +6,7 @@ import { Carousel} from 'antd'
 import Menu from './menu';
 import Footer from './footer';
 import { useFetchMoviesPersonQuery } from '../../../rtk/moviesPerson/moviesPerson';
+import "../../../personPage/responsive.css"
 
 
 

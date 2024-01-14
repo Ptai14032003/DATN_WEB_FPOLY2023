@@ -1,13 +1,21 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
-interface Form {
-    userCode: string
-}
 
 const bookingApi = createApi({
     reducerPath: "booking",
     baseQuery: fetchBaseQuery({
         baseUrl: "http://localhost:8000/api",
+        prepareHeaders: (headers, { getState }) => {
+            // Lấy token từ localstorage
+            const token = localStorage.getItem("accessToken");
+            // Nếu có token thì gán vào header Authorization
+            if (token) {
+                headers.set("Authorization", `Bearer ${token}`);
+            }
+            // Thêm header Content-Type
+            headers.set("Content-Type", "application/json");
+            return headers;
+        }
     }),
     tagTypes: ["booking"],
     endpoints: builder => ({
@@ -15,14 +23,14 @@ const bookingApi = createApi({
             query: (id) => `/show_seat_room/${id}`,
             providesTags: ["booking"]
         }),
-        ticketHistory: builder.mutation<void, Form>({
-            query: (body) => ({
-                url: "/booking_history",
-                method: "POST",
-                body
+        ticketHistory: builder.mutation<{ message: string, user: {} }, string>({
+            query: (userCode) => ({
+              url: "/booking_history",
+              method: "POST",
+              body: { userCode },
             }),
-            invalidatesTags: ["booking"]
-        }),
+            invalidatesTags: ["booking"],
+          }),
     })
 })
 export const { useFetchSeatRoomIdQuery, useTicketHistoryMutation } = bookingApi

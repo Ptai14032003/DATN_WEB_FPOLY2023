@@ -14,6 +14,7 @@ import foodsApi from './qlSp/qlSp'
 import billApi from './bill/bill'
 import VoucherApi from './voucher/voucher'
 import statisticsApi from './statistics/statistics'
+import MovieTypeApi from './movie_type/page'
 
 export const store = configureStore({
     reducer: {
@@ -31,7 +32,8 @@ export const store = configureStore({
         bill: billApi.reducer,
         voucher: VoucherApi.reducer,
         promotions: discountApi.reducer,
-        statistics: statisticsApi.reducer
+        statistics: statisticsApi.reducer,
+        movie_type: MovieTypeApi.reducer,
 
 
     },
@@ -52,6 +54,7 @@ export const store = configureStore({
             .concat(VoucherApi.middleware)
             .concat(discountApi.middleware)
             .concat(statisticsApi.middleware)
+            .concat(MovieTypeApi.middleware)
 
 });
 

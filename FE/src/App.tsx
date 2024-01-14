@@ -27,6 +27,9 @@ import TicketHistory from './personPage/TicketHistory.tsx'
 import ForgotPassword from './personPage/forgotPassword.tsx'
 import ResetPassword from './personPage/ResetPassword.tsx'
 import AdminQlBill from './admin/bill/page.tsx'
+import BookingAdmin from './admin/booking/page.tsx'
+import BookingAdminMovies from './admin/booking/booking.tsx'
+import BookingSeatAdmin from './admin/booking/bookingSeat.tsx'
 function App() {
   const checkLocal = localStorage.getItem("user");
   const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
@@ -53,8 +56,8 @@ function App() {
       <Route path="ticket-price" element={<TicketPrice />} />
       <Route path="ticket-history" element={<TicketHistory />} />
       <Route path="profile" element={<Profile />} />
-      <Route path="forgot-password" element={<ForgotPassword />}/>
-      <Route path="reset_password?" element={<ResetPassword />}/>
+      <Route path="forgot-password" element={<ForgotPassword />} />
+      <Route path="reset_password?" element={<ResetPassword />} />
 
       <Route path="signin" element={<Signin />} />
       <Route path="signup" element={<Signup />} />
@@ -73,6 +76,14 @@ function App() {
           <Route path='voucher' element={<AdminQlDiscount />}></Route>
           <Route path='bill_history' element={<AdminQlBill />}></Route>
           <Route path='thongKe' element={<ThongKe />}></Route>
+          {/* <Route path='booking' element={<BookingAdmin />}></Route> */}
+          <Route path='booking'>
+            <Route index element={<BookingAdmin />} />
+            <Route path="movie_show_time/:id">
+              <Route index element={<BookingAdminMovies />} />
+              <Route path='seat/:id' element={<BookingSeatAdmin />} />
+            </Route>
+          </Route>
         </Route>
       ) : (
         <Route path='/notfound' element={<NotFound />}></Route>
