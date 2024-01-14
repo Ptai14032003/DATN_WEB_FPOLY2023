@@ -1,7 +1,7 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, BarChart, Bar } from 'recharts';
 import dayjs from 'dayjs';
 import type { DatePickerProps, TimePickerProps } from 'antd';
-import { useTop5FoodsMutation, useTop5MoviesMutation } from '../../rtk/statistics/statistics';
+import { useTop5FoodsMutation, useTop5MoviesMutation, useTop5UsersMutation } from '../../rtk/statistics/statistics';
 import { Space, DatePicker, DatePickerProps, Select, Button, message } from 'antd';
 import { useEffect, useState } from 'react';
 const { RangePicker } = DatePicker;
@@ -9,27 +9,41 @@ const { Option } = Select;
 const HomeAdmin = () => {
     const [Top5Foods] = useTop5FoodsMutation()
     const [Top5Movies] = useTop5MoviesMutation()
+    const [Top5Users] = useTop5UsersMutation()
     const [dataFoods, setDataFoods] = useState<any>()
     const [dataMovies, setDataMovies] = useState<any>()
-    const [typeSearch, setType] = useState<any>('year');
+    const [dataUsers, setDataUsers] = useState<any>()
     const [valueDateFood, setValueDateFood] = useState<any>(dayjs().year())
     const [valueDateMovie, setValueDateMovie] = useState<any>(dayjs().year())
+    const [valueDateUser, setValueDateUser] = useState<any>(dayjs().year())
     const [dataChartFoods, setDataChartFoods] = useState<any>()
     const [dataChartMovies, setDataChartMovies] = useState<any>()
+    const [dataChartUsers, setDataChartUsers] = useState<any>()
+    const [typeSearchMovies, setTypeSearchMovies] = useState<any>('year');
+    const [typeSearchFood, setTypeSearchFood] = useState<any>('year');
+    const [typeSearchUser, setTypeSearchUser] = useState<any>('year');
     const [traCuu, setTraCuu] = useState<any>()
     const [convert, setConvert] = useState<any>(0)
-    const onChange1: DatePickerProps['onChange'] = (date, dateString) => {
+    const onChangeFood: DatePickerProps['onChange'] = (date, dateString) => {
         setValueDateFood(dateString)
         setTraCuu({
-            timeline: typeSearch,
+            timeline: typeSearchFood,
             year: date?.year(),
             month: Number(date?.month()) + 1,
         })
     };
-    const onChange2: DatePickerProps['onChange'] = (date, dateString) => {
+    const onChangeMovies: DatePickerProps['onChange'] = (date, dateString) => {
         setValueDateMovie(dateString)
         setTraCuu({
-            timeline: typeSearch,
+            timeline: typeSearchMovies,
+            year: date?.year(),
+            month: Number(date?.month()) + 1,
+        })
+    };
+    const onChangeUser: DatePickerProps['onChange'] = (date, dateString) => {
+        setValueDateUser(dateString)
+        setTraCuu({
+            timeline: typeSearchUser,
             year: date?.year(),
             month: Number(date?.month()) + 1,
         })
@@ -40,25 +54,20 @@ const HomeAdmin = () => {
             return;
         }
         if (traCuu) {
+            console.log(traCuu);
+
             Top5Foods(traCuu).then((fetchdata: any) => {
-                if (fetchdata?.data?.error) {
+                if (fetchdata?.data?.message) {
+                    message.error(fetchdata?.data?.message)
                     setDataFoods({
                         food_name: "",
                         total_tickets_sold: 0,
                         total_revenue: 0,
                     })
-                    if (typeSearch === "month") {
-                        setDataChartFoods(fetchdata?.data)
-                    } else {
-                        setDataChartFoods(fetchdata?.data)
-                    }
+                    setDataChartFoods(fetchdata?.data)
                 } else {
                     setDataFoods(fetchdata?.data)
-                    if (typeSearch === "month") {
-                        setDataChartFoods(fetchdata?.data)
-                    } else {
-                        setDataChartFoods(fetchdata?.data)
-                    }
+                    setDataChartFoods(fetchdata?.data)
                 }
             })
         }
@@ -71,82 +80,103 @@ const HomeAdmin = () => {
         if (traCuu) {
             Top5Movies(traCuu).then((fetchdata: any) => {
                 if (fetchdata?.data?.error) {
+                    message.error(fetchdata?.data?.message)
                     setDataMovies({
                         moveie_name: "",
                         total_tickets_sold: 0,
                         total_revenue: 0,
                     })
-                    if (typeSearch === "month") {
-                        setDataChartMovies(fetchdata?.data)
-                    } else {
-                        setDataChartFoods(fetchdata?.data)
-                    }
+                    setDataChartFoods(fetchdata?.data)
                 } else {
                     setDataMovies(fetchdata?.data)
-                    if (typeSearch === "month") {
-                        setDataChartMovies(fetchdata?.data)
-                    } else {
-                        setDataChartMovies(fetchdata?.data)
-                    }
+                    setDataChartMovies(fetchdata?.data)
+                }
+            })
+        }
+    }
+    const handleSelectUsers = () => {
+        if (valueDateUser === null) {
+            message.error("Vui lòng nhập lại thời gian khi thay đổi trạng thái");
+            return;
+        }
+        if (traCuu) {
+            Top5Users(traCuu).then((fetchdata: any) => {
+                if (fetchdata?.data?.error) {
+                    message.error(fetchdata?.data?.message)
+                    setDataUsers({
+                        name: "",
+                        user_code: "",
+                        email: "",
+                        phone_number: "",
+                        total_spent: 0
+                    })
+                    setDataChartUsers(fetchdata?.data)
+                } else {
+                    setDataUsers(fetchdata?.data)
+                    setDataChartUsers(fetchdata?.data)
                 }
             })
         }
     }
     useEffect(() => {
         const currentTime = new Date()
-        if (dataFoods) {
-            const total_revenue = (Number(dataFoods?.total_revenue))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") || 0
-        } else
-            if (!dataFoods) {
-                const dateData = {
-                    timeline: "year",
-                    year: currentTime?.getFullYear(),
-                    month: currentTime?.getMonth() + 1,
+        const dateData = {
+            timeline: "year",
+            year: currentTime?.getFullYear(),
+            month: currentTime?.getMonth() + 1,
+        }
+        if (!dataFoods) {
+            Top5Foods(dateData).then((fetchdata: any) => {
+                if (fetchdata?.data?.error) {
+                    message.error(fetchdata?.data?.message)
+                    setDataFoods({
+                        food_name: "",
+                        total_tickets_sold: 0,
+                        total_revenue: 0,
+                    })
+                    setDataChartFoods(fetchdata?.data)
+                } else {
+                    setDataFoods(fetchdata?.data)
+                    setDataChartFoods(fetchdata?.data)
                 }
-                Top5Foods(dateData).then((fetchdata: any) => {
-                    if (fetchdata?.data?.error) {
-                        setDataFoods({
-                            food_name: "",
-                            total_tickets_sold: 0,
-                            total_revenue: 0,
-                        })
-                        if (typeSearch === "month") {
-                            setDataChartFoods(fetchdata?.data)
-                        } else {
-                            setDataChartFoods(fetchdata?.data)
-                        }
-                    } else {
-                        setDataFoods(fetchdata?.data)
-                        if (typeSearch === "month") {
-                            setDataChartFoods(fetchdata?.data)
-                        } else {
-                            setDataChartFoods(fetchdata?.data)
-                        }
-                    }
-                })
-                Top5Movies(dateData).then((fetchdata: any) => {
-                    if (fetchdata?.data?.error) {
-                        setDataMovies({
-                            moveie_name: "",
-                            total_tickets_sold: 0,
-                            total_revenue: 0,
-                        })
-                        if (typeSearch === "month") {
-                            setDataChartMovies(fetchdata?.data)
-                        } else {
-                            setDataChartMovies(fetchdata?.data)
-                        }
-                    } else {
-                        setDataMovies(fetchdata?.data)
-                        if (typeSearch === "month") {
-                            setDataChartMovies(fetchdata?.data)
-                        } else {
-                            setDataChartMovies(fetchdata?.data)
-                        }
-                    }
-                })
-            }
-    }, [dataFoods])
+            })
+        }
+        if (!dataMovies) {
+            Top5Movies(dateData).then((fetchdata: any) => {
+                if (fetchdata?.data?.error) {
+                    message.error(fetchdata?.data?.message)
+                    setDataMovies({
+                        moveie_name: "",
+                        total_tickets_sold: 0,
+                        total_revenue: 0,
+                    })
+                    setDataChartMovies(fetchdata?.data)
+                } else {
+                    setDataMovies(fetchdata?.data)
+                    setDataChartMovies(fetchdata?.data)
+
+                }
+            });
+        }
+        if (!dataUsers) {
+            Top5Users(dateData).then((fetchdata: any) => {
+                if (fetchdata?.data?.error) {
+                    message.error(fetchdata?.data?.message)
+                    setDataMovies({
+                        name: "",
+                        user_code: "",
+                        email: "",
+                        phone_number: "",
+                        total_spent: 0
+                    })
+                    setDataUsers(fetchdata?.data)
+                } else {
+                    setDataUsers(fetchdata?.data)
+                    setDataChartUsers(fetchdata?.data)
+                }
+            })
+        }
+    }, [dataFoods, dataMovies, dataUsers])
     const ContentRechart = ({ active, payload, label }) => {
         if (active) {
             return (
@@ -159,20 +189,24 @@ const HomeAdmin = () => {
     }
     const Content = ({ data }: { data: string }) => {
         return (
-            <div className="px-[52%]">{data}</div>
+            <div className="pl-[48%] pb-[50px]">{data}</div>
         );
     };
-    const setTypeChange1 = (type: string) => {
-        setType(type)
+    const setTypeFood = (type: string) => {
+        setTypeSearchFood(type)
         setValueDateFood(null)
     }
-    const setTypeChange2 = (type: string) => {
-        setType(type)
+    const setTypeMovies = (type: string) => {
+        setTypeSearchMovies(type)
         setValueDateMovie(null)
+    }
+    const setTypeUser = (type: string) => {
+        setTypeSearchUser(type)
+        setValueDateUser(null)
     }
     return (
         <>
-            <div className='mb-[20px] text-2xl mt-[-55px] flex gap-5' ><div className='cursor-pointer' onClick={() => setConvert(0)}>Xu hướng</div> | <div className='cursor-pointer' onClick={() => setConvert(1)}>Bảng xếp hạng</div></div>
+            <div className='mb-[20px] text-2xl mt-[-55px] flex gap-5' ><div className={`cursor-pointer ${convert === 0 ? "border rounded px-2 py-1 bg-slate-500" : ""}`} onClick={() => setConvert(0)}>Xu hướng</div> | <div className={`cursor-pointer ${convert === 1 ? "border rounded px-2 py-1 bg-slate-500" : ""}`} onClick={() => setConvert(1)}>Bảng xếp hạng</div></div>
             <div className={`${convert === 0 ? "" : "hidden"}`}>
                 <div className="mt-[20px] flex justify-around ">
                     <div>
@@ -180,11 +214,11 @@ const HomeAdmin = () => {
                         <div className='mb-[40px]'>
                             <Space direction="vertical" size={12}>
                                 <div className="flex gap-[40px]">
-                                    <Select value={typeSearch} onChange={(e) => setTypeChange1(e)}>
+                                    <Select value={typeSearchFood} onChange={(e) => setTypeFood(e)}>
                                         <Option value="month">Month</Option>
                                         <Option value="year">Year</Option>
                                     </Select>
-                                    <DatePicker picker={typeSearch} onChange={onChange1} defaultValue={dayjs(`${valueDateFood}`, `${typeSearch === 'month' ? "MM / YYYY" : "YYYY"}`)} format={`${typeSearch === 'month' ? "MM / YYYY" : "YYYY"}`} className='w-[100px]' />
+                                    <DatePicker picker={typeSearchFood} onChange={onChangeFood} defaultValue={dayjs(`${valueDateFood}`, `${typeSearchFood === 'month' ? "MM / YYYY" : "YYYY"}`)} format={`${typeSearchFood === 'month' ? "MM / YYYY" : "YYYY"}`} className='w-[100px]' />
                                     <Button onClick={() => handleSelectFoods()}>Tra cứu</Button>
                                 </div>
                             </Space>
@@ -196,7 +230,7 @@ const HomeAdmin = () => {
                                 left: 20,
                                 bottom: 5,
                             }}>
-                            <XAxis dataKey="food_name" tickFormatter={(value) => ``} padding={{ left: 20 }} />
+                            <XAxis dataKey="food_name" tickFormatter={() => ``} padding={{ left: 20 }} />
                             <YAxis domain={[0, Number(dataFoods?.total_money_ticket)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
                             <Tooltip content={<ContentRechart label={`food_name`} />} />
                             <Legend content={<Content data="Foods" />} />
@@ -209,11 +243,11 @@ const HomeAdmin = () => {
                         <div className='mb-[40px]'>
                             <Space direction="vertical" size={12}>
                                 <div className="flex gap-[40px]">
-                                    <Select value={typeSearch} onChange={(e) => setTypeChange2(e)}>
+                                    <Select value={typeSearchMovies} onChange={(e) => setTypeMovies(e)}>
                                         <Option value="month">Month</Option>
                                         <Option value="year">Year</Option>
                                     </Select>
-                                    <DatePicker picker={typeSearch} onChange={onChange2} defaultValue={dayjs(`${valueDateMovie}`, `${typeSearch === 'month' ? "MM / YYYY" : "YYYY"}`)} format={`${typeSearch === 'month' ? "MM / YYYY" : "YYYY"}`} className='w-[100px]' />
+                                    <DatePicker picker={typeSearchMovies} onChange={onChangeMovies} defaultValue={dayjs(`${valueDateMovie}`, `${typeSearchMovies === 'month' ? "MM / YYYY" : "YYYY"}`)} format={`${typeSearchMovies === 'month' ? "MM / YYYY" : "YYYY"}`} className='w-[100px]' />
                                     <Button onClick={() => handleSelectMovies()}>Tra cứu</Button>
                                 </div>
                             </Space>
@@ -225,7 +259,7 @@ const HomeAdmin = () => {
                                 left: 20,
                                 bottom: 5,
                             }}>
-                            <XAxis dataKey="movie_name" tickFormatter={(value) => ``} padding={{ left: 20 }} />
+                            <XAxis dataKey="movie_name" tickFormatter={() => ``} padding={{ left: 20 }} />
                             <YAxis domain={[0, Number(dataFoods?.total_money_ticket)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
                             <Tooltip content={<ContentRechart />} />
                             <Legend content={<Content data="Movies" />} />
@@ -241,7 +275,7 @@ const HomeAdmin = () => {
                                     <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">STT</th>
                                     <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Sản phẩm</th>
                                     <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Tổng lượng sản phẩm bán</th>
-                                    <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Tổng doanh thu</th>
+                                    <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Tổng doanh thu (VNĐ)</th>
                                 </tr>
                             </thead>
                             {dataFoods && dataFoods.length > 0 ? (
@@ -256,9 +290,13 @@ const HomeAdmin = () => {
                                     ))}
                                 </tbody>
                             ) : (
-                                <div className='flex items-center justify-center h-40 text-xl text-gray-500'>
-                                    Thông tin trống
-                                </div>
+                                <tbody>
+                                    <tr>
+                                        <td colSpan={4} className='flex items-center justify-center h-40 text-xl text-gray-500'>
+                                            Thông tin trống
+                                        </td>
+                                    </tr>
+                                </tbody>
                             )}
                         </table>
                     </div>
@@ -270,7 +308,7 @@ const HomeAdmin = () => {
                                     <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">STT</th>
                                     <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Phim</th>
                                     <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Tổng lượng vé bán</th>
-                                    <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Tổng doanh thu</th>
+                                    <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Tổng doanh thu (VNĐ)</th>
                                 </tr>
                             </thead>
                             {dataMovies && dataMovies.length > 0 ? (
@@ -285,9 +323,13 @@ const HomeAdmin = () => {
                                     ))}
                                 </tbody>
                             ) : (
-                                <div className='flex items-center justify-center h-40 text-xl text-gray-500'>
-                                    Thông tin trống
-                                </div>
+                                <tbody>
+                                    <tr>
+                                        <td colSpan={4} className='flex items-center justify-center h-40 text-xl text-gray-500'>
+                                            Thông tin trống
+                                        </td>
+                                    </tr>
+                                </tbody>
                             )}
                         </table>
                     </div>
@@ -295,19 +337,31 @@ const HomeAdmin = () => {
             </div>
             <div className={`${convert === 1 ? "" : "hidden"} mt-[10px]`}>
                 <div className="mb-[25px] text-2xl ">Top 5 người dùng </div>
+                <div className='mb-[40px]'>
+                    <Space direction="vertical" size={12}>
+                        <div className="flex gap-[40px]">
+                            <Select value={typeSearchUser} onChange={(e) => setTypeUser(e)}>
+                                <Option value="month">Month</Option>
+                                <Option value="year">Year</Option>
+                            </Select>
+                            <DatePicker picker={typeSearchUser} onChange={onChangeUser} defaultValue={dayjs(`${valueDateMovie}`, `${typeSearchUser === 'month' ? "MM / YYYY" : "YYYY"}`)} format={`${typeSearchUser === 'month' ? "MM / YYYY" : "YYYY"}`} className='w-[100px]' />
+                            <Button onClick={() => handleSelectUsers()}>Tra cứu</Button>
+                        </div>
+                    </Space>
+                </div>
                 <div className='mx-[25%]'>
-                    <BarChart width={600} height={300} data={dataChartFoods}
+                    <BarChart width={600} height={400} data={dataChartUsers}
                         margin={{
                             top: 5,
                             right: 30,
                             left: 20,
                             bottom: 5,
                         }}>
-                        <XAxis dataKey="food_name" tickFormatter={(value) => ``} padding={{ left: 20 }} />
-                        <YAxis domain={[0, Number(dataFoods?.total_money_ticket)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
+                        <XAxis dataKey="name" tickFormatter={() => ``} padding={{ left: 20 }} />
+                        <YAxis domain={[0, Number(dataUsers?.total_spent)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
                         <Tooltip content={<ContentRechart label={`food_name`} />} />
-                        <Legend content={<Content data="Foods" />} />
-                        <Bar dataKey="total_revenue" fill="#8884d8" />
+                        <Legend content={<Content data="Người dùng" />} />
+                        <Bar dataKey="total_spent" fill="#8884d8" />
                     </BarChart>
                 </div>
                 <div>
@@ -316,26 +370,34 @@ const HomeAdmin = () => {
                             <thead className="ltr:text-left rtl:text-right bg-gray-100">
                                 <tr>
                                     <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">STT</th>
-                                    <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Sản phẩm</th>
-                                    <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Tổng lượng sản phẩm bán</th>
-                                    <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Tổng doanh thu</th>
+                                    <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Người dùng</th>
+                                    <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Mã người dùng</th>
+                                    <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Email</th>
+                                    <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Số điện thoại</th>
+                                    <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Tổng tiêu thụ (VNĐ)</th>
                                 </tr>
                             </thead>
-                            {dataFoods && dataFoods.length > 0 ? (
+                            {dataUsers && dataUsers.length > 0 ? (
                                 <tbody className="divide-y divide-gray-200">
-                                    {dataFoods.map((value: any, index: number) => (
+                                    {dataUsers.map((value: any, index: number) => (
                                         <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
                                             <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">{index + 1}</td>
-                                            <td className="whitespace-nowrap px-4 py-2 text-gray-900">{value?.food_name}</td>
-                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">{value?.total_quantity_sold}</td>
-                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">{(Number(value?.total_revenue))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-900">{value?.name}</td>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">{value?.user_code}</td>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-900">{value?.email}</td>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">{value?.phone_number}</td>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">{(Number(value?.total_spent))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                                         </tr>
                                     ))}
                                 </tbody>
                             ) : (
-                                <div className='flex items-center justify-center h-40 text-xl text-gray-500'>
-                                    Thông tin trống
-                                </div>
+                                <tbody>
+                                    <tr>
+                                        <td colSpan={4} className='flex items-center justify-center h-40 text-xl text-gray-500'>
+                                            Thông tin trống
+                                        </td>
+                                    </tr>
+                                </tbody>
                             )}
                         </table>
                     </div>
