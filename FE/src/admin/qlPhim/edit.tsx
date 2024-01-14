@@ -4,6 +4,7 @@ import { Button, Form, Image, Input, InputNumber, Modal, Select, Upload, message
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
 import { useFetchMovieIdQuery, useUpdateMoviesMutation } from '../../rtk/movies/movies';
+const { TextArea } = Input;
 type Props = {
     projects: string
 }
@@ -22,6 +23,7 @@ type QlPhimEdit = {
     movie_time: number
     start_date: string,
     end_date: string
+    describe: string
 }
 const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
     const { data: dataMovies } = useFetchMovieIdQuery(projects);
@@ -36,8 +38,12 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                 type_name: dataMovies?.type_name,
                 genre: dataMovies?.genre,
                 director: dataMovies?.director,
+                movie_time: dataMovies?.movie_time,
                 image: dataMovies?.image,
-                trailer: dataMovies?.trailer
+                trailer: dataMovies?.trailer,
+                describe: dataMovies?.describe,
+                start_date: dataMovies?.start_date,
+                end_date: dataMovies?.end_date,
             }
             setNewData(newData)
         }
