@@ -22,11 +22,10 @@ export interface QlNhanSuEdit {
 }
 const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
     const { data } = useFetchNhanSuIdQuery(projects);
-    console.log(data);
-
     const [updateNhanSu] = useUpdateNhanSuMutation()
+    const [dataError, setDataError] = useState<any>()
     const dataNhanSu = data?.data
-    const selectGender = ["Nam", "Nữ", "Không muốn trả lời"]
+    const selectGender = ["Nam", "Nữ"]
     const GenderOptions = selectGender.map((gender) => ({
         value: gender,
         label: gender,
@@ -39,9 +38,11 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
-        console.log(values);
-        
-         updateNhanSu({ body: values, id: projects }).then(()=>{setIsModalOpen(false), message.success("Sửa thành công")})
+        updateNhanSu({ body: values, id: projects }).then((data: any) => {
+            if (!data?.data.message) {
+                setDataError(data?.data)
+            } else { setIsModalOpen(false); setIsModalOpen(false), setDataError(data?.data); formRef.current?.resetFields(); message.success("Sửa nhân sự thành công") }
+        })
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -71,12 +72,6 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
                         initialValues={dataNhanSu}
                     >
                         <Form.Item<QlNhanSuEdit>
-                            label="Mã nhân viên"
-                            name="personnel_code"
-                        >
-                            <Input disabled />
-                        </Form.Item>
-                        <Form.Item<QlNhanSuEdit>
                             label="Tên nhân viên"
                             name="name"
                             rules={[{ required: true, message: 'Vui lòng nhập mô tả !' }]}
@@ -90,16 +85,15 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
                         >
                             <Input />
                         </Form.Item>
+                        <div className='text-red-500 pb-[10px]'>{dataError?.email}</div>
                         <Form.Item<QlNhanSuEdit>
                             label="Số điện thoại"
                             name="phone_number"
-                            rules={[{ required: true, message: 'Vui lòng nhập số điện thoại !' }, {
-                                pattern: /^(?:\d[ -]?){9,14}\d$/,
-                                message: 'Vui lòng nhập số điện thoại hợp lệ!',
-                            }]}
+                            rules={[{ required: true, message: 'Vui lòng nhập số điện thoại !' }]}
                         >
                             <Input />
                         </Form.Item>
+                        <div className='text-red-500 pb-[10px] pl-[80px]'>{dataError?.phone_number}</div>
                         <Form.Item<QlNhanSuEdit>
                             label="Mật khẩu"
                             name="password"
@@ -107,6 +101,7 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
                         >
                             <Input type="password" />
                         </Form.Item>
+                        <div className='text-red-500 pb-[10px] pl-[80px]'>{dataError?.password}</div>
                         <Form.Item<QlNhanSuEdit>
                             label="Địa chỉ"
                             name="address"
@@ -119,7 +114,7 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
                             name="birthday"
                             rules={[{ required: true, message: 'Vui lòng nhập ngày sinh!' }]}
                         >
-                            <Input type='date' style={{ width: 200 }} />
+                            <Input type='date' style={{ width: 200, marginLeft: -70 }} />
                         </Form.Item>
                         <Form.Item<QlNhanSuEdit>
                             label="Giới tính"
@@ -127,7 +122,7 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
                             rules={[{ required: true, message: 'Vui lòng nhập giới tính !' }]}
                         >
                             <Select className='ml-[-72px]'
-                                defaultValue="Chọn giới tính"
+                                placeholder="Chọn giới tính"
                                 style={{ width: 200 }}
                                 options={GenderOptions}
                             />
@@ -137,23 +132,19 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
                             name="date_start"
                             rules={[{ required: true, message: 'Vui lòng nhập ngày bắt đầu!' }]}
                         >
-                            <Input type='date' style={{ width: 200 }} />
+                            <Input type='date' style={{ width: 200, marginLeft: -70 }} />
                         </Form.Item>
+                        <div className='text-red-500 pb-[10px] pl-[80px]'>{dataError?.date_start}</div>
                         <Form.Item<QlNhanSuEdit>
                             label="Chức vụ"
                             name="role"
-                            rules={[{ required: true, message: 'Vui lòng chọn chức vụ !' }]}
+                            rules={[{ required: true, message: 'Vui lòng nhập mô tả !' }]}
                         >
                             <Select className='ml-[-72px]'
-                                defaultValue="Chọn chức vụ"
+                                placeholder="Chọn chức vụ"
                                 style={{ width: 200 }}
                                 options={RoleOptions}
                             />
-                        </Form.Item>
-                        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                            <Button htmlType="submit">
-                                Update
-                            </Button>
                         </Form.Item>
                     </Form>
                 ) : (

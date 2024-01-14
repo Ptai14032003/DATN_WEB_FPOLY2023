@@ -167,24 +167,31 @@ const HomePage = () => {
             ))}
           </div>
           <div className='Screen-tablet'>
-            <div className='menu-film-tablet flex jus'>
-              <h1>Phim đang chiếu</h1>
-              <a href="">Xem tất cả</a>
-            </div>
-            <div>
-            <Slider {...settings} className="Slider">
-              {allMovie?.map((item: any) => (
-                <div key={item.id} className='rounded-md'>
-                  <img src={item.image} alt="" className='h-[150px] w-[90%] rounded-t-md' />
-                  <div className="text px-3 bg-gray-900  w-[90%] m-0 rounded-b-md">
-                    <h1 className='text-[10px] font-semibold my-2 text-center'>{item.movie_name}</h1>
-                    <div className="font-semibold text-black mb-2 text-[8px]">
-                      <Link to={'/movie_show_time/' + item?.id}><button className='w-full bg-[#1ACAAC] rounded-sm py-1'>Đặt vé ngay</button></Link>
-                    </div>
-                  </div>
+            <div className='Showing-film-tablet mb-20'>
+              <div className='menu-film-tablet flex justify-between w-[90%] mx-auto mb-5 p-5'>
+                <div className='flex items-center'>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" className="bi bi-circle-fill" viewBox="0 0 16 16">
+                    <circle cx="8" cy="8" r="8" />
+                  </svg>
+                  <h1 className='Movie text-lg font-bold ml-3'>Phim đang chiếu</h1>
                 </div>
-              ))}
-            </Slider>
+                <a href="" className='text-[15px] underline text-[#1ACAAC]'>Xem tất cả</a>
+              </div>
+              <div>
+                <Slider {...settings} className="Slider">
+                  {showing?.map((item: any) => (
+                    <div key={item.id} className='rounded-md'>
+                      <img src={item.image} alt="" className='h-[150px] w-[90%] rounded-t-md' />
+                      <div className="text px-3 bg-gray-900  w-[90%] m-0 rounded-b-md">
+                        <h1 className='text-[10px] font-semibold my-2 text-center'>{item.movie_name}</h1>
+                        <div className="font-semibold text-black mb-2 text-[8px]">
+                          <Link to={'/movie_show_time/' + item?.id}><button className='w-full bg-[#1ACAAC] rounded-sm py-1'>Đặt vé ngay</button></Link>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </Slider>
+              </div>
             </div>
           </div>
         </>

@@ -74,7 +74,7 @@ class HomeController extends Controller
         // Check if the movie is still in the "coming soon" phase
         if ($movie && $movie->start_date > Carbon::now()) {
             // return response()->json(['messages' => 'Phim này đang trong giai đoạn "Sắp chiếu"'], 404);
-            return response()->json(['movie' => $movies, 'st_movie' => []]);
+            return response()->json(['movie' => $movie, 'st_movie' => []]);
         }
         $st_movie = Movie::join('showtimes', 'showtimes.movie_id', '=', 'movies.id')
             ->join('rooms', 'showtimes.room_id', '=', 'rooms.id')

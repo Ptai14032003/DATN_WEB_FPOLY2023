@@ -23,11 +23,11 @@ const bookingApi = createApi({
             query: (id) => `/show_seat_room/${id}`,
             providesTags: ["booking"]
         }),
-        ticketHistory: builder.mutation<{ message: string, user: {} }, string>({
-            query: (userCode) => ({
+        ticketHistory: builder.mutation<{ message: string, user:{} }, any>({
+            query: (body) => ({
               url: "/booking_history",
               method: "POST",
-              body: { userCode },
+              body,
             }),
             invalidatesTags: ["booking"],
           }),

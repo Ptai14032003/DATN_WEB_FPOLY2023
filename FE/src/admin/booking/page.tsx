@@ -21,6 +21,7 @@ const BookingAdmin = () => {
     const {data: movie_type} = useFetchMovieTypeQuery();
     // const movieType = movie_type.find((item:any)=> item?.id === movies?.movie_type_id);
     // const movieTypeName = movieType ? movieType?.type_name : '';
+    console.log(movies);
     
     useEffect(() => {
        if(Array.isArray(movies)){
@@ -32,10 +33,8 @@ const BookingAdmin = () => {
             movies_type: item?.movie_type_id,
         }))
         setData(ArrayData);
-       }else{
-        message.error('hihi')
        }
-    },[])
+    },[movies])
     return (
         <div>
             {/* <Table dataSource={data} /> */}

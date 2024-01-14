@@ -36,7 +36,7 @@ const BookingAdminMovies = () => {
 
     return (
         <div className='h-screen'>
-            <div className='bg-black text-white py-5'>
+            <div className=' text-black py-5'>
             <div className='w-[60%] mx-auto'>
                 <div className='flex gap-20'>
                     {st_movie?.map((item: any) => (

@@ -17,9 +17,11 @@ type Reset = Yup.InferType<typeof formSchema>;
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState(1);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const userString = localStorage.getItem('user');
   const user = userString ? JSON.parse(userString) : null;
+  
 
   const handleClick = (tabNumber: number) => {
     setActiveTab(tabNumber);
@@ -31,18 +33,30 @@ const Profile = () => {
   const navigate = useNavigate();
 
   const onSubmit = async (values: any) => {
-    console.log(values);
 
-    await updatePassword(values).unwrap()
-      .then(() => {
-        message.success("Đổi mật khẩu thành công");
-        navigate("/signin");
+    await updatePassword(values)
+      .then((req:any) => {    
+        if(req?.data?.error){
+          messageApi.open({
+            type: 'error',
+            content: `${req?.data?.error}`,
+          });
+        }
+        if(req?.data?.message){
+          messageApi.open({
+            type: 'success',
+            content: `${req?.data?.message}`,
+          });        
+        }
+
       })
-      .catch(() => message.error('lỗi'))
+      .catch(() => console.log('lỗi')
+      )
   };
 
   return (
     <div className='bg-black h-screen'>
+        {contextHolder}
       <div className='h-[80px]'>
         <Menu />
       </div>
@@ -91,20 +105,22 @@ const Profile = () => {
         </div>
         <div className='pt-5 max-w-2xl mx-auto'>
           <form action="" onSubmit={handleSubmit(onSubmit)}>
-            <div className="input-box hidden">
-              <input type="text" value={user?.email} {...register('email')} name="email" />
+            <div className="input-box">
+              <input type="text" value={user?.user_code} {...register('user_code')} name="user_code" />
             </div>
             <div className='in4-box'>
               <label htmlFor="" className='block text-start font-normal text-lg'>Mật khẩu cũ</label>
-              <input type="password" className='w-full h-[50px] bg-zinc-800 border rounded-md pl-3' placeholder='Nhập mật khẩu cũ' name='old_password' />
+              <input type="password" className='w-full h-[50px] bg-zinc-800 border rounded-md pl-3' placeholder='Nhập mật khẩu cũ' {...register('old_password')} name='old_password' />
             </div>
             <div className='in4-box mt-5'>
               <label htmlFor="" className='block text-start font-normal text-lg'>Mật khẩu mới</label>
-              <input type="password" className='w-full h-[50px] bg-zinc-800 border rounded-md pl-3' placeholder='Nhập mật khẩu mới' name='password' />
+              <input type="password" className='w-full h-[50px] bg-zinc-800 border rounded-md pl-3' placeholder='Nhập mật khẩu mới' {...register('password')} name='password' />
+              <p className='text-red-500'>{errors.password && <p>{errors.password?.message}</p>}</p>
             </div>
             <div className='in4-box mt-5'>
               <label htmlFor="" className='block text-start font-normal text-lg'>Xác nhận mật khẩu mới</label>
-              <input type="password" className='w-full h-[50px] bg-zinc-800 border rounded-md pl-3' placeholder='Xác nhận lại mật khẩu mới' name='password_comfirmation' />
+              <input type="password" className='w-full h-[50px] bg-zinc-800 border rounded-md pl-3' placeholder='Xác nhận lại mật khẩu mới' {...register('password_confirmation')} name='password_confirmation' />
+              <p className='text-red-500'>{errors.password_confirmation && <p>{errors.password_confirmation?.message}</p>}</p>
             </div>
             <div className='flex justify-end mt-8'>
               <button className='border rounded-md py-1 w-[200px] font-normal text-lg  bg-[#1ACAAC] '>Đổi mật khẩu</button>

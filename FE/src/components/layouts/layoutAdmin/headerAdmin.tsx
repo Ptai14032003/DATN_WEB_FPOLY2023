@@ -1,5 +1,6 @@
 
 import { Navigate, useNavigate } from 'react-router-dom';
+import logoweb from "/Wonder-logo-1.png"
 import { Button, Dropdown, MenuProps, Space } from "antd";
 const HeaderAdmin: React.FC = () => {
     const checkLocal = localStorage.getItem("user");
@@ -24,7 +25,7 @@ const HeaderAdmin: React.FC = () => {
     return (
         <div className="header-admin flex justify-around h-[90px]">
             <div>
-                <img src="/logo.png" alt="" />
+                <img src={logoweb} alt="" className='w-[23%]'/>
             </div>
             <div className="w-[1050px]"></div>
             <div className="flex">
