@@ -53,8 +53,23 @@ public function showingAdmin(){
 
         // if($request->image){
             // $result = cloudinary()->uploadApi()->upload($request->file);
-        //  $response = cloudinary()->upload($request->image->getRealPath())->getSecurePath();
-        //     $image = $response;
+        $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
+    
+        $elements = explode(',', $fileData);
+
+        // Lấy tất cả các phần tử sau dấu ','
+        $elementsAfterComma = array_slice($elements, 1);
+        // Giải mã dữ liệu base64
+        $decodedData = base64_decode($elementsAfterComma[0]);
+
+        // Tạo một tên tệp tin duy nhất
+        $uniqueFileName = uniqid('file_');
+
+        // Lưu dữ liệu vào tệp tin mới tạo
+        $filePath = storage_path('app/' . $uniqueFileName);
+        file_put_contents($filePath, $decodedData);
+        $response = cloudinary()->upload($filePath)->getSecurePath();
+
             $type_name = $request->get('type_name');
             $movie_type = Movie_Type::where('type_name',$type_name)->first();
 
@@ -65,7 +80,6 @@ public function showingAdmin(){
             $director = $request->get('director');
             $start_date = $request->get('start_date');
             $end_date = $request->get('end_date');
-            $total_revenue = $request->get('total_revenue');
             $trailer = $request->get('trailer');
             $actor_name = $request->get('actor_name');
             $movie_time = $request->get('movie_time');
@@ -77,13 +91,12 @@ public function showingAdmin(){
                 'genre' => $genre,
                 'director' => $director,
                 'actor_name' => $actor_name,
-                'start_date' => $start_date,    
-                'end_date' => $end_date,
-                'total_revenue'=> $total_revenue,
+                'start_date' => '2024-01-10',    
+                'end_date' => '2024-01-15',
                 'movie_time'=> $movie_time,
-                'image' => '',
+                'image' => $response,
                 'trailer' => $trailer,
-                'describe' => $describe
+                'describe' => ''
             ];
             Movie::create($data); 
             return response()->json($data);
@@ -128,20 +141,7 @@ public function showingAdmin(){
     
         // Update the movie data
         $movie->update($request->all());
-    
-        // // Update genres
-        // $gen = DB::table('movie_genres')      
-        // ->where('movie_genres.movie_id', $id)
-        // ->delete();
-
-        // $newGenre = $request->input('genres');
-     
-        // foreach ($newGenre as $new){
-        //     $genreID = DB::table('list_genres')->where('genre' , $new)->first();
-        //     Movie_Genre::create(['movie_id' => $id, 'list_genre_id' => $genreID->id]);
-        // }
   
-     
         if ($request->hasFile('image')) {
             // Upload the new image to Cloudinary
             $response = cloudinary()->upload($request->file('image')->getRealPath())->getSecurePath();
