@@ -56,6 +56,7 @@ export default function Detail() {
                                         <div className="w-[90px] h-full flex flex-col items-center justify-center text-xs transition-colors">
                                             <span>{item.weekday}</span>
                                             <span className="text-xl font-bold">{item?.show_date}</span>
+
                                             <span className="text-xl font-bold">{item?.date}</span>
                                         </div>
                                     </button>
