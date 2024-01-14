@@ -60,7 +60,6 @@ const ThongKe = () => {
                 } else {
                     setData(fetchdata?.data)
                     if (typeSearch === "month") {
-
                         setDataChart(fetchdata?.data?.dailyRevenue)
                     } else {
                         setDataChart(fetchdata?.data?.monthlyRevenue)

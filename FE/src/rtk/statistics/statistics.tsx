@@ -40,7 +40,7 @@ const statisticsApi = createApi({
         }),
         Top5Users: builder.mutation<any, any>({
             query: (body) => ({
-                url: `/get_top5_user /`,
+                url: `/get_top5_user/`,
                 method: "POST",
                 body
             }),
