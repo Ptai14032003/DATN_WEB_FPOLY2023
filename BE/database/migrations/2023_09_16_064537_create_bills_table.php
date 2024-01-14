@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('total_money');
             $table->dateTime('payment_time');
             $table->tinyInteger('status');
+            $table->tinyInteger('export_ticket')->defaultValue('0');
             $table->timestamps();
             $table->softDeletes();
         });

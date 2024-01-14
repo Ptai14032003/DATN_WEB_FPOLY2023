@@ -19,6 +19,7 @@ class Bill extends Model
         'additional_fee',
         'total_money',
         'payment_time',
-        'status'//0 là chưa thanh toán, 1 là đã thanh toán, 2 là đã hủy
+        'status',//0 là chưa thanh toán, 1 là đã thanh toán, 2 là đã hủy
+        'export_ticket'
     ];
 }
