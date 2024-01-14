@@ -240,7 +240,7 @@ class StatisticalController extends Controller
             DB::raw("SUM(ticket_foods.total_money) as total_revenue")
         )
             ->groupBy("foods.food_name")
-            ->orderByDesc("total_quantity_sold")
+            ->orderByDesc("total_revenue")
             ->take(5)
             ->get();
         if (count($result) == 0) {
