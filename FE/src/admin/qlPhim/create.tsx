@@ -4,6 +4,7 @@ import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
 import { QlPhim } from './page';
 import { useAddMoviesMutation } from '../../rtk/movies/movies';
+const { TextArea } = Input;
 export interface QlGenre {
     id: string;
     genre: string
@@ -140,6 +141,13 @@ const CreateQlPhim: React.FC = () => {
                         rules={[{ required: true, message: 'Vui lòng nhập ngày kết thúc !' }]}
                     >
                         <Input type='date' style={{ width: 200, marginLeft: -70 }} />
+                    </Form.Item>
+                    <Form.Item<QlPhim>
+                        label="Mô tả"
+                        name="describe"
+                        rules={[{ required: true, message: 'Vui lòng nhập mô tả phim !' }]}
+                    >
+                        <TextArea rows={4} />
                     </Form.Item>
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button htmlType="submit" className='mr-[80px]'>

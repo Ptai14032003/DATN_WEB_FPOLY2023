@@ -177,6 +177,13 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                         >
                             <Input type='date' style={{ width: 200, marginLeft: -70 }} />
                         </Form.Item>
+                        <Form.Item<QlPhimEdit>
+                            label="Mô tả"
+                            name="describe"
+                            rules={[{ required: true, message: 'Vui lòng nhập mô tả phim !' }]}
+                        >
+                            <TextArea rows={4} />
+                        </Form.Item>
                         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                             <Button htmlType="submit" className='mr-[80px]'>
                                 Update
