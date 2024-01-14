@@ -22,6 +22,9 @@ const HomeAdmin = () => {
     const [typeSearchMovies, setTypeSearchMovies] = useState<any>('year');
     const [typeSearchFood, setTypeSearchFood] = useState<any>('year');
     const [typeSearchUser, setTypeSearchUser] = useState<any>('year');
+    const [maxChartFood, setMaxChartFood] = useState<number>()
+    const [maxChartMovies, setMaxChartMovies] = useState<number>()
+    const [maxChartUser, setMaxChartUser] = useState<number>()
     const [traCuu, setTraCuu] = useState<any>()
     const [convert, setConvert] = useState<any>(0)
     const onChangeFood: DatePickerProps['onChange'] = (date, dateString) => {
@@ -54,8 +57,6 @@ const HomeAdmin = () => {
             return;
         }
         if (traCuu) {
-            console.log(traCuu);
-
             Top5Foods(traCuu).then((fetchdata: any) => {
                 if (fetchdata?.data?.message) {
                     message.error(fetchdata?.data?.message)
@@ -67,6 +68,7 @@ const HomeAdmin = () => {
                     setDataChartFoods(fetchdata?.data)
                 } else {
                     setDataFoods(fetchdata?.data)
+                    setMaxChartFood(fetchdata?.data[0]?.total_revenue);
                     setDataChartFoods(fetchdata?.data)
                 }
             })
@@ -89,6 +91,7 @@ const HomeAdmin = () => {
                     setDataChartFoods(fetchdata?.data)
                 } else {
                     setDataMovies(fetchdata?.data)
+                    setMaxChartMovies(fetchdata?.data[0]?.total_revenue)
                     setDataChartMovies(fetchdata?.data)
                 }
             })
@@ -113,6 +116,7 @@ const HomeAdmin = () => {
                     setDataChartUsers(fetchdata?.data)
                 } else {
                     setDataUsers(fetchdata?.data)
+                    setMaxChartUser(fetchdata?.data[0]?.total_spent)
                     setDataChartUsers(fetchdata?.data)
                 }
             })
@@ -137,6 +141,8 @@ const HomeAdmin = () => {
                     setDataChartFoods(fetchdata?.data)
                 } else {
                     setDataFoods(fetchdata?.data)
+                    setMaxChartFood(fetchdata?.data[0]?.total_revenue);
+
                     setDataChartFoods(fetchdata?.data)
                 }
             })
@@ -152,6 +158,7 @@ const HomeAdmin = () => {
                     })
                     setDataChartMovies(fetchdata?.data)
                 } else {
+                    setMaxChartMovies(fetchdata?.data[0]?.total_revenue)
                     setDataMovies(fetchdata?.data)
                     setDataChartMovies(fetchdata?.data)
 
@@ -172,6 +179,7 @@ const HomeAdmin = () => {
                     setDataUsers(fetchdata?.data)
                 } else {
                     setDataUsers(fetchdata?.data)
+                    setMaxChartUser(fetchdata?.data[0]?.total_spent)
                     setDataChartUsers(fetchdata?.data)
                 }
             })
@@ -231,7 +239,7 @@ const HomeAdmin = () => {
                                 bottom: 5,
                             }}>
                             <XAxis dataKey="food_name" tickFormatter={() => ``} padding={{ left: 20 }} />
-                            <YAxis domain={[0, Number(dataFoods?.total_money_ticket)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
+                            <YAxis domain={[0, Number(maxChartFood)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
                             <Tooltip content={<ContentRechart label={`food_name`} />} />
                             <Legend content={<Content data="Foods" />} />
                             <Bar dataKey="total_revenue" fill="#8884d8" />
@@ -260,7 +268,7 @@ const HomeAdmin = () => {
                                 bottom: 5,
                             }}>
                             <XAxis dataKey="movie_name" tickFormatter={() => ``} padding={{ left: 20 }} />
-                            <YAxis domain={[0, Number(dataFoods?.total_money_ticket)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
+                            <YAxis domain={[0, Number(maxChartMovies)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
                             <Tooltip content={<ContentRechart />} />
                             <Legend content={<Content data="Movies" />} />
                             <Bar dataKey="total_revenue" fill="#8884d8" />
@@ -358,7 +366,7 @@ const HomeAdmin = () => {
                             bottom: 5,
                         }}>
                         <XAxis dataKey="name" tickFormatter={() => ``} padding={{ left: 20 }} />
-                        <YAxis domain={[0, Number(dataUsers?.total_spent)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
+                        <YAxis domain={[0, Number(maxChartUser)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
                         <Tooltip content={<ContentRechart label={`food_name`} />} />
                         <Legend content={<Content data="Người dùng" />} />
                         <Bar dataKey="total_spent" fill="#8884d8" />
