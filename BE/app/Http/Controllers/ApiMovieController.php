@@ -144,8 +144,22 @@ public function showingAdmin(){
   
         if ($request->hasFile('image')) {
             // Upload the new image to Cloudinary
-            $response = cloudinary()->upload($request->file('image')->getRealPath())->getSecurePath();
-            $data['image'] = $response;
+            $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
+    
+            $elements = explode(',', $fileData);
+    
+            // Lấy tất cả các phần tử sau dấu ','
+            $elementsAfterComma = array_slice($elements, 1);
+            // Giải mã dữ liệu base64
+            $decodedData = base64_decode($elementsAfterComma[0]);
+    
+            // Tạo một tên tệp tin duy nhất
+            $uniqueFileName = uniqid('file_');
+    
+            // Lưu dữ liệu vào tệp tin mới tạo
+            $filePath = storage_path('app/' . $uniqueFileName);
+            file_put_contents($filePath, $decodedData);
+            $response = cloudinary()->upload($filePath)->getSecurePath();
     
             // Delete old image from Cloudinary
             $oldImage = $movie->image;

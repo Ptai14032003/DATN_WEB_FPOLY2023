@@ -81,8 +81,10 @@ const CreateQlSp: React.FC = () => {
                     >
                         <Upload listType='picture' beforeUpload={(file) => {
                             return new Promise((resolve, reject) => {
-                                if (file.type === 'image/jpg' || file.type === 'image/png') {
-                                    reject();
+                                if ((file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/webp' || file.type === 'image/jpeg')) {
+                                    if(file.size < 3000000){
+                                        reject();
+                                    }
                                 } else {
                                     message.error("Vui lòng thêm ảnh đúng định dạng")
                                 }
