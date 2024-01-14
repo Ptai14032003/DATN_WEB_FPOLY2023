@@ -1,10 +1,7 @@
-import React, { useState, useRef } from 'react';
-import { Button, Form, Image, Input, InputNumber, Modal, Select, Upload, message } from 'antd';
+import React, { useState } from 'react';
+import { Button, Form, Input, InputNumber, Modal, Select, Upload, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
-import { QlFood } from './page';
-
-
 import { useAddFoodMutation, useFetchTypeFoodsQuery } from '../../rtk/qlSp/qlSp';
 interface QlFoodCreate {
     food_name: string,
@@ -14,48 +11,24 @@ interface QlFoodCreate {
 }
 const CreateQlSp: React.FC = () => {
     const { data: dataTypeFood } = useFetchTypeFoodsQuery()
-    const fileInputRef = useRef(null);
-    const [selectedFile, setSelectedFile] = useState(null);
     const [addFood] = useAddFoodMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
-    const [selectedImage, setSelectedImage] = useState(null);
+    const [checkApi, setCheckApi] = useState(true)
     const selectTypeFood = dataTypeFood?.map((food: any) => ({
         value: food?.id,
         label: food?.name,
     }));
     const onFinish = (values: any) => {
-        const newData = {
-            ...values,
-            image: values.image.file
+        if (checkApi) {
+            addFood(values).then(() => { setIsModalOpen(false); formRef.current?.resetFields(); message.success("Thêm thành công") })
+            setCheckApi(false)
+            return;
         }
-        console.log(newData);
-
-        addFood(newData).then((data) => {
-
-        })
-
     };
-    const onChange = (e) => {
-        const selectedFile = e.target.files[0];
-        console.log(selectedFile);
-
-
-    }
-    const handleFileChange = () => {
-        const file = fileInputRef.current?.files?.[0];
-        if (file) {
-            setSelectedFile(URL.createObjectURL(file));
-        }
-
-
-    };
-    const onFinishFailed = (errorInfo: any) => {
-        console.log('Failed:', errorInfo);
-    };
-
     const showModal = () => {
         setIsModalOpen(true);
+        setCheckApi(true)
     };
     const handleCancel = () => {
         setIsModalOpen(false);
@@ -72,7 +45,6 @@ const CreateQlSp: React.FC = () => {
                     wrapperCol={{ span: 16 }}
                     style={{ maxWidth: 600 }}
                     onFinish={onFinish}
-                    onFinishFailed={onFinishFailed}
                     autoComplete="off"
                     encType='multiple/form-data'
                 >

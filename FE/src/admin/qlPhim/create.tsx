@@ -10,22 +10,27 @@ export interface QlGenre {
 }
 const CreateQlPhim: React.FC = () => {
     const [addMovies] = useAddMoviesMutation()
+    const [checkApi, setCheckApi] = useState(true)
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const formRef = React.useRef<FormInstance>(null);
     const typeMovies = ["2D", "3D"];
-
     const typeOptions = typeMovies.map((type) => ({
         value: type,
         label: type,
     }));
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
-        // addMovies(values).then(() => setIsModalOpen(false))
+        if (checkApi) {
+            addMovies(values).then(() => { setIsModalOpen(false); formRef.current?.resetFields(); message.success("Thêm thành công") })
+            setCheckApi(false)
+            return;
+        }
     };
     const onFinishFailed = (errorInfo: any) => {
         console.log(errorInfo);
     };
     const showModal = () => {
         setIsModalOpen(true);
+        setCheckApi(true)
     };
     const handleCancel = () => {
         setIsModalOpen(false);
