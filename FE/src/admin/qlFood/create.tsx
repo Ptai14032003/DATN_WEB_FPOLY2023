@@ -79,14 +79,14 @@ const CreateQlSp: React.FC = () => {
                         name="image"
                         rules={[{ required: true, message: 'Vui lòng nhập ảnh !' }]}
                     >
-                        <Upload listType='picture' beforeUpload={(file) => {
+                        <Upload listType='picture' multiple={false} beforeUpload={(file) => {
                             return new Promise((resolve, reject) => {
-                                if ((file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/webp' || file.type === 'image/jpeg')) {
-                                    if(file.size < 3000000){
-                                        reject();
-                                    }
+                                if (file.type !== 'image/jpg' && file.type !== 'image/png' && file.type !== 'image/webp' && file.type !== 'image/jpeg') {
+                                    message.error("Ảnh không đúng định dạng.");
+                                } else if (file.size > 2000000) {
+                                    message.error("Ảnh không được lớn hơn 2MB.");
                                 } else {
-                                    message.error("Vui lòng thêm ảnh đúng định dạng")
+                                    reject();
                                 }
                             })
                         }} maxCount={1} multiple>

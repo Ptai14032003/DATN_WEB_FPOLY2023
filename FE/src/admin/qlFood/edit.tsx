@@ -3,19 +3,17 @@ import { Button, Form, Image, Input, InputNumber, Modal, Upload, message } from 
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
 import { QlFood } from './page';
-import { useFetchFoodIDQuery } from '../../rtk/qlSp/qlSp';
-import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
-
+import { useFetchFoodIDQuery, useUpdateFoodMutation } from '../../rtk/qlSp/qlSp';
 type Props = {
     projects: string
 }
 const EditQlSp: React.FC<Props> = ({ projects }: Props) => {
     const { data } = useFetchFoodIDQuery(projects)
+    const [putFood] = useUpdateFoodMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
-        console.log(values.image.file);
-
+        putFood({ body: values, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -80,12 +78,14 @@ const EditQlSp: React.FC<Props> = ({ projects }: Props) => {
                             name="image"
                             rules={[{ required: true, message: 'Vui lòng nhập ảnh !' }]}
                         >
-                            <Upload listType='picture' beforeUpload={(file) => {
+                            <Upload listType='picture' multiple={false} beforeUpload={(file) => {
                                 return new Promise((resolve, reject) => {
-                                    if (file.type === 'image/jpg' || file.type === 'image/png') {
-                                        reject();
+                                    if (file.type !== 'image/jpg' && file.type !== 'image/png' && file.type !== 'image/webp' && file.type !== 'image/jpeg') {
+                                        message.error("Ảnh không đúng định dạng.");
+                                    } else if (file.size > 2000000) {
+                                        message.error("Ảnh không được lớn hơn 2MB.");
                                     } else {
-                                        message.error("Vui lòng thêm ảnh đúng định dạng")
+                                        reject();
                                     }
                                 })
                             }} maxCount={1} multiple>

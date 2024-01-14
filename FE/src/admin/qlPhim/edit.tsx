@@ -59,8 +59,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
         label: type,
     }));
     const onFinish = (values: any) => {
-        console.log(values);
-        // putMovie({ body: values, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
+        putMovie({ body: values, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
 
     };
 
@@ -150,13 +149,17 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                             name="image"
                             rules={[{ required: true, message: 'Vui lòng nhập ảnh !' }]}
                         >
-                            <Upload listType='picture' beforeUpload={(file) => {
+                            <Upload listType='picture' multiple={false} beforeUpload={(file) => {
                                 return new Promise((resolve, reject) => {
-                                    if (file.type === 'image/jpg' || file.type === 'image/png') {
-                                        reject();
-                                    } else {
-                                        message.error("Vui lòng thêm ảnh đúng định dạng")
-                                    }
+                                    return new Promise((resolve, reject) => {
+                                        if (file.type !== 'image/jpg' && file.type !== 'image/png' && file.type !== 'image/webp' && file.type !== 'image/jpeg') {
+                                            message.error("Ảnh không đúng định dạng.");
+                                        } else if (file.size > 2000000) {
+                                            message.error("Ảnh không được lớn hơn 2MB.");
+                                        } else {
+                                            reject();
+                                        }
+                                    });
                                 })
                             }} maxCount={1} multiple>
                                 <Button icon={<UploadOutlined />}>Click to Upload </Button>

@@ -109,15 +109,17 @@ const CreateQlPhim: React.FC = () => {
                         name="image"
                         rules={[{ required: true, message: 'Vui lòng nhập ảnh !' }]}
                     >
-                        <Upload listType='picture' beforeUpload={(file) => {
+                        <Upload multiple={false} listType='picture' beforeUpload={(file) => {
                             return new Promise((resolve, reject) => {
-                                if (file.type === 'image/jpg' || file.type === 'image/png') {
-                                    reject();
+                                if (file.type !== 'image/jpg' && file.type !== 'image/png' && file.type !== 'image/webp' && file.type !== 'image/jpeg') {
+                                    message.error("Ảnh không đúng định dạng.");
+                                } else if (file.size > 2000000) {
+                                    message.error("Ảnh không được lớn hơn 2MB.");
                                 } else {
-                                    message.error("Vui lòng thêm ảnh đúng định dạng")
+                                    reject();
                                 }
                             })
-                        }} maxCount={1} multiple>
+                        }} maxCount={1} >
                             <Button icon={<UploadOutlined />}>Click to Upload </Button>
                         </Upload>
                     </Form.Item>
