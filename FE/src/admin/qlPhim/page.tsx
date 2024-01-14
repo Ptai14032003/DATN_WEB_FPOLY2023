@@ -26,6 +26,8 @@ export type QlPhim = {
     trailer: string;
     describe: string;
     movie_time: number
+    start_date: string,
+    end_date: string
 }
 const AdminQlPhim: React.FC = () => {
     const { data: dataMovies, isLoading, error } = useFetchMoviesQuery()

@@ -19,9 +19,7 @@ const CreateQlPhim: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
-        console.log(values);
-
-        addMovies(values).then(() => setIsModalOpen(false))
+        // addMovies(values).then(() => setIsModalOpen(false))
     };
     const onFinishFailed = (errorInfo: any) => {
         console.log(errorInfo);
@@ -74,8 +72,8 @@ const CreateQlPhim: React.FC = () => {
                     </Form.Item>
                     <Form.Item<QlPhim>
                         label="Thời lượng"
-                        name="country_name"
-                        rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
+                        name="movie_time"
+                        rules={[{ required: true, message: 'Vui lòng nhập thời lượng phim !' }]}
                     >
                         <InputNumber min={0} />
                     </Form.Item>
@@ -123,6 +121,20 @@ const CreateQlPhim: React.FC = () => {
                         rules={[{ required: true, message: 'Vui lòng nhập trailer !' }, { type: "url", message: 'Vui lòng nhập đúng định dạng !' }]}
                     >
                         <Input />
+                    </Form.Item>
+                    <Form.Item<QlPhim>
+                        label="Ngày bắt đầu"
+                        name="start_date"
+                        rules={[{ required: true, message: 'Vui lòng nhập ngày bắt đầu !' }]}
+                    >
+                        <Input type='date' style={{ width: 200, marginLeft: -70 }} />
+                    </Form.Item>
+                    <Form.Item<QlPhim>
+                        label="Ngày kết thúc"
+                        name="end_date"
+                        rules={[{ required: true, message: 'Vui lòng nhập ngày kết thúc !' }]}
+                    >
+                        <Input type='date' style={{ width: 200, marginLeft: -70 }} />
                     </Form.Item>
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button htmlType="submit" className='mr-[80px]'>
