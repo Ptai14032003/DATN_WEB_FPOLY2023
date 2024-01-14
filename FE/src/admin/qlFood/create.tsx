@@ -47,7 +47,7 @@ const CreateQlSp: React.FC = () => {
         if (file) {
             setSelectedFile(URL.createObjectURL(file));
         }
-        console.log(URL.createObjectURL(file));
+
 
     };
     const onFinishFailed = (errorInfo: any) => {
