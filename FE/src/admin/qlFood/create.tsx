@@ -31,9 +31,9 @@ const CreateQlSp: React.FC = () => {
         }
         console.log(newData);
 
-        // addFood(newData).then((data) => {
+        addFood(newData).then((data) => {
 
-        // })
+        })
 
     };
     const onChange = (e) => {
@@ -107,7 +107,7 @@ const CreateQlSp: React.FC = () => {
                         name="image"
                         rules={[{ required: true, message: 'Vui lòng nhập ảnh !' }]}
                     >
-                        {/* <Upload listType='picture' beforeUpload={(file) => {
+                        <Upload listType='picture' beforeUpload={(file) => {
                             return new Promise((resolve, reject) => {
                                 if (file.type === 'image/jpg' || file.type === 'image/png') {
                                     reject();
@@ -117,9 +117,7 @@ const CreateQlSp: React.FC = () => {
                             })
                         }} maxCount={1} multiple>
                             <Button icon={<UploadOutlined />}>Click to Upload </Button>
-                        </Upload> */}
-                        <input type="file" multiple name="" id="" onChange={handleFileChange} ref={fileInputRef} />
-                        {selectedFile && <img src={selectedFile} alt="Selected" />}
+                        </Upload>
                     </Form.Item>
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button htmlType="submit">

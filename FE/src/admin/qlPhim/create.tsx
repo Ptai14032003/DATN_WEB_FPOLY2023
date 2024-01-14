@@ -73,7 +73,7 @@ const CreateQlPhim: React.FC = () => {
                     <Form.Item<QlPhim>
                         label="Thời lượng"
                         name="movie_time"
-                        rules={[{ required: true, message: 'Vui lòng nhập thời lượng phim !' }]}
+                        rules={[{ required: true, message: 'Vui lòng nhập thời lượng !' }]}
                     >
                         <InputNumber min={0} />
                     </Form.Item>
