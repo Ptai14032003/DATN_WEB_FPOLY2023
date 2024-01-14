@@ -139,9 +139,12 @@ public function showingAdmin(){
             return response()->json(['messages' => 'Phim không tồn tại'], 404);
         }
     
+        // Initialize the $data array
+        $data = [];
+    
         // Update the movie data
         $movie->update($request->all());
-  
+    
         if ($request->hasFile('image')) {
             // Upload the new image to Cloudinary
             $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
@@ -167,15 +170,17 @@ public function showingAdmin(){
                 $publicId = cloudinary()->getPublicIdFromPath($oldImage);
                 cloudinary()->destroy($publicId);
             }
-        } else {
-            // If no new image is provided, keep the existing image
-            $data['image'] = $movie->image;
-        }
-        // Update the movie record with the new data
-        $movie->update($data);
     
-    return response()->json(['messages' => 'Cập nhật phim thành công'], 202);
+            // Update the image link in the $data array
+            $data['image'] = $response;
+    
+            // Update the movie record with the new image link
+            $movie->update($data);
+        }
+    
+        return response()->json(['messages' => 'Cập nhật phim thành công'], 202);
     }
+    
     
     public function destroy(string $id){
         $movie = Movie::find($id);
