@@ -16,6 +16,7 @@ const CreateQlPhongChieu: React.FC = () => {
     const [tongGhe, setTongGhe] = useState<any>();
     const [seat, setSeat] = useState<any>([])
     const [buttonClick, setButtonClick] = useState<any>(1)
+    const [nameRoom, setNameRoom] = useState<any>('')
     const [messageApi, contextHolder] = message.useMessage();
     const [dataRoom, setDataRoom] = useState<any>({})
     const onFinish = (values: any) => {
@@ -166,9 +167,21 @@ const CreateQlPhongChieu: React.FC = () => {
         }
     }, [dataSeat],)
     const addPhong = () => {
-        const newData = [...dataSeat, dataRoom]
+        const newDataRoom = {
+            ...dataRoom,
+            name: nameRoom
+        }
+        const newData = [...dataSeat, newDataRoom]
         if (checkApi) {
-            addPhongChieu(newData).then(() => { setIsModalOpen(false); message.success("Tạo mới thành công"); formRef.current?.resetFields(); setCheckApi(false) })
+            addPhongChieu(newData).then((data: any) => {
+                if (data?.data?.name) {
+                    message.error(data?.data?.name)
+                } else {
+                    setIsModalOpen(false); message.success("Tạo mới thành công");
+                    formRef.current?.resetFields(); setCheckApi(false); setDataSeat([])
+                    setSeat([])
+                }
+            })
         }
     }
     return (
@@ -194,7 +207,7 @@ const CreateQlPhongChieu: React.FC = () => {
                         name="name"
                         rules={[{ required: true, message: 'Vui lòng nhập tên phòng !' }]}
                     >
-                        <Input />
+                        <Input onChange={(e) => setNameRoom(e.target.value)} />
                     </Form.Item>
 
                     <Form.Item<PhongChieu1>
