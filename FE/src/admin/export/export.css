@@ -1,4 +1,42 @@
 .ModalTicket{
-    width: 650px!important;
+    width: 1100px!important;
     margin: 0 auto;
+}
+.ant-modal-content{
+    background-color: white!important;
+}
+.ant-btn-default, .ant-btn-primary{
+    display: none;
+}
+.left-bill {
+    position: relative;
+}
+.left-bill:before {
+    top: -5px;
+    background: radial-gradient(circle, transparent, transparent 50%, rgb(185 28 28 / var(--tw-bg-opacity)) 50%, rgb(185 28 28 / var(--tw-bg-opacity)) 100%) -7px -8px/16px 16px repeat-x;
+}
+.left-bill:before, .left-bill:after {
+    content: "";
+    position: absolute;
+    transform: rotate(90deg);
+    height: 6px;
+    width: 215px;
+    right: -33%;
+    top: 48.5%;
+}
+.left-combo {
+    position: relative;
+}
+.left-combo:before {
+    top: -5px;
+    background: radial-gradient(circle, transparent, transparent 50%, rgb(185 28 28 / var(--tw-bg-opacity)) 50%, rgb(185 28 28 / var(--tw-bg-opacity)) 100%) -7px -8px/16px 16px repeat-x;
+}
+.left-combo:before, .left-combo:after {
+    content: "";
+    position: absolute;
+    transform: rotate(90deg);
+    height: 6px;
+    width: 130px;
+    right: -20.5%;
+    top: 47.8%;
 }

@@ -31,8 +31,32 @@ const bookingApi = createApi({
             }),
             invalidatesTags: ["booking"],
           }),
+        listBill: builder.mutation<{ message: string, user:{} }, any>({
+            query: (body) => ({
+              url: "admin/get_list_bill_export",
+              method: "POST",
+              body,
+            }),
+            invalidatesTags: ["booking"],
+          }),
+        getBillId: builder.mutation<void, any>({
+            query: (id) => ({
+              url: "admin/get_bill_export",
+              method: "POST",
+              body: id
+            }),
+            invalidatesTags: ["booking"],
+          }),
+        exportBill: builder.mutation<void, any>({
+            query: (id) => ({
+              url: "admin/export",
+              method: "POST",
+              body: id
+            }),
+            invalidatesTags: ["booking"],
+          }),
     })
 })
-export const { useFetchSeatRoomIdQuery, useTicketHistoryMutation } = bookingApi
+export const { useFetchSeatRoomIdQuery, useTicketHistoryMutation, useListBillMutation, useGetBillIdMutation, useExportBillMutation } = bookingApi
 
 export default bookingApi
