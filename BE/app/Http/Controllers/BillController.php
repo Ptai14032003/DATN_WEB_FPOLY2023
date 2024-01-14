@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bill;
+use App\Models\Ticket;
+use App\Models\Ticket_Food;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -122,9 +124,11 @@ class BillController extends Controller
     public function destroy($id)
     {
         $bill = Bill::find($id);
+        $ticket = Ticket::where('bill_id', $id)->delete();
+        $ticket_food = Ticket_Food::where('bill_id', $id)->delete();
         $bill->delete();
         return response()->json([
-            "message" => "delete successfully"
+            "message" => "xóa thành công"
         ]);
     }
 
@@ -134,7 +138,7 @@ class BillController extends Controller
     public function history(Request $request)
     {
         $bills = Bill::leftjoin('users', 'users.user_code', '=', 'bills.user_code')
-            ->leftjoin('personnels','personnels.personnel_code','=','bills.personnel_code')
+            ->leftjoin('personnels', 'personnels.personnel_code', '=', 'bills.personnel_code')
             ->join('tickets', 'tickets.bill_id', '=', 'bills.id')
             ->join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
             ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
@@ -174,6 +178,7 @@ class BillController extends Controller
                 'show_date',
                 'payment_status'
             )
+            ->orderBy('bills.id', 'desc') 
             ->get();
         return response()->json($bills);
     }
