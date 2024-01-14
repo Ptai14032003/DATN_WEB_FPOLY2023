@@ -27,6 +27,8 @@ const TicketHistory = () => {
           await ticketHistory(newData).unwrap()
             .then((data: any) =>
               setData(data)
+              // console.log(data)
+              
             )
         } else {
           message.error('Không tìm thấy mã người dùng');
@@ -59,6 +61,7 @@ const TicketHistory = () => {
                           <p>{item?.show_date}</p>
                           <p>{item?.booking_date}</p>
                           <p>{item?.total_combo}</p>
+                          <p>Bắp nước: {item?.food_name}</p>
                         </div>
                       </div>
                       <div className='billUser'>

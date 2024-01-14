@@ -31,6 +31,7 @@ import BookingAdmin from './admin/booking/page.tsx'
 import BookingAdminMovies from './admin/booking/booking.tsx'
 import BookingSeatAdmin from './admin/booking/bookingSeat.tsx'
 import HomeAdmin from './admin/home/page.tsx'
+import ExportTicket from './admin/export/exportTicket.tsx'
 function App() {
   const checkLocal = localStorage.getItem("user");
   const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
@@ -86,6 +87,7 @@ function App() {
               <Route path='seat/:id' element={<BookingSeatAdmin />} />
             </Route>
           </Route>
+          <Route path='export-ticket' element={<ExportTicket />}></Route>
         </Route>
       ) : (
         <Route path='/notfound' element={<NotFound />}></Route>

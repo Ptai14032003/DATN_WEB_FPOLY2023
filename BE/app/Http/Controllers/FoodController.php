@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
 use Cloudinary\Cloudinary;
+use Illuminate\Support\Facades\Storage;
 
 class FoodController extends Controller
 {
@@ -17,6 +18,7 @@ class FoodController extends Controller
     {
         $food = Food::join('food_types', 'foods.food_type_id', '=', 'food_types.id')
         ->select('foods.*', 'food_types.name')
+        ->orderBy('foods.id', 'desc')
         ->whereNull('foods.deleted_at')
         ->get();
         $food->makeHidden(['food_type_id']);
@@ -27,24 +29,37 @@ class FoodController extends Controller
 
     public function store(Request $request){
         
-        if($request->hasFile('image')){
-            $response = cloudinary()->upload($request->file('image')->getRealPath())->getSecurePath();
-            $image = $response;
-           
-            $food_name = $request->get('food_name');
-            $price = $request->get('price');
-            $food_type_id = $request->get('food_type_id');
-            $data = [
-                'image' => $image,
-                'food_name' => $food_name,
-                'price' => $price,
-                'food_type_id' => $food_type_id,
-            ];
 
-            Food::create($data);   
-            return response()->json(['message' => 'Thêm Thành công'], 200);
-        }
+    $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
+    
+    $elements = explode(',', $fileData);
 
+    // Lấy tất cả các phần tử sau dấu ','
+    $elementsAfterComma = array_slice($elements, 1);
+    // Giải mã dữ liệu base64
+    $decodedData = base64_decode($elementsAfterComma[0]);
+
+    // Tạo một tên tệp tin duy nhất
+    $uniqueFileName = uniqid('file_');
+
+    // Lưu dữ liệu vào tệp tin mới tạo
+    $filePath = storage_path('app/' . $uniqueFileName);
+    file_put_contents($filePath, $decodedData);
+    $response = cloudinary()->upload($filePath)->getSecurePath();
+
+    $food_name = $request->get('food_name');
+    $price = $request->get('price');
+    $food_type_id = $request->get('food_type_id');
+    $data = [
+        'image' => $response,
+        'food_name' => $food_name,
+        'price' => $price,
+        'food_type_id' => $food_type_id,
+    ];
+
+    Food::create($data);   
+    // Đây là real path của tệp tin
+    return response()->json(['real_path' => $response]);
     }
 
     /**
