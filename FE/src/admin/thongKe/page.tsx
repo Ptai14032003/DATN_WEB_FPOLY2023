@@ -45,6 +45,7 @@ const ThongKe = () => {
             })
             getRevenueAll(traCuu).then((fetchdata: any) => {
                 if (fetchdata?.data?.error) {
+                    message.error(fetchdata?.data?.error)
                     setData({
                         quantity_bill: 0,
                         total_money: 0,
@@ -59,7 +60,6 @@ const ThongKe = () => {
                 } else {
                     setData(fetchdata?.data)
                     if (typeSearch === "month") {
-
                         setDataChart(fetchdata?.data?.dailyRevenue)
                     } else {
                         setDataChart(fetchdata?.data?.monthlyRevenue)
@@ -91,6 +91,7 @@ const ThongKe = () => {
                 })
                 getRevenueAll(dateData).then((fetchdata: any) => {
                     if (fetchdata?.data?.error) {
+                        message.error(fetchdata?.data?.error)
                         setData({
                             quantity_bill: 0,
                             total_money: 0,

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Form, Modal, Select, Input, TimePicker } from 'antd';
+import { Button, Form, Modal, Select, Input, TimePicker, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 // import dayjs from 'dayjs';
 import { useAddSuatChieuMutation } from '../../rtk/qlSc/qlSc';
@@ -7,13 +7,15 @@ import { useFetchMoviesQuery } from '../../rtk/movies/movies';
 import { useFetchPhongChieuQuery } from '../../rtk/qlPhongChieu/qlPhongChieu';
 import { SuatChieu } from '../../type';
 import { QlSuatChieu } from './page';
-
+import type { Dayjs } from 'dayjs';
 import { useFetchMoviesPersonQuery } from '../../rtk/moviesPerson/moviesPerson';
 const CreateQlSc: React.FC = () => {
     const [addSc] = useAddSuatChieuMutation()
     // const { data: dataMovie } = useFetchMoviesQuery()
     const { data: dataRoom } = useFetchPhongChieuQuery()
     const { data: dataMovie } = useFetchMoviesPersonQuery()
+    const [time, setTime] = useState("")
+    const [checkApi, setCheckApi] = useState(true)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const movieOptions = dataMovie?.map((movie: any) => ({
@@ -26,16 +28,26 @@ const CreateQlSc: React.FC = () => {
         value: room.id,
         label: room.name,
     })) || [];
+    const onChange = (time: Dayjs, timeString: string) => {
+        setTime(timeString);
+    };
     const onFinish = (values: QlSuatChieu) => {
-        console.log(values);
-
-        addSc(values).then(() => { setIsModalOpen(false); formRef.current?.resetFields(); })
+        const newData = {
+            ...values,
+            show_time: time
+        }
+        if (checkApi) {
+            addSc(newData).then(() => { setIsModalOpen(false); formRef.current?.resetFields(); message.success("Thêm thành công") })
+            setCheckApi(false)
+            return;
+        }
     };
 
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
     };
     const showModal = () => {
+        setCheckApi(true)
         setIsModalOpen(true);
     };
     const handleCancel = () => {
@@ -94,7 +106,7 @@ const CreateQlSc: React.FC = () => {
                         name="show_time"
                         rules={[{ required: true, message: 'Vui lòng nhập thời gian!' }]}
                     >
-                        {/* <TimePicker style={{ width: 200 }} value={dayjs('12:08', 'HH:mm')} format={'HH:mm'} /> */}
+                        <TimePicker style={{ width: 200 }} onChange={onChange} format={'HH:mm'} />
                     </Form.Item>
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button htmlType="submit" className='mr-[80px]'>

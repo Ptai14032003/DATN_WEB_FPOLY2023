@@ -5,7 +5,7 @@ import { useTicketHistoryMutation } from '../rtk/booking/booking'
 import { message } from 'antd'
 
 const TicketHistory = () => {
-  const [ticketHistory] = useTicketHistoryMutation();
+  // const [ticketHistory] = useTicketHistoryMutation();
   const userString = localStorage.getItem('user');
   const user = userString ? JSON.parse(userString) : null;
   

@@ -69,10 +69,17 @@ Route::prefix('admin')->group(function () {
     //lịch sử đặt vé trang admin
     Route::get('/history_bills', [BillController::class, "history"])->name('history_bills');
 
-    Route::resource('bill', BillController::class);
+    // Route::resource('bill', BillController::class);
     Route::resource('food', FoodController::class);
     Route::resource('food_type', TypeFoodController::class);
+    Route::prefix('bill')->group(function () {
+        Route::get('/', [BillController::class, 'index']);
+        Route::post('/', [BillController::class, 'store']);
 
+        Route::get('/{id}', [BillController::class, 'edit']);
+        Route::put('/{id}', [BillController::class, 'update']);
+        Route::delete('/{id}', [BillController::class, 'destroy']);
+    });
     Route::prefix('movies')->group(function () {
         Route::get('/', [ApiMovieController::class, 'index']);
         Route::post('/', [ApiMovieController::class, 'store']);
@@ -85,6 +92,7 @@ Route::prefix('admin')->group(function () {
     Route::delete('/destroyMultiplePromotion', [ApiPromotionController::class, 'destroyMultiplePromotion']);
     Route::delete('/destroyMultipleFood', [FoodController::class, 'destroyMultipleFood']);
     Route::delete('/destroyMultipleRoom',[RoomApiController::class,'destroyMultipleRoom']);
+    Route::get('/showingAdmin', [ApiMovieController::class, "showingAdmin"])->name('showingAdmin');
     Route::prefix('movie_type')->group(function () {
         Route::get('/', [ApiMovieTypeController::class, 'index']);
         Route::post('/', [ApiMovieTypeController::class, 'store']);

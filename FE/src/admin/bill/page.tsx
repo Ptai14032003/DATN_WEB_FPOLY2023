@@ -33,20 +33,6 @@ const AdminQlBill: React.FC = () => {
     const [deleteMovie] = useDeleteMoviesMutation()
     const [dataTable, setDataTable] = useState<QlPhim[]>([])
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
-    const onSelectChange = (newSelectedRowKeys: any[]) => {
-        setSelectedRowKeys(newSelectedRowKeys);
-    };
-    const DeleteAll = () => {
-        console.log(selectedRowKeys);
-        message.success("Xóa thành công");
-    }
-    const rowSelection = {
-        selectedRowKeys,
-        onChange: onSelectChange,
-    };
-    const hasSelected = selectedRowKeys.length > 0;
-
     const fuseOptions = {
         includeScore: true,
         includeMatches: true,
@@ -145,27 +131,6 @@ const AdminQlBill: React.FC = () => {
                     value={searchTerm}
                     onChange={(e) => searchProject(e.target.value)} />
             </div>
-            <span style={{ marginLeft: 8 }}>
-                {hasSelected ? (
-                    <Popconfirm
-                        title="Delete the task"
-                        description="Are you sure to delete this task?"
-                        onConfirm={() => {
-                            DeleteAll();
-                        }}
-                        okButtonProps={{
-                            style: { backgroundColor: "#007bff" },
-                        }}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <Button danger>
-                            {`Delete ${selectedRowKeys.length} items`}
-                        </Button>
-                    </Popconfirm>) : (
-                    <div></div>
-                )}
-            </span>
             {isLoading ? (
                 <Waveform
                     size={40}
@@ -174,7 +139,7 @@ const AdminQlBill: React.FC = () => {
                     color="black"
                 />
             ) : (
-                <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 4, }}>
+                <Table dataSource={dataTable} pagination={{ pageSize: 4, }}>
                     <Column title="Mã người dùng " dataIndex="user_code" key="user_code" />
                     <Column title="Tên người dùng " dataIndex="user_name" key="user_name" />
                     <Column title="Phim " dataIndex="movie_name" key="movie_name" />

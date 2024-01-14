@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, Modal, Select } from 'antd';
+import { Button, Form, Input, Modal, Select, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { useAddNhanSuMutation } from '../../rtk/qlNhanSu/qlNhanSu';
 export interface QlNhanSuAdd {
@@ -16,7 +16,8 @@ export interface QlNhanSuAdd {
 }
 const CreateQlNhanSu: React.FC = () => {
     const [addNhanSu] = useAddNhanSuMutation()
-    const selectGender = ["Nam", "Nữ", "Không muốn trả lời"]
+    const selectGender = ["Nam", "Nữ"]
+    const [dataError, setDataError] = useState<any>()
     const GenderOptions = selectGender.map((gender) => ({
         value: gender,
         label: gender,
@@ -29,17 +30,21 @@ const CreateQlNhanSu: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
-        console.log(values);
-        
-        addNhanSu(values).then(() => setIsModalOpen(false))
+        addNhanSu(values).then((data: any) => {
+            if (!data?.data.message) {
+                setDataError(data?.data)
+            } else { setIsModalOpen(false); formRef.current?.resetFields(); message.success("Tạo nhân sự thành công") }
+        })
     };
     const onFinishFailed = (errorInfo: any) => {
     };
     const showModal = () => {
+        setDataError(null)
         setIsModalOpen(true);
     };
     const handleCancel = () => {
         setIsModalOpen(false);
+        setDataError(null)
         formRef.current?.resetFields();
     };
     return (
@@ -70,6 +75,7 @@ const CreateQlNhanSu: React.FC = () => {
                     >
                         <Input />
                     </Form.Item>
+                    <div className='text-red-500 pb-[10px]'>{dataError?.email}</div>
                     <Form.Item<QlNhanSuAdd>
                         label="Số điện thoại"
                         name="phone_number"
@@ -77,6 +83,7 @@ const CreateQlNhanSu: React.FC = () => {
                     >
                         <Input />
                     </Form.Item>
+                    <div className='text-red-500 pb-[10px] pl-[80px]'>{dataError?.phone_number}</div>
                     <Form.Item<QlNhanSuAdd>
                         label="Mật khẩu"
                         name="password"
@@ -84,6 +91,7 @@ const CreateQlNhanSu: React.FC = () => {
                     >
                         <Input type="password" />
                     </Form.Item>
+                    <div className='text-red-500 pb-[10px] pl-[80px]'>{dataError?.password}</div>
                     <Form.Item<QlNhanSuAdd>
                         label="Địa chỉ"
                         name="address"
@@ -96,7 +104,7 @@ const CreateQlNhanSu: React.FC = () => {
                         name="birthday"
                         rules={[{ required: true, message: 'Vui lòng nhập ngày sinh!' }]}
                     >
-                        <Input type='date' style={{ width: 200 }} />
+                        <Input type='date' style={{ width: 200, marginLeft: -70 }} />
                     </Form.Item>
                     <Form.Item<QlNhanSuAdd>
                         label="Giới tính"
@@ -104,7 +112,7 @@ const CreateQlNhanSu: React.FC = () => {
                         rules={[{ required: true, message: 'Vui lòng nhập giới tính !' }]}
                     >
                         <Select className='ml-[-72px]'
-                            defaultValue="Chọn giới tính"
+                            placeholder="Chọn giới tính"
                             style={{ width: 200 }}
                             options={GenderOptions}
                         />
@@ -114,15 +122,16 @@ const CreateQlNhanSu: React.FC = () => {
                         name="date_start"
                         rules={[{ required: true, message: 'Vui lòng nhập ngày bắt đầu!' }]}
                     >
-                        <Input type='date' style={{ width: 200 }} />
+                        <Input type='date' style={{ width: 200, marginLeft: -70 }} />
                     </Form.Item>
+                    <div className='text-red-500 pb-[10px] pl-[80px]'>{dataError?.date_start}</div>
                     <Form.Item<QlNhanSuAdd>
                         label="Chức vụ"
                         name="role"
                         rules={[{ required: true, message: 'Vui lòng nhập mô tả !' }]}
                     >
                         <Select className='ml-[-72px]'
-                            defaultValue="Chọn chức vụ"
+                            placeholder="Chọn chức vụ"
                             style={{ width: 200 }}
                             options={RoleOptions}
                         />
@@ -133,7 +142,7 @@ const CreateQlNhanSu: React.FC = () => {
                         </Button>
                     </Form.Item>
                 </Form>
-            </Modal>
+            </Modal >
         </>
     )
 };
