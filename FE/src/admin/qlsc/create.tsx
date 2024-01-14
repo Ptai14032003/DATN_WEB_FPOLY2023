@@ -3,7 +3,6 @@ import { Button, Form, Modal, Select, Input, TimePicker, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 // import dayjs from 'dayjs';
 import { useAddSuatChieuMutation } from '../../rtk/qlSc/qlSc';
-import { useFetchMoviesQuery } from '../../rtk/movies/movies';
 import { useFetchPhongChieuQuery } from '../../rtk/qlPhongChieu/qlPhongChieu';
 import { SuatChieu } from '../../type';
 import { QlSuatChieu } from './page';
@@ -29,7 +28,7 @@ const CreateQlSc: React.FC = () => {
         label: room.name,
     })) || [];
 
-    const onChange = (time: Dayjs, timeString: string) => {
+    const onChange = (timeString: string) => {
         setTime(timeString);
     };
     const onFinish = (values: QlSuatChieu) => {
