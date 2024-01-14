@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Actor;
 use App\Models\Movie;
 use App\Models\Movie_Genre;
+use App\Models\Movie_Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -50,19 +51,35 @@ public function showingAdmin(){
 }
     public function store(Request $request){
 
-        if($request->image){
-            $result = cloudinary()->uploadApi()->upload($request->file);
-            // $response = cloudinary()->upload($request->image->getRealPath())->getSecurePath();
-            $image = $response;
+        // if($request->image){
+            // $result = cloudinary()->uploadApi()->upload($request->file);
+        $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
+    
+        $elements = explode(',', $fileData);
+
+        // Lấy tất cả các phần tử sau dấu ','
+        $elementsAfterComma = array_slice($elements, 1);
+        // Giải mã dữ liệu base64
+        $decodedData = base64_decode($elementsAfterComma[0]);
+
+        // Tạo một tên tệp tin duy nhất
+        $uniqueFileName = uniqid('file_');
+
+        // Lưu dữ liệu vào tệp tin mới tạo
+        $filePath = storage_path('app/' . $uniqueFileName);
+        file_put_contents($filePath, $decodedData);
+        $response = cloudinary()->upload($filePath)->getSecurePath();
+
+            $type_name = $request->get('type_name');
+            $movie_type = Movie_Type::where('type_name',$type_name)->first();
+
             $movie_name = $request->get('movie_name');
             $producer_name = $request->get('producer_name');
             $country_name = $request->get('country_name');
-            $movie_type_id = $request->get('movie_type_id');
             $genre = $request->get('genre');
             $director = $request->get('director');
             $start_date = $request->get('start_date');
             $end_date = $request->get('end_date');
-            $total_revenue = $request->get('total_revenue');
             $trailer = $request->get('trailer');
             $actor_name = $request->get('actor_name');
             $movie_time = $request->get('movie_time');
@@ -70,22 +87,21 @@ public function showingAdmin(){
             $data = [
                 'movie_name' => $movie_name,
                 'country_name' => $country_name,
-                'movie_type_id' => $movie_type_id,
+                'movie_type_id' => $movie_type->id,
                 'genre' => $genre,
                 'director' => $director,
                 'actor_name' => $actor_name,
-                'start_date' => $start_date,    
-                'end_date' => $end_date,
-                'total_revenue'=> $total_revenue,
+                'start_date' => '2024-01-10',    
+                'end_date' => '2024-01-15',
                 'movie_time'=> $movie_time,
-                'image' => $image,
+                'image' => $response,
                 'trailer' => $trailer,
-                'describe' => $describe
+                'describe' => ''
             ];
-            // Movie::create($data); 
-            return response()->json($request->image->getRealPath());
+            Movie::create($data); 
+            return response()->json($data);
 
-        }
+        // }
         // }else{
         //     return $this->returnError(202, 'file is required');
         // }
@@ -123,26 +139,30 @@ public function showingAdmin(){
             return response()->json(['messages' => 'Phim không tồn tại'], 404);
         }
     
+        // Initialize the $data array
+        $data = [];
+    
         // Update the movie data
         $movie->update($request->all());
     
-        // // Update genres
-        // $gen = DB::table('movie_genres')      
-        // ->where('movie_genres.movie_id', $id)
-        // ->delete();
-
-        // $newGenre = $request->input('genres');
-     
-        // foreach ($newGenre as $new){
-        //     $genreID = DB::table('list_genres')->where('genre' , $new)->first();
-        //     Movie_Genre::create(['movie_id' => $id, 'list_genre_id' => $genreID->id]);
-        // }
-  
-     
         if ($request->hasFile('image')) {
             // Upload the new image to Cloudinary
-            $response = cloudinary()->upload($request->file('image')->getRealPath())->getSecurePath();
-            $data['image'] = $response;
+            $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
+    
+            $elements = explode(',', $fileData);
+    
+            // Lấy tất cả các phần tử sau dấu ','
+            $elementsAfterComma = array_slice($elements, 1);
+            // Giải mã dữ liệu base64
+            $decodedData = base64_decode($elementsAfterComma[0]);
+    
+            // Tạo một tên tệp tin duy nhất
+            $uniqueFileName = uniqid('file_');
+    
+            // Lưu dữ liệu vào tệp tin mới tạo
+            $filePath = storage_path('app/' . $uniqueFileName);
+            file_put_contents($filePath, $decodedData);
+            $response = cloudinary()->upload($filePath)->getSecurePath();
     
             // Delete old image from Cloudinary
             $oldImage = $movie->image;
@@ -150,15 +170,17 @@ public function showingAdmin(){
                 $publicId = cloudinary()->getPublicIdFromPath($oldImage);
                 cloudinary()->destroy($publicId);
             }
-        } else {
-            // If no new image is provided, keep the existing image
-            $data['image'] = $movie->image;
-        }
-        // Update the movie record with the new data
-        $movie->update($data);
     
-    return response()->json(['messages' => 'Cập nhật phim thành công'], 202);
+            // Update the image link in the $data array
+            $data['image'] = $response;
+    
+            // Update the movie record with the new image link
+            $movie->update($data);
+        }
+    
+        return response()->json(['messages' => 'Cập nhật phim thành công'], 202);
     }
+    
     
     public function destroy(string $id){
         $movie = Movie::find($id);

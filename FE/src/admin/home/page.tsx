@@ -22,6 +22,9 @@ const HomeAdmin = () => {
     const [typeSearchMovies, setTypeSearchMovies] = useState<any>('year');
     const [typeSearchFood, setTypeSearchFood] = useState<any>('year');
     const [typeSearchUser, setTypeSearchUser] = useState<any>('year');
+    const [maxChartFood, setMaxChartFood] = useState<number>()
+    const [maxChartMovies, setMaxChartMovies] = useState<number>()
+    const [maxChartUser, setMaxChartUser] = useState<number>()
     const [traCuu, setTraCuu] = useState<any>()
     const [convert, setConvert] = useState<any>(0)
     const onChangeFood: DatePickerProps['onChange'] = (date, dateString) => {
@@ -54,8 +57,6 @@ const HomeAdmin = () => {
             return;
         }
         if (traCuu) {
-            console.log(traCuu);
-
             Top5Foods(traCuu).then((fetchdata: any) => {
                 if (fetchdata?.data?.message) {
                     message.error(fetchdata?.data?.message)
@@ -67,6 +68,7 @@ const HomeAdmin = () => {
                     setDataChartFoods(fetchdata?.data)
                 } else {
                     setDataFoods(fetchdata?.data)
+                    setMaxChartFood(fetchdata?.data[0]?.total_revenue);
                     setDataChartFoods(fetchdata?.data)
                 }
             })
@@ -89,6 +91,7 @@ const HomeAdmin = () => {
                     setDataChartFoods(fetchdata?.data)
                 } else {
                     setDataMovies(fetchdata?.data)
+                    setMaxChartMovies(fetchdata?.data[0]?.total_revenue)
                     setDataChartMovies(fetchdata?.data)
                 }
             })
@@ -113,6 +116,7 @@ const HomeAdmin = () => {
                     setDataChartUsers(fetchdata?.data)
                 } else {
                     setDataUsers(fetchdata?.data)
+                    setMaxChartUser(fetchdata?.data[0]?.total_spent)
                     setDataChartUsers(fetchdata?.data)
                 }
             })
@@ -137,6 +141,8 @@ const HomeAdmin = () => {
                     setDataChartFoods(fetchdata?.data)
                 } else {
                     setDataFoods(fetchdata?.data)
+                    setMaxChartFood(fetchdata?.data[0]?.total_revenue);
+
                     setDataChartFoods(fetchdata?.data)
                 }
             })
@@ -152,6 +158,7 @@ const HomeAdmin = () => {
                     })
                     setDataChartMovies(fetchdata?.data)
                 } else {
+                    setMaxChartMovies(fetchdata?.data[0]?.total_revenue)
                     setDataMovies(fetchdata?.data)
                     setDataChartMovies(fetchdata?.data)
 
@@ -172,6 +179,7 @@ const HomeAdmin = () => {
                     setDataUsers(fetchdata?.data)
                 } else {
                     setDataUsers(fetchdata?.data)
+                    setMaxChartUser(fetchdata?.data[0]?.total_spent)
                     setDataChartUsers(fetchdata?.data)
                 }
             })
@@ -223,19 +231,29 @@ const HomeAdmin = () => {
                                 </div>
                             </Space>
                         </div>
-                        <BarChart width={400} height={300} data={dataChartFoods}
-                            margin={{
-                                top: 5,
-                                right: 30,
-                                left: 20,
-                                bottom: 5,
-                            }}>
-                            <XAxis dataKey="food_name" tickFormatter={() => ``} padding={{ left: 20 }} />
-                            <YAxis domain={[0, Number(dataFoods?.total_money_ticket)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
-                            <Tooltip content={<ContentRechart label={`food_name`} />} />
-                            <Legend content={<Content data="Foods" />} />
-                            <Bar dataKey="total_revenue" fill="#8884d8" />
-                        </BarChart>
+                        {dataChartFoods && dataChartFoods.length > 0 ? (
+                            <BarChart width={400} height={300} data={dataChartFoods}
+                                margin={{
+                                    top: 5,
+                                    right: 30,
+                                    left: 20,
+                                    bottom: 5,
+                                }}>
+                                <XAxis dataKey="food_name" tickFormatter={() => ``} padding={{ left: 20 }} />
+                                <YAxis domain={[0, Number(maxChartFood)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
+                                <Tooltip content={<ContentRechart label={`food_name`} />} />
+                                <Legend content={<Content data="Foods" />} />
+                                <Bar dataKey="total_revenue" fill="#8884d8" />
+                            </BarChart>
+                        ) : (
+                            <div
+                                className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                                role="status">
+                                <span
+                                    className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+                                >Loading...</span>
+                            </div>
+                        )}
                     </div>
                     <div></div>
                     <div>
@@ -252,21 +270,31 @@ const HomeAdmin = () => {
                                 </div>
                             </Space>
                         </div>
-                        <BarChart width={400} height={300} data={dataChartMovies}
-                            margin={{
-                                top: 5,
-                                right: 30,
-                                left: 20,
-                                bottom: 5,
-                            }}>
-                            <XAxis dataKey="movie_name" tickFormatter={() => ``} padding={{ left: 20 }} />
-                            <YAxis domain={[0, Number(dataFoods?.total_money_ticket)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
-                            <Tooltip content={<ContentRechart />} />
-                            <Legend content={<Content data="Movies" />} />
-                            <Bar dataKey="total_revenue" fill="#8884d8" />
-                        </BarChart>
+                        {dataChartMovies && dataChartMovies.length > 0 ? (
+                            <BarChart width={400} height={300} data={dataChartMovies}
+                                margin={{
+                                    top: 5,
+                                    right: 30,
+                                    left: 20,
+                                    bottom: 5,
+                                }}>
+                                <XAxis dataKey="movie_name" tickFormatter={() => ``} padding={{ left: 20 }} />
+                                <YAxis domain={[0, Number(maxChartMovies)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
+                                <Tooltip content={<ContentRechart />} />
+                                <Legend content={<Content data="Movies" />} />
+                                <Bar dataKey="total_revenue" fill="#8884d8" />
+                            </BarChart>
+                        ) : (
+                            <div
+                                className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                                role="status">
+                                <span
+                                    className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+                                >Loading...</span>
+                            </div>
+                        )}
                     </div>
-                </div>
+                </div >
                 <div className='flex justify-around mt-[30px]'>
                     <div className="overflow-x-auto rounded-lg border border-gray-200">
                         <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm text-center">
@@ -334,7 +362,7 @@ const HomeAdmin = () => {
                         </table>
                     </div>
                 </div>
-            </div>
+            </div >
             <div className={`${convert === 1 ? "" : "hidden"} mt-[10px]`}>
                 <div className="mb-[25px] text-2xl ">Top 5 người dùng </div>
                 <div className='mb-[40px]'>
@@ -350,19 +378,29 @@ const HomeAdmin = () => {
                     </Space>
                 </div>
                 <div className='mx-[25%]'>
-                    <BarChart width={600} height={400} data={dataChartUsers}
-                        margin={{
-                            top: 5,
-                            right: 30,
-                            left: 20,
-                            bottom: 5,
-                        }}>
-                        <XAxis dataKey="name" tickFormatter={() => ``} padding={{ left: 20 }} />
-                        <YAxis domain={[0, Number(dataUsers?.total_spent)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
-                        <Tooltip content={<ContentRechart label={`food_name`} />} />
-                        <Legend content={<Content data="Người dùng" />} />
-                        <Bar dataKey="total_spent" fill="#8884d8" />
-                    </BarChart>
+                    {dataChartUsers && dataChartUsers.length > 0 ? (
+                        <BarChart width={600} height={400} data={dataChartUsers}
+                            margin={{
+                                top: 5,
+                                right: 30,
+                                left: 20,
+                                bottom: 5,
+                            }}>
+                            <XAxis dataKey="name" tickFormatter={() => ``} padding={{ left: 20 }} />
+                            <YAxis domain={[0, Number(maxChartUser)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
+                            <Tooltip content={<ContentRechart label={`food_name`} />} />
+                            <Legend content={<Content data="Người dùng" />} />
+                            <Bar dataKey="total_spent" fill="#8884d8" />
+                        </BarChart>
+                    ) : (
+                        <div
+                            className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                            role="status">
+                            <span
+                                className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+                            >Loading...</span>
+                        </div>
+                    )}
                 </div>
                 <div>
                     <div className="overflow-x-auto rounded-lg border border-gray-200">
