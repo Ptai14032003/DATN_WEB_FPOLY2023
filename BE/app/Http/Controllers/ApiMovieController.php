@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Actor;
 use App\Models\Movie;
 use App\Models\Movie_Genre;
+use App\Models\Movie_Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -50,14 +51,16 @@ public function showingAdmin(){
 }
     public function store(Request $request){
 
-        if($request->image){
-            $result = cloudinary()->uploadApi()->upload($request->file);
-            // $response = cloudinary()->upload($request->image->getRealPath())->getSecurePath();
-            $image = $response;
+        // if($request->image){
+            // $result = cloudinary()->uploadApi()->upload($request->file);
+        //  $response = cloudinary()->upload($request->image->getRealPath())->getSecurePath();
+        //     $image = $response;
+            $type_name = $request->get('type_name');
+            $movie_type = Movie_Type::where('type_name',$type_name)->first();
+
             $movie_name = $request->get('movie_name');
             $producer_name = $request->get('producer_name');
             $country_name = $request->get('country_name');
-            $movie_type_id = $request->get('movie_type_id');
             $genre = $request->get('genre');
             $director = $request->get('director');
             $start_date = $request->get('start_date');
@@ -70,7 +73,7 @@ public function showingAdmin(){
             $data = [
                 'movie_name' => $movie_name,
                 'country_name' => $country_name,
-                'movie_type_id' => $movie_type_id,
+                'movie_type_id' => $movie_type->id,
                 'genre' => $genre,
                 'director' => $director,
                 'actor_name' => $actor_name,
@@ -78,14 +81,14 @@ public function showingAdmin(){
                 'end_date' => $end_date,
                 'total_revenue'=> $total_revenue,
                 'movie_time'=> $movie_time,
-                'image' => $image,
+                'image' => '',
                 'trailer' => $trailer,
                 'describe' => $describe
             ];
-            // Movie::create($data); 
-            return response()->json($request->image->getRealPath());
+            Movie::create($data); 
+            return response()->json($data);
 
-        }
+        // }
         // }else{
         //     return $this->returnError(202, 'file is required');
         // }
