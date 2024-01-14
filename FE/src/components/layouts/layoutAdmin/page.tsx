@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, {useState } from 'react';
 
 import type { MenuProps } from 'antd';
 import { Layout, Menu, theme } from 'antd';
@@ -39,7 +39,6 @@ const items: MenuItem[] = [
     getItem('Thống kê', '8', <NavLink to="/admin/thongKe"><img src="/tke.png" alt="" width={10} /></NavLink>),
     getItem('Lịch sử', '9', <NavLink to="/admin/bill_history"><img src="/ls.png" alt="" width={10} /></NavLink >),
     getItem('Voucher', '10', <NavLink to="/admin/voucher" > <img src="/voucher.png" alt="" width={10} /></NavLink >),
-    getItem('Sự cố', '11', <img src="/error.png" alt="" width={10} />)
 ];
 
 const AdminLayout: React.FC = () => {
