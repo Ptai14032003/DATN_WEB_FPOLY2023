@@ -249,6 +249,9 @@ class BillController extends Controller
     {
         $bill_id = $request->bill_id;
         $bill = Bill::find($bill_id);
+        if(!$bill){
+            return response()->json(['error' => "Hóa đơn không tồn tại"]);
+        }
         if ($bill->export_ticket == 0) {
             $tickets = Ticket::join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
                 ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
@@ -273,6 +276,9 @@ class BillController extends Controller
     {
         $bill_id = $request->bill_id;
         $bill = Bill::find($bill_id);
+        if(!$bill){
+            return response()->json(['error' => "Hóa đơn không tồn tại"]);
+        }
         if ($bill->export_ticket == 0) {
             $bills = Bill::where('id', $bill_id)->update(['export_ticket' => 1]);
             return response()->json(['message' => "Xuất vé thành công"]);

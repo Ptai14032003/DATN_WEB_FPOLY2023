@@ -59,7 +59,7 @@ class FoodController extends Controller
 
     Food::create($data);   
     // Đây là real path của tệp tin
-    return response()->json(['real_path' => $response]);
+    return response()->json([$data]);
     }
 
     /**
