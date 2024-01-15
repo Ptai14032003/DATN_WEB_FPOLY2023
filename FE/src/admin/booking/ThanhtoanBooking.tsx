@@ -72,7 +72,7 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
     const dataTong = (Number(priceTong))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     const handlePayment = () => {
 
-     }
+    }
     return (
         <>
             <a href=""></a>
@@ -112,7 +112,7 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
                             </div>
                             {combo.map((item: any) => (
                                 <div key={item.food_name} className='flex justify-between'>
-                                    <span className="text-sm text-white">{item?.food_name}</span>
+                                    <span className="text-sm ">{item?.food_name}</span>
                                     <span className="text-smw-[50px] text-center">{item?.soLuong}</span>
                                 </div>
                             ))}

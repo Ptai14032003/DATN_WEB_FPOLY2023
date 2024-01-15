@@ -40,8 +40,6 @@ function App() {
   const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
   const checkRoleAdmin = checkUser?.role === "Admin"
   const checkRoleNhansu = checkUser?.role === "Nhân Viên"
-  console.log(checkRoleNhansu);
-  
   // const checktab = document.addEventListener("visibilitychange", () => {
   //   if (document.hidden && checkLocal) {
   //     localStorage.removeItem("user")
