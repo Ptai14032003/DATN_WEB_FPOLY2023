@@ -59,6 +59,8 @@ const ExportTicket = () => {
         const newData = {
             bill_id: values.bill_id
         }
+        console.log(newData);
+        
         await getBillId(newData).unwrap()
             .then((data: any) =>
                 // setBillData(data)
@@ -114,7 +116,7 @@ const ExportTicket = () => {
                                 Xuất vé
                             </Button> */}
                             <form action="" onSubmit={handleSubmit(GetBillId)} className='Button-Export'>
-                                <div className='hidden'>
+                                <div className=''>
                                     <input type="number" value={record.id} {...register('bill_id')} name='bill_id' />
                                 </div>
                                 <button type="submit" onClick={showModal}>

@@ -8,6 +8,8 @@ import Menu from "../components/layouts/layoutGuest/menu";
 export default function Detail() {
     const { id } = useParams()
     const { data: movieBooking, error } = useFetchMovieIdPersonQuery(id);
+    console.log(movieBooking);
+    
     const [checkError, setCheckError] = useState(true);
     const movie = movieBooking?.movie
     const st_movie = movieBooking?.st_movie
@@ -43,18 +45,19 @@ export default function Detail() {
                 <iframe width="100%" height="700" src={movie?.trailer} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
             </div>
             <div className="mx-[5%] mb-[5%]">
-                <div className="flex gap-[8%] my-[3%]">
-                    <div className="block w-[190px]">
-                        <div className="mb-[25px]"><span className="text-left">{movie?.movie_name}</span></div>
-                        <div className="w-[190px]"><img width="190" height="240" src={movie?.image} alt="" /></div>
+                <div className="flex gap-[8%] my-[3%] Detail-in4-film-content">
+                    <div className="block w-[190px] Detail-in4-film">
+                        <div className="mb-[25px] Detail-in4-film-name"><span className="text-left">{movie?.movie_name}</span></div>
+                        <div className="mb-[25px] Detail-in4-film-time hidden"><span>{movie?.movie_time} phút</span></div>
+                        <div className="w-[190px] Detail-in4-film-img"><img width="190" height="240" src={movie?.image} alt="" /></div>
                     </div>
                     <div className="w-[100%] mt-[3%]">
                         <div className="w-[20%] ">
                             <div className="flex gap-20">
                                 {st_movie?.map((item: any) => (
                                     <button key={item.date} className={`btn-date ${dataDate === item?.date ? "btn-date-action text-red-400" : ""}`} onClick={() => onClick(item?.date)}>
-                                        <div className="w-[90px] h-full flex flex-col items-center justify-center text-xs transition-colors">
-                                            <span>{item.weekday}</span>
+                                        <div className="w-[90px] h-full flex flex-col items-center justify-center text-xs transition-colors Detail-in4-film-date">
+                                            <p>{item.weekday}</p>
                                             <span className="text-xl font-bold">{item?.show_date}</span>
 
                                             <span className="text-xl font-bold">{item?.date}</span>
@@ -75,14 +78,14 @@ export default function Detail() {
 
                     </div>
                 </div>
-                <div className="border-b-2 pb-[15px] text-xl ">
+                <div className="border-b-2 pb-[15px] text-xl Detail-in4-film-titleDes">
                     <div className="flex">
                         <span className="w-[50%]">Chi tiết</span>
-                        <span>Mô tả</span>
+                        <span className="text">Mô tả</span>
                     </div>
                 </div>
-                <div className="flex justify-around">
-                    <div className="w-[1600px] pr-[50px]">
+                <div className="flex justify-around Detail-in4-film-Des">
+                    <div className="w-[1600px] pr-[50px] Detail-in4-film-Des-left">
                         <div className="detail-content">
                             <div>Quốc gia</div>
                             <div>{movie?.country_name}</div>
@@ -117,7 +120,7 @@ export default function Detail() {
                             <div>C16 -  ĐỦ 16 TUỔI TRỞ LÊN (16+)</div>
                         </div>
                     </div>
-                    <div className="mt-[20px]">
+                    <div className="mt-[20px] Detail-in4-film-Des-right">
                         <span>{movie?.describe}</span>
                     </div>
                 </div>

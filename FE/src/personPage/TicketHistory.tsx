@@ -103,9 +103,6 @@ const TicketHistory = () => {
                             <p className='text-sm'>Bắp nước:</p>
                             <p className='font-semibold'>{item?.food_name || "Không có"}</p>
                           </div>
-                          <div>
-                            <p>x {item?.total_combo}</p>
-                          </div>
                         </div>
                         <div className='flex justify-between'>
                           <p className='text-sm'>Phí phụ thu</p>
