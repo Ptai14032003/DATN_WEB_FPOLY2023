@@ -46,6 +46,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                 end_date: dataMovies?.end_date,
             }
             setNewData(newData)
+            
         }
     }, [dataMovies])
     const [newData, setNewData] = useState({})
