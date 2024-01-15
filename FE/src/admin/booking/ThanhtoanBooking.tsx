@@ -38,12 +38,12 @@ const typeOptions = typeThanhToan.map((type: any) => ({
 const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, show_time, movieBooking, idGhe } }: Props) => {
     const [Payment] = usePaymentAdminMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [exportBill] = useExportBillMutation();
     const [sumbitQR] = useSumbitQRPaymentMutation()
     const [user_code, setUser] = useState("")
     const [typeThanhToan, getTypeThanhToan] = useState<number>()
     const [linkQR, setQR] = useState("")
     const [newBillId, setNewBillId] = useState(null)
+    const [newBillIdQR, setNewBillIdQR] = useState(null)
     const [isExportTicketVisible, setIsExportTicketVisible] = useState(false);
     const handleCancel = () => {
         setIsModalOpen(false);
@@ -128,6 +128,7 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
             if (data?.data?.bill_id) {
                 setIsExportTicketVisible(true);
                 setIsModalOpen(false);
+                setNewBillIdQR(data?.data?.bill_id)
             }
 
         })
@@ -234,7 +235,7 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
                     </div>
                 </Modal>
             )}
-            {isExportTicketVisible && (
+            {newBillIdQR !== null && newBillId !== null && typeThanhToan === 0 && isExportTicketVisible && (
                 <ExportTicketAdmin data={newBillId} />
             )}
         </>
