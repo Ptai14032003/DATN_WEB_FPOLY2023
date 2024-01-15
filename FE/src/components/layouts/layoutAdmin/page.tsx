@@ -32,7 +32,7 @@ const AdminLayout: React.FC = () => {
     const checkLocal = localStorage.getItem("user");
     const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
     const checkRoleAdmin = checkUser?.role === "Admin"
-    const checkRoleNhansu = checkUser?.role === "Nhân viên"
+    const checkRoleNhansu = checkUser?.role === "Nhân Viên"
     const [collapsed, setCollapsed] = useState(false);
     const {
         token: { colorBgContainer },
@@ -49,13 +49,15 @@ const AdminLayout: React.FC = () => {
         getItem('Lịch sử', '9', <NavLink to="/admin/bill_history"><img src="/ls.png" alt="" width={10} /></NavLink >),
         getItem('Voucher', '10', <NavLink to="/admin/voucher" > <img src="/voucher.png" alt="" width={10} /></NavLink >),
         getItem('Sự cố', '11', <img src="/error.png" alt="" width={10} />),
-        getItem('Đặt vé', '12', <NavLink to="/admin/booking" > <img src="" alt="" width={10} /></NavLink >),
-        getItem('Xuất vé', '13', <NavLink to="/admin/export-ticket" > <img src="" alt="" width={10} /></NavLink >),
+        getItem('Đặt vé', '4', <NavLink to="/admin/booking" > <img src="" alt="" width={10} /></NavLink >),
+        getItem('Xuất vé', '5', <NavLink to="/admin/export-ticket" > <img src="" alt="" width={10} /></NavLink >),
     ];
     const itemsNhansu: MenuItem[] = [
         getItem('Trang chủ', '1', <NavLink to="/admin/"><HomeOutlined width={10} /> </NavLink>,),
         getItem('Quản lý khách hàng', '2', <NavLink to="/admin/qlGuest"><img src="/qlkh.png" alt="" width={10} /></NavLink >),
         getItem('Lịch sử', '3', <NavLink to="/admin/bill_history"><img src="/ls.png" alt="" width={10} /></NavLink >),
+        getItem('Đặt vé', '4', <NavLink to="/admin/booking" > <img src="" alt="" width={10} /></NavLink >),
+        getItem('Xuất vé', '5', <NavLink to="/admin/export-ticket" > <img src="" alt="" width={10} /></NavLink >),
     ];
     // const userString = localStorage.getItem('user');
     // const user = userString ? JSON.parse(userString) : null;
