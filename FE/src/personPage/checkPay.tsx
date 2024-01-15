@@ -6,7 +6,7 @@ const CheckPay = () => {
     const [sendEmail] = useSendMailMutation()
     const [checkRequest, setRequest] = useState(false)
     const [mess, setMess] = useState("")
-    const [checkPay, setCheckPay] = useState(true)
+    const [checkPay, setCheckPay] = useState(false)
     const url = new URL(window.location.href);
     const urlSearchParams = new URLSearchParams(new URL(window.location.href).search);
     const vnp_Amount = urlSearchParams.get('vnp_Amount');
@@ -25,12 +25,14 @@ const CheckPay = () => {
         bill_id: vnp_TxnRef
     }
     const sendEmailUser = async () => {
-        if (checkRequest === false) {
+        if (checkRequest === true) {
             sendEmail(dataSend_email)
         }
     }
     useEffect(() => {
-        sendEmailUser()
+        if (checkPay === false) {
+            sendEmailUser()
+        }
     }, [])
     useEffect(() => {
         if (url.pathname === "/listvnp" && checkRequest === false) {
