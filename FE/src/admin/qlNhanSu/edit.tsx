@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Form, Input, Modal, Select, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
-import { QlNhanSu } from './page';
 import { useFetchNhanSuIdQuery, useUpdateNhanSuMutation } from '../../rtk/qlNhanSu/qlNhanSu';
 type Props = {
     projects: string

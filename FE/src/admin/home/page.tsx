@@ -214,8 +214,8 @@ const HomeAdmin = () => {
     }
     return (
         <>
-            <div className='mb-[20px] text-2xl mt-[-55px] flex gap-5' ><div className={`cursor-pointer ${convert === 0 ? "border rounded px-2 py-1 bg-slate-500" : ""}`} onClick={() => setConvert(0)}>Xu hướng</div> | <div className={`cursor-pointer ${convert === 1 ? "border rounded px-2 py-1 bg-slate-500" : ""}`} onClick={() => setConvert(1)}>Bảng xếp hạng</div></div>
-            <div className={`${convert === 0 ? "" : "hidden"}`}>
+            <div className='mb-[20px] text-2xl mt-[-55px] flex gap-5' ><div className={`cursor-pointer ${convert === 0 ? "border rounded px-2 py-1 bg-slate-500 transition-all" : ""}`} onClick={() => setConvert(0)}>Xu hướng</div> | <div className={`cursor-pointer  ${convert === 1 ? "border rounded px-2 py-1 bg-slate-500 transition-all" : ""}`} onClick={() => setConvert(1)}>Bảng xếp hạng</div></div>
+            <div className={` ${convert === 0 ? "transition-all duration-300" : "hidden"}`}>
                 <div className="mt-[20px] flex justify-around ">
                     <div>
                         <div className="mb-[25px] text-2xl">Top 5 Sản phẩm  </div>
