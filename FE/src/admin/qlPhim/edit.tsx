@@ -157,7 +157,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                             name="image"
                             rules={[{ required: true, message: 'Vui lòng nhập ảnh !' }]}
                         >
-                            <Upload listType='picture' fileList={newData?.image ? [{ uid: '-1', name: 'Image', status: 'done', url: newData.image }] : []} multiple={false} beforeUpload={(file) => {
+                            <Upload listType='picture' defaultFileList={newData?.image ? [{ uid: '-1', name: 'Image', status: 'done', url: newData.image }] : []} multiple={false} beforeUpload={(file) => {
                                 return new Promise((resolve, reject) => {
                                     if (file.type !== 'image/jpg' && file.type !== 'image/png' && file.type !== 'image/webp' && file.type !== 'image/jpeg') {
                                         message.error("Ảnh không đúng định dạng.");
