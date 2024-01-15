@@ -299,7 +299,7 @@ class PaymentController extends Controller
             "user_code" => $user_code ?? null,
             "total_ticket" => count($seat),
             "total_combo" => count($combo),
-            "total_money" => $total_money,
+            "total_money" => $total_money + $additional_fee,
             "payment_time" => date("Y-m-d H:i:s"),
             "status" => 0,
             "personnel_code" => $personnel_code,
