@@ -117,7 +117,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                             />
                         </Form.Item>
                         <Form.Item<QlPhimEdit>
-                            label="Thời lượng"
+                            label="Thời lượng (phút)"
                             name="movie_time"
                             rules={[{ required: true, message: 'Vui lòng nhập thời lượng phim !' }]}
                         >
@@ -144,6 +144,12 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                         >
                             <Input />
                         </Form.Item>
+                        <Form.Item<QlPhimEdit>>
+                            <div className='mx-[60%]'>
+                                <Image className='' width={150}
+                                    src={newData?.image} />
+                            </div>
+                        </Form.Item>
                         <Form.Item<QlPhimEdit>
                             label="Poster"
                             name="image"
@@ -151,17 +157,15 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                         >
                             <Upload listType='picture' multiple={false} beforeUpload={(file) => {
                                 return new Promise((resolve, reject) => {
-                                    return new Promise((resolve, reject) => {
-                                        if (file.type !== 'image/jpg' && file.type !== 'image/png' && file.type !== 'image/webp' && file.type !== 'image/jpeg') {
-                                            message.error("Ảnh không đúng định dạng.");
-                                        } else if (file.size > 2000000) {
-                                            message.error("Ảnh không được lớn hơn 2MB.");
-                                        } else {
-                                            reject();
-                                        }
-                                    });
-                                })
-                            }} maxCount={1} multiple>
+                                    if (file.type !== 'image/jpg' && file.type !== 'image/png' && file.type !== 'image/webp' && file.type !== 'image/jpeg') {
+                                        message.error("Ảnh không đúng định dạng.");
+                                    } else if (file.size > 2000000) {
+                                        message.error("Ảnh không được lớn hơn 2MB.");
+                                    } else {
+                                        reject();
+                                    }
+                                });
+                            }} maxCount={1}>
                                 <Button icon={<UploadOutlined />}>Click to Upload </Button>
                             </Upload>
                         </Form.Item>
