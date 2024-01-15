@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import "./ThanhToan.css"
-import { Button, Input, Select, message } from 'antd'
-import { useSetBillMutation } from '../../rtk/bill/bill';
+import { Button, Input, Modal, Select, message } from 'antd'
 import { usePaymentAdminMutation } from '../../rtk/payment_admin/payment_admin';
+import ExportTicketAdmin from './exportTicket';
+import { useExportBillMutation } from '../../rtk/booking/booking';
 type Props = {
     data: {
         selectedSeats: string[]
@@ -35,13 +36,22 @@ const typeOptions = typeThanhToan.map((type: any) => ({
     label: type.label,
 }));
 const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, show_time, movieBooking, idGhe } }: Props) => {
-    const [data] = useSetBillMutation();
     const [Payment] = usePaymentAdminMutation()
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [exportBill] = useExportBillMutation();
     const [user_code, setUser] = useState("")
-    const [type, getTypeThanhToan] = useState("")
-    const [phuPhi, setPhuPhi] = useState<any>()
+    const [typeThanhToan, getTypeThanhToan] = useState<number>()
+    const [linkQR, setQR] = useState("")
+    const [newBillId, setNewBillId] = useState(null)
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
     const dataBill = {
-        show_time: show_time,
+        showtime_id: show_time,
         seat:
             idGhe.map((item: any) => (
                 {
@@ -59,7 +69,7 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
             ))
         ,
         total_money: priceTong,
-        payment_method: type,
+        payment_method: typeThanhToan,
         user_code: user_code || null,
         additionnal_fee: Number(selectedSeats?.length) * 10000,
     }
@@ -75,6 +85,12 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
         Payment(newData).then((data: any) => {
             if (data?.error?.data?.error) {
                 message.error(data?.error?.data?.error)
+            } else {
+                setNewBillId(data?.data?.bill_id);
+                if (data?.data?.link) {
+                    setQR(data?.data?.link);
+                    showModal()
+                }
             }
         })
     }
@@ -83,6 +99,7 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
             const newData = {
                 ...dataBill,
             }
+            console.log(newData);
             PostPayment(newData)
 
         } else {
@@ -90,13 +107,33 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
                 ...dataBill,
                 additionnal_fee: 0
             }
+            console.log(newData);
             PostPayment(newData)
         }
 
     }
+    const ExportBill = async (values: any) => {
+        const newData = {
+            bill_id: values.bill_id
+        }
+        await exportBill(newData).unwrap()
+            .then((req: any) => {
+                if (req?.message) {
+                    message.success(req?.message);
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+
+                }
+                if (req?.error) {
+                    message.success(req?.error)
+                }
+            }
+            )
+    };
     return (
         <>
-            <a href=""></a>
+
             <div className='my-[25px] flex gap-[30px] justify-center text-black'>
                 <div className='w-[25%]'>
                     <img src={movieBooking?.image} width={200} alt="" />
@@ -182,6 +219,15 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
             >
                 Thanh toán
             </Button>
+            {typeThanhToan === 1 && newBillId !== null && (
+                <ExportTicketAdmin data={newBillId} />
+            )}
+            {typeThanhToan === 0 && newBillId !== null && (
+
+                <Modal open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className='ModalTicket'>
+                    <iframe src={`${linkQR}`} />
+                </Modal>
+            )}
         </>
     )
 };

@@ -18,11 +18,6 @@ interface DataType {
 const BookingAdmin = () => {
     const { data: movies } = useFetchMoviesQuery();
     const [data, setData] = useState<DataType[]>([]);
-    const { data: movie_type } = useFetchMovieTypeQuery();
-    // const movieType = movie_type.find((item:any)=> item?.id === movies?.movie_type_id);
-    // const movieTypeName = movieType ? movieType?.type_name : '';
-    console.log(movies);
-
     useEffect(() => {
         if (Array.isArray(movies)) {
             const ArrayData = movies?.map((item: any) => ({

@@ -22,28 +22,11 @@ const AdminQlGuest: React.FC = () => {
     const { data: dataGuest, isLoading, error } = useFetchGuestsQuery()
     const navigate = useNavigate();
     const status = error?.status;
-
-
     const [dataTable, setDataTable] = useState<Guest[]>([])
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
-    const onSelectChange = (newSelectedRowKeys: any[]) => {
-        console.log('', newSelectedRowKeys);
-        setSelectedRowKeys(newSelectedRowKeys);
-    };
-    const DeleteAll = () => {
-        console.log(selectedRowKeys);
-        message.success("Xóa thành công");
-    }
     const deleteOne = (key: string) => {
         message.success("Xóa thành công")
     }
-    const rowSelection = {
-        selectedRowKeys,
-        onChange: onSelectChange,
-    };
-    const hasSelected = selectedRowKeys.length > 0;
-
     const fuseOptions = {
         includeScore: true,
         isCaseSensitive: true,
@@ -55,9 +38,11 @@ const AdminQlGuest: React.FC = () => {
     const fuse = new Fuse(dataGuest?.data, fuseOptions)
 
     const searchProject = (value: string) => {
-
         setSearchTerm(value);
     };
+    const checkLocal = localStorage.getItem("user");
+    const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
+    const checkRoleAdmin = checkUser?.role === "Admin"
     useEffect(() => {
         const dataMap = dataGuest?.data
         if (Array.isArray(dataMap)) {
@@ -116,27 +101,6 @@ const AdminQlGuest: React.FC = () => {
                     value={searchTerm}
                     onChange={(e) => searchProject(e.target.value)} />
             </div>
-            <span style={{ marginLeft: 8 }}>
-                {hasSelected ? (
-                    <Popconfirm
-                        title="Delete the task"
-                        description="Are you sure to delete this task?"
-                        onConfirm={() => {
-                            DeleteAll();
-                        }}
-                        okButtonProps={{
-                            style: { backgroundColor: "#007bff" },
-                        }}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <Button danger>
-                            {`Delete ${selectedRowKeys.length} items`}
-                        </Button>
-                    </Popconfirm>) : (
-                    <div></div>
-                )}
-            </span>
             {isLoading ? (
                 <Waveform
                     size={40}
@@ -145,34 +109,36 @@ const AdminQlGuest: React.FC = () => {
                     color="black"
                 />
             ) : (
-                <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
+                <Table dataSource={dataTable} pagination={{ pageSize: 6, }}>
                     <Column title="Mã khách hàng" dataIndex="user_code" key="user_code" />
                     <Column title="Tên khách hàng" dataIndex="name" key="name" />
                     <Column title="Email" dataIndex="email" key="email" />
                     <Column title="Số điện thoại" dataIndex="phone_number" key="phone_number" />
-                    <Column
-                        title="Action"
-                        key="action"
-                        render={(_: any, record: any) => (
-                            <Space size="middle">
-                                <a>
-                                    <Popconfirm
-                                        title="Delete the task"
-                                        description="Are you sure to delete this task?"
-                                        onConfirm={() => {
-                                            deleteOne(record.key);
-                                        }}
-                                        okButtonProps={{
-                                            style: { backgroundColor: "#007bff" },
-                                        }}
-                                        okText="Yes"
-                                        cancelText="No"
-                                    >
-                                        <Button danger>Delete</Button>
-                                    </Popconfirm></a>
-                            </Space>
-                        )}
-                    />
+                    {checkRoleAdmin && (
+                        <Column
+                            title="Action"
+                            key="action"
+                            render={(_: any, record: any) => (
+                                <Space size="middle">
+                                    <a>
+                                        <Popconfirm
+                                            title="Delete the task"
+                                            description="Are you sure to delete this task?"
+                                            onConfirm={() => {
+                                                deleteOne(record.key);
+                                            }}
+                                            okButtonProps={{
+                                                style: { backgroundColor: "#007bff" },
+                                            }}
+                                            okText="Yes"
+                                            cancelText="No"
+                                        >
+                                            <Button danger>Delete</Button>
+                                        </Popconfirm></a>
+                                </Space>
+                            )}
+                        />
+                    )}
                 </Table>
             )}
         </div>

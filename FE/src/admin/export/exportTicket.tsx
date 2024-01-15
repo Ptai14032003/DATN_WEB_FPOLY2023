@@ -58,8 +58,6 @@ const ExportTicket = () => {
             setBillData(data?.data?.tickets)
         })
     }
-    console.log(billFoodData);
-
     const ExportBill = async (values: any) => {
         const newData = {
             bill_id: values.bill_id
@@ -70,7 +68,7 @@ const ExportTicket = () => {
                     message.success(req?.message);
                     setTimeout(() => {
                         window.location.reload();
-                    }, 2000);
+                    }, 1000);
 
                 }
                 if (req?.error) {
