@@ -5,8 +5,8 @@ import { MdChair } from "react-icons/md";
 import { useFetchMovieIdPersonQuery } from '../../rtk/moviesPerson/moviesPerson';
 import { useFetchSeatRoomIdQuery } from '../../rtk/booking/booking';
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
-import ThanhToan from '../../components/itemGuest/ThanhToan/ThanhToan';
 import "./index.css"
+import ThanhToanBooking from './ThanhtoanBooking';
 
 const BookingSeatAdmin = () => {
     const { search } = useLocation();
@@ -359,7 +359,7 @@ const BookingSeatAdmin = () => {
 
     };
     return (
-        <div className='containner'>
+        <div className='containner text-black'>
             <div className="booking">
                 <div className="booking-seat">
                     {/* Dữ liệu form */}
@@ -368,7 +368,7 @@ const BookingSeatAdmin = () => {
                             <div className='flex gap-5'>
                                 <div className="w-[190px]"><img width="190" height="240" src={movieBooking?.image} alt="" /></div>
 
-                                <div className="max-w-sm">
+                                <div className="max-w-sm ">
                                     <h3 className=" text-lg font-bold sm:text-xl">
                                         {movieBooking?.movie_name}
                                     </h3>
@@ -483,7 +483,7 @@ const BookingSeatAdmin = () => {
                             </div>
                         </div>
                         <div className={`${activeTab === 3 ? "ThanhToan" : "hidden"}`}>
-                            <ThanhToan data={{ selectedSeats, priceTong, movieBooking, combo, idGhe, show_time }} key={`1`}/>
+                            <ThanhToanBooking data={{ selectedSeats, priceTong, movieBooking, combo, idGhe, show_time }} key={`1`} />
                         </div>
                     </div>
                 </div>
