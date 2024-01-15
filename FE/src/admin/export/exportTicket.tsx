@@ -113,7 +113,7 @@ const ExportTicket = () => {
                             {/* <Button type="primary" onClick={showModal}>
                                 Xuất vé
                             </Button> */}
-                            <form action="" onSubmit={handleSubmit(GetBillId)}>
+                            <form action="" onSubmit={handleSubmit(GetBillId)} className='Button-Export'>
                                 <div className='hidden'>
                                     <input type="number" value={record.id} {...register('bill_id')} name='bill_id' />
                                 </div>

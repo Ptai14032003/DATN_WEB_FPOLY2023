@@ -203,7 +203,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                 </div >
             </div >
             <div className='flex justify-center'>
-                <Button className="w-[70%] rounded bg-teal-400 text-white text-base h-[42px] border-0" onClick={() => setThanhToan()} >Thanh toán</Button>
+                <Button className="w-[82%] rounded bg-teal-400 text-white text-base h-[42px] border-0" onClick={() => setThanhToan()} >Thanh toán</Button>
             </div>
         </>
     )

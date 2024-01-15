@@ -378,7 +378,7 @@ const Booking = () => {
             </div>
 
             <div className="booking h-full max-w-[1420px] mx-auto ">
-                <div className="booking-seat">
+                <div className="booking-seat-person">
                     {/* Dữ liệu form */}
                     <div className="no-content mt-5">
                         <div className="block">
@@ -478,7 +478,7 @@ const Booking = () => {
                             </div>
                         </form>
                         <div className={`Booking-combo grid ${activeTab === 2 ? "" : "hidden"}`}>
-                            <div className='mt-[7rem] mx-[4rem]'>
+                            <div className='mt-[7rem] '>
                                 <div className='grid grid-cols-2 gap-12'>
                                     {Foods?.map((item: any) => (
                                         <div className='Combo grid grid-cols-3 border-2 border-white rounded-md bg-[#2f9c8a] p-3 gap-5' key={item?.id}>
@@ -493,13 +493,10 @@ const Booking = () => {
                                                         <button className='bg-white rounded-tl-md rounded-bl-md h-full flex items-center justify-center' onClick={() => handleDecrease(item?.food_name, item?.price)}>
                                                             <MinusOutlined style={{ color: '#000', fontSize: '20px', padding: '3px' }} />
                                                         </button>
-                                                        <input className='text-black w-[100px] h-full outline-none pl-3' type="number" defaultValue={comboItems[item?.food_name] || 0} min={0} value={comboItems[item?.food_name] || 0} readOnly />
+                                                        <input className='text-black w-[170px] h-full outline-none pl-3' type="number" defaultValue={comboItems[item?.food_name] || 0} min={0} value={comboItems[item?.food_name] || 0} readOnly />
                                                         <button className='bg-white rounded-tr-md rounded-br-md h-full flex items-center justify-center' onClick={() => handleIncrease(item?.food_name, item?.price)}>
                                                             <PlusOutlined style={{ color: '#000', fontSize: '20px', padding: '3px' }} />
                                                         </button>
-                                                    </div>
-                                                    <div>
-                                                        <button className='cursor-pointer border rounded py-1 px-4 bg-black'>Chọn</button>
                                                     </div>
                                                 </div>
                                             </div>

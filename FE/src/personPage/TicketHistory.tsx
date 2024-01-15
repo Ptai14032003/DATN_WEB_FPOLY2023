@@ -45,6 +45,7 @@ const TicketHistory = () => {
       <div className='h-[80px]'>
         <Menu />
       </div>
+      <div className='h-screen'>
       <div className='h-full text-black space-y-10 my-20'>
         {data?.map((item: any) => (
           <div key={item?.id} className='max-w-5xl mx-auto bg-white px-8 py-5 rounded-md Bills'>
@@ -80,6 +81,7 @@ const TicketHistory = () => {
             </div>
           </div>
         ))}
+      </div>
       </div>
       <footer className='text-white'>
         <Footer />
