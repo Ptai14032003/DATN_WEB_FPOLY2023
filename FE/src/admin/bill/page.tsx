@@ -6,6 +6,7 @@ import { checkApiStatus } from "../checkApiStatus"; // Import hàm trợ giúp
 import { useNavigate } from 'react-router-dom';
 import Fuse from 'fuse.js';
 import { useFetchBillAdminQuery } from '../../rtk/bill/bill';
+import moment from 'moment';
 
 const { Column } = Table;
 
@@ -126,6 +127,7 @@ const AdminQlBill: React.FC = () => {
             }
         }
     }, [searchTerm, dataBill])
+    console.log(dataTable);
 
     return (
         <div>
@@ -156,7 +158,9 @@ const AdminQlBill: React.FC = () => {
                     <Column title="Tổng vé" dataIndex="total_ticket" key="total_ticket" />
                     <Column title="Tổng combo" dataIndex="total_combo" key="total_combo" />
                     <Column title="Tổng tiền" dataIndex="total_money" key="total_money" render={(price: any) => (Number(price))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} />
-                    <Column title="Trang thái" dataIndex="payment_status" key="payment_status" />
+                    <Column title="Tổng vé" dataIndex="total_ticket" key="total_ticket" />
+                    <Column title="Ngày chiếu" dataIndex="show_date" key="show_date" />
+                    <Column title="Ngày đặt" dataIndex="booking_date" key="booking_date" />
                     {checkRoleAdmin && (
                         <Column
                             title="Action"
