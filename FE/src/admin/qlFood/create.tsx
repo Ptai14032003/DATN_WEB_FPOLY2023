@@ -89,7 +89,7 @@ const CreateQlSp: React.FC = () => {
                                     reject();
                                 }
                             })
-                        }} maxCount={1} multiple>
+                        }} maxCount={1}>
                             <Button icon={<UploadOutlined />}>Click to Upload </Button>
                         </Upload>
                     </Form.Item>
