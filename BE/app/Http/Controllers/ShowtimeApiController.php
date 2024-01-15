@@ -27,10 +27,9 @@ class ShowtimeApiController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'show_date' => 'required|after:today'
+                'show_date' => 'after:today'
             ],
             [
-                'show_date.required' => "Ngày chiếu không được để trống",
                 'show_date.after' => "Ngày suất chiếu phải trước ngày hiện tại"
             ]
         );
