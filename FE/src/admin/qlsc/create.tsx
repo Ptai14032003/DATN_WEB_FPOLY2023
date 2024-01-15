@@ -37,8 +37,6 @@ const CreateQlSc: React.FC = () => {
             show_time: time
         }
         if (checkApi) {
-            console.log(newData);
-
             addSc(newData).then((data: any) => {
                 if (data?.data?.message) {
                     setIsModalOpen(false); formRef.current?.resetFields(); message.success("Thêm thành công");

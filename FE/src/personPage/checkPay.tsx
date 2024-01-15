@@ -6,6 +6,7 @@ const CheckPay = () => {
     const [sendEmail] = useSendMailMutation()
     const [checkRequest, setRequest] = useState(false)
     const [mess, setMess] = useState("")
+    const [checkPay, setCheckPay] = useState(true)
     const url = new URL(window.location.href);
     const urlSearchParams = new URLSearchParams(new URL(window.location.href).search);
     const vnp_Amount = urlSearchParams.get('vnp_Amount');
@@ -48,15 +49,23 @@ const CheckPay = () => {
                 vnp_CardType: vnp_CardType
             }
             checkBill(data).then((req: any) => {
-                setMess(req?.data?.Message);
-                setRequest(true)
+                console.log(req);
+
+                if (req?.data?.Message) {
+                    setMess(req?.data?.Message);
+                    setRequest(true)
+                    setCheckPay(true)
+                } else if (req?.data?.Error) {
+                    setMess(req?.data?.Error);
+                    setRequest(true)
+                    setCheckPay(false)
+                }
+
             }
             )
             return;
         }
     }, [])
-    console.log(checkRequest);
-
     const moneny = (Number(vnp_Amount) / 100)?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     const date: Array<number> = vnp_PayDate?.split("").map(Number) as [];
     const year = date.slice(0, 4).join("");
@@ -68,29 +77,52 @@ const CheckPay = () => {
     const timePay = `${hour}:${mins}:${second} , ${day}/${month}/${year}`
     return (
         <div className='pay-success-screen h-screen grid place-content-center'>
-            <div className='pay-success-box bg-white h-[500px] w-[600px] rounded-xl'>
-                <div className='check-icon text-center mt-10 space-y-3'>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="svg-success" viewBox="0 0 24 24">
-                        <g strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10">
-                            <circle className="success-circle-outline" cx="12" cy="12" r="11.5" />
-                            <circle className="success-circle-fill" cx="12" cy="12" r="11.5" />
-                            <polyline className="success-tick" points="17,8.5 9.5,15.5 7,13" />
-                        </g>
-                    </svg>
-                    <p className='font-medium text-lg'>{mess}</p>
-                    <span className='block text-4xl text-[#81c038] font-medium'>{moneny} đ </span>
-                </div>
-                <div className='pay-content text-center mt-10 space-y-3'>
-                    <p>Thời gian giao dịch: <span className=' font-medium'>{timePay}</span>.</p>
-                    <p>Mã giao dịch của bạn là <span className='text-[#81c038] font-medium'>{vnp_TxnRef}</span>.</p>
-                    <p>Xem chi tiết thông tin vé tại đây <a href="" className='text-blue-500'>Ticket Infomation</a>.</p>
-                    <div className='pt-5'>
-                        <Link to="/">
-                            <button className='bg-blue-500 text-white text-lg font-medium rounded-lg p-4'>Quay về trang chủ</button>
-                        </Link>
+            {checkPay === true ? (
+                <div className='pay-success-box bg-white h-[500px] w-[600px] rounded-xl'>
+                    <div className='check-icon text-center mt-10 space-y-3'>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="svg-success" viewBox="0 0 24 24">
+                            <g strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10">
+                                <circle className="success-circle-outline" cx="12" cy="12" r="11.5" />
+                                <circle className="success-circle-fill" cx="12" cy="12" r="11.5" />
+                                <polyline className="success-tick" points="17,8.5 9.5,15.5 7,13" />
+                            </g>
+                        </svg>
+                        <p className='font-medium text-lg'>{mess}</p>
+                        <span className='block text-4xl text-[#81c038] font-medium'>{moneny} đ </span>
+                    </div>
+                    <div className='pay-content text-center mt-10 space-y-3'>
+                        <p>Thời gian giao dịch: <span className=' font-medium'>{timePay}</span>.</p>
+                        <p>Mã giao dịch của bạn là <span className='text-[#81c038] font-medium'>{vnp_TxnRef}</span>.</p>
+                        <p>Xem chi tiết thông tin vé tại đây <a href="" className='text-blue-500'>Ticket Infomation</a>.</p>
+                        <div className='pt-5'>
+                            <Link to="/">
+                                <button className='bg-blue-500 text-white text-lg font-medium rounded-lg p-4'>Quay về trang chủ</button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
-            </div>
+            ) : (
+                <div className='pay-success-box bg-white h-[500px] w-[600px] rounded-xl'>
+                    <div className='check-icon text-center mt-10 space-y-3'>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="red" className="bi bi-exclamation-circle-fill mx-auto" viewBox="0 0 24 24">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2" />
+                        </svg>
+                        <p className='font-medium text-2xl'>{mess}</p>
+                        <span className='block text-4xl text-red-500 font-medium'>{moneny} đ</span>
+                    </div>
+                    <div className='pay-content text-center mt-10 space-y-3'>
+                        <p>Đã có sự cố xảy ra trong lúc thanh toán</p>
+                        <p>Vui lòng thử lại</p>
+                        <div className='pt-5'>
+                            <div className='pt-5'>
+                                <Link to="/">
+                                    <button className='bg-blue-500 text-white text-lg font-medium rounded-lg p-4'>Quay về trang chủ</button>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

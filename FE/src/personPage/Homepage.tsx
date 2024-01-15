@@ -87,7 +87,7 @@ const HomePage = () => {
     className: 'my-slider',
     slidesToShow: 5,
     slidesToScroll: 1,
-    infinite: false, 
+    infinite: false,
     swipeToSlide: true,
     arrows: true,
     responsive: [
@@ -112,17 +112,6 @@ const HomePage = () => {
       <div className="menu-film max-w-[1420px] mx-auto p-5 mt-28">
         <div className="title flex justify-between border-b pb-4 mb-5">
           <h2 className='Movie text-4xl font-bold'>Movie</h2>
-          <div className="SearchInput border rounded-md p-2 border-[#1ACAAC] w-[350px]">
-            <form onSubmit={handleSearch} className='flex'>
-              <input
-                type="text"
-                placeholder='Search your film'
-                value={inputSearchValue}
-                onChange={onHandleChange}
-                className='bg-black px-2 outline-none w-full'
-              />
-            </form>
-          </div>
         </div>
         <div className="btn-movie space-x-5 mb-16">
           <button className={activeTab === 1 ? ' bg-[#1ACAAC] rounded-md w-[200px] py-2 text-lg' : 'bg-[#282727] rounded-md w-[200px] py-2 text-lg'} onClick={() => handleClick(1)}>Tất cả phim</button>
@@ -217,7 +206,7 @@ const HomePage = () => {
                 </Slider>
               </div>
             </div>
-             {/* ComingSoon-film-tablet */}
+            {/* ComingSoon-film-tablet */}
             <div className='ComingSoon-film-tablet mb-20'>
               <div className='menu-film-tablet flex justify-between w-[90%] mx-auto mb-5 p-5'>
                 <div className='flex items-center'>
