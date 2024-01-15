@@ -30,8 +30,6 @@ const AdminQlBill: React.FC = () => {
     const { data: dataBill, isLoading, error } = useFetchBillAdminQuery()
     const navigate = useNavigate();
     const status = error?.status;
-    //checkApiStatus(status);
-    const [deleteMovie] = useDeleteMoviesMutation()
     const [dataTable, setDataTable] = useState<QlPhim[]>([])
     const [searchTerm, setSearchTerm] = useState('');
     const fuseOptions = {
@@ -49,12 +47,6 @@ const AdminQlBill: React.FC = () => {
 
         setSearchTerm(value);
     };
-    const deleteOne = (key: string) => {
-        deleteMovie(key).then(() => message.success("Xóa thành công"))
-    }
-    const checkLocal = localStorage.getItem("user");
-    const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
-    const checkRoleAdmin = checkUser?.role === "Admin"
     useEffect(() => {
         // chưa có kiểu dữ liệu cho data
         if (Array.isArray(dataBill)) {
@@ -161,31 +153,6 @@ const AdminQlBill: React.FC = () => {
                     <Column title="Tổng vé" dataIndex="total_ticket" key="total_ticket" />
                     <Column title="Ngày chiếu" dataIndex="show_date" key="show_date" />
                     <Column title="Ngày đặt" dataIndex="booking_date" key="booking_date" />
-                    {checkRoleAdmin && (
-                        <Column
-                            title="Action"
-                            key="action"
-                            render={(_: any, record: QlPhim) => (
-                                <Space size="middle">
-                                    <a>
-                                        <Popconfirm
-                                            title="Xoá"
-                                            description="Bạn có muốn xoá bill này?"
-                                            onConfirm={() => {
-                                                deleteOne(record.key);
-                                            }}
-                                            okButtonProps={{
-                                                style: { backgroundColor: "#007bff" },
-                                            }}
-                                            okText="Yes"
-                                            cancelText="No"
-                                        >
-                                            <Button danger>Delete</Button>
-                                        </Popconfirm></a>
-                                </Space>
-                            )}
-                        />
-                    )}
                 </Table>
             )}
         </div>
