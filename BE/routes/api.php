@@ -69,10 +69,15 @@ Route::prefix('admin')->group(function () {
     //lịch sử đặt vé trang admin
     Route::get('/history_bills', [BillController::class, "history"])->name('history_bills');
 
+    //phần xuất vé
+    Route::post('/get_list_bill_export',[BillController::class,"get_list_bill_export"])->name('get_list_bill_export');
+    Route::post('/get_bill_export',[BillController::class,"get_bill_export"])->name('get_bill_export');
+    Route::post('/export',[BillController::class,"export"])->name('export');
     // Route::resource('bill', BillController::class);
     Route::resource('food', FoodController::class);
     Route::resource('food_type', TypeFoodController::class);
     Route::prefix('bill')->group(function () {
+
         Route::get('/', [BillController::class, 'index']);
         Route::post('/', [BillController::class, 'store']);
 

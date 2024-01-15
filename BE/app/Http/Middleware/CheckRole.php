@@ -28,12 +28,7 @@ class CheckRole
             $model = $entropy->tokenable_type;
             $id = $entropy->tokenable_id;
             if ($model == "App\\Models\\Personnel") {
-                $personnel = $model::where("id", $id)->first();
-                if ($personnel->role == 1) {
-                    return $next($request);
-                } else {
-                    return response(['mesage' => "Chỉ có admin mới truy cập được vào đây"], 403);
-                }
+                return $next($request);
             } else {
                 return response(['mesage' => "Chỉ có admin mới truy cập được vào đây"], 403);
             }
