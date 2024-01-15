@@ -36,35 +36,37 @@ const Menu = () => {
       </div>
       <nav>
         <ul className='menu-content flex text-white'>
-          <li><a href={homeLink}>Trang chủ</a></li>
-          <li><a href={homeLink + 'ticket-price'}>Giá vé</a></li>
-          <li><a href={homeLink}>Giới thiệu</a></li>
-          <li><a href={homeLink + 'ticket-history'}>Lịch sử đặt vé</a></li>
+        <a href={homeLink}><li>Trang chủ</li></a>
+        <a href={homeLink + 'ticket-price'}><li>Giá vé</li></a>
+        <a href={homeLink}> <li>Giới thiệu</li></a>
           {!user && (
-            <><li onClick={handleClick}><a>User</a></li>
+            <><li onClick={handleClick}><a>Tài khoản</a></li>
               {dropDown ?
-                <ul className="dropdown-content absolute translate-y-[4.8rem] right-6 w-[160px] text-center">
-                  <li><a href={homeLink + 'signin'} className='block'>Đăng nhập</a></li>
-                  <li><a href={homeLink + 'signup'} className='block'>Đăng kí</a></li>
+                <ul className="dropdown-content absolute translate-y-[4.8rem] right-6 w-[160px] text-center drop-none-user">
+                  <a href={homeLink + 'signin'} className='block'><li>Đăng nhập</li></a>
+                  <a href={homeLink + 'signup'} className='block'><li>Đăng kí</li></a>
                 </ul>
                 : ""
               }
             </>
           )}
           {user && (
-            <><li onClick={handleClick} className='flex space-x-2'>
+            <><li onClick={handleClick} className='have-user flex space-x-2'>
               <FaUserCircle size={30} />
               <a className='text-xl'>
                 {user?.name}</a>
             </li>
               {dropDown ?
-                <ul className="dropdown-content absolute translate-y-[5.1rem] -translate-x-[2rem] right-6 w-[160px] text-center">
+                <ul className="dropdown-content absolute translate-y-[5.1rem] -translate-x-[2rem] right-6 w-[250px] text-center drop-have-user">
                   {user.role === 'Admin' && (
+                    <a href={homeLink + "admin"}>
                     <li>
-                      <a href={homeLink + "admin"}>Admin</a>
+                      Admin
                     </li>
+                    </a>
                   )}
-                  <li><a href={homeLink + 'profile'} className='block'>Thông tin cá nhân</a></li>
+                  <a href={homeLink + 'profile'} className='block'><li>Thông tin cá nhân</li></a>
+                  <a href={homeLink + 'ticket-history'}><li>Lịch sử đặt vé</li></a>
                   <li onClick={() => Logout()}><div className='block'>Đăng xuất</div></li>
                 </ul>
                 : ""

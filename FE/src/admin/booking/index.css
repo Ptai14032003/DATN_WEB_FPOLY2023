@@ -1,0 +1,10 @@
+.ModalAdminBooking .ant-btn-primary {
+    background-color: #1677ff!important;
+}
+.booking-seat{
+    display: block;
+}
+.content-right{
+    width: 80%;
+    margin: 5rem auto;
+}
