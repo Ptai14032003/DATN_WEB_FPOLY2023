@@ -4,6 +4,7 @@ import { Button, Form, Image, Input, InputNumber, Modal, Select, Upload, message
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
 import { useFetchMovieIdQuery, useUpdateMoviesMutation } from '../../rtk/movies/movies';
+const { TextArea } = Input;
 type Props = {
     projects: string
 }
@@ -22,6 +23,7 @@ type QlPhimEdit = {
     movie_time: number
     start_date: string,
     end_date: string
+    describe: string
 }
 const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
     const { data: dataMovies } = useFetchMovieIdQuery(projects);
@@ -36,8 +38,12 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                 type_name: dataMovies?.type_name,
                 genre: dataMovies?.genre,
                 director: dataMovies?.director,
+                movie_time: dataMovies?.movie_time,
                 image: dataMovies?.image,
-                trailer: dataMovies?.trailer
+                trailer: dataMovies?.trailer,
+                describe: dataMovies?.describe,
+                start_date: dataMovies?.start_date,
+                end_date: dataMovies?.end_date,
             }
             setNewData(newData)
         }
@@ -53,8 +59,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
         label: type,
     }));
     const onFinish = (values: any) => {
-        console.log(values);
-        // putMovie({ body: values, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
+        putMovie({ body: values, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
 
     };
 
@@ -112,7 +117,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                             />
                         </Form.Item>
                         <Form.Item<QlPhimEdit>
-                            label="Thời lượng"
+                            label="Thời lượng (phút)"
                             name="movie_time"
                             rules={[{ required: true, message: 'Vui lòng nhập thời lượng phim !' }]}
                         >
@@ -139,20 +144,28 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                         >
                             <Input />
                         </Form.Item>
+                        <Form.Item<QlPhimEdit>>
+                            <div className='mx-[60%]'>
+                                <Image className='' width={150}
+                                    src={newData?.image} />
+                            </div>
+                        </Form.Item>
                         <Form.Item<QlPhimEdit>
                             label="Poster"
                             name="image"
                             rules={[{ required: true, message: 'Vui lòng nhập ảnh !' }]}
                         >
-                            <Upload listType='picture' beforeUpload={(file) => {
+                            <Upload listType='picture' multiple={false} beforeUpload={(file) => {
                                 return new Promise((resolve, reject) => {
-                                    if (file.type === 'image/jpg' || file.type === 'image/png') {
-                                        reject();
+                                    if (file.type !== 'image/jpg' && file.type !== 'image/png' && file.type !== 'image/webp' && file.type !== 'image/jpeg') {
+                                        message.error("Ảnh không đúng định dạng.");
+                                    } else if (file.size > 2000000) {
+                                        message.error("Ảnh không được lớn hơn 2MB.");
                                     } else {
-                                        message.error("Vui lòng thêm ảnh đúng định dạng")
+                                        reject();
                                     }
-                                })
-                            }} maxCount={1} multiple>
+                                });
+                            }} maxCount={1}>
                                 <Button icon={<UploadOutlined />}>Click to Upload </Button>
                             </Upload>
                         </Form.Item>
@@ -176,6 +189,13 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                             rules={[{ required: true, message: 'Vui lòng nhập ngày kết thúc !' }]}
                         >
                             <Input type='date' style={{ width: 200, marginLeft: -70 }} />
+                        </Form.Item>
+                        <Form.Item<QlPhimEdit>
+                            label="Mô tả"
+                            name="describe"
+                            rules={[{ required: true, message: 'Vui lòng nhập mô tả phim !' }]}
+                        >
+                            <TextArea rows={4} />
                         </Form.Item>
                         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                             <Button htmlType="submit" className='mr-[80px]'>

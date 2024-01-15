@@ -1,12 +1,13 @@
 import React from 'react'
 import Menu from '../components/layouts/layoutGuest/menu'
 import Footer from '../components/layouts/layoutGuest/footer'
+import "./responsive.css"
 
 type Props = {}
 
 const TicketPrice = (props: Props) => {
     return (
-        <div className='bg-black h-full'>
+        <div className='ticket-price bg-black h-full'>
             <div className='h-[80px]'>
                 <Menu />
             </div>

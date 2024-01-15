@@ -16,9 +16,6 @@ export interface QlFood {
     name: string,
     price: number,
     image: string,
-    // created_at: string,
-    // updated_at: string,
-    // deleted_at: string,
 }
 
 interface FetchFoods {
@@ -27,9 +24,6 @@ interface FetchFoods {
     name: string,
     price: number,
     image: string,
-    // created_at: string,
-    // updated_at: string,
-    // deleted_at: string,
 }
 const AdminQlSp: React.FC = () => {
     const { data: dataFood, isLoading, error } = useFetchFoodsQuery()
