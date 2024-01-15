@@ -35,7 +35,7 @@ const suatChieuApi = createApi({
             query: (id) => `/showtimes/${id}`,
             providesTags: ["showtimes"]
         }),
-        patchSuatChieu: builder.mutation<void, { body: any, id: string }>({
+        upSuatChieu: builder.mutation<void, { body: any, id: string }>({
             query: ({ body, id }) => ({
                 url: `/showtimes/${id}`,
                 method: "PUT",

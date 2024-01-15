@@ -205,7 +205,7 @@ class PaymentController extends Controller
                             } else {
                                 $Status = 2; // Trạng thái thanh toán thất bại / lỗi
                                 $returnData['RspCode'] = '99';
-                                $returnData['Message'] = 'Thanh toán thất bại / lỗi';
+                                $returnData['error'] = 'Thanh toán thất bại / lỗi';
                             }
                             //Cài đặt Code cập nhật kết quả thanh toán, tình trạng đơn hàng vào DB
                             Bill::where('id', $bill_id)->update(['status' => $Status]);
@@ -216,24 +216,24 @@ class PaymentController extends Controller
                             // Trạng thái thanh toán thất bại / lỗi
                             Bill::where('id', $bill_id)->update(['status' => 2]);
                             $returnData['RspCode'] = '99';
-                            $returnData['Message'] = 'Thanh toán thất bại / lỗi';
+                            $returnData['error'] = 'Thanh toán thất bại / lỗi';
                         }
                     } else {
                         Bill::where('id', $bill_id)->update(['status' => 2]);
                         $returnData['RspCode'] = '04';
-                        $returnData['Message'] = 'Số tiền không hợp lệ';
+                        $returnData['error'] = 'Số tiền không hợp lệ';
                     }
                 } else {
                     $returnData['RspCode'] = '01';
-                    $returnData['Message'] = 'Không tìm thấy đơn hàng';
+                    $returnData['error'] = 'Không tìm thấy đơn hàng';
                 }
             } else {
                 $returnData['RspCode'] = '97';
-                $returnData['Message'] = 'Chữ ký không hợp lệ';
+                $returnData['error'] = 'Chữ ký không hợp lệ';
             }
         } catch (Exception $e) {
             $returnData['RspCode'] = '99';
-            $returnData['Message'] = 'Unknow error';
+            $returnData['error'] = 'Unknow error';
         }
 
         //Trả lại VNPAY theo định dạng JSON

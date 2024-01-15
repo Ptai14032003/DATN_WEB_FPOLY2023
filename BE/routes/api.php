@@ -96,7 +96,7 @@ Route::prefix('admin')->group(function () {
     Route::delete('/destroyMultipleMovie', [ApiMovieController::class, 'destroyMultipleMovie']);
     Route::delete('/destroyMultiplePromotion', [ApiPromotionController::class, 'destroyMultiplePromotion']);
     Route::delete('/destroyMultipleFood', [FoodController::class, 'destroyMultipleFood']);
-
+    Route::delete('/destroyMultipleRoom',[RoomApiController::class,'destroyMultipleRoom']);
     Route::get('/showingAdmin', [ApiMovieController::class, "showingAdmin"])->name('showingAdmin');
     Route::prefix('movie_type')->group(function () {
         Route::get('/', [ApiMovieTypeController::class, 'index']);
