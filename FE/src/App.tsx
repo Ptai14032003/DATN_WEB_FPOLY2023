@@ -24,7 +24,6 @@ import CheckPay from './personPage/checkPay.tsx'
 import Payment from './personPage/Payment.tsx'
 import NotFound from './personPage/404.tsx'
 import TicketHistory from './personPage/TicketHistory.tsx'
-import ForgotPassword from './personPage/forgotPassword.tsx'
 import ResetPassword from './personPage/ResetPassword.tsx'
 import AdminQlBill from './admin/bill/page.tsx'
 import BookingAdmin from './admin/booking/page.tsx'
@@ -34,10 +33,13 @@ import HomeAdmin from './admin/home/page.tsx'
 import ExportTicket from './admin/export/exportTicket.tsx'
 import ShowingFilm from './personPage/showingFilm.tsx'
 import ComingSoonFilm from './personPage/comingSoonFilm.tsx'
+import ForgotPassword from './personPage/ForgotPassword.tsx'
+
 function App() {
   const checkLocal = localStorage.getItem("user");
   const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
   const checkRoleAdmin = checkUser?.role === "Admin"
+  const checkRoleNhansu = checkUser?.role === "Nhân viên"
   // const checktab = document.addEventListener("visibilitychange", () => {
   //   if (document.hidden && checkLocal) {
   //     localStorage.removeItem("user")
@@ -71,7 +73,14 @@ function App() {
       <Route path='booking/:id' element={<Booking />} />
       <Route path='payment' element={<Payment />} />
       <Route path="listvnp" element={<CheckPay />} />
-      {checkRoleAdmin ? (
+      {checkRoleNhansu && (
+        <Route path='/admin' element={<LayoutAdmin />}>
+          <Route path='' element={<HomeAdmin />}></Route>
+          <Route path='qlGuest' element={<AdminQlGuest />}></Route>
+          <Route path='bill_history' element={<AdminQlBill />}></Route>
+        </Route>
+      )}
+      {checkRoleAdmin && (
         <Route path='/admin' element={<LayoutAdmin />}>
           <Route path='' element={<HomeAdmin />}></Route>
           <Route path='qlPhim' element={<AdminQlPhim />}></Route>
@@ -93,9 +102,8 @@ function App() {
           </Route>
           <Route path='export-ticket' element={<ExportTicket />}></Route>
         </Route>
-      ) : (
-        <Route path='/notfound' element={<NotFound />}></Route>
       )}
+      <Route path='/notfound' element={<NotFound />}></Route>
       <Route path='*' element={<Navigate to='/notfound' />} />
     </Routes>
   </BrowserRouter>

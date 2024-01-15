@@ -117,6 +117,7 @@ const AdminQlNhanSu: React.FC = () => {
             }
         }
     }, [searchTerm, dataNhanSu])
+    console.log(dataNhanSu);
 
     return (
         <div>
