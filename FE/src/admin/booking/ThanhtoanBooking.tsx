@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import "./ThanhToan.css"
-import { Button, Input } from 'antd'
+import { Button, Input, Select } from 'antd'
 import { useSetBillMutation } from '../../rtk/bill/bill';
 type Props = {
     data: {
@@ -21,9 +21,22 @@ type Props = {
         show_time: any
     }
 }
+const typeThanhToan = [{
+    value: 0,
+    label: "Thanh toán mã QR"
+},
+{
+    value: 1,
+    label: "Thanh toán tiền mặt"
+}];
+const typeOptions = typeThanhToan.map((type: any) => ({
+    value: type.value,
+    label: type.label,
+}));
 const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, show_time, movieBooking, idGhe } }: Props) => {
     const [data] = useSetBillMutation();
     const [user_code, setUser] = useState("")
+    const [type, getTypeThanhToan] = useState("")
     const checkLocal = localStorage.getItem("user");
     const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
     const userCode = checkUser?.user_code;
@@ -46,28 +59,20 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
             ))
         ,
         total_money: priceTong,
+        payment_method: type,
         user_code: userCode,
     }
-    const setThanhToan = () => {
-        data(dataBill)
-            .then((response) => {
-                if (('data' in response)) {
-                    const thanhToanURL = response.data;
-                    window.location.href = thanhToanURL;
-                }
-            })
-            .catch((error) => {
-                console.error('Lỗi truy vấn:', error);
-                alert('Đã xảy ra lỗi khi thực hiện thanh toán.');
-            });
-    };
-    useEffect(() => {
-    })
     const onChange = (value: any) => {
         setUser(value)
     }
-
+    const onChangeTypeThanhToan = (value: any) => {
+        getTypeThanhToan(value)
+    }
+    const dataPhuPhi = (Number(Number(selectedSeats?.length) * 10000))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     const dataTong = (Number(priceTong))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    const handlePayment = () => {
+
+     }
     return (
         <>
             <a href=""></a>
@@ -131,11 +136,31 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
                             <div className='item-info-card'>{dataTong} đ</div>
                         </div>
                     </div>
+                    <div className='block my-3'>
+                        <div className='info-card'>
+                            <div>Phụ phí</div>
+                            <div className='item-info-card'>{dataPhuPhi} đ</div>
+                        </div>
+                    </div>
+                    <div className='block my-3'>
+                        <div className=''>
+                            <div>Phương thức thanh toán :</div>
+                            <Select className='mt-[20px] mb-[-40px]'
+                                placeholder={"Chọn phương thức thanh toán"}
+                                style={{ width: 200 }}
+                                options={typeOptions}
+                                onChange={(value: any) => onChangeTypeThanhToan(value)}
+                            />
+                        </div>
+                    </div>
                 </div >
             </div >
-            <div className='flex justify-center'>
-                <Button className="w-[82%] rounded bg-teal-400text-base h-[42px] border-0 bg-[#1ACAAC]" onClick={() => setThanhToan()} >Thanh toán</Button>
-            </div>
+            <Button
+                className="w-[82%] rounded bg-teal-400text-base h-[42px] border-0 bg-[#1ACAAC]"
+                onClick={handlePayment}
+            >
+                Thanh toán
+            </Button>
         </>
     )
 };
