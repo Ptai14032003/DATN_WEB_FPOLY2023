@@ -21,6 +21,12 @@
         width: 90%;
         grid-template-columns: 1fr 1fr 1fr 1fr!important;
     }
+    .Showing-film-page{
+        grid-template-columns: 1fr 1fr 1fr 1fr!important;
+    }
+    .comingSoon-film-page{
+        grid-template-columns: 1fr 1fr 1fr 1fr!important;
+    }
     iframe{
         height: 600px;
     }
@@ -60,6 +66,9 @@
         padding: 15px 20px;
         font-size: 16px;
     }
+    .menu-content .have-user{
+        align-items: center;
+    }
     .menu-content .have-user svg{
         height: 20px;
         width: 20px;
@@ -80,6 +89,12 @@
         width: 90%;
         grid-template-columns: 1fr 1fr 1fr 1fr!important;
         gap: 25px!important;
+    }
+    .Showing-film-page-text h1{
+        font-size: 16px;
+    }
+    .comingSoon-film-page-text h1{
+        font-size: 16px;
     }
     .movie-item img{
         height: 270px;
@@ -164,11 +179,55 @@
     iframe{
         height: 450px;
     }
+    .menu-film{
+        display: none;
+    }
+    .menu-content li {
+        font-size: 14px;
+    }
+    .menu-content .have-user svg{
+        height: 15px;
+        width: 15px;
+    }
+    .menu-content .have-user a{
+        font-size: 14px;
+    }
     .Screen-tablet{
         display: block!important;
+        margin-top: 3rem;
     }
     .All-movies, .Showing-movies, .Coming-soon-movies{
         display: none!important;
+    }
+    .Showing-film-page{
+        grid-template-columns: 1fr 1fr 1fr!important;
+    }
+    .comingSoon-film-page{
+        grid-template-columns: 1fr 1fr 1fr!important;
+    }
+    .Showing-film-page img{
+        height: 170px;
+    }
+    .comingSoon-film-page img{
+        height: 170px;
+    }
+    .Showing-film-page-text h1{
+        font-size: 14px;
+    }
+    .Showing-film-page-text p{
+        font-size: 12px;
+    }
+    .Showing-film-section{
+        padding: 7rem 0!important;
+    }
+    .comingSoon-film-page-text h1{
+        font-size: 14px;
+    }
+    .comingSoon-film-page-text p{
+        font-size: 12px;
+    }
+    .comingSoon-film-section{
+        padding: 7rem 0!important;
     }
 }
 
@@ -260,4 +319,62 @@
   .Slider .custom-nextArrow:hover {
     fill: red;
     cursor: pointer;
+  }
+
+
+.Slider-ComingSon-film  {
+    position: relative;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    width: 90%;
+    margin: 0 auto;
+  }
+   .Slider-ComingSon-film .slick-list {
+    position: relative;
+    display: block !important;
+    overflow: hidden;
+    padding: 70px 90px !important;
+    width: 100%;
+  }
+  .Slider-ComingSon-film .slick-track {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: flex;
+  }
+  .Slider-ComingSon-film.slick-slide div {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  /* .slick-slide .image {
+    object-fit: cover;
+    border-radius: 2px;
+    max-width: 150px !important;
+  } */
+
+  .Slider-ComingSon-film .slick-slide div div span {
+    margin-top: 10px;
+    width: inherit;
+    text-align: center;
+    font-size: 0.75rem;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #111;
+  }
+  .Slider-ComingSon-film .slick-list {
+    position: relative;
+    display: block !important;
+    overflow: hidden;
+    padding: 0 !important;
+    width: 100%;
+  }
+  .Slider-ComingSon-film .slick-prev,
+  .Slider-ComingSon-film .slick-next {
+    display: none !important;
   }

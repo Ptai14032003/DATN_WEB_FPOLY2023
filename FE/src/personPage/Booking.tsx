@@ -18,6 +18,7 @@ const Booking = () => {
     const { data: seatBooking } = useFetchSeatRoomIdQuery(show_time);
     const { data: movie } = useFetchMovieIdPersonQuery(id);
     const [activeTab, setActiveTab] = useState(1);
+    const [isFixed, setIsFixed] = useState(false);
     const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
     const [idGhe, setidGhe] = useState<any[]>([])
     const [combo, setCombo] = useState<[]>([]);
@@ -360,6 +361,17 @@ const Booking = () => {
 
     };
 
+    useEffect(() => {
+        const handleScroll = () => {
+          const scrollPosition = window.scrollY || window.pageYOffset;
+          const shouldFix = scrollPosition > (0.8 * window.innerHeight) && activeTab !== 3;
+          setIsFixed(shouldFix);
+        };
+    
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+      }, [activeTab]);
+
 
     return (
         <div className='bg-black text-white'>
@@ -379,8 +391,9 @@ const Booking = () => {
 
             <div className="booking h-full max-w-[1420px] mx-auto ">
                 <div className="booking-seat-person">
+                    <div className={`${isFixed ? 'block' : 'hidden'}`}></div>
                     {/* Dữ liệu form */}
-                    <div className="no-content mt-5">
+                    <div className={`no-content ${isFixed ? 'fixed top-[20%]' : 'mt-10'}`}>
                         <div className="block">
                             <div className="w-[190px]"><img width="190" height="240" src={movieBooking?.image} alt="" /></div>
                             <h3 className="mt-4 text-lg font-bold text-white sm:text-xl">

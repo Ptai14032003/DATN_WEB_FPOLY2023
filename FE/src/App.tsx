@@ -32,6 +32,8 @@ import BookingAdminMovies from './admin/booking/booking.tsx'
 import BookingSeatAdmin from './admin/booking/bookingSeat.tsx'
 import HomeAdmin from './admin/home/page.tsx'
 import ExportTicket from './admin/export/exportTicket.tsx'
+import ShowingFilm from './personPage/showingFilm.tsx'
+import ComingSoonFilm from './personPage/comingSoonFilm.tsx'
 function App() {
   const checkLocal = localStorage.getItem("user");
   const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
@@ -55,6 +57,8 @@ function App() {
         <Route path="new" element={<NewFilm />} />
         <Route path="seat" element={<Seat />} />
       </Route>
+      <Route path="showing-film" element={<ShowingFilm />} />
+      <Route path="coming-soon-film" element={<ComingSoonFilm />} />
       <Route path="ticket-price" element={<TicketPrice />} />
       <Route path="ticket-history" element={<TicketHistory />} />
       <Route path="profile" element={<Profile />} />
