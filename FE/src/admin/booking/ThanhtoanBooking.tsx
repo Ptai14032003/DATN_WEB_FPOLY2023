@@ -3,7 +3,7 @@ import "./ThanhToan.css"
 import { Button, Input, Modal, Select, message } from 'antd'
 import { usePaymentAdminMutation } from '../../rtk/payment_admin/payment_admin';
 import ExportTicketAdmin from './exportTicket';
-import { useExportBillMutation } from '../../rtk/booking/booking';
+import { useExportBillMutation, useSumbitQRPaymentMutation } from '../../rtk/booking/booking';
 type Props = {
     data: {
         selectedSeats: string[]
@@ -39,6 +39,7 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
     const [Payment] = usePaymentAdminMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [exportBill] = useExportBillMutation();
+    const [sumbitQR] = useSumbitQRPaymentMutation()
     const [user_code, setUser] = useState("")
     const [typeThanhToan, getTypeThanhToan] = useState<number>()
     const [linkQR, setQR] = useState("")
@@ -131,6 +132,15 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
             }
             )
     };
+    const CheckQR = (id: any) => {
+        const newData = {
+            bill_id: id
+        }
+        sumbitQR(newData).then((data: any) => {
+            console.log(data);
+
+        })
+    }
     return (
         <>
 
@@ -226,6 +236,11 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
 
                 <Modal open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className='ModalTicket'>
                     <iframe src={`${linkQR}`} />
+                    <div className='flex justify-end'>
+                        <button type="submit" onClick={() => CheckQR(newBillId)} className='border border-blue-500 rounded-md px-3 py-1 hover:bg-blue-200'>
+                            Xác nhận
+                        </button>
+                    </div>
                 </Modal>
             )}
         </>
