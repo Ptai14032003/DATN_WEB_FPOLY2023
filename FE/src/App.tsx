@@ -2,7 +2,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
 import LayoutAdmin from './components/layouts/layoutAdmin/page'
-import AdminQlSc from './admin/qlSc/page'
 import AdminQlSp from './admin/qlFood/page'
 import AdminQlNhanSu from './admin/qlNhanSu/page'
 import AdminQlGuest from './admin/qlGuest/page'
@@ -34,12 +33,15 @@ import ExportTicket from './admin/export/exportTicket.tsx'
 import ShowingFilm from './personPage/showingFilm.tsx'
 import ComingSoonFilm from './personPage/comingSoonFilm.tsx'
 import ForgotPassword from './personPage/ForgotPassword.tsx'
+import AdminQlSc from './admin/qlSc/page.tsx'
 
 function App() {
   const checkLocal = localStorage.getItem("user");
   const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
   const checkRoleAdmin = checkUser?.role === "Admin"
-  const checkRoleNhansu = checkUser?.role === "Nhân viên"
+  const checkRoleNhansu = checkUser?.role === "Nhân Viên"
+  console.log(checkRoleNhansu);
+  
   // const checktab = document.addEventListener("visibilitychange", () => {
   //   if (document.hidden && checkLocal) {
   //     localStorage.removeItem("user")
@@ -78,6 +80,14 @@ function App() {
           <Route path='' element={<HomeAdmin />}></Route>
           <Route path='qlGuest' element={<AdminQlGuest />}></Route>
           <Route path='bill_history' element={<AdminQlBill />}></Route>
+          <Route path='booking'>
+            <Route index element={<BookingAdmin />} />
+            <Route path="movie_show_time/:id">
+              <Route index element={<BookingAdminMovies />} />
+              <Route path='seat/:id' element={<BookingSeatAdmin />} />
+            </Route>
+          </Route>
+          <Route path='export-ticket' element={<ExportTicket />}></Route>
         </Route>
       )}
       {checkRoleAdmin && (

@@ -121,4 +121,11 @@ class RoomApiController extends Controller
             return response()->json(['message' => 'Khach hang khong ton tai'], 404);
         }
     }
+    public function destroyMultipleRoom(Request $request){
+       
+        $ids = $request->input('ids');
+        Room::whereIn('id', $ids)->delete();
+
+        return response()->json(['success' => 'Xóa nhiều room thành công']);
+    }
 }
