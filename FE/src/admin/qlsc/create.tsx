@@ -40,7 +40,10 @@ const CreateQlSc: React.FC = () => {
             addSc(newData).then((data: any) => {
                 if (data?.data?.message) {
                     setIsModalOpen(false); formRef.current?.resetFields(); message.success("Thêm thành công");
-                }
+                } else
+                    if (data?.data?.error) {
+                        setIsModalOpen(false); formRef.current?.resetFields(); message.success(data?.data?.error);
+                    }
             })
             setCheckApi(false)
             return;
