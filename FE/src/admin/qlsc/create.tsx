@@ -39,11 +39,14 @@ const CreateQlSc: React.FC = () => {
         if (checkApi) {
             addSc(newData).then((data: any) => {
                 if (data?.data?.message) {
-                    setIsModalOpen(false);setCheckApi(false); formRef.current?.resetFields(); message.success("Thêm thành công");
+                    setIsModalOpen(false); setCheckApi(false); formRef.current?.resetFields(); message.success("Thêm thành công");
                 } else
                     if (data?.data?.show_date[0]) {
-                     message.error("Ngày suất chiếu phải trước ngày hiện tại");
+                        message.error("Ngày suất chiếu phải trước ngày hiện tại");
                     }
+                if (data?.data?.show_time[0]) {
+                    message.error("Thời gian suất chiếu phải sau thời gian của suất chiếu cuối cùng cộng thêm 15 phút");
+                }
             })
             return;
         }

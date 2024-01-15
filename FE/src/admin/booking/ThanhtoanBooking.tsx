@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import "./ThanhToan.css"
-import { Button, Input, Select } from 'antd'
+import { Button, Input, Select, message } from 'antd'
 import { useSetBillMutation } from '../../rtk/bill/bill';
+import { usePaymentAdminMutation } from '../../rtk/payment_admin/payment_admin';
 type Props = {
     data: {
         selectedSeats: string[]
@@ -35,11 +36,10 @@ const typeOptions = typeThanhToan.map((type: any) => ({
 }));
 const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, show_time, movieBooking, idGhe } }: Props) => {
     const [data] = useSetBillMutation();
+    const [Payment] = usePaymentAdminMutation()
     const [user_code, setUser] = useState("")
     const [type, getTypeThanhToan] = useState("")
-    const checkLocal = localStorage.getItem("user");
-    const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
-    const userCode = checkUser?.user_code;
+    const [phuPhi, setPhuPhi] = useState<any>()
     const dataBill = {
         show_time: show_time,
         seat:
@@ -60,7 +60,8 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
         ,
         total_money: priceTong,
         payment_method: type,
-        user_code: userCode,
+        user_code: user_code || null,
+        additionnal_fee: Number(selectedSeats?.length) * 10000,
     }
     const onChange = (value: any) => {
         setUser(value)
@@ -70,7 +71,27 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
     }
     const dataPhuPhi = (Number(Number(selectedSeats?.length) * 10000))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     const dataTong = (Number(priceTong))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    const PostPayment = (newData: any) => {
+        Payment(newData).then((data: any) => {
+            if (data?.error?.data?.error) {
+                message.error(data?.error?.data?.error)
+            }
+        })
+    }
     const handlePayment = () => {
+        if (user_code.length > 0) {
+            const newData = {
+                ...dataBill,
+            }
+            PostPayment(newData)
+
+        } else {
+            const newData = {
+                ...dataBill,
+                additionnal_fee: 0
+            }
+            PostPayment(newData)
+        }
 
     }
     return (
@@ -132,13 +153,13 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
                     </div>
                     <div className='block my-3'>
                         <div className='info-card'>
-                            <div>Giá gốc</div>
+                            <div>Giá gốc :</div>
                             <div className='item-info-card'>{dataTong} đ</div>
                         </div>
                     </div>
-                    <div className='block my-3'>
+                    <div className={`block my-3 ${user_code.length > 0 ? "hidden" : ""}`}>
                         <div className='info-card'>
-                            <div>Phụ phí</div>
+                            <div>Phụ phí :</div>
                             <div className='item-info-card'>{dataPhuPhi} đ</div>
                         </div>
                     </div>
