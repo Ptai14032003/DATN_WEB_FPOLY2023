@@ -49,7 +49,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
             
         }
     }, [dataMovies])
-    const [newData, setNewData] = useState({})
+    const [newData, setNewData] = useState<any>({})
     const [putMovie] = useUpdateMoviesMutation();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
@@ -60,7 +60,9 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
         label: type,
     }));
     const onFinish = (values: any) => {
-        putMovie({ body: values, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
+        console.log(values);
+
+        // putMovie({ body: values, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
 
     };
 
@@ -156,7 +158,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                             name="image"
                             rules={[{ required: true, message: 'Vui lòng nhập ảnh !' }]}
                         >
-                            <Upload listType='picture' multiple={false} beforeUpload={(file) => {
+                            <Upload listType='picture' fileList={newData?.image ? [{ uid: '-1', name: 'Image', status: 'done', url: newData.image }] : []} multiple={false} beforeUpload={(file) => {
                                 return new Promise((resolve, reject) => {
                                     if (file.type !== 'image/jpg' && file.type !== 'image/png' && file.type !== 'image/webp' && file.type !== 'image/jpeg') {
                                         message.error("Ảnh không đúng định dạng.");

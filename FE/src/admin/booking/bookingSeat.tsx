@@ -468,9 +468,6 @@ const BookingSeatAdmin = () => {
                                                             <PlusOutlined style={{ color: '#000', fontSize: '20px', padding: '3px' }} />
                                                         </button>
                                                     </div>
-                                                    <div>
-                                                        <button className='cursor-pointer border rounded py-1 px-4 bg-black'>Chọn</button>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

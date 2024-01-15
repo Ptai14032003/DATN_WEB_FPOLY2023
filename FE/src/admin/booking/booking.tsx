@@ -12,7 +12,6 @@ const BookingAdminMovies = () => {
     const [dataTime, setDataTime] = useState<any>();
     const [dataDate, setDataDate] = useState<any>("");
     const navigate = useNavigate();
-    console.log(st_movie);
     const redirectToLink = (link: any) => {
         navigate(link);
     };

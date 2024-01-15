@@ -3,7 +3,7 @@ import { useExportBillMutation, useGetBillIdMutation, useListBillMutation, useTi
 import { useForm } from 'react-hook-form';
 import { Space, Table, message } from 'antd';
 import Column from 'antd/es/table/Column';
-import { Button, Modal } from 'antd';
+import { Modal } from 'antd';
 import logoweb from "/Wonder-logo-1.png"
 import "./export.css"
 import { useNavigate } from 'react-router-dom';
@@ -47,14 +47,6 @@ const ExportTicket = () => {
     const showModal = () => {
         setIsModalOpen(true);
     };
-
-    const handleOk = () => {
-        setIsModalOpen(false);
-    };
-
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
     const GetBillId = (values: any) => {
         const newData = {
             bill_id: values
@@ -66,8 +58,6 @@ const ExportTicket = () => {
             setBillData(data?.data?.tickets)
         })
     }
-    console.log(billFoodData);
-
     const ExportBill = async (values: any) => {
         const newData = {
             bill_id: values.bill_id
@@ -78,7 +68,7 @@ const ExportTicket = () => {
                     message.success(req?.message);
                     setTimeout(() => {
                         window.location.reload();
-                    }, 2000);
+                    }, 1000);
 
                 }
                 if (req?.error) {
@@ -87,7 +77,9 @@ const ExportTicket = () => {
             }
             )
     };
-
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
     return (
         <div className=''>
             <form action="" className='flex gap-3' onSubmit={handleSubmit(onSubmit)}>
@@ -110,7 +102,7 @@ const ExportTicket = () => {
                             <button onClick={() => GetBillId(record?.id)}>
                                 Xuất vé
                             </button>
-                            <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel} className='ModalTicket'>
+                            <Modal open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className='ModalTicket'>
                                 <div className='grid grid-cols-2 gap-5'>
                                     {billData?.map((item: any) => (
                                         <div key={item.id} className='w-full h-[215px] flex mb-5'>
