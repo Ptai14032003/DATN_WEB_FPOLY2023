@@ -28,8 +28,8 @@ const CreateQlSc: React.FC = () => {
         label: room.name,
     })) || [];
 
-    const onChange = (timeString: string) => {
-        setTime(timeString);
+    const onChange = (value: Dayjs | null, dateString: string) => {
+        setTime(dateString);
     };
     const onFinish = (values: QlSuatChieu) => {
         const newData = {
@@ -37,7 +37,13 @@ const CreateQlSc: React.FC = () => {
             show_time: time
         }
         if (checkApi) {
-            addSc(newData).then(() => { setIsModalOpen(false); formRef.current?.resetFields(); message.success("Thêm thành công") })
+            console.log(newData);
+
+            addSc(newData).then((data: any) => {
+                if (data?.data?.message) {
+                    setIsModalOpen(false); formRef.current?.resetFields(); message.success("Thêm thành công");
+                }
+            })
             setCheckApi(false)
             return;
         }
@@ -106,7 +112,7 @@ const CreateQlSc: React.FC = () => {
                         name="show_time"
                         rules={[{ required: true, message: 'Vui lòng nhập thời gian!' }]}
                     >
-                        <TimePicker style={{ width: 200 }} onChange={onChange} format={'HH:mm'} />
+                        <TimePicker style={{ width: 200 }} onChange={(value: Dayjs | null, dateString: string) => onChange(value, dateString)} format={'HH:mm'} />
                     </Form.Item>
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button htmlType="submit" className='mr-[80px]'>
