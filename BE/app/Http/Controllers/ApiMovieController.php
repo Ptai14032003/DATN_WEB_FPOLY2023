@@ -69,6 +69,17 @@ public function showingAdmin(){
         $filePath = storage_path('app/' . $uniqueFileName);
         file_put_contents($filePath, $decodedData);
         $response = cloudinary()->upload($filePath)->getSecurePath();
+            // Kiểm tra start_date không được nhỏ hơn ngày hôm nay
+        // $start_date = Carbon::parse($request->get('start_date'));
+        // if ($start_date->isBefore(Carbon::now())) {
+        //     return response()->json(['error' => 'Ngày bắt đầu không thể nhỏ hơn ngày hôm nay.'], 400);
+        // }
+
+        // // Kiểm tra end_date không được nhỏ hơn start_date
+        // $end_date = Carbon::parse($request->get('end_date'));
+        // if ($end_date->isBefore($start_date)) {
+        //     return response()->json(['error' => 'Ngày kết thúc không thể nhỏ hơn ngày bắt đầu.'], 400);
+        // }
 
             $type_name = $request->get('type_name');
             $movie_type = Movie_Type::where('type_name',$type_name)->first();
@@ -91,12 +102,12 @@ public function showingAdmin(){
                 'genre' => $genre,
                 'director' => $director,
                 'actor_name' => $actor_name,
-                'start_date' => '2024-01-10',    
-                'end_date' => '2024-01-15',
+                'start_date' => $start_date,    
+                'end_date' =>  $end_date,
                 'movie_time'=> $movie_time,
                 'image' => $response,
                 'trailer' => $trailer,
-                'describe' => ''
+                'describe' => $describe
             ];
             Movie::create($data); 
             return response()->json($data);
@@ -117,14 +128,7 @@ public function showingAdmin(){
             ->where('movies.id', $id)
             ->whereNull('movies.deleted_at')
             ->first();
-    
-            //  
-            //     $genres = DB::table('list_genres')
-            //         ->join('movie_genres', 'movie_genres.list_genre_id', '=', 'list_genres.id')
-            //         ->where('movie_genres.movie_id', $id)
-            //         ->pluck('genre')
-            //         ->toArray();
-            //     $movie->genres = $genres;    
+ 
             if ($movie){
             return response()->json($movie);
         } else {
@@ -133,19 +137,16 @@ public function showingAdmin(){
     }
     
     public function update(Request $request, string $id) {
-        $movie = Movie::find($id);
+         $movie = Movie::find($id);
     
         if (!$movie) {
             return response()->json(['messages' => 'Phim không tồn tại'], 404);
         }
-    
-        // Initialize the $data array
-        $data = [];
-    
+       
         // Update the movie data
         $movie->update($request->all());
     
-        if ($request->hasFile('image')) {
+        // if ($request->hasFile('image')) {
             // Upload the new image to Cloudinary
             $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
     
@@ -165,18 +166,19 @@ public function showingAdmin(){
             $response = cloudinary()->upload($filePath)->getSecurePath();
     
             // Delete old image from Cloudinary
-            $oldImage = $movie->image;
-            if ($oldImage) {
-                $publicId = cloudinary()->getPublicIdFromPath($oldImage);
-                cloudinary()->destroy($publicId);
-            }
+
+            // $oldImage = $movie->image;
+            // if ($oldImage) {
+            //     $publicId = cloudinary()->getPublicIdFromPath($oldImage);
+            //     cloudinary()->destroy($publicId);
+            // }
     
             // Update the image link in the $data array
             $data['image'] = $response;
     
             // Update the movie record with the new image link
             $movie->update($data);
-        }
+        // }
     
         return response()->json(['messages' => 'Cập nhật phim thành công'], 202);
     }
