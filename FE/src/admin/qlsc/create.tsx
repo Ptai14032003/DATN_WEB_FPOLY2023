@@ -49,7 +49,6 @@ const CreateQlSc: React.FC = () => {
             return;
         }
     };
-
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
     };
