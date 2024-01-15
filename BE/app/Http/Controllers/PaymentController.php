@@ -37,7 +37,8 @@ class PaymentController extends Controller
             "total_money" => $total_money,
             "payment_time" => date("Y-m-d H:i:s"),
             "status" => 0,
-            "discount_code" => $discount_code
+            "discount_code" => $discount_code,
+            "personnel_code" => null
         ];
         $bill_add = Bill::create($bill);
 
@@ -283,7 +284,7 @@ class PaymentController extends Controller
         $combo = $request->combo;
         $total_money = $request->total_money;
         $user_code = $request->user_code ?? null;
-        $personnel_code = $request->user_code;
+        $personnel_code = $request->personnel_code;
         $additional_fee = $request->additional_fee ?? 0;
         $payment_method = $request->payment_method;
         $fee = true;
@@ -298,7 +299,7 @@ class PaymentController extends Controller
             "user_code" => $user_code ?? null,
             "total_ticket" => count($seat),
             "total_combo" => count($combo),
-            "total_money" => $total_money,
+            "total_money" => $total_money + $additional_fee,
             "payment_time" => date("Y-m-d H:i:s"),
             "status" => 0,
             "personnel_code" => $personnel_code,

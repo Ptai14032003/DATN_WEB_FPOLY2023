@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bill;
 use App\Models\Food;
 use App\Models\Movie;
+use App\Models\Personnel;
 use App\Models\Ticket;
 use App\Models\Ticket_Food;
 use App\Models\User;
@@ -292,6 +293,48 @@ class StatisticalController extends Controller
                 return response()->json(["message" => "Không có dữ liệu thống kê top 5 khách hàng chi tiêu nhiều nhất năm " . $data['year']]);
             } else {
                 return response()->json(["message" => "Không có dữ liệu thống kê top 5 khách hàng chi tiêu nhiều nhất tháng " . $data['month'] . " năm " . $data['year']]);
+            }
+        } else {
+            return response()->json($result);
+        }
+    }
+
+    //top 5 nhân viên bán được doanh thu nhiều nhất
+    public function get_top5_personnel(Request $request)
+    {
+        $data = $request->all();
+
+        $year = $data['year'];
+        $timeline = $data['timeline'];
+
+        $users = Personnel::leftjoin("bills", "bills.personnel_code", "=", "personnels.personnel_code")
+            ->where("bills.status", 1);
+
+        if ($timeline == 'month') {
+            $month = $data['month'];
+            $users->whereMonth("bills.updated_at", $month)
+                ->whereYear("bills.updated_at", $year);
+        } elseif ($timeline == 'year') {
+            $users->whereYear("bills.updated_at", $year);
+        }
+
+        $result = $users->select(
+            "personnels.name",
+            "personnels.personnel_code",
+            "personnels.email",
+            "personnels.phone_number",
+            DB::raw("SUM(bills.total_money) as total_spent")
+        )
+            ->groupBy("personnels.name", "personnels.personnel_code", "personnels.email", "personnels.phone_number")
+            ->orderByDesc("total_spent")
+            ->take(5)
+            ->get();
+
+        if (count($result) == 0) {
+            if ($data['timeline'] == 'year') {
+                return response()->json(["message" => "Không có dữ liệu thống kê top 5 nhân viên bán được doanh thu cao nhất năm " . $data['year']]);
+            } else {
+                return response()->json(["message" => "Không có dữ liệu thống kê top 5 nhân viên bán được doanh thu cao nhất tháng " . $data['month'] . " năm " . $data['year']]);
             }
         } else {
             return response()->json($result);

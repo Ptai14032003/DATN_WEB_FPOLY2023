@@ -65,6 +65,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/get_top5_movie', [StatisticalController::class, 'get_top5_movie'])->name('get_top5_movie');
     Route::post('/get_top5_food', [StatisticalController::class, 'get_top5_food'])->name('get_top5_food');
     Route::post('/get_top5_user', [StatisticalController::class, 'get_top5_user'])->name('get_top5_user');
+    Route::post('/get_top5_personnel', [StatisticalController::class, 'get_top5_personnel'])->name('get_top5_personnel');
     //lịch sử đặt vé trang admin
     Route::get('/history_bills', [BillController::class, "history"])->name('history_bills');
 
