@@ -45,14 +45,14 @@ class ShowtimeApiController extends Controller
                 'show_time.unique' => 'Suất chiếu đã tồn tại cho thời gian và ngày đã chọn'
             ]
         );
-        if ($validator->fails()) {
-            return response()->json($validator->messages());
-        } 
         $existingShowtime = Showtime::where('room_id', $request->input('room_id'))
         ->where('show_date', $request->input('show_date'))
         ->orderBy('show_time', 'desc') // Chọn suất chiếu mới nhất
         ->first();
-        if ($existingShowtime) {
+        if ($validator->fails()) {
+            return response()->json($validator->messages());
+        } 
+        elseif ($existingShowtime) {
             // Kiểm tra xem $resultTime có dữ liệu hay không
             $resultTime = Showtime::join('movies', 'showtimes.movie_id', '=', 'movies.id')
                 ->join('rooms', 'showtimes.room_id', '=', 'rooms.id')
@@ -79,16 +79,12 @@ class ShowtimeApiController extends Controller
                     // Gọi Validator để thêm thông báo lỗi
                     $validator->errors()->add('show_time', 'Thời gian suất chiếu phải sau thời gian của suất chiếu cuối cùng cộng thêm 15 phút.');
                     return response()->json($validator->messages());
+                } else {
+                $show_time = Showtime::create($request->all());
+                if ($show_time) {
+                    return response()->json(['message' => 'Thêm Suất chiếu thành công']);
                 }
-            } else {
-                // Nếu $resultTime trống rỗng, bạn có thể xử lý theo ý của mình (ví dụ: thông báo lỗi hoặc xử lý khác)
-                return response()->json(['error' => 'Không thể lấy thông tin thời lượng phim.'], 500);
-            }
-        }
-        else {
-            $show_time = Showtime::create($request->all());
-            if ($show_time) {
-                return response()->json(['message' => 'Thêm Suất chiếu thành công']);
+            } 
             }
         }
     }
