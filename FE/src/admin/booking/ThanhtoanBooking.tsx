@@ -44,6 +44,7 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
     const [typeThanhToan, getTypeThanhToan] = useState<number>()
     const [linkQR, setQR] = useState("")
     const [newBillId, setNewBillId] = useState(null)
+    const [isExportTicketVisible, setIsExportTicketVisible] = useState(false);
     const handleCancel = () => {
         setIsModalOpen(false);
     };
@@ -96,48 +97,38 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
         })
     }
     const handlePayment = () => {
-        if (user_code.length > 0) {
-            const newData = {
-                ...dataBill,
-            }
-            console.log(newData);
-            PostPayment(newData)
+        if (typeThanhToan === 0 || typeThanhToan === 1) {
+            if (user_code.length > 0) {
+                const newData = {
+                    ...dataBill,
+                }
+                console.log(newData);
+                PostPayment(newData)
 
-        } else {
-            const newData = {
-                ...dataBill,
-                additionnal_fee: 0
+            } else {
+                const newData = {
+                    ...dataBill,
+                    additionnal_fee: 0
+                }
+                console.log(newData);
+                PostPayment(newData)
             }
-            console.log(newData);
-            PostPayment(newData)
+        } else {
+            message.error("Vui lòng nhập phương thức thanh toán !")
         }
 
     }
-    const ExportBill = async (values: any) => {
-        const newData = {
-            bill_id: values.bill_id
-        }
-        await exportBill(newData).unwrap()
-            .then((req: any) => {
-                if (req?.message) {
-                    message.success(req?.message);
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 2000);
-
-                }
-                if (req?.error) {
-                    message.success(req?.error)
-                }
-            }
-            )
-    };
     const CheckQR = (id: any) => {
         const newData = {
             bill_id: id
         }
+        console.log(newData);
+
         sumbitQR(newData).then((data: any) => {
-            console.log(data);
+            if (data?.data?.bill_id) {
+                setIsExportTicketVisible(true);
+                setIsModalOpen(false);
+            }
 
         })
     }
@@ -242,6 +233,9 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
                         </button>
                     </div>
                 </Modal>
+            )}
+            {isExportTicketVisible && (
+                <ExportTicketAdmin data={newBillId} />
             )}
         </>
     )

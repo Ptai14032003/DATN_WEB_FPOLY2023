@@ -14,10 +14,6 @@ const ExportTicketAdmin = ({ data }: Props) => {
     const [billFoodData, setBillFoodData] = useState<any[]>([]);
     const [getBillId] = useGetBillIdMutation();
     const [exportBill] = useExportBillMutation();
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
-
     const showModal = () => {
         setIsModalOpen(true);
     };
@@ -54,7 +50,7 @@ const ExportTicketAdmin = ({ data }: Props) => {
     };
     return (
         <div className=''>
-            <Modal open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className='ModalTicket'>
+            <Modal open={isModalOpen} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className='ModalTicket'>
                 <div className='grid grid-cols-2 gap-5'>
                     {billData?.map((item: any) => (
                         <div key={item.id} className='w-full h-[215px] flex mb-5'>

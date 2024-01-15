@@ -57,7 +57,7 @@ const bookingApi = createApi({
     }),
     SumbitQRPayment: builder.mutation<any, any>({
       query: (body) => ({
-        url: "confirm_qr",
+        url: "admin/confirm_qr",
         method: "POST",
         body
       }),
