@@ -35,7 +35,7 @@
     left: 3.1rem;
   }
 
-  .booking-seat{
+  .booking-seat-person{
     display: grid;
     grid-template-columns: 350px 1fr;
     gap: 3rem;
@@ -511,4 +511,74 @@
 }
 .loading-home > * {
   position: absolute;
+}
+
+/* Bills Ticket History */
+.Bills{
+ position: relative;
+}
+.Bills .circle-1::before{
+  content: "";
+  position: absolute;
+  left: 42.5%;
+  top: -14px;
+  background: black;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+}
+.Bills .circle-1::after{
+  content: "";
+  position: absolute;
+  left: 42.5%;
+  bottom: -14px;
+  background: black;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+}
+.Bills .circle-2::before{
+  content: "";
+  position: absolute;
+  right: 6.5%;
+  top: -14px;
+  background: black;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+}
+.Bills .circle-2::after{
+  content: "";
+  position: absolute;
+  right: 6.5%;
+  bottom: -14px;
+  background: black;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+}
+.Bills .Rectangle-1::before{
+  content: "";
+  position: absolute;
+  left: 36%;
+  top: 100px;
+  background: #fff;
+  width: 15.5%;
+  border-bottom: 2px dashed;
+  transform: rotate(90deg);
+}
+.Bills .Rectangle-1::after{
+  content: "";
+    position: absolute;
+    right: 0.2%;
+    top: 100px;
+    background: #fff;
+    width: 15.5%;
+    border-bottom: 2px dashed;
+    transform: rotate(90deg);
+}
+.Ticket{
+  display: grid;
+  grid-template-columns: 400px 1fr 30px;
+  gap: 30px;
 }

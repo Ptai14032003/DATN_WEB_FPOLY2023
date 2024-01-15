@@ -1,0 +1,380 @@
+
+
+.Screen-tablet{
+    display: none!important;
+}
+
+@media (max-width: 1440px){
+    *{
+        overflow-x: none;
+    }
+    .menu{
+        padding: 0 40px!important;
+    }
+    .drop-have-user{
+        right: 0%!important;
+    }
+    .drop-have-user li{
+        padding: 20px;
+    }
+    .All-movies, .Showing-movies, .Coming-soon-movies{
+        width: 90%;
+        grid-template-columns: 1fr 1fr 1fr 1fr!important;
+    }
+    .Showing-film-page{
+        grid-template-columns: 1fr 1fr 1fr 1fr!important;
+    }
+    .comingSoon-film-page{
+        grid-template-columns: 1fr 1fr 1fr 1fr!important;
+    }
+    iframe{
+        height: 600px;
+    }
+    .menu-film{
+        margin-top: 3rem!important;
+        width: 90%;
+    }
+    .loading-home{
+        width: 100%!important;
+    }
+    footer>div{
+        padding: 1rem 0!important;
+    }
+    footer .logo img{
+        width: 8%;
+    }
+    footer .logo h2{
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 1024px){
+    *, .ticket-price{
+        overflow-x: none;
+    }
+    .ticket-price{
+        overflow-x: none;
+    }
+    .menu{
+        padding: 0 20px!important;
+    }
+    .menu .logo-web img{
+        height: 70px;
+        width: 90px;
+    }
+    .menu-content li {
+        padding: 15px 20px;
+        font-size: 16px;
+    }
+    .menu-content .have-user{
+        align-items: center;
+    }
+    .menu-content .have-user svg{
+        height: 20px;
+        width: 20px;
+    }
+    .menu-content .have-user a{
+        font-size: 16px;
+    }
+    .drop-have-user{
+        width: 180px!important;
+        transform: translateY(4.1rem)!important;
+        right: 1.5%!important;
+    }
+    .drop-have-user li{
+        font-size: 14px;
+        padding: 8px;
+    }
+    .All-movies, .Showing-movies, .Coming-soon-movies{
+        width: 90%;
+        grid-template-columns: 1fr 1fr 1fr 1fr!important;
+        gap: 25px!important;
+    }
+    .Showing-film-page-text h1{
+        font-size: 16px;
+    }
+    .comingSoon-film-page-text h1{
+        font-size: 16px;
+    }
+    .movie-item img{
+        height: 270px;
+    }
+    iframe{
+        height: 600px;
+    }
+    .menu-film{
+        margin-top: 3rem!important;
+    }
+    .menu-film .title{
+        padding-bottom: 0.7rem;
+        margin-bottom: 0.75rem;
+    }
+    .menu-film .title h2{
+        font-size: 24px;
+    }
+    .menu-film .title .SearchInput{
+        width: 200px;
+    }
+    .menu-film .btn-movie{
+        margin-bottom: 20px!important;
+    }
+    .menu-film .btn-movie button{
+        width: 150px;
+        font-size: 16px;
+    }
+    footer>div{
+        padding: 1rem 0!important;
+    }
+    footer nav ul li{
+        font-size: 15px;
+    }
+    footer .logo img{
+        width: 8%;
+    }
+    footer .logo h2{
+        font-size: 18px;
+    }
+    .icon-fb{
+        width: 45px!important;
+    }
+    .icon-yt{
+        width: 35px!important;
+    }
+    .icon-zl{
+        width: 30px!important;
+        height: 30px!important;
+    }
+    .address-footer{
+        font-size: 15px;
+    }
+    .ticket-price-content, .film2D, .film3D, .ticket-price-describe{
+        width: 90%!important;
+        margin: 0 auto;
+    }
+    .ticket-price-table{
+        width: 100%!important;
+        margin: 0;
+    }
+    .ticket-price-table th, .ticket-price-table tr{
+        font-size: 15px!important;
+    }
+    .ticket-price-table tr{
+        height: 50px!important;
+    }
+    .ticket-price-title h1{
+        font-size: 25px!important;
+    }
+    .ticket-price-title p{
+        font-size: 18px!important;
+    }
+    .film2D h2, .film3D h2{
+        font-size: 18px!important;
+    }
+    .ticket-price-describe{
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 768px){
+    iframe{
+        height: 450px;
+    }
+    .menu-film{
+        display: none;
+    }
+    .menu-content li {
+        font-size: 14px;
+    }
+    .menu-content .have-user svg{
+        height: 15px;
+        width: 15px;
+    }
+    .menu-content .have-user a{
+        font-size: 14px;
+    }
+    .Screen-tablet{
+        display: block!important;
+        margin-top: 3rem;
+    }
+    .All-movies, .Showing-movies, .Coming-soon-movies{
+        display: none!important;
+    }
+    .Showing-film-page{
+        grid-template-columns: 1fr 1fr 1fr!important;
+    }
+    .comingSoon-film-page{
+        grid-template-columns: 1fr 1fr 1fr!important;
+    }
+    .Showing-film-page img{
+        height: 170px;
+    }
+    .comingSoon-film-page img{
+        height: 170px;
+    }
+    .Showing-film-page-text h1{
+        font-size: 14px;
+    }
+    .Showing-film-page-text p{
+        font-size: 12px;
+    }
+    .Showing-film-section{
+        padding: 7rem 0!important;
+    }
+    .comingSoon-film-page-text h1{
+        font-size: 14px;
+    }
+    .comingSoon-film-page-text p{
+        font-size: 12px;
+    }
+    .comingSoon-film-section{
+        padding: 7rem 0!important;
+    }
+}
+
+.Slider  {
+    position: relative;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    width: 90%;
+    margin: 0 auto;
+  }
+  .Slider .slick-list {
+    position: relative;
+    display: block !important;
+    overflow: hidden;
+    padding: 70px 90px !important;
+    width: 100%;
+  }
+  .Slider .slick-track {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: flex;
+  }
+  .Slider.slick-slide div {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  /* .slick-slide .image {
+    object-fit: cover;
+    border-radius: 2px;
+    max-width: 150px !important;
+  } */
+  .Slider .slick-slide div div span {
+    margin-top: 10px;
+    width: inherit;
+    text-align: center;
+    font-size: 0.75rem;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #111;
+  }
+  
+  .Slider  .slick-slide:not(.slick-active) {
+    position: relative;
+    z-index: 997;
+    opacity: 0.3;
+  }
+  .Slider .slick-slide.slick-active:not(.slick-current) {
+    position: relative;
+    z-index: 998;
+    transform: scale(1.3);
+    transition: 0.25s;
+    opacity: 0.7;
+  }
+  .Slider  .slick-slide.slick-active.slick-current {
+    position: relative;
+    z-index: 999;
+    transform: scale(1.6);
+    transition: 0.25s;
+  }
+  .Slider .slick-slide.slick-active:not(.slick-current) .image,
+  .Slider .slick-slide.slick-active.slick-current .image,
+  .Slider .slick-slide:not(.slick-active) .image {
+    width: 100% !important;
+  }
+  .Slider .slick-prev,
+  .Slider .slick-next {
+    display: none !important;
+  }
+  .Slider .custom-prevArrow,
+  .Slider .custom-nextArrow {
+    position: relative;
+    z-index: 99999;
+    top: -10px;
+  }
+  .Slider .custom-prevArrow {
+    left: -10px;
+  }
+  .Slider .custom-nextArrow {
+    right: -10px;
+  }
+  .Slider .custom-prevArrow:hover,
+  .Slider .custom-nextArrow:hover {
+    fill: red;
+    cursor: pointer;
+  }
+
+
+.Slider-ComingSon-film  {
+    position: relative;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    width: 90%;
+    margin: 0 auto;
+  }
+   .Slider-ComingSon-film .slick-list {
+    position: relative;
+    display: block !important;
+    overflow: hidden;
+    padding: 70px 90px !important;
+    width: 100%;
+  }
+  .Slider-ComingSon-film .slick-track {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: flex;
+  }
+  .Slider-ComingSon-film.slick-slide div {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  /* .slick-slide .image {
+    object-fit: cover;
+    border-radius: 2px;
+    max-width: 150px !important;
+  } */
+
+  .Slider-ComingSon-film .slick-slide div div span {
+    margin-top: 10px;
+    width: inherit;
+    text-align: center;
+    font-size: 0.75rem;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #111;
+  }
+  .Slider-ComingSon-film .slick-list {
+    position: relative;
+    display: block !important;
+    overflow: hidden;
+    padding: 0 !important;
+    width: 100%;
+  }
+  .Slider-ComingSon-film .slick-prev,
+  .Slider-ComingSon-film .slick-next {
+    display: none !important;
+  }

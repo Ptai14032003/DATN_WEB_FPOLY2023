@@ -1,16 +1,14 @@
-
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useFetchSeatRoomIdQuery } from '../rtk/booking/booking';
-import ThanhToan from '../components/itemGuest/ThanhToan/ThanhToan';
-import { useFetchMovieIdPersonQuery } from '../rtk/moviesPerson/moviesPerson';
-import { MdChair } from "react-icons/md";
-import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { message } from 'antd';
-import Footer from '../components/layouts/layoutGuest/footer';
-import Menu from '../components/layouts/layoutGuest/menu';
+import { MdChair } from "react-icons/md";
+import { useFetchMovieIdPersonQuery } from '../../rtk/moviesPerson/moviesPerson';
+import { useFetchSeatRoomIdQuery } from '../../rtk/booking/booking';
+import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import ThanhToan from '../../components/itemGuest/ThanhToan/ThanhToan';
+import "./index.css"
 
-const Booking = () => {
+const BookingSeatAdmin = () => {
     const { search } = useLocation();
     const show_time = new URLSearchParams(search).get('show_seat');
     const { id } = useParams();
@@ -18,7 +16,6 @@ const Booking = () => {
     const { data: seatBooking } = useFetchSeatRoomIdQuery(show_time);
     const { data: movie } = useFetchMovieIdPersonQuery(id);
     const [activeTab, setActiveTab] = useState(1);
-    const [isFixed, setIsFixed] = useState(false);
     const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
     const [idGhe, setidGhe] = useState<any[]>([])
     const [combo, setCombo] = useState<[]>([]);
@@ -35,6 +32,7 @@ const Booking = () => {
     const [minute, setMinute] = useState<number>(10);
     const [second, setSecond] = useState<number>(0)
     const navigate = useNavigate();
+
 
     useEffect(() => {
         if (seats) {
@@ -360,76 +358,35 @@ const Booking = () => {
         });
 
     };
-
-    useEffect(() => {
-        const handleScroll = () => {
-          const scrollPosition = window.scrollY || window.pageYOffset;
-          const shouldFix = scrollPosition > (0.8 * window.innerHeight) && activeTab !== 3;
-          setIsFixed(shouldFix);
-        };
-    
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-      }, [activeTab]);
-
-
     return (
-        <div className='bg-black text-white'>
-            <div>
-                <Menu />
-            </div>
-            <div className="backdrop">
-                <img src={seatBooking?.movie?.image} className='backdrop-img w-full h-[550px] relative'></img>
-            </div>
-
-            <div className="movies-title absolute flex justify-between items-center translate-x-[28rem] -translate-y-[4rem] text-white w-[63.875rem]">
-                <div className="time flex text-lg items-center space-x-10">
-                    <p>{seatBooking?.movie?.time}</p>
-
-                </div>
-            </div>
-
-            <div className="booking h-full max-w-[1420px] mx-auto ">
-                <div className="booking-seat-person">
-                    <div className={`${isFixed ? 'block' : 'hidden'}`}></div>
+        <div className='containner'>
+            <div className="booking">
+                <div className="booking-seat">
                     {/* Dữ liệu form */}
-                    <div className={`no-content ${isFixed ? 'fixed top-[20%]' : 'mt-10'}`}>
-                        <div className="block">
-                            <div className="w-[190px]"><img width="190" height="240" src={movieBooking?.image} alt="" /></div>
-                            <h3 className="mt-4 text-lg font-bold text-white sm:text-xl">
-                                {movieBooking?.movie_name}
-                            </h3>
+                    <div className="no-content mt-5">
+                        <div className="flex justify-between">
+                            <div className='flex gap-5'>
+                                <div className="w-[190px]"><img width="190" height="240" src={movieBooking?.image} alt="" /></div>
 
-                            <div className="mt-2 max-w-sm text-white">
-                                <h1 className='mt-3 text-sm'>Số ghế đã chọn : {selectedSeats.map(seatId => seatId + ' ').join('')}</h1>
-                                <h1 className='mt-3 text-sm'>Combo :</h1>
-                                {combo.map((item: any) => (
-                                    <div key={item.food_name} className='flex gap-[100px]'>
-                                        <div className='w-[80%]'>{item.food_name}</div>
-                                        <div>x{item.soLuong}</div>
-                                    </div>
-                                ))}
-                                <h1 className='mt-3 text-sm'>Tổng tiền : {dataTong} đ</h1>
+                                <div className="max-w-sm">
+                                    <h3 className=" text-lg font-bold sm:text-xl">
+                                        {movieBooking?.movie_name}
+                                    </h3>
+                                    <h1 className='mt-3 text-sm'>Số ghế đã chọn : {selectedSeats.map(seatId => seatId + ' ').join('')}</h1>
+                                    <h1 className='mt-3 text-sm'>Combo :</h1>
+                                    {combo.map((item: any) => (
+                                        <div key={item.food_name} className='flex gap-[100px]'>
+                                            <div className='w-[80%]'>{item.food_name}</div>
+                                            <div>x{item.soLuong}</div>
+                                        </div>
+                                    ))}
+                                    <h1 className='mt-3 text-sm'>Tổng tiền : {dataTong} đ</h1>
+                                </div>
                             </div>
+                            <div className="w-[200px] h-[42px] border-[2px] rounded-md px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
                         </div>
                     </div>
                     <div className="content-right">
-                        <div className="taskbar">
-                            <ul>
-                                <li className={activeTab === 1 ? 'active' : ''}>
-                                    <span>1</span> Chọn ghế
-                                </li>
-                                <li className={activeTab === 2 ? 'active' : ''}>
-                                    <span>2</span> Combo
-                                </li>
-                                <li className={activeTab === 3 ? 'active' : ''}>
-
-                                    <span>3</span> Thanh toán
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div className="w-[250px] h-[42px] border-[2px] rounded-md mt-[50px] px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
                         <form action="" method='POST'>
 
                             <div className={`Booking-content ${activeTab === 1 ? "" : "hidden"}`}>
@@ -491,7 +448,7 @@ const Booking = () => {
                             </div>
                         </form>
                         <div className={`Booking-combo grid ${activeTab === 2 ? "" : "hidden"}`}>
-                            <div className='mt-[7rem] '>
+                            <div className=''>
                                 <div className='grid grid-cols-2 gap-12'>
                                     {Foods?.map((item: any) => (
                                         <div className='Combo grid grid-cols-3 border-2 border-white rounded-md bg-[#2f9c8a] p-3 gap-5' key={item?.id}>
@@ -506,10 +463,13 @@ const Booking = () => {
                                                         <button className='bg-white rounded-tl-md rounded-bl-md h-full flex items-center justify-center' onClick={() => handleDecrease(item?.food_name, item?.price)}>
                                                             <MinusOutlined style={{ color: '#000', fontSize: '20px', padding: '3px' }} />
                                                         </button>
-                                                        <input className='text-black w-[170px] h-full outline-none pl-3' type="number" defaultValue={comboItems[item?.food_name] || 0} min={0} value={comboItems[item?.food_name] || 0} readOnly />
+                                                        <input className='text-black w-[100px] h-full outline-none pl-3' type="number" defaultValue={comboItems[item?.food_name] || 0} min={0} value={comboItems[item?.food_name] || 0} readOnly />
                                                         <button className='bg-white rounded-tr-md rounded-br-md h-full flex items-center justify-center' onClick={() => handleIncrease(item?.food_name, item?.price)}>
                                                             <PlusOutlined style={{ color: '#000', fontSize: '20px', padding: '3px' }} />
                                                         </button>
+                                                    </div>
+                                                    <div>
+                                                        <button className='cursor-pointer border rounded py-1 px-4 bg-black'>Chọn</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -522,17 +482,14 @@ const Booking = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className={`${activeTab === 3 ? "" : "hidden"}`}>
-                            <ThanhToan data={{ selectedSeats, priceTong, movieBooking, combo, idGhe, show_time }} key={`1`} />
+                        <div className={`${activeTab === 3 ? "ThanhToan" : "hidden"}`}>
+                            <ThanhToan data={{ selectedSeats, priceTong, movieBooking, combo, idGhe, show_time }} key={`1`}/>
                         </div>
                     </div>
                 </div>
             </div >
-            <footer className='mt-10'>
-                <Footer />
-            </footer>
-        </div >
-
+        </div>
     )
 }
-export default Booking
+
+export default BookingSeatAdmin

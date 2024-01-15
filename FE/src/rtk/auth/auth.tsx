@@ -16,6 +16,12 @@ interface ResetPassword {
     password: string,
     password_confirmation: string
 }
+interface UpdatePassword {
+    user_code: string,
+    old_password: string,
+    password: string,
+    password_confirmation: string
+}
 interface AuthSignin {
     email: string;
     password: string;
@@ -67,8 +73,15 @@ const authApi = createApi({
                     body: user,
                 })
             }),
+            updatePassword: builder.mutation<{ message: string, user: {} }, UpdatePassword>({
+                query: (user) => ({
+                    url: '/api/update_password',
+                    method: "POST",
+                    body: user,
+                })
+            }),
         }
     )
 })
-export const { useSignupMutation, useSigninMutation, useForgotPasswordMutation, useResetPasswordMutation } = authApi;
+export const { useSignupMutation, useSigninMutation, useForgotPasswordMutation, useResetPasswordMutation, useUpdatePasswordMutation } = authApi;
 export default authApi
