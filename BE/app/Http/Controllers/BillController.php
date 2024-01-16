@@ -147,6 +147,7 @@ class BillController extends Controller
             ->leftJoin('ticket_foods', 'ticket_foods.bill_id', '=', 'bills.id')
             ->leftJoin('foods', 'foods.id', '=', 'ticket_foods.food_id')
             ->select(
+                'bills.id',
                 'bills.bill_code',
                 DB::raw('IFNULL(bills.user_code, "Không có") as user_code'),
                 DB::raw('IFNULL(users.name, "Không có") as user_name'),
@@ -173,6 +174,7 @@ class BillController extends Controller
                 DB::raw('GROUP_CONCAT(DISTINCT IFNULL(CONCAT(ticket_foods.quantity, " - ", foods.food_name), " ")) as food_name')
             )
             ->groupBy(
+                'bills.id',
                 'bills.bill_code',
                 'user_code',
                 'user_name',
