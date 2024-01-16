@@ -149,7 +149,7 @@ class StatisticalController extends Controller
 
             while ($start <= $end) {
                 $dailySum = Bill::whereDate('updated_at', $start)->where('status', 1)->sum('total_money');
-                $dailyRevenue[] = ['date' => $start, 'total_money' => $dailySum];
+                $dailyRevenue[] = ['date' => Carbon::parse($start)->format('d-m-Y'), 'total_money' => $dailySum];
                 $start = Carbon::parse($start)->addDay()->format('Y-m-d');
             }
             $total_revenue['dailyRevenue'] = $dailyRevenue;
