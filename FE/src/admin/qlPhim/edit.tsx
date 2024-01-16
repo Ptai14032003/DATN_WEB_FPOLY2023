@@ -46,7 +46,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                 end_date: dataMovies?.end_date,
             }
             setNewData(newData)
-            
+
         }
     }, [dataMovies])
     const [newData, setNewData] = useState<any>({})
@@ -61,8 +61,19 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
     }));
     const onFinish = (values: any) => {
         console.log(values);
-
-        // putMovie({ body: values, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
+        putMovie({ body: values, id: projects }).then((data: any) => {
+            if (data?.data?.start_date) {
+                message.error(data?.data?.start_date[0]);
+            } else if (data?.data?.end_date) {
+                message.error(data?.data?.end_date[0]);
+            } else if (data?.data?.movie_name) {
+                message.error(data?.data?.movie_name[0]);
+            } else {
+                setIsModalOpen(false);
+                message.success("Sửa thành công");
+                formRef.current?.resetFields();
+            }
+        })
 
     };
 

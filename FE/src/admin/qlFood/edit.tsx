@@ -21,8 +21,12 @@ const EditQlSp: React.FC<Props> = ({ projects }: Props) => {
         console.log(values);
 
         putFood({ body: values, id: projects }).then((data: any) => {
-            console.log(data);
-            setIsModalOpen(false), message.success("Sửa thành công")
+            if (data?.data?.food_name) {
+                message.error(data?.data?.food_name[0])
+            } else {
+                setIsModalOpen(false), message.success("Sửa thành công");
+                formRef.current?.resetFields();
+            }
         })
     };
 

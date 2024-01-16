@@ -21,7 +21,14 @@ const CreateQlSp: React.FC = () => {
     }));
     const onFinish = (values: any) => {
         if (checkApi) {
-            addFood(values).then(() => { setIsModalOpen(false); formRef.current?.resetFields(); message.success("Thêm thành công") })
+            addFood(values).then((data: any) => {
+                if (data?.data?.food_name) {
+                    message.error(data?.data?.food_name[0])
+                } else {
+                    setIsModalOpen(false), message.success("Thêm thành công");
+                    formRef.current?.resetFields();
+                }
+            })
             setCheckApi(false)
             return;
         }

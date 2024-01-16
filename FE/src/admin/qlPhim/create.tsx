@@ -21,7 +21,19 @@ const CreateQlPhim: React.FC = () => {
     }));
     const onFinish = (values: any) => {
         if (checkApi) {
-            addMovies(values).then(() => { setIsModalOpen(false); formRef.current?.resetFields(); message.success("Thêm thành công") })
+            addMovies(values).then((data: any) => {
+                if (data?.data?.start_date) {
+                    message.error(data?.data?.start_date[0]);
+                } else if (data?.data?.end_date) {
+                    message.error(data?.data?.end_date[0]);
+                } else if (data?.data?.movie_name) {
+                    message.error(data?.data?.movie_name[0]);
+                } else {
+                    setIsModalOpen(false);
+                    message.success("Thêm thành công");
+                    formRef.current?.resetFields();
+                }
+            })
             setCheckApi(false)
             return;
         }
