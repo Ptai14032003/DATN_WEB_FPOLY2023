@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Cloudinary\Cloudinary;
-
+use Illuminate\Support\Facades\Validator;
 class ApiMovieController extends Controller
 { 
    public function index(){
@@ -38,7 +38,21 @@ public function showingAdmin(){
     return response()->json($movies);
 }
     public function store(Request $request){
-
+        $validator = Validator::make(
+            $request->all(),
+            [   'movie_name' => "movie_name:unique",
+                'start_date' => 'after:today',
+                'end_date' => 'after:start_date'
+            ],
+            [
+                'movie_name.unique' => "Tên phim đã tồn tại",
+                'start_date.after' => "Ngày bắt đầu không được nhỏ hơn ngày hiện tại",
+                'end_date.after' => "Ngày kết thúc không được nhỏ hơn ngày bát đầu"
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json($validator->messages());
+        } else {
         // if($request->image){
             // $result = cloudinary()->uploadApi()->upload($request->file);
         $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
@@ -57,19 +71,7 @@ public function showingAdmin(){
         $filePath = storage_path('app/' . $uniqueFileName);
         file_put_contents($filePath, $decodedData);
         $response = cloudinary()->upload($filePath)->getSecurePath();
-
-            // Kiểm tra start_date không được nhỏ hơn ngày hôm nay
-            
-        // $start_date = Carbon::parse($request->get('start_date'));
-        // if ($start_date->isBefore(Carbon::now())) {
-        //     return response()->json(['error' => 'Ngày bắt đầu không thể nhỏ hơn ngày hôm nay.'], 400);
-        // }
-
-        // // Kiểm tra end_date không được nhỏ hơn start_date
-        // $end_date = Carbon::parse($request->get('end_date'));
-        // if ($end_date->isBefore($start_date)) {
-        //     return response()->json(['error' => 'Ngày kết thúc không thể nhỏ hơn ngày bắt đầu.'], 400);
-        // }
+    
 
             $type_name = $request->get('type_name');
             $movie_type = Movie_Type::where('type_name',$type_name)->first();
@@ -108,6 +110,7 @@ public function showingAdmin(){
         // }
        
     }
+}
 
     public function edit(string $id)
     {
@@ -128,59 +131,48 @@ public function showingAdmin(){
     
     public function update(Request $request, string $id) {
         $movie = Movie::find($id);
-    
+
         if (!$movie) {
             return response()->json(['messages' => 'Phim không tồn tại'], 404);
         }
-
-        $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'start_date' => 'after:today',
+                'end_date' => 'after:start_date'
+            ],
+            [
+                'start_date.after' => "Ngày bắt đầu không được nhỏ hơn ngày hiện tại",
+                'end_date.after' => "Ngày kết thúc không được nhỏ hơn ngày bát đầu"
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json($validator->messages());
+        } else {
+        // Update other fields based on the request
+        $movie->update($request->except('image'));
     
-        $elements = explode(',', $fileData);
-
-        // Lấy tất cả các phần tử sau dấu ','
-        $elementsAfterComma = array_slice($elements, 1);
-        // Giải mã dữ liệu base64
-        $decodedData = base64_decode($elementsAfterComma[0]);
-
-        // Tạo một tên tệp tin duy nhất
-        $uniqueFileName = uniqid('file_');
-
-        // Lưu dữ liệu vào tệp tin mới tạo
-        $filePath = storage_path('app/' . $uniqueFileName);
-        file_put_contents($filePath, $decodedData);
-        $response = cloudinary()->upload($filePath)->getSecurePath();
-    
-        // Update the movie data
-   
-        $data['image'] = $response;
-        $movie->update($data);
-    
-        if ($request->hasFile('image')) {
-            // Xóa ảnh cũ trên Cloudinary
-            if ($movie->image) {
-                $publicId = pathinfo($movie->image)['filename'];
-                cloudinary()->destroy($publicId);
-            }
-    
-            // Upload ảnh mới lên Cloudinary
+        // Handle image upload if a new image is provided in the request
+        if ($request->input('image')['fileList']) {
             $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
             $elements = explode(',', $fileData);
             $elementsAfterComma = array_slice($elements, 1);
             $decodedData = base64_decode($elementsAfterComma[0]);
-    
             $uniqueFileName = uniqid('file_');
             $filePath = storage_path('app/' . $uniqueFileName);
             file_put_contents($filePath, $decodedData);
+            $imagePath = cloudinary()->upload($filePath)->getSecurePath();
     
-            $response = cloudinary()->upload($filePath)->getSecurePath();
-    
-            
-            // Xóa ảnh tạm trên local storage
-            unlink($filePath);
+            // Save the new image path to the movie record
+            $movie->image = $imagePath;
+            $movie->save();
+        }else{
+            $movie->image = $request->image;
         }
     
-        return response()->json(['messages' => 'Cập nhật phim thành công'], 202);
+        return response()->json(['message' => 'Phim đã được cập nhật thành công'], 200);
     }
+}
     
     
     

@@ -15,6 +15,7 @@ import billApi from './bill/bill'
 import VoucherApi from './voucher/voucher'
 import statisticsApi from './statistics/statistics'
 import MovieTypeApi from './movie_type/page'
+import PaymentAdminApi from './payment_admin/payment_admin'
 
 export const store = configureStore({
     reducer: {
@@ -34,7 +35,7 @@ export const store = configureStore({
         promotions: discountApi.reducer,
         statistics: statisticsApi.reducer,
         movie_type: MovieTypeApi.reducer,
-
+        paymentAdmin: PaymentAdminApi.reducer,
 
     },
     middleware: (getDefaultMiddleware) =>
@@ -55,7 +56,7 @@ export const store = configureStore({
             .concat(discountApi.middleware)
             .concat(statisticsApi.middleware)
             .concat(MovieTypeApi.middleware)
-
+            .concat(PaymentAdminApi.middleware)
 });
 
 
