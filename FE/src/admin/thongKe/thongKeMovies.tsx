@@ -56,8 +56,6 @@ const ThongKeMovies = () => {
     const handleCancel = () => {
         setIsModalOpen(false);
     };
-    console.log(data);
-
     return (
         <>
             {contextHolder}
