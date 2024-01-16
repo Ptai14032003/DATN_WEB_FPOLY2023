@@ -304,9 +304,83 @@ class BillController extends Controller
         }
         if ($bill->export_ticket == 0) {
             $bills = Bill::where('id', $bill_id)->update(['export_ticket' => 1]);
+            if($request->personnel_code){
+                $bills = Bill::where('id', $bill_id)->update(['personnel_code' => $request->personnel_code]);
+            }
             return response()->json(['message' => "Xuất vé thành công"]);
         } else {
             return response()->json(['error' => "Vé đã được xuất rồi"]);
         }
+    }
+
+    //chi tiết hóa đơn
+
+    public function bill_detail(Request $request){
+        $bill_id = $request->bill_id;
+        $bill_detail = Bill::leftjoin('users', 'users.user_code', '=', 'bills.user_code')
+            ->leftjoin('personnels', 'personnels.personnel_code', '=', 'bills.personnel_code')
+            ->join('tickets', 'tickets.bill_id', '=', 'bills.id')
+            ->join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
+            ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
+            ->where('bills.id', $bill_id)
+            ->select(
+                'bills.id',
+                'bills.bill_code',
+                DB::raw('IFNULL(bills.user_code, "Không có") as user_code'),
+                DB::raw('IFNULL(users.name, "Không có") as user_name'),
+                DB::raw('IFNULL(bills.personnel_code, "Không có") as personnel_code'),
+                DB::raw('IFNULL(personnels.name, "Không có") as personnel_name'),
+                'bills.total_ticket',
+                'bills.total_combo',
+                'bills.additional_fee',
+                'bills.total_money',
+                'movies.movie_name',
+                'movies.image',
+                DB::raw('DATE_FORMAT(bills.created_at, "%d-%m-%Y") as booking_date'),
+                DB::raw('DATE_FORMAT(showtimes.show_date, "%d-%m-%Y") as show_date'),
+                DB::raw('CASE 
+                WHEN bills.status = 0 THEN "Đang chờ thanh toán" 
+                WHEN bills.status = 1 THEN "Đã thanh toán" 
+                WHEN bills.status = 2 THEN "Đã hủy" 
+                END as payment_status')
+            )
+            ->groupBy(
+                'bills.id',
+                'bills.bill_code',
+                'bills.user_code',
+                'users.name',
+                'bills.personnel_code',
+                'personnels.name',
+                'bills.total_ticket',
+                'bills.total_combo',
+                'bills.additional_fee',
+                'bills.total_money',
+                'movies.movie_name',
+                'movies.image',
+                'booking_date',
+                'show_date',
+                'payment_status'
+            )
+            ->orderBy('bills.id', 'desc')
+            ->get();
+            $tickets = Ticket::join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
+            ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
+            ->join('rooms', 'rooms.id', '=', 'showtimes.room_id')
+            ->join('seats', 'seats.id', '=', 'tickets.id_seat')
+            ->where('bill_id', $bill_id)
+            ->select('movies.movie_name', 'showtimes.show_date as date', 'showtimes.show_time as time', 'rooms.name as room_name', 'seats.seat_code', 'tickets.price')
+            ->groupBy('movie_name', 'date', 'time', 'room_name', 'seat_code', 'tickets.price')
+            ->get();
+        $ticket_foods = Ticket_Food::join('foods', 'foods.id', '=', 'ticket_foods.food_id')
+            ->where('bill_id', $bill_id)
+            ->select(
+                'foods.food_name',
+                'ticket_foods.quantity',
+                DB::raw('SUM(ticket_foods.total_money) as total_money')
+            )
+            ->groupBy('foods.food_name', 'ticket_foods.quantity')
+            ->get();
+
+        return response()->json(['bill'=>$bill_detail,'tickets' => $tickets, 'ticket_foods' => $ticket_foods]);
     }
 }

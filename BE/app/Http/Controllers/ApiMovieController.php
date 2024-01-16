@@ -106,7 +106,7 @@ public function showingAdmin(){
                 'describe' => $describe
             ];
             Movie::create($data); 
-            return response()->json($data);
+            return response()->json([$data, 'message' => 'Phim đã được thêm thành công'], 201);
 
         // }
         // }else{
@@ -136,51 +136,43 @@ public function showingAdmin(){
     public function update(Request $request, string $id) {
         $movie = Movie::find($id);
 
-        // $validator = Validator::make(
-        //     $request->all(),
-        //     [  
-        //         'movie_name' =>
-        //         [ "unique:movies,movie_name",
-        //         Rule::unique('movies')->ignore($this->id)
-        //         ],
-        //         'start_date' => 'after:today',
-        //         'end_date' => 'after:start_date'
-        //     ],
-        //     [
-        //         'movie_name.unique' => "Tên phim đã tồn tại",
-        //         'end_date.after' => "Ngày kết thúc không được nhỏ hơn ngày bát đầu"
-        //     ]
-        // );
-        // if ($validator->fails()) {
-        //     return response()->json($validator->messages());
-        // } else {
+        $validator = Validator::make(
+            $request->all(),
+            [  
+                'end_date' => 'after:start_date'
+            ],
+            [
+                'end_date.after' => "Ngày kết thúc không được nhỏ hơn ngày bát đầu"
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json($validator->messages());
+        } else {
         // Update other fields based on the request
         $movie->update($request->except('image'));
     
         // Handle image upload if a new image is provided in the request
-        // if ($request->input('image')['fileList']) {
-        //     $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
-        //     $elements = explode(',', $fileData);
-        //     $elementsAfterComma = array_slice($elements, 1);
-        //     $decodedData = base64_decode($elementsAfterComma[0]);
-        //     $uniqueFileName = uniqid('file_');
-        //     $filePath = storage_path('app/' . $uniqueFileName);
-        //     file_put_contents($filePath, $decodedData);
-        //     $imagePath = cloudinary()->upload($filePath)->getSecurePath();
+        if ($request->input('image')['fileList']) {
+            $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
+            $elements = explode(',', $fileData);
+            $elementsAfterComma = array_slice($elements, 1);
+            $decodedData = base64_decode($elementsAfterComma[0]);
+            $uniqueFileName = uniqid('file_');
+            $filePath = storage_path('app/' . $uniqueFileName);
+            file_put_contents($filePath, $decodedData);
+            $imagePath = cloudinary()->upload($filePath)->getSecurePath();
     
-        //     // Save the new image path to the movie record
-        //     $movie->image = $imagePath;
-        //     $movie->save();
-        // }else{
-        //     $movie->image = $request->image;
-        // }
+            // Save the new image path to the movie record
+            $movie->image = $imagePath;
+            $movie->save();
+        }else{
+            $movie->image = $request->image;
+        }
     
         return response()->json(['message' => 'Phim đã được cập nhật thành công'], 200);
     }
+}
 
-    
-    
-    
     public function destroy(string $id){
         $movie = Movie::find($id);
 

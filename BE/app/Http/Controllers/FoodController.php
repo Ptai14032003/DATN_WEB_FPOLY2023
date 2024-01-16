@@ -34,7 +34,6 @@ class FoodController extends Controller
             $request->all(),
             [  
                 'food_name' => "unique:foods,food_name",
-                 Rule::unique('foods')->ignore($this->food_name)
                
             ],
             [
@@ -100,49 +99,55 @@ class FoodController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request,string $id){
-        $food = Food::find($id);
+        
         // $validator = Validator::make(
         //     $request->all(),
         //     [  
-                
-        //         'food_name' => "unique:foods,food_name",
-        //         Rule::unique('foods')->ignore($this->id)
+        //         'food_name' => [
+        //             Rule::unique('foods')->ignore($id),
+        //             function ($attribute, $value, $fail) use ($id) {
+        //                 // Kiểm tra sự tồn tại trong users khi email thay đổi
+        //                 $name = Food::where('food_name', $value)->first();
+        //                 if ($name) {
+        //                     $fail('Tên đã tồn tại');
+        //                 }
+        //             },
+        //         ],
                
         //     ],
-        //     [
-        //         'food_name.unique' => "Tên sản phẩm đã tồn tại",
-              
-        //     ]
         // );
         // if ($validator->fails()) {
         //     return response()->json($validator->messages());
         // } else {
+            $food = Food::find($id);
         if (!$food) {
             return response()->json(['messages' => 'Đô ăn không tồn tại'], 404);
         }
      
         $food->update($request->except('image'));
     
-        // if ($request->input('image')['fileList']) {
-        //     $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
-        //     $elements = explode(',', $fileData);
-        //     $elementsAfterComma = array_slice($elements, 1);
-        //     $decodedData = base64_decode($elementsAfterComma[0]);
-        //     $uniqueFileName = uniqid('file_');
-        //     $filePath = storage_path('app/' . $uniqueFileName);
-        //     file_put_contents($filePath, $decodedData);
-        //     $imagePath = cloudinary()->upload($filePath)->getSecurePath();
+        if ($request->input('image')['fileList']) {
+            $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
+            $elements = explode(',', $fileData);
+            $elementsAfterComma = array_slice($elements, 1);
+            $decodedData = base64_decode($elementsAfterComma[0]);
+            $uniqueFileName = uniqid('file_');
+            $filePath = storage_path('app/' . $uniqueFileName);
+            file_put_contents($filePath, $decodedData);
+            $imagePath = cloudinary()->upload($filePath)->getSecurePath();
     
-        //     // Save the new image path to the movie record
-        //     $food->image = $imagePath;
-        //     $food->save();
+            // Save the new image path to the movie record
+            $food->image = $imagePath;
+            $food->save();
 
-        // }else{
-        //     $food->image = $request->image;
-        // }
+        }else{
+            $food->image = $request->image;
+        }
     
         return response()->json(['message' => 'Sản phẩm đã được cập nhật thành công'], 200);
     }
+// }
+
 
 
     /**
