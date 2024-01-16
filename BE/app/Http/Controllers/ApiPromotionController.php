@@ -38,12 +38,13 @@ class ApiPromotionController extends Controller
             ]
         );
         if ($validator->fails()) {
-            return response()->json($validator->messages());
+            return response()->json(['status' => 'error', 'message' => $validator->messages()], 400);
         } else {
-        $promotion = Promotion::create($request->all());
-        return response()->json($promotion);
+            $promotion = Promotion::create($request->all());
+            return response()->json(['status' => 'success', 'message' => 'Thêm thành công', 'data' => $promotion], 201);
+        }
     }
-}
+
 
     /**
      * Display the specified resource.
