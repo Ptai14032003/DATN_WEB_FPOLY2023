@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('bills', function (Blueprint $table) {
             $table->id();
+            $table->string('bill_code')->nullable();
             $table->string('user_code')->nullable();
             $table->string('personnel_code')->nullable();
             $table->integer('total_ticket');

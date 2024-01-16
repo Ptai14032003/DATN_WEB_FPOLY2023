@@ -62,9 +62,13 @@ class StatisticalController extends Controller
         $data = $request->all();
         $currentYear = Carbon::now()->year;
         $currentMonth = Carbon::now()->month;
-        $start = Carbon::createFromFormat('d-m-Y', $data['start'])->format('Y-m-d');
-        $end = Carbon::createFromFormat('d-m-Y', $data['end'])->format('Y-m-d');
-
+        if ($data['timeline'] == "day") {
+            $start = Carbon::createFromFormat('d-m-Y', $data['start'])->format('Y-m-d');
+            $end = Carbon::createFromFormat('d-m-Y', $data['end'])->format('Y-m-d');
+        } else {
+            $start = now();
+            $end = now();
+        }
         // Kiểm tra nếu năm > hiện tại hoặc tháng > tháng hiện tại
         if (
             ($data['timeline'] == 'year' && $data['year'] > $currentYear) ||

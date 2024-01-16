@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Cloudinary\Cloudinary;
 use Illuminate\Support\Facades\Validator;
+
 class ApiMovieController extends Controller
 { 
    public function index(){
@@ -40,7 +41,8 @@ public function showingAdmin(){
     public function store(Request $request){
         $validator = Validator::make(
             $request->all(),
-            [   'movie_name' => "movie_name:unique",
+            [  
+                'movie_name' => "unique:movies,movie_name",
                 'start_date' => 'after:today',
                 'end_date' => 'after:start_date'
             ],
@@ -132,16 +134,15 @@ public function showingAdmin(){
     public function update(Request $request, string $id) {
         $movie = Movie::find($id);
 
-        if (!$movie) {
-            return response()->json(['messages' => 'Phim không tồn tại'], 404);
-        }
         $validator = Validator::make(
             $request->all(),
-            [
+            [  
+                'movie_name' => "unique:movies,movie_name",
                 'start_date' => 'after:today',
                 'end_date' => 'after:start_date'
             ],
             [
+                'movie_name.unique' => "Tên phim đã tồn tại",
                 'start_date.after' => "Ngày bắt đầu không được nhỏ hơn ngày hiện tại",
                 'end_date.after' => "Ngày kết thúc không được nhỏ hơn ngày bát đầu"
             ]
