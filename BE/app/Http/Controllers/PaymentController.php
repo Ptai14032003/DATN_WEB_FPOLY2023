@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use App\Models\Bill;
 use App\Models\Food;
 use App\Models\Promotion;
@@ -30,7 +31,9 @@ class PaymentController extends Controller
         } else {
             $discount_percent = 0;
         }
+        $bill_code = Helper::IDGenerator(new Bill, 'bill_code', 6, 'HD');
         $bill = [
+            "bill_code" => $bill_code ?? null,
             "user_code" => $user_code,
             "total_ticket" => count($seat),
             "total_combo" => count($combo),
@@ -38,7 +41,8 @@ class PaymentController extends Controller
             "payment_time" => date("Y-m-d H:i:s"),
             "status" => 0,
             "discount_code" => $discount_code,
-            "personnel_code" => null
+            "personnel_code" => null,
+            "additional_fee"=>0
         ];
         $bill_add = Bill::create($bill);
 
@@ -77,7 +81,7 @@ class PaymentController extends Controller
         $vnp_Returnurl = "http://localhost:5173/listvnp"; // Đường dẫn return sau khi thanh toán
         $vnp_TmnCode = "Y4S5IA1I"; //Mã website tại VNPAY 
         $vnp_HashSecret = "UDAXFZLJPNALXHWXVNNNZKOFPQAQMOHX"; //Chuỗi bí mật
-        $vnp_TxnRef = $bill_add->id; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
+        $vnp_TxnRef = $bill_add->bill_code; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
         $vnp_OrderInfo = 'Thanh toán hóa đơn';
         $vnp_OrderType = 'billpayment';
         $vnp_Amount = $bill_add->total_money * 100;
@@ -174,7 +178,7 @@ class PaymentController extends Controller
         $vnp_Amount = $inputData['vnp_Amount'] / 100; // Số tiền thanh toán VNPAY phản hồi
 
         $Status = 0; // Là trạng thái thanh toán của giao dịch chưa có IPN lưu tại hệ thống của merchant chiều khởi tạo URL thanh toán.
-        $bill_id = $inputData['vnp_TxnRef'];
+        $bill_code = $inputData['vnp_TxnRef'];
 
         try {
             //Check Orderid    
@@ -183,8 +187,9 @@ class PaymentController extends Controller
                 //Lấy thông tin đơn hàng lưu trong Database và kiểm tra trạng thái của đơn hàng, mã đơn hàng là: $bill_id            
                 //Việc kiểm tra trạng thái của đơn hàng giúp hệ thống không xử lý trùng lặp, xử lý nhiều lần một giao dịch
                 //Giả sử: $bill = mysqli_fetch_assoc($result);   
-                $bill = Bill::find($bill_id);
-
+                $bill = Bill::where('bill_code', $bill_code)->first();
+                $bill_id = $bill->bill_id;
+                // $bill = Bill::find($bill_id);
                 if ($bill != NULL) {
                     if ($bill["total_money"] == $vnp_Amount) //Kiểm tra số tiền thanh toán của giao dịch: giả sử số tiền kiểm tra là đúng. //$bill["Amount"] == $vnp_Amount
                     {
@@ -296,6 +301,7 @@ class PaymentController extends Controller
             $fee = false;
         }
         $bill = [
+            "bill_code" => Helper::IDGenerator(new Bill, 'bill_code', 6, 'HD'),
             "user_code" => $user_code ?? null,
             "total_ticket" => count($seat),
             "total_combo" => count($combo),
