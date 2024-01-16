@@ -24,7 +24,6 @@ const ExportTicketAdmin = ({ data }: Props) => {
         };
 
         getBillId(newData).then((data: any) => {
-            console.log(data);
             showModal();
             setBillFoodData(data?.data?.ticket_foods);
             setBillData(data?.data?.tickets);
@@ -34,17 +33,17 @@ const ExportTicketAdmin = ({ data }: Props) => {
         const newData = {
             bill_code: data
         }
-        await exportBill(newData).unwrap()
+        await exportBill(newData)
             .then((req: any) => {
-                if (req?.message) {
-                    message.success(req?.message);
+                if (req?.data?.message) {
+                    message.success(req?.data?.message);
                     setTimeout(() => {
                         window.location.reload();
                     }, 1000);
 
                 }
-                if (req?.error) {
-                    message.success(req?.error)
+                if (req?.data?.error) {
+                    message.success(req?.data?.error)
                 }
             }
             )
@@ -85,7 +84,7 @@ const ExportTicketAdmin = ({ data }: Props) => {
                                     </div>
                                     <div className='flex text-amber-100'>
                                         <p className='font-medium pr-2'>Giá vé:</p>
-                                        <p>{(Number(item?.total_money))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ</p>
+                                        <p>{(Number(item?.price))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ</p>
                                     </div>
                                 </div>
                             </div>
@@ -140,7 +139,7 @@ const ExportTicketAdmin = ({ data }: Props) => {
                                 </div>
                                 <div className='flex text-amber-100'>
                                     <p className='font-medium pr-2'>Giá:</p>
-                                    <p>{(Number(item?.price))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ</p>
+                                    <p>{(Number(item?.total_money))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ</p>
                                 </div>
                             </div>
                             <div className='w-[35%] bg-amber-100 rounded-r-md p-3'>

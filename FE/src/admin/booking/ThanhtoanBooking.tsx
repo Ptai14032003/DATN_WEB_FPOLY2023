@@ -20,7 +20,8 @@ type Props = {
             id: string,
             price: number
         }[],
-        show_time: any
+        show_time: any,
+        room: string
     }
 }
 const typeThanhToan = [{
@@ -35,7 +36,7 @@ const typeOptions = typeThanhToan.map((type: any) => ({
     value: type.value,
     label: type.label,
 }));
-const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, show_time, movieBooking, idGhe } }: Props) => {
+const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, show_time, movieBooking, idGhe, room } }: Props) => {
     const [Payment] = usePaymentAdminMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [sumbitQR] = useSumbitQRPaymentMutation()
@@ -44,6 +45,7 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
     const [linkQR, setQR] = useState("")
     const [newBillCode, setNewBillCode] = useState(null)
     const [newBillIdQR, setNewBillIdQR] = useState(null)
+    const [priceAll, setPriceAll] = useState<String>("")
     const [isExportTicketVisible, setIsExportTicketVisible] = useState(false);
     const handleCancel = () => {
         setIsModalOpen(false);
@@ -88,12 +90,16 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
             if (data?.error?.data?.error) {
                 message.error(data?.error?.data?.error)
             } else {
-                console.log(data);
-
                 setNewBillCode(data?.data?.bill_code);
                 if (data?.data?.link) {
                     setQR(data?.data?.link);
                     showModal()
+                    if (newData.additionnal_fee === 0) {
+                        setPriceAll((Number((Number(selectedSeats?.length) * 10000) + Number(priceTong)))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
+
+                    } else {
+                        setPriceAll((Number(Number(priceTong)))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
+                    }
                 }
             }
         })
@@ -104,7 +110,6 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
                 const newData = {
                     ...dataBill,
                 }
-                console.log(newData);
                 PostPayment(newData)
 
             } else {
@@ -153,7 +158,7 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
                     </div>
                     <div className='item-card flex order-b-2 gap-[30px] border-b-2'>
                         <div className='flex flex-col-reverse w-[95px]'>
-                            <dd className="text-sm">1</dd>
+                            <dd className="text-sm">{room}</dd>
                             <dt className="text-xs text-gray-500">Phòng chiếu</dt>
                         </div>
                         <div className='flex flex-col-reverse'>
@@ -220,7 +225,7 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
                 </div >
             </div >
             <Button
-                className="w-[82%] rounded bg-teal-400text-base h-[42px] border-0 bg-[#1ACAAC]"
+                className="w-[80%] mx-[10%] rounded bg-teal-400text-base h-[42px] border-0 bg-[#1ACAAC]"
                 onClick={handlePayment}
             >
                 Thanh toán
@@ -231,7 +236,54 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
             {typeThanhToan === 0 && newBillCode !== null && (
 
                 <Modal open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className='ModalTicket'>
-                    <iframe src={`${linkQR}`} />
+                    <div className='flex justify-center'>
+                        <iframe src={`${linkQR}`} />
+                        <div>
+                            <div className='item-card border-b-2'>
+                                <div className='flex flex-col-reverse'>
+                                    <dd className="text-smtext-left">{movieBooking?.movie_name}</dd>
+                                    <dt className="text-xs text-gray-500 text-left">Tên phim</dt>
+                                </div>
+                            </div>
+                            <div className='item-card flex order-b-2 gap-[30px] border-b-2'>
+                                <div className='flex flex-col-reverse w-[95px]'>
+                                    <dd className="text-sm">{room}</dd>
+                                    <dt className="text-xs text-gray-500">Phòng chiếu</dt>
+                                </div>
+                                <div className='flex flex-col-reverse'>
+                                    <dd className="text-smw-[95px]">{selectedSeats?.length}</dd>
+
+                                    <dt className="text-xs text-gray-500">Số vé</dt>
+                                </div>
+                                <div className='flex flex-col-reverse w-[125px]'>
+                                    <dd className="text-sm flex gap-1 max-w-[80px]">{selectedSeats.map((item: any) => (
+                                        <div key={item}>{item}</div>
+                                    ))}</dd>
+                                    <dt className="text-xs text-gray-500">Số ghế</dt>
+                                </div>
+                            </div>
+                            <div className='item-card border-b-2'>
+                                <div>
+                                    <div className='flex justify-between'>
+                                        <span className="text-xs text-gray-500 text-left">Combo</span>
+                                        <span className="text-xs text-gray-500">Số lượng</span>
+                                    </div>
+                                    {combo.map((item: any) => (
+                                        <div key={item.food_name} className='flex justify-between'>
+                                            <span className="text-sm ">{item?.food_name}</span>
+                                            <span className="text-smw-[50px] text-center">{item?.soLuong}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className='block my-3'>
+                                <div className='info-card'>
+                                    <div>Tổng tiền :</div>
+                                    <div className='item-info-card'>{priceAll} đ</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div className='flex justify-end'>
                         <button type="submit" onClick={() => CheckQR(newBillCode)} className='border border-blue-500 rounded-md px-3 py-1 hover:bg-blue-200'>
                             Xác nhận
