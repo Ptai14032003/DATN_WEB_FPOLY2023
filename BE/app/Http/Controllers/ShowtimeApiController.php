@@ -46,7 +46,7 @@ class ShowtimeApiController extends Controller
             ]
         );
         if ($validator->fails()) {
-            return response()->json($validator->messages());
+            return response()->json(['flag' => false, 'message' => "Ngày suất chiếu phải trước ngày hiện tại"]);
         }
         $flag = false;
         $existingShowtime = Showtime::join('movies', 'showtimes.movie_id', '=', 'movies.id')
@@ -75,7 +75,7 @@ class ShowtimeApiController extends Controller
             }
         }
         if ($flag) {
-            return response()->json(['flag' => false, 'message' => 'Thời gian suất chiếu phải sau thời gian của suất chiếu cuối cùng cộng thêm 15 phút.']);
+            return response()->json(['flag' => false, 'message' => 'Thời gian suất chiếu bị trùng vào thời gian của suất chiếu khác hoặc đã tồn tại.']);
         } else {
             // Thêm suất chiếu mới nếu không có trùng lặp
             $show_time = Showtime::create($request->all());
@@ -83,7 +83,6 @@ class ShowtimeApiController extends Controller
                 return response()->json(['flag' => true, 'message' => 'Thêm Suất chiếu thành công']);
             }
         }
-        
     }
     public function show(string $id)
     {
