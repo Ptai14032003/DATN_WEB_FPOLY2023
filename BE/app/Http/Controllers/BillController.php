@@ -147,6 +147,7 @@ class BillController extends Controller
             ->leftJoin('ticket_foods', 'ticket_foods.bill_id', '=', 'bills.id')
             ->leftJoin('foods', 'foods.id', '=', 'ticket_foods.food_id')
             ->select(
+                'bills.id',
                 'bills.bill_code',
                 DB::raw('IFNULL(bills.user_code, "Không có") as user_code'),
                 DB::raw('IFNULL(users.name, "Không có") as user_name'),
@@ -173,6 +174,7 @@ class BillController extends Controller
                 DB::raw('GROUP_CONCAT(DISTINCT IFNULL(CONCAT(ticket_foods.quantity, " - ", foods.food_name), " ")) as food_name')
             )
             ->groupBy(
+                'bills.id',
                 'bills.bill_code',
                 'user_code',
                 'user_name',
@@ -341,6 +343,7 @@ class BillController extends Controller
                 'rooms.name as room_name',
                 DB::raw('DATE_FORMAT(bills.created_at, "%d-%m-%Y") as booking_date'),
                 DB::raw('DATE_FORMAT(showtimes.show_date, "%d-%m-%Y") as show_date'),
+                'showtimes.show_time',
                 DB::raw('CASE 
                 WHEN bills.status = 0 THEN "Đang chờ thanh toán" 
                 WHEN bills.status = 1 THEN "Đã thanh toán" 
@@ -363,6 +366,7 @@ class BillController extends Controller
                 'room_name',
                 'booking_date',
                 'show_date',
+                'show_time',
                 'payment_status'
             )
             ->orderBy('bills.id', 'desc')
