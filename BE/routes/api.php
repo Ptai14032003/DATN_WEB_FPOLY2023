@@ -69,6 +69,8 @@ Route::prefix('admin')->group(function () {
     //lịch sử đặt vé trang admin
     Route::get('/history_bills', [BillController::class, "history"])->name('history_bills');
 
+    Route::post('/bill_detail', [BillController::class, 'bill_detail'])->name('bill_detail');
+
     //thanh toán admin
     Route::post('/payment_admin', [PaymentController::class, 'payment_admin'])->name('payment_admin');
     Route::post('/confirm_qr', [PaymentController::class, 'confirm_qr'])->name('confirm_qr');

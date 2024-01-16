@@ -76,6 +76,7 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
         payment_method: typeThanhToan,
         user_code: user_code || null,
         additionnal_fee: Number(selectedSeats?.length) * 10000,
+        personnel_code:""
     }
     const onChange = (value: any) => {
         setUser(value)
@@ -87,6 +88,8 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
     const dataTong = (Number(priceTong))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     const PostPayment = (newData: any) => {
         Payment(newData).then((data: any) => {
+            console.log(newData);
+            
             if (data?.error?.data?.error) {
                 message.error(data?.error?.data?.error)
             } else {
@@ -105,17 +108,22 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
         })
     }
     const handlePayment = () => {
+        const checkLocal = localStorage.getItem("user");
+        const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
+        const personnel_code  = checkUser?.personnel_code
         if (typeThanhToan === 0 || typeThanhToan === 1) {
             if (user_code.length > 0) {
                 const newData = {
                     ...dataBill,
+                 personnel_code:personnel_code
                 }
                 PostPayment(newData)
 
             } else {
                 const newData = {
                     ...dataBill,
-                    additionnal_fee: 0
+                    additionnal_fee: 0,
+                    personnel_code:personnel_code
                 }
                 PostPayment(newData)
             }
@@ -129,8 +137,6 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
             bill_code: id
         }
         sumbitQR(newData).then((data: any) => {
-            console.log(data);
-
             if (data?.data?.bill_code) {
                 message.success(data?.data?.message);
                 setNewBillIdQR(data?.data?.bill_id)

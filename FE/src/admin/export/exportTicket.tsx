@@ -66,8 +66,11 @@ const ExportTicket = () => {
         })
     }
     const ExportBill = async (values: any) => {
+        const checkLocal = localStorage.getItem("user");
+        const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
         const newData = {
-            bill_code: values.bill_code
+            bill_code: values.bill_code,
+            personnel_code: checkUser?.personnel_code
         }
         await exportBill(newData)
             .then((req: any) => {
@@ -94,7 +97,7 @@ const ExportTicket = () => {
         <div className=''>
             <form action="" className='flex gap-3' onSubmit={handleSubmit(onSubmit)}>
                 <div className=''>
-                    <input type="text" placeholder='Nhập mã người dùng' className='border border-gray-500 rounded-md p-2'  {...register('bill_code')} name='bill_code' />
+                    <input type="text" placeholder='Nhập mã hoá đơn' className='border border-gray-500 rounded-md p-2'  {...register('bill_code')} name='bill_code' />
                 </div>
                 <button className='border rounded-md py-1 w-[100px] font-normal text-lg  bg-[#1ACAAC] '>Submit</button>
             </form>
