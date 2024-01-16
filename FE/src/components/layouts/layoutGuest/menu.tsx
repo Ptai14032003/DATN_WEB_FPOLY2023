@@ -36,9 +36,9 @@ const Menu = () => {
       </div>
       <nav>
         <ul className='menu-content flex text-white'>
-        <a href={homeLink}><li>Trang chủ</li></a>
-        <a href={homeLink + 'ticket-price'}><li>Giá vé</li></a>
-        <a href={homeLink}> <li>Giới thiệu</li></a>
+          <a href={homeLink}><li>Trang chủ</li></a>
+          <a href={homeLink + 'ticket-price'}><li>Giá vé</li></a>
+          <a href={homeLink}> <li>Giới thiệu</li></a>
           {!user && (
             <><li onClick={handleClick}><a>Tài khoản</a></li>
               {dropDown ?
@@ -60,13 +60,17 @@ const Menu = () => {
                 <ul className="dropdown-content absolute translate-y-[5.1rem] -translate-x-[2rem] right-6 w-[250px] text-center drop-have-user">
                   {user.role === 'Admin' && (
                     <a href={homeLink + "admin"}>
-                    <li>
-                      Admin
-                    </li>
+                      <li>
+                        Admin
+                      </li>
                     </a>
                   )}
-                  <a href={homeLink + 'profile'} className='block'><li>Thông tin cá nhân</li></a>
-                  <a href={homeLink + 'ticket-history'}><li>Lịch sử đặt vé</li></a>
+                  {user.role !== 'Admin' && (
+                    <div>
+                      <a href={homeLink + 'profile'} className='block'><li>Thông tin cá nhân</li></a>
+                      <a href={homeLink + 'ticket-history'}><li>Lịch sử đặt vé</li></a>
+                    </div>
+                  )}
                   <li onClick={() => Logout()}><div className='block'>Đăng xuất</div></li>
                 </ul>
                 : ""
