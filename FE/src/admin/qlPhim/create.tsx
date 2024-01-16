@@ -23,6 +23,8 @@ const CreateQlPhim: React.FC = () => {
     const onFinish = (values: any) => {
         if (checkApi) {
             addMovies(values).then((data: any) => {
+                console.log(data);
+
                 if (data?.data?.start_date) {
                     message.error(data?.data?.start_date[0]);
                 } else if (data?.data?.end_date) {
@@ -31,11 +33,11 @@ const CreateQlPhim: React.FC = () => {
                     message.error(data?.data?.movie_name[0]);
                 } else {
                     setIsModalOpen(false);
+                    setCheckApi(false)
                     message.success("Thêm thành công");
                     formRef.current?.resetFields();
                 }
             })
-            setCheckApi(false)
             return;
         }
     };
