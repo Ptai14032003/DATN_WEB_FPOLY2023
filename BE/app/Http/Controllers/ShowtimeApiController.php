@@ -27,50 +27,63 @@ class ShowtimeApiController extends Controller
 
     public function store(Request $request)
     {
-        $flag = false;
         $validator = Validator::make(
             $request->all(),
             [
                 'show_date' => 'after:today',
             ],
+            [
+                'show_date.after' => "Ngày suất chiếu phải trước ngày hiện tại"
+            ]
         );
         if ($validator->fails()) {
-            return response()->json(['flag' => false, 'message' => "Ngày suất chiếu phải trước ngày hiện tại"]);
+            return response()->json($validator->messages());
         }
         $existingShowtime = Showtime::join('movies', 'showtimes.movie_id', '=', 'movies.id')
             ->join('rooms', 'showtimes.room_id', '=', 'rooms.id')
             ->where('room_id', $request->input('room_id'))
             ->where('show_date', $request->input('show_date'))
-            ->select('showtimes.show_time','movies.movie_time')
+            ->select('showtimes.show_time', 'movies.movie_time')
             ->get();
-        //return response()->json($existingShowtime);
-        $userInputTime = Carbon::parse($request->input('show_time'));
-        $flag = false;
+        $flag = true;
+        // Khai báo một mảng để lưu trữ thông tin về từng suất chiếu và thời lượng phim
+        $showtimesWithMovieTime = [];
+
         foreach ($existingShowtime as $showtime) {
             $showtimeTime = Carbon::parse($showtime->show_time);
-            $movieTime = $existingShowtime->first()->movie_time;
+            $userInputTime = Carbon::parse($request->input('show_time'));
+            // Lấy thời lượng phim của suất chiếu hiện tại
+            $movieTime = $showtime->movie_time;
             $movieHours = floor($movieTime / 60);
             $movieMinutes = $movieTime % 60;
-            // return response()->json($movieTime);
-            // Kiểm tra xem thời gian nhập có trùng với bất kỳ show_time nào không
-            if ($userInputTime->greaterThanOrEqualTo($showtimeTime) && $userInputTime->lessThanOrEqualTo($showtimeTime->copy()->addHours($movieHours)->addMinutes($movieMinutes)->addMinutes(15))) {
-                $flag = true;
-                break; // Nếu đã tìm thấy trùng lặp, có thể dừng vòng lặp
-            }elseif(($userInputTime->greaterThanOrEqualTo($showtimeTime->copy()->subHours($movieHours)->subMinutes($movieMinutes)->subMinutes(15)))&&($userInputTime->lessThanOrEqualTo($showtimeTime))
-            ){
-                $flag = true;
-                break;
+            $userInputTimeWithMovieTime = $userInputTime->copy()->addHours($movieHours)->addMinutes($movieMinutes)->addMinutes(15);
+            // Tính toán thời gian bắt đầu và kết thúc của suất chiếu
+            $startTime = $showtimeTime->copy()->format("H:i"); // Giảm 15 phút
+            $endTime = $showtimeTime->copy()->addHours($movieHours)->addMinutes($movieMinutes)->addMinutes(15)->format("H:i"); // Cộng thời lượng phim và 15 phút chờ đợi
+
+            // Lưu thông tin vào mảng
+            $showtimesWithMovieTime[] = [
+                'show_time' => $showtime->show_time,
+                'movie_time' => $showtime->movie_time,
+                'start_time' => $startTime,
+                'end_time' => $endTime,
+                'tine' => $userInputTimeWithMovieTime->format("H:i")
+            ];
+            // $userInputTimeWithMovieTime = $userInputTimeWithMovieTime->format("H:i");
+            $userInputTimeWithMovieTime = \DateTime::createFromFormat('H:i', $userInputTimeWithMovieTime->format("H:i"));
+            $userInputTime = \DateTime::createFromFormat('H:i', $userInputTime->format("H:i"));
+
+            if (($userInputTimeWithMovieTime >= \DateTime::createFromFormat('H:i', $startTime) && $userInputTimeWithMovieTime <= \DateTime::createFromFormat('H:i', $endTime)) || $userInputTime >= \DateTime::createFromFormat('H:i', $startTime) && $userInputTime <= \DateTime::createFromFormat('H:i', $endTime)) {
+                return response()->json([
+                             'flag' => false,
+                             'message' => 'Thời gian suất chiếu bị trùng vào thời gian của suất chiếu khác hoặc đã tồn tại.',
+                         ]);
             }
         }
-        if ($flag) {
-            return response()->json(['flag' => false, 'message' => 'Thời gian suất chiếu bị trùng vào thời gian của suất chiếu khác hoặc đã tồn tại.']);
-        } else {
-            // Thêm suất chiếu mới nếu không có trùng lặp
-            $show_time = Showtime::create($request->all());
+        $show_time = Showtime::create($request->all());
             if ($show_time) {
                 return response()->json(['flag' => true, 'message' => 'Thêm Suất chiếu thành công']);
             }
-        }
     }
     public function show(string $id)
     {
