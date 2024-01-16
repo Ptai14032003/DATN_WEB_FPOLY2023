@@ -44,9 +44,9 @@ const AdminQlSp: React.FC = () => {
             ids: selectedRowKeys
         }
         deleteMultiple(data).then((req: any) => {
-            console.log(req);
-
-            message.success("Xóa thành công");
+            if (req?.data?.data?.success) {
+                message.success(req?.data?.data?.success);
+            }
         })
     }
     const rowSelection = {

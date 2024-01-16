@@ -40,7 +40,7 @@ const HomeAdmin = () => {
     const checkLocal = localStorage.getItem("user");
     const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
     const checkRoleAdmin = checkUser?.role === "Admin"
-    const checkRoleNhansu = checkUser?.role === "Nhân Viên"
+    const checkRoleNhanSu = checkUser?.role === "Nhân Viên"
     const onChangeFood: DatePickerProps['onChange'] = (date, dateString) => {
         setValueDateFood(dateString)
         setTraCuuFood({
@@ -181,9 +181,8 @@ const HomeAdmin = () => {
             year: currentTime?.getFullYear(),
             month: currentTime?.getMonth() + 1,
         }
-        if (!dataFoods) {
+        if (!dataFoods && checkRoleAdmin) {
             Top5Foods(dateData).then((fetchdata: any) => {
-                console.log(fetchdata);
                 if (fetchdata?.data?.message) {
                     message.error(fetchdata?.data?.message)
                     setDataFoods({
@@ -195,12 +194,11 @@ const HomeAdmin = () => {
                 } else {
                     setDataFoods(fetchdata?.data)
                     setMaxChartFood(fetchdata?.data[0]?.total_revenue);
-
                     setDataChartFoods(fetchdata?.data)
                 }
             })
         }
-        if (!dataMovies) {
+        if (!dataMovies && checkRoleAdmin) {
             Top5Movies(dateData).then((fetchdata: any) => {
                 if (fetchdata?.data?.message) {
                     message.error(fetchdata?.data?.message)
@@ -237,7 +235,7 @@ const HomeAdmin = () => {
                 }
             })
         }
-        if (!dataNhanSu) {
+        if (!dataNhanSu && checkRoleAdmin) {
             Top5NhanSu(dateData).then((fetchdata: any) => {
                 if (fetchdata?.data?.message) {
                     message.error(fetchdata?.data?.message)
@@ -289,7 +287,7 @@ const HomeAdmin = () => {
     }
     return (
         <>
-            {checkRoleNhansu ? (
+            {checkRoleAdmin ? (
                 <div>
                     <div className='mb-[20px] text-2xl mt-[-55px] flex gap-5' ><div className={`cursor-pointer ${convert === 0 ? "border rounded px-2 py-1 bg-slate-500 transition-all" : ""}`} onClick={() => setConvert(0)}>Xu hướng</div> | <div className={`cursor-pointer  ${convert === 1 ? "border rounded px-2 py-1 bg-slate-500 transition-all" : ""}`} onClick={() => setConvert(1)}>Bảng xếp hạng</div></div>
                     <div className={` ${convert === 0 ? "transition-all duration-300" : "hidden"}`}>
