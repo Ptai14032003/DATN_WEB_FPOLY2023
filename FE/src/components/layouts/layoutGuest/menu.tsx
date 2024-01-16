@@ -58,14 +58,14 @@ const Menu = () => {
             </li>
               {dropDown ?
                 <ul className="dropdown-content absolute translate-y-[5.1rem] -translate-x-[2rem] right-6 w-[250px] text-center drop-have-user">
-                  {user.role === 'Admin' && (
+                  {user.role === 'Admin' || user.role === 'Nhân Viên' && (
                     <a href={homeLink + "admin"}>
                       <li>
                         Admin
                       </li>
                     </a>
                   )}
-                  {user.role !== 'Admin' && (
+                  {user.role !== 'Admin' && user.role !== 'Nhân Viên' && (
                     <div>
                       <a href={homeLink + 'profile'} className='block'><li>Thông tin cá nhân</li></a>
                       <a href={homeLink + 'ticket-history'}><li>Lịch sử đặt vé</li></a>
