@@ -319,7 +319,7 @@ class HomeController extends Controller
 
     public function send_mail(Request $request)
     {
-        $bill = Bill::where('id', $request->bill_id)->first();
+        $bill = Bill::where('bill_code', $request->bill_code)->first();
         //thông tin người nhận mail
         $user = User::where('user_code', $bill->user_code)->first();
 
@@ -330,7 +330,7 @@ class HomeController extends Controller
             ->join('rooms', 'rooms.id', '=', 'showtimes.room_id')
             ->leftJoin('ticket_foods', 'ticket_foods.bill_id', '=', 'bills.id')
             ->leftJoin('foods', 'foods.id', '=', 'ticket_foods.food_id')
-            ->where('bills.id', $request->bill_id)
+            ->where('bills.bill_code', $request->bill_code)
             ->select(
                 'bills.bill_code',
                 'showtimes.show_date as show_date',

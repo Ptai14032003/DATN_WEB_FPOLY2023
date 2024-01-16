@@ -22,17 +22,13 @@ const CheckPay = () => {
     const vnp_TxnRef = urlSearchParams.get('vnp_TxnRef');
     const vnp_SecureHash = urlSearchParams.get('vnp_SecureHash');
     const dataSend_email = {
-        bill_id: vnp_TxnRef
+        bill_code: vnp_TxnRef
     }
     const sendEmailUser = async () => {
-        if (checkRequest === true) {
             sendEmail(dataSend_email)
-        }
     }
     useEffect(() => {
-        if (checkPay === false) {
             sendEmailUser()
-        }
     }, [])
     useEffect(() => {
         if (url.pathname === "/listvnp" && checkRequest === false) {
