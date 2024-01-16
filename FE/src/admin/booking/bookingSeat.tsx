@@ -14,6 +14,7 @@ const BookingSeatAdmin = () => {
     const { id } = useParams();
     // const { data: Foods } = useFetchFoodsQuery()
     const { data: seatBooking } = useFetchSeatRoomIdQuery(show_time);
+    const [isFixed, setIsFixed] = useState(false);
     const { data: movie } = useFetchMovieIdPersonQuery(id);
     const [activeTab, setActiveTab] = useState(1);
     const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
@@ -33,6 +34,7 @@ const BookingSeatAdmin = () => {
     const [minute, setMinute] = useState<number>(10);
     const [second, setSecond] = useState<number>(0)
     const navigate = useNavigate();
+    console.log(movieBooking);
 
 
     useEffect(() => {
@@ -367,24 +369,27 @@ const BookingSeatAdmin = () => {
             <div className="booking">
                 <div className="booking-seat">
                     {/* Dữ liệu form */}
-                    <div className={`no-content ${isFixed ? 'fixed top-[20%]' : 'mt-10'}`}>
-                        <div className="block">
-                            <div className="w-[190px]"><img width="190" height="240" src={movieBooking?.image} alt="" /></div>
-                            <h3 className="mt-4 text-lg font-bold text-white sm:text-xl">
-                                {movieBooking?.movie_name}
-                            </h3>
+                    <div className="no-content mt-5">
+                        <div className="flex justify-between">
+                            <div className='flex gap-5'>
+                                <div className="w-[190px]"><img width="190" height="240" src={movieBooking?.image} alt="" /></div>
 
-                            <div className="mt-2 max-w-sm text-white">
-                                <h1 className='mt-3 text-sm'>Số ghế đã chọn : {selectedSeats.map(seatId => seatId + ' ').join('')}</h1>
-                                <h1 className='mt-3 text-sm'>Combo :</h1>
-                                {combo.map((item: any) => (
-                                    <div key={item.food_name} className='flex gap-[100px]'>
-                                        <div className='w-[80%]'>{item.food_name}</div>
-                                        <div>x{item.soLuong}</div>
-                                    </div>
-                                ))}
-                                <h1 className='mt-3 text-sm'>Tổng tiền : {dataTong} đ</h1>
+                                <div className="max-w-sm ">
+                                    <h3 className=" text-lg font-bold sm:text-xl">
+                                        {movieBooking?.movie_name}
+                                    </h3>
+                                    <h1 className='mt-3 text-sm'>Số ghế đã chọn : {selectedSeats.map(seatId => seatId + ' ').join('')}</h1>
+                                    <h1 className='mt-3 text-sm'>Combo :</h1>
+                                    {combo.map((item: any) => (
+                                        <div key={item.food_name} className='flex gap-[100px]'>
+                                            <div className='w-[80%]'>{item.food_name}</div>
+                                            <div>x{item.soLuong}</div>
+                                        </div>
+                                    ))}
+                                    <h1 className='mt-3 text-sm'>Tổng tiền : {dataTong} đ</h1>
+                                </div>
                             </div>
+                            <div className="w-[200px] h-[42px] border-[2px] rounded-md px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
                         </div>
                     </div>
                     <div className="no-content mt-5">
