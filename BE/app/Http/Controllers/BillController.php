@@ -370,7 +370,7 @@ class BillController extends Controller
                 'payment_status'
             )
             ->orderBy('bills.id', 'desc')
-            ->get();
+            ->first();
         $tickets = Ticket::join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
             ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
             ->join('rooms', 'rooms.id', '=', 'showtimes.room_id')
@@ -389,6 +389,28 @@ class BillController extends Controller
             ->groupBy('foods.food_name', 'ticket_foods.quantity')
             ->get();
 
-        return response()->json(['bill' => $bill_detail, 'tickets' => $tickets, 'ticket_foods' => $ticket_foods]);
+        return response()->json([
+            'bill' => [
+                'id' => $bill_detail->id,
+                'bill_code' => $bill_detail->bill_code,
+                'user_code' => $bill_detail->user_code,
+                'user_name' => $bill_detail->user_name,
+                'personnel_code' => $bill_detail->personnel_code,
+                'personnel_name' => $bill_detail->personnel_name,
+                'total_ticket' => $bill_detail->total_ticket,
+                'total_combo' => $bill_detail->total_combo,
+                'additional_fee' => $bill_detail->additional_fee,
+                'total_money' => $bill_detail->total_money,
+                'movie_name' => $bill_detail->movie_name,
+                'image' => $bill_detail->image,
+                'room_name' => $bill_detail->room_name,
+                'booking_date' => $bill_detail->booking_date,
+                'show_date' => $bill_detail->show_date,
+                'show_time' => $bill_detail->show_time,
+                'payment_status' => $bill_detail->payment_status,
+            ],
+            'tickets' => $tickets,
+            'ticket_foods' => $ticket_foods
+        ]);
     }
 }
