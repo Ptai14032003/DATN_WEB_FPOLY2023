@@ -149,7 +149,7 @@ const AdminQlBill: React.FC = () => {
                     )} />
                     <Column title="Tổng vé" dataIndex="total_ticket" key="total_ticket" />
                     <Column title="Tổng combo" dataIndex="total_combo" key="total_combo" />
-                    <Column title="Tổng tiền" dataIndex="total_money" key="total_money" render={(price: any) => `${(Number(price))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ`} />
+                    <Column title="Tổng tiền" dataIndex="total_money" key="total_money" render={(price: any) => `${(Number(price))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ `} />
                     <Column title="Tổng vé" dataIndex="total_ticket" key="total_ticket" />
                     <Column title="Ngày chiếu" dataIndex="show_date" key="show_date" />
                     <Column title="Ngày đặt" dataIndex="booking_date" key="booking_date" />

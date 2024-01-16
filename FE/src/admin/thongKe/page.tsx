@@ -21,11 +21,19 @@ const ThongKe = () => {
     const [total_money, setData_money] = useState<any>("0")
     const [total_money_food, setData_food] = useState<any>("0")
     const [total_money_ticket, setData_ticket] = useState<any>("0")
-    const [typeSearch, setType] = useState<any>('year');
-    const [valueDate, setValueDate] = useState<any>(dayjs().year())
+    const [typeSearch, setType] = useState<any>('month');
+    const [date_start, setDateStart] = useState("")
+    const [date_end, setDateEnd] = useState("")
+    const [valueDate, setValueDate] = useState<string>(dayjs().format('MM - YYYY'));
     const [dataChart, setDataChart] = useState<any>()
     const [tbTime, setTbTime] = useState<any>(dayjs().year())
     const [traCuu, setTraCuu] = useState<any>()
+    const onChangeDateStart = (value: Dayjs | null, dateString: string) => {
+        setDateStart(dateString)
+    };
+    const onChangeDateEnd = (value: Dayjs | null, dateString: string) => {
+        setDateEnd(dateString)
+    };
     const onChange: DatePickerProps['onChange'] = (date, dateString) => {
         setValueDate(dateString)
         setTraCuu({
@@ -35,7 +43,7 @@ const ThongKe = () => {
         })
     };
     const handleSelect = () => {
-        if (valueDate === null) {
+        if (valueDate === "") {
             message.error("Vui lòng nhập lại thời gian khi thay đổi trạng thái");
             return;
         }
@@ -82,10 +90,12 @@ const ThongKe = () => {
         } else
             if (!data) {
                 const dateData = {
-                    timeline: "year",
+                    timeline: "month",
                     year: currentTime?.getFullYear(),
                     month: currentTime?.getMonth() + 1,
                 }
+                console.log(dateData);
+
                 setTbTime({
                     chuKi: typeSearch,
                     time: valueDate
@@ -145,13 +155,31 @@ const ThongKe = () => {
     }
     const setTypeChange = (type: string) => {
         setType(type)
-        setValueDate(null)
+        setValueDate("")
     }
     return (
         <>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Thống kê tổng doanh thu</div>
             <div className="flex justify-end mr-[60px]">
                 <ThongKeMovies />
+            </div>
+            <div className="flex gap-[40px] ml-[4%]">
+                <div className="flex text-center">
+                    <DatePicker
+                        style={{ width: 160 }}
+                        onChange={onChangeDateStart}
+                        placeholder="Ngày bắt đầu"
+                        format={"DD-MM-YYYY"}
+                    />
+                    <div className="px-[10px] mt-[4px]">đến</div>
+                    <DatePicker
+                        style={{ width: 160 }}
+                        onChange={onChangeDateEnd}
+                        placeholder="Ngày kết thúc"
+                        format={"DD-MM-YYYY"}
+                    />
+                </div>
+                <Button onClick={() => handleSelect()}>Tra cứu</Button>
             </div>
             <div className="flex gap-10 ml-[4%] mt-[5%]">
                 <div>
@@ -161,7 +189,7 @@ const ThongKe = () => {
                                 <Option value="month">Month</Option>
                                 <Option value="year">Year</Option>
                             </Select>
-                            <DatePicker picker={typeSearch} onChange={onChange} defaultValue={dayjs(`${valueDate}`, `${typeSearch === 'month' ? "MM / YYYY" : "YYYY"}`)} format={`${typeSearch === 'month' ? "MM / YYYY" : "YYYY"}`} className='w-[100px]' />
+                            <DatePicker picker={typeSearch} onChange={onChange} defaultValue={dayjs(`${valueDate}`, `${typeSearch === 'month' ? "MM - YYYY" : "YYYY"}`)} format={`${typeSearch === 'month' ? "MM - YYYY" : "YYYY"}`} className='w-[100px]' />
                             <Button onClick={() => handleSelect()}>Tra cứu</Button>
                         </div>
                     </Space>
