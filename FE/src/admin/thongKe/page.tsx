@@ -9,14 +9,6 @@ import ThongKeMovies from './thongKeMovies';
 import moment from 'moment';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
-interface TotalRevenue {
-    quantity_bill: number,
-    total_money: number,
-    total_money_ticket: number,
-    percent_ticket: number,
-    total_money_food: number,
-    percent_food: number,
-}
 const ThongKe = () => {
     const [getRevenueAll] = useRevenueAllAPIMutation()
     const [data, setData] = useState<any>()
@@ -24,6 +16,7 @@ const ThongKe = () => {
     const [total_money_food, setData_food] = useState<any>("0")
     const [total_money_ticket, setData_ticket] = useState<any>("0")
     const [typeSearch, setType] = useState<any>('month');
+    const [typeSearchArr, setTypeArr] = useState<any>(false);
     const [date_start, setDateStart] = useState("")
     const [date_end, setDateEnd] = useState("")
     const [valueDate, setValueDate] = useState<string>(dayjs().format('MM - YYYY'));
@@ -50,6 +43,7 @@ const ThongKe = () => {
             return;
         }
         if (traCuu) {
+            setTypeArr(false)
             setTbTime({
                 chuKi: typeSearch,
                 time: valueDate
@@ -78,6 +72,9 @@ const ThongKe = () => {
                 }
 
             })
+        } else {
+            message.error("Vui lòng nhập lại thời gian khi thay đổi kiểu tra cứu");
+            return;
         }
     }
     const handleSelectDay = () => {
@@ -87,6 +84,7 @@ const ThongKe = () => {
             if (!date_end) {
                 message.error("Vui lòng chọn ngày kết thúc !")
             } else {
+                setTypeArr(true)
                 const newData = {
                     timeline: "day",
                     start: date_start,
@@ -101,14 +99,12 @@ const ThongKe = () => {
                             total_money_ticket: 0,
                             total_money_food: 0
                         })
-                        setType("month")
                         setDataChart(
                             newData.timeline === 'day'
                                 ? fetchdata?.data?.dailyRevenue
                                 : fetchdata?.data?.monthlyRevenue
                         );
                     } else {
-                        setType("month")
                         setDataChart(
                             newData.timeline === 'day'
                                 ? fetchdata?.data?.dailyRevenue
@@ -246,8 +242,8 @@ const ThongKe = () => {
                             <div>{total_money_food}</div>
                         </div>
                         <div>
-                            <div>Chu kì : {tbTime.chuKi === "month" ? "Theo tháng" : "Theo năm"}</div>
-                            <div className="py-2">Thời gian : {tbTime?.time}</div>
+                            <div>Chu kì : {typeSearchArr === true ? `Khoảng thời gian` : `${tbTime.chuKi === "month" ? "Theo tháng" : "Theo năm"}`}</div>
+                            <div className="py-2">Thời gian : {typeSearchArr === true ? `${date_start + " đến " + date_end}` : `${tbTime?.time}`}</div>
                             <div>Số hoá đơn : {data?.quantity_bill}</div>
                         </div>
                     </div>

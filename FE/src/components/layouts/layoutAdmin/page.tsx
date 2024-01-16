@@ -6,7 +6,8 @@ import { Layout, Menu, theme } from 'antd';
 import { NavLink, Outlet, redirect } from 'react-router-dom';
 import HeaderAdmin from './headerAdmin';
 import { HomeOutlined } from '@ant-design/icons';
-
+import { GiTicket } from "react-icons/gi";
+import { PiExport } from "react-icons/pi";
 import { checkApiStatus } from '../../../admin/checkApiStatus'; // Import hàm trợ giúp
 import { useNavigate } from 'react-router-dom';
 
@@ -48,15 +49,15 @@ const AdminLayout: React.FC = () => {
         getItem('Thống kê', '8', <NavLink to="/admin/thongKe"><img src="/tke.png" alt="" width={10} /></NavLink>),
         getItem('Lịch sử', '9', <NavLink to="/admin/bill_history"><img src="/ls.png" alt="" width={10} /></NavLink >),
         getItem('Voucher', '10', <NavLink to="/admin/voucher" > <img src="/voucher.png" alt="" width={10} /></NavLink >),
-        getItem('Đặt vé', '11', <NavLink to="/admin/booking" > <img src="" alt="" width={10} /></NavLink >),
-        getItem('Xuất vé', '12', <NavLink to="/admin/export-ticket" > <img src="" alt="" width={10} /></NavLink >),
+        getItem('Đặt vé', '11', <NavLink to="/admin/booking" > <GiTicket size={15} /></NavLink >),
+        getItem('Xuất vé', '12', <NavLink to="/admin/export-ticket" > <PiExport size={15} /></NavLink >),
     ];
     const itemsNhansu: MenuItem[] = [
         getItem('Trang chủ', '1', <NavLink to="/admin/"><HomeOutlined width={10} /> </NavLink>,),
         getItem('Quản lý khách hàng', '2', <NavLink to="/admin/qlGuest"><img src="/qlkh.png" alt="" width={10} /></NavLink >),
         getItem('Lịch sử', '3', <NavLink to="/admin/bill_history"><img src="/ls.png" alt="" width={10} /></NavLink >),
-        getItem('Đặt vé', '4', <NavLink to="/admin/booking" > <img src="" alt="" width={10} /></NavLink >),
-        getItem('Xuất vé', '5', <NavLink to="/admin/export-ticket" > <img src="" alt="" width={10} /></NavLink >),
+        getItem('Đặt vé', '4', <NavLink to="/admin/booking" ><GiTicket size={15} /></NavLink >),
+        getItem('Xuất vé', '5', <NavLink to="/admin/export-ticket" > <PiExport size={15} /></NavLink >),
     ];
     // const userString = localStorage.getItem('user');
     // const user = userString ? JSON.parse(userString) : null;
@@ -77,12 +78,16 @@ const AdminLayout: React.FC = () => {
         <div>
             <HeaderAdmin />
             <Layout style={{ minHeight: '100vh' }}>
-                <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+                <Sider collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
                     {checkRoleAdmin && (
-                        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={itemsAdmin} />
+                        <div className="fixed w-[200px]">
+                            <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={itemsAdmin} />
+                        </div>
                     )}
                     {checkRoleNhansu && (
-                        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={itemsNhansu} />
+                        <div className="fixed w-[200px]">
+                            <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={itemsNhansu} />
+                        </div>
                     )}
                 </Sider>
                 <Layout>

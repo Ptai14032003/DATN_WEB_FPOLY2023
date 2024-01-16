@@ -49,10 +49,8 @@ const AdminQlDiscount: React.FC = () => {
     const hasSelected = selectedRowKeys.length > 0;
 
     const fuseOptions = {
-        includeScore: true,
-        useExtendedSearch: true,
-        isCaseSensitive: true,
-        findAllMatches: true,
+        minMatchCharLength: 1,
+
         keys: ["discount_code"]
     }
     const fuse = new Fuse(dataDiscounts, fuseOptions)
@@ -68,7 +66,6 @@ const AdminQlDiscount: React.FC = () => {
             const mapMovies = dataDiscounts.map((item: Discount) => ({
                 id: item.id,
                 discount_code: item.discount_code,
-
                 event: item.event,
                 start: item.start,
                 end: item.end,
