@@ -25,8 +25,6 @@ export type QlPhim = {
 }
 const AdminQlBill: React.FC = () => {
     const { data: dataBill, isLoading, error } = useFetchBillAdminQuery()
-    console.log(dataBill);
-
     const navigate = useNavigate();
     const status = error?.status;
     const [dataTable, setDataTable] = useState<QlPhim[]>([])

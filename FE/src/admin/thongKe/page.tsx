@@ -134,8 +134,6 @@ const ThongKe = () => {
                     year: currentTime?.getFullYear(),
                     month: currentTime?.getMonth() + 1,
                 }
-                console.log(dateData);
-
                 setTbTime({
                     chuKi: typeSearch,
                     time: valueDate

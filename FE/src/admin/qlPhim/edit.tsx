@@ -37,7 +37,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                 country_name: dataMovies?.country_name,
                 producer_name: dataMovies?.producer_name,
                 actor_name: dataMovies?.actor_name,
-                movie_type_id: dataMovies?.type_name,
+                movie_type_id: dataMovies?.movie_type_id,
                 genre: dataMovies?.genre,
                 director: dataMovies?.director,
                 movie_time: dataMovies?.movie_time,
