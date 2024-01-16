@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Button, ConfigProvider, DatePicker, Form, Input, InputNumber, Modal, message } from 'antd';
+import { Button, Form, Input, InputNumber, Modal, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { Discount } from './page';
 import { useFetchDiscountIDQuery, useUpdateDiscountMutation } from '../../rtk/discount/discount';
-import viVN from 'antd/lib/locale/vi_VN';
 type Props = {
     projects: string
 }
