@@ -106,7 +106,7 @@ public function showingAdmin(){
                 'describe' => $describe
             ];
             Movie::create($data); 
-            return response()->json([$data, 'message' => 'Phim đã được thêm thành công'], 201);
+            return response()->json([$data,'message' => 'Thêm phim thành công']);
 
         // }
         // }else{
@@ -152,22 +152,22 @@ public function showingAdmin(){
         $movie->update($request->except('image'));
     
         // Handle image upload if a new image is provided in the request
-        if ($request->input('image')['fileList']) {
-            $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
-            $elements = explode(',', $fileData);
-            $elementsAfterComma = array_slice($elements, 1);
-            $decodedData = base64_decode($elementsAfterComma[0]);
-            $uniqueFileName = uniqid('file_');
-            $filePath = storage_path('app/' . $uniqueFileName);
-            file_put_contents($filePath, $decodedData);
-            $imagePath = cloudinary()->upload($filePath)->getSecurePath();
+        // if ($request->input('image')['fileList']) {
+        //     $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
+        //     $elements = explode(',', $fileData);
+        //     $elementsAfterComma = array_slice($elements, 1);
+        //     $decodedData = base64_decode($elementsAfterComma[0]);
+        //     $uniqueFileName = uniqid('file_');
+        //     $filePath = storage_path('app/' . $uniqueFileName);
+        //     file_put_contents($filePath, $decodedData);
+        //     $imagePath = cloudinary()->upload($filePath)->getSecurePath();
     
-            // Save the new image path to the movie record
-            $movie->image = $imagePath;
-            $movie->save();
-        }else{
-            $movie->image = $request->image;
-        }
+        //     // Save the new image path to the movie record
+        //     $movie->image = $imagePath;
+        //     $movie->save();
+        // }else{
+        //     $movie->image = $request->image;
+        // }
     
         return response()->json(['message' => 'Phim đã được cập nhật thành công'], 200);
     }
