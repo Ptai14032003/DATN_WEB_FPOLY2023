@@ -28,7 +28,20 @@ class FoodController extends Controller
     }
 
     public function store(Request $request){
-        
+        $validator = Validator::make(
+            $request->all(),
+            [  
+                'food_name' => "unique:foods,food_name",
+               
+            ],
+            [
+                'food_name.unique' => "Tên sản phẩm đã tồn tại",
+              
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json($validator->messages());
+        } else {
 
     $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
     
@@ -61,7 +74,7 @@ class FoodController extends Controller
     // Đây là real path của tệp tin
     return response()->json([$data]);
     }
-
+    }
     /**
      * Display the specified resource.
      */
@@ -85,7 +98,20 @@ class FoodController extends Controller
      */
     public function update(Request $request,string $id){
         $food = Food::find($id);
-    
+        $validator = Validator::make(
+            $request->all(),
+            [  
+                'food_name' => "unique:foods,food_name",
+               
+            ],
+            [
+                'food_name.unique' => "Tên sản phẩm đã tồn tại",
+              
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json($validator->messages());
+        } else {
         if (!$food) {
             return response()->json(['messages' => 'Đô ăn không tồn tại'], 404);
         }
@@ -112,6 +138,7 @@ class FoodController extends Controller
     
         return response()->json(['message' => 'Sản phẩm đã được cập nhật thành công'], 200);
     }
+}
 
     /**
      * Remove the specified resource from storage.
