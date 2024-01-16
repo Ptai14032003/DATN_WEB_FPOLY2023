@@ -46,7 +46,7 @@ const moviesApi = createApi({
         }),
         deleteMultipleMovie: builder.mutation<void, any>({
             query: (body) => ({
-                url: "/deleteMultipleMovie/",
+                url: "/destroyMultipleFood/",
                 method: "POST",
                 body
             }),
@@ -63,5 +63,5 @@ const moviesApi = createApi({
 
     })
 })
-export const { useFetchMoviesQuery, useFetchMovieIdQuery, useAddMoviesMutation, useUpdateMoviesMutation, useDeleteMoviesMutation, useDeleteMultipleMovieMutation ,useFetchAdminBookingMoviesQuery} = moviesApi
+export const { useFetchMoviesQuery, useFetchMovieIdQuery, useAddMoviesMutation, useUpdateMoviesMutation, useDeleteMoviesMutation, useDeleteMultipleMovieMutation, useFetchAdminBookingMoviesQuery } = moviesApi
 export default moviesApi

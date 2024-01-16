@@ -34,7 +34,6 @@ const AdminQlPhim: React.FC = () => {
     const [deleteMultiple] = useDeleteMultipleMovieMutation()
     const navigate = useNavigate();
     const status = error?.status;
-    //checkApiStatus(status);
     const [deleteMovie] = useDeleteMoviesMutation()
     const [dataTable, setDataTable] = useState<QlPhim[]>([])
     const [searchTerm, setSearchTerm] = useState('');
@@ -47,9 +46,11 @@ const AdminQlPhim: React.FC = () => {
         const data = {
             ids: selectedRowKeys
         }
-        // deleteMultiple(data).then(() => {
-        //     message.success("Xóa thành công");
-        // })
+        deleteMultiple(data).then(() => {
+            console.log(data);
+
+            message.success("Xóa thành công");
+        })
 
     }
     const rowSelection = {

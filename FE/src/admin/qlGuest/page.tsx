@@ -24,9 +24,6 @@ const AdminQlGuest: React.FC = () => {
     const status = error?.status;
     const [dataTable, setDataTable] = useState<Guest[]>([])
     const [searchTerm, setSearchTerm] = useState('');
-    const deleteOne = (key: string) => {
-        message.success("Xóa thành công")
-    }
     const fuseOptions = {
         includeScore: true,
         isCaseSensitive: true,
@@ -40,9 +37,6 @@ const AdminQlGuest: React.FC = () => {
     const searchProject = (value: string) => {
         setSearchTerm(value);
     };
-    const checkLocal = localStorage.getItem("user");
-    const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
-    const checkRoleAdmin = checkUser?.role === "Admin"
     useEffect(() => {
         const dataMap = dataGuest?.data
         if (Array.isArray(dataMap)) {
