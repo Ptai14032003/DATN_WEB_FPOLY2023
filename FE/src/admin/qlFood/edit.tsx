@@ -1,19 +1,29 @@
 import React, { useState } from 'react';
-import { Button, Form, Image, Input, InputNumber, Modal, Upload, message } from 'antd';
+import { Button, Form, Image, Input, InputNumber, Modal, Select, Upload, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
 import { QlFood } from './page';
-import { useFetchFoodIDQuery, useUpdateFoodMutation } from '../../rtk/qlSp/qlSp';
+import { useFetchFoodIDQuery, useFetchTypeFoodsQuery, useUpdateFoodMutation } from '../../rtk/qlSp/qlSp';
 type Props = {
     projects: string
 }
 const EditQlSp: React.FC<Props> = ({ projects }: Props) => {
+    const { data: dataTypeFood } = useFetchTypeFoodsQuery()
     const { data } = useFetchFoodIDQuery(projects)
     const [putFood] = useUpdateFoodMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
+    const selectTypeFood = dataTypeFood?.map((food: any) => ({
+        value: food?.id,
+        label: food?.name,
+    }));
     const onFinish = (values: any) => {
-        putFood({ body: values, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
+        console.log(values);
+
+        putFood({ body: values, id: projects }).then((data: any) => {
+            console.log(data);
+            setIsModalOpen(false), message.success("Sửa thành công")
+        })
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -58,14 +68,18 @@ const EditQlSp: React.FC<Props> = ({ projects }: Props) => {
                             name="price"
                             rules={[{ required: true, message: 'Vui lòng nhập giá sản phẩm !' }]}
                         >
-                            <InputNumber min={0} />
+                            <InputNumber min={0} style={{ width: 150 }} />
                         </Form.Item>
                         <Form.Item<QlFood>
                             label="Loại sản phẩm"
                             name="name"
                             rules={[{ required: true, message: 'Vui lòng nhập loại sản phẩm !' }]}
                         >
-                            <Input />
+                            <Select className='ml-[-72px]'
+                                placeholder="Chọn loại sản phẩm"
+                                style={{ width: 200 }}
+                                options={selectTypeFood}
+                            />
                         </Form.Item>
                         <Form.Item<QlFood>>
                             <div className='mx-[60%]'>

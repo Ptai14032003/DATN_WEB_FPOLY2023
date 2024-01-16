@@ -61,7 +61,7 @@ const CreateQlSp: React.FC = () => {
                         name="price"
                         rules={[{ required: true, message: 'Vui lòng nhập giá sản phẩm !' }]}
                     >
-                        <InputNumber min={0} />
+                        <InputNumber min={0} style={{ width: 150 }} />
                     </Form.Item>
                     <Form.Item<QlFoodCreate>
                         label="Loại sản phẩm"

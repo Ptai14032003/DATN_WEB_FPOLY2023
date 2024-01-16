@@ -45,6 +45,9 @@ class ShowtimeApiController extends Controller
                 'show_time.unique' => 'Suất chiếu đã tồn tại cho thời gian và ngày đã chọn'
             ]
         );
+        if ($validator->fails()) {
+            return response()->json($validator->messages());
+        }
         $flag = false;
         $existingShowtime = Showtime::join('movies', 'showtimes.movie_id', '=', 'movies.id')
             ->join('rooms', 'showtimes.room_id', '=', 'rooms.id')
@@ -80,9 +83,7 @@ class ShowtimeApiController extends Controller
                 return response()->json(['flag' => true, 'message' => 'Thêm Suất chiếu thành công']);
             }
         }
-        if ($validator->fails()) {
-            return response()->json($validator->messages());
-        }
+        
     }
     public function show(string $id)
     {
