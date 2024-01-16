@@ -37,7 +37,7 @@ class ShowtimeApiController extends Controller
             ]
         );
         if ($validator->fails()) {
-            return response()->json($validator->messages());
+            return response()->json(['flag' => false, 'message' => 'Ngày suất chiếu phải trước ngày hiện tại']);
         }
         $existingShowtime = Showtime::join('movies', 'showtimes.movie_id', '=', 'movies.id')
             ->join('rooms', 'showtimes.room_id', '=', 'rooms.id')
