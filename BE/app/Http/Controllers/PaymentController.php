@@ -320,7 +320,7 @@ class PaymentController extends Controller
                         'data' => '2|99|' . '0923896715' . '|Wonder Cinema||0|0|' . $total_money . '|Thanh toán hóa đơn đặt vé xem phim|transfer_myqr',
                         'background' => 'rgb(255,255,255)',
                         'foreground' => 'rgb(0,0,0)',
-                        'logo' => 'C:\xampp\htdocs\datn_web_fpoly2023\FE\public\Wonder-logo-1.png',
+                        'logo' => 'https://res.cloudinary.com/davwhek6g/image/upload/v1705419366/z5067605060007_c8a2392dc3eaaadd70c0992b698d482f_edgg95.jpg',
                     )),
                 ));
 
