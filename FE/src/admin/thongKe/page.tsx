@@ -63,18 +63,18 @@ const ThongKe = () => {
                         total_money_ticket: 0,
                         total_money_food: 0
                     })
-                    if (typeSearch === "month") {
-                        setDataChart(fetchdata?.data?.dailyRevenue)
-                    } else {
-                        setDataChart(fetchdata?.data?.monthlyRevenue)
-                    }
+                    setDataChart(
+                        typeSearch === 'month'
+                            ? fetchdata?.data?.dailyRevenue
+                            : fetchdata?.data?.monthlyRevenue
+                    );
                 } else {
                     setData(fetchdata?.data)
-                    if (typeSearch === "month") {
-                        setDataChart(fetchdata?.data?.dailyRevenue)
-                    } else {
-                        setDataChart(fetchdata?.data?.monthlyRevenue)
-                    }
+                    setDataChart(
+                        typeSearch === 'month'
+                            ? fetchdata?.data?.dailyRevenue
+                            : fetchdata?.data?.monthlyRevenue
+                    );
                 }
 
             })
@@ -101,18 +101,17 @@ const ThongKe = () => {
                             total_money_ticket: 0,
                             total_money_food: 0
                         })
-                        if (newData?.timeline === "day") {
-                            setDataChart(fetchdata?.data?.dailyRevenue)
-                        } else {
-                            setDataChart(fetchdata?.data?.monthlyRevenue)
-                        }
+                        setDataChart(
+                            newData.timeline === 'day'
+                                ? fetchdata?.data?.dailyRevenue
+                                : fetchdata?.data?.monthlyRevenue
+                        );
                     } else {
-                        setData(fetchdata?.data)
-                        if (newData?.timeline === "day") {
-                            setDataChart(fetchdata?.data?.dailyRevenue)
-                        } else {
-                            setDataChart(fetchdata?.data?.monthlyRevenue)
-                        }
+                        setDataChart(
+                            newData.timeline === 'day'
+                                ? fetchdata?.data?.dailyRevenue
+                                : fetchdata?.data?.monthlyRevenue
+                        );
                     }
                 })
             }
