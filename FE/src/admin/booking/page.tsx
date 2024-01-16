@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { Image, Space, Table, message } from 'antd';
-import { useFetchMoviesQuery } from '../../rtk/movies/movies';
+import { useFetchMoviesQuery, useFetchShowingAdminQuery } from '../../rtk/movies/movies';
 import { useFetchMovieTypeQuery } from '../../rtk/movie_type/page';
 import Column from 'antd/es/table/Column';
 import BookingAdminMovies from './booking';
@@ -16,7 +16,7 @@ interface DataType {
 }
 
 const BookingAdmin = () => {
-    const { data: movies } = useFetchMoviesQuery();
+    const { data: movies } = useFetchShowingAdminQuery();
     const [data, setData] = useState<DataType[]>([]);
     useEffect(() => {
         if (Array.isArray(movies)) {

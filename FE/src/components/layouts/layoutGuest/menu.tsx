@@ -47,7 +47,7 @@ const Menu = () => {
           <ul className='menu-content flex text-white'>
             <a href={homeLink}><li>Trang chủ</li></a>
             <a href={homeLink + 'ticket-price'}><li>Giá vé</li></a>
-            <a href={homeLink}> <li>Giới thiệu</li></a>
+            <a href={homeLink + 'privacy-policy'}> <li>Chính sách</li></a>
             {!user && (
               <><li onClick={handleClick}><a>Tài khoản</a></li>
                 {dropDown ?
@@ -108,7 +108,7 @@ const Menu = () => {
               <ul className=" text-white text-end translate-y-[40.5rem]">
                 <a href={homeLink}><li className='pr-5 mb-3'>Trang chủ</li></a>
                 <a href={homeLink + 'ticket-price'}><li className='pr-5  mb-3'>Giá vé</li></a>
-                <a href={homeLink}> <li className='pr-5  mb-3'>Giới thiệu</li></a>
+                <a href={homeLink + 'privacy-policy'}> <li className='pr-5  mb-3'>Chính sách</li></a>
                 {!user && (
                   <><li onClick={handleClick} className='pr-5  mb-3'><a>Tài khoản</a></li>
                     {dropDown ?

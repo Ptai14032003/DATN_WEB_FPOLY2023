@@ -136,7 +136,7 @@ const ExportTicket = () => {
                                                     </div>
                                                     <div className='flex text-amber-100'>
                                                         <p className='font-medium pr-2'>Giá vé:</p>
-                                                        <p>{item?.total_money}</p>
+                                                        <p>{item?.price}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -191,7 +191,7 @@ const ExportTicket = () => {
                                                 </div>
                                                 <div className='flex text-amber-100'>
                                                     <p className='font-medium pr-2'>Giá:</p>
-                                                    <p>{item?.price}</p>
+                                                    <p>{item?.total_money}</p>
                                                 </div>
                                             </div>
                                             <div className='w-[35%] bg-amber-100 rounded-r-md p-3'>

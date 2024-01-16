@@ -40,6 +40,9 @@
     grid-template-columns: 350px 1fr;
     gap: 3rem;
   }
+  .booking-seat-person-Active3{
+    display: block;
+  }
  
   .taskbar{
     margin-top: 1.5rem;

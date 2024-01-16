@@ -390,10 +390,10 @@ const Booking = () => {
             </div>
 
             <div className="booking h-full max-w-[1420px] mx-auto ">
-                <div className="booking-seat-person">
+                <div className={`${activeTab === 3 ? 'booking-seat-person-Active3' : 'booking-seat-person'}`}>
                     <div className={`${isFixed ? 'block' : 'hidden'}`}></div>
                     {/* Dữ liệu form */}
-                    <div className={`no-content ${isFixed ? 'fixed top-[20%]' : 'mt-10'}`}>
+                    <div className={`no-content  ${activeTab === 3 ? "hidden" : isFixed ? 'fixed top-[20%]' : 'mt-10'}`}>
                         <div className="block">
                             <div className="w-[190px]"><img width="190" height="240" src={movieBooking?.image} alt="" /></div>
                             <h3 className="mt-4 text-lg font-bold text-white sm:text-xl">
@@ -413,7 +413,7 @@ const Booking = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="content-right">
+                    <div className={`${activeTab === 3 ? "w-[70%] mx-auto my-20" : "content-right"}`}>
                         <div className="taskbar">
                             <ul>
                                 <li className={activeTab === 1 ? 'active' : ''}>
