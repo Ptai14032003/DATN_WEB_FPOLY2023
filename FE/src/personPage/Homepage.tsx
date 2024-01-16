@@ -130,7 +130,7 @@ const HomePage = () => {
       </div>
       {/*  */}
       {loading ? (
-        <div className="loading-home">
+        <div className="loading-home h-screen">
           <Loading />
         </div>
       ) : (

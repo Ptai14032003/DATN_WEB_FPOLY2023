@@ -100,8 +100,8 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
     return (
         <>
             <a href=""></a>
-            <div className='my-[25px] flex gap-[30px] justify-center'>
-                <div className='w-[25%]'>
+            <div className='my-[25px] flex gap-[30px] justify-center Payment-content'>
+                <div className='w-[25%] Payment-film-image'>
                     <img src={movieBooking?.image} width={200} alt="" />
                 </div>
                 <div>
@@ -152,7 +152,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                         <div className='sale-code'>
                             <div className='grid grid-cols-3 space-x-2'>
                                 <input type="text" className='voucher-code cursor-not-allowed h-[30px] outline-none col-span-2 text-black pl-2 font-medium' value={VoucherCode} />
-                                <Button type="primary" onClick={showModal} className='bg-teal-400 mb-3'>
+                                <Button type="primary" onClick={showModal} className='bg-teal-400 mb-3 voucher-button'>
                                     Choose discount
                                 </Button>
                             </div>
@@ -203,7 +203,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                 </div >
             </div >
             <div className='flex justify-center'>
-                <Button className="w-[72%] rounded bg-teal-400 text-white text-base h-[42px] border-0" onClick={() => setThanhToan()} >Thanh toán</Button>
+                <Button className="ThanhToanBtn w-[72%] rounded bg-teal-400 text-white text-base h-[42px] border-0" onClick={() => setThanhToan()} >Thanh toán</Button>
             </div>
         </>
     )

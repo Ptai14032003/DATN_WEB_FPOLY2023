@@ -563,20 +563,20 @@
 .Bills .Rectangle-1::before{
   content: "";
   position: absolute;
-  left: 36%;
-  top: 100px;
+  left: 34.5%;
+  top: 115px;
   background: #fff;
-  width: 15.5%;
+  width: 18.5%;
   border-bottom: 2px dashed;
   transform: rotate(90deg);
 }
 .Bills .Rectangle-1::after{
   content: "";
     position: absolute;
-    right: 0.2%;
-    top: 100px;
+    right: -1.5%;
+    top: 115px;
     background: #fff;
-    width: 15.5%;
+    width: 18.5%;
     border-bottom: 2px dashed;
     transform: rotate(90deg);
 }
@@ -585,3 +585,67 @@
   grid-template-columns: 400px 1fr 30px;
   gap: 30px;
 }
+
+
+
+.Bills-mobile .circle-1::before{
+  content: "";
+  position: absolute;
+  left: -5%;
+  top: 32.7%;
+  background: black;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+}
+.Bills-mobile .circle-1::after{
+  content: "";
+  position: absolute;
+  left: -4%;
+  bottom: 11%;
+  background: black;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+}
+.Bills-mobile .circle-2::before{
+  content: "";
+  position: absolute;
+  right: -4%;
+  top: 32.5%;
+  background: black;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+}
+.Bills-mobile .circle-2::after{
+  content: "";
+  position: absolute;
+  right: -4%;
+  bottom: 11%;
+  background: black;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+}
+.Bills-mobile .Rectangle-1::before{
+  content: "";
+  position: absolute;
+  left: 10%;
+  top: 37%;
+  background: #fff;
+  width: 80%;
+  border-bottom: 2px dashed;
+}
+.Bills-mobile .Rectangle-1::after{
+  content: "";
+    position: absolute;
+    top: 85%;
+    left: 10%;
+    background: #fff;
+    width: 80%;
+    border-bottom: 2px dashed;
+}
+.Bills-mobile{
+  position: relative;
+ }

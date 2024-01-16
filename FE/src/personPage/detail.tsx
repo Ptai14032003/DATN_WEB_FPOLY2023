@@ -44,7 +44,7 @@ export default function Detail() {
             <div>
                 <iframe width="100%" height="700" src={movie?.trailer} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
             </div>
-            <div className="mx-[5%] mb-[5%]">
+            <div className="mx-[5%] mb-[5%] Detail-film-container">
                 <div className="flex gap-[8%] my-[3%] Detail-in4-film-content">
                     <div className="block w-[190px] Detail-in4-film">
                         <div className="mb-[25px] Detail-in4-film-name"><span className="text-left">{movie?.movie_name}</span></div>
@@ -53,7 +53,7 @@ export default function Detail() {
                     </div>
                     <div className="w-[100%] mt-[3%]">
                         <div className="w-[20%] ">
-                            <div className="flex gap-20">
+                            <div className="flex gap-20 ShowDayMovie">
                                 {st_movie?.map((item: any) => (
                                     <button key={item.date} className={`btn-date ${dataDate === item?.date ? "btn-date-action text-red-400" : ""}`} onClick={() => onClick(item?.date)}>
                                         <div className="w-[90px] h-full flex flex-col items-center justify-center text-xs transition-colors Detail-in4-film-date">
@@ -65,7 +65,7 @@ export default function Detail() {
                                     </button>
                                 ))}
                             </div>
-                            <div className="flex gap-20">
+                            <div className="flex gap-20 ShowTimeMovie">
                                 {dataTime?.map((data: any) => (
                                     <div key={data?.show_time} className="w-[70%] mt-[20px] text-black">
                                         <button className="detail-time w-[90px] h-[40px] bg-white rounded-sm" onClick={() => redirectToLink('/booking/' + movie?.id + `?show_seat=${data?.showtime_id}`)}>
@@ -114,10 +114,6 @@ export default function Detail() {
                         <div className="detail-content">
                             <div>Thời lượng</div>
                             <div>{movie?.movie_time} phút</div>
-                        </div>
-                        <div className="detail-content">
-                            <div>Rated</div>
-                            <div>C16 -  ĐỦ 16 TUỔI TRỞ LÊN (16+)</div>
                         </div>
                     </div>
                     <div className="mt-[20px] Detail-in4-film-Des-right">

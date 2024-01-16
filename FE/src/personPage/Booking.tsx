@@ -395,29 +395,31 @@ const Booking = () => {
 
             <div className="booking h-full max-w-[1420px] mx-auto ">
                 <div className={`${activeTab === 3 ? 'booking-seat-person-Active3' : 'booking-seat-person'}`}>
-                    <div className={`${isFixed ? 'block' : 'hidden'}`}></div>
+                    <div className={`${isFixed ? 'block NoFixed' : 'hidden'}`}></div>
                     {/* Dữ liệu form */}
-                    <div className={`no-content  ${activeTab === 3 ? "hidden" : isFixed ? 'fixed top-[20%]' : 'mt-10'}`}>
+                    <div className={`no-content  ${activeTab === 3 ? "hidden" : isFixed ? 'fixed top-[20%] no-content-fixed' : 'mt-10'}`}>
                         <div className="block">
-                            <div className="w-[190px]"><img width="190" height="240" src={movieBooking?.image} alt="" /></div>
+                            <div className="w-[190px] image-film-left-content"><img width="190" height="240" src={movieBooking?.image} alt="" /></div>
+                            <div className='in4-film-left-content'>
                             <h3 className="mt-4 text-lg font-bold text-white sm:text-xl">
                                 {movieBooking?.movie_name}
                             </h3>
 
-                            <div className="mt-2 max-w-sm text-white">
+                            <div className="mt-2 max-w-sm text-white no-content-total-money">
                                 <h1 className='mt-3 text-sm'>Số ghế đã chọn : {selectedSeats.map(seatId => seatId + ' ').join('')}</h1>
                                 <h1 className='mt-3 text-sm'>Combo :</h1>
                                 {combo.map((item: any) => (
-                                    <div key={item.food_name} className='flex gap-[100px]'>
-                                        <div className='w-[80%]'>{item.food_name}</div>
+                                    <div key={item.food_name} className='flex gap-[100px] no-content-food-name'>
+                                        <div className='w-[80%] '>{item.food_name}</div>
                                         <div>x{item.soLuong}</div>
                                     </div>
                                 ))}
                                 <h1 className='mt-3 text-sm'>Tổng tiền : {dataTong} đ</h1>
                             </div>
+                            </div>
                         </div>
                     </div>
-                    <div className={`${activeTab === 3 ? "w-[70%] mx-auto my-20" : "content-right"}`}>
+                    <div className={`${activeTab === 3 ? "w-[70%] mx-auto my-20 Payment-taskbar" : "content-right"}`}>
                         <div className="taskbar">
                             <ul>
                                 <li className={activeTab === 1 ? 'active' : ''}>
@@ -433,7 +435,7 @@ const Booking = () => {
                             </ul>
                         </div>
 
-                        <div className="w-[250px] h-[42px] border-[2px] rounded-md mt-[50px] px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
+                        <div className="w-[250px] h-[42px] border-[2px] rounded-md mt-[50px] px-[8px] py-2 border-red-600 CheckTimeChooseSeat">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
                         <form action="" method='POST'>
 
                             <div className={`Booking-content ${activeTab === 1 ? "" : "hidden"}`}>
@@ -490,13 +492,13 @@ const Booking = () => {
                                     </div>
                                 </div>
                                 <div className='max-w-4xl mx-auto my-6 flex justify-end'>
-                                    <a className={`cursor-pointer ${!selectedSeats || selectedSeats.length === 0 ? "hidden" : "border-2 border-[#1ACAAC] rounded-full px-7 py-2 hover:bg-[#1ACAAC]"}`} onClick={() => Continue()}>Tiếp tục</a>
+                                    <a className={`cursor-pointer ${!selectedSeats || selectedSeats.length === 0 ? "hidden" : "border-2 border-[#1ACAAC] rounded-full px-7 py-2 hover:bg-[#1ACAAC] NextButton"}`} onClick={() => Continue()}>Tiếp tục</a>
                                 </div>
                             </div>
                         </form>
                         <div className={`Booking-combo grid ${activeTab === 2 ? "" : "hidden"}`}>
                             <div className='mt-[7rem] '>
-                                <div className='grid grid-cols-2 gap-12'>
+                                <div className='grid grid-cols-2 gap-12 Combo-list'>
                                     {Foods?.map((item: any) => (
                                         <div className='Combo grid grid-cols-3 border-2 border-white rounded-md bg-[#2f9c8a] p-3 gap-5' key={item?.id}>
                                             <img src={item?.image} alt="" className='col-span-1 h-[70%] w-full rounded-md my-auto' />
@@ -520,9 +522,9 @@ const Booking = () => {
                                         </div>
                                     ))}
                                 </div>
-                                <div className='my-10 flex justify-end space-x-5'>
-                                    <a onClick={() => handleClick(1)} className='border-2 border-[#1ACAAC] rounded-full px-7 py-2 hover:bg-[#1ACAAC] cursor-pointer'>Quay lại</a>
-                                    <a onClick={() => handleClick(3)} className='border-2 border-[#1ACAAC] rounded-full px-7 py-2 hover:bg-[#1ACAAC] cursor-pointer'>Tiếp tục</a>
+                                <div className='my-10 flex justify-end space-x-5 ButtonEvent'>
+                                    <a onClick={() => handleClick(1)} className='border-2 border-[#1ACAAC] rounded-full px-7 py-2 hover:bg-[#1ACAAC] cursor-pointer BackButton'>Quay lại</a>
+                                    <a onClick={() => handleClick(3)} className='border-2 border-[#1ACAAC] rounded-full px-7 py-2 hover:bg-[#1ACAAC] cursor-pointer NextButton'>Tiếp tục</a>
                                 </div>
                             </div>
                         </div>

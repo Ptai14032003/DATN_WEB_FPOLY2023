@@ -70,7 +70,7 @@ const Profile = () => {
         <div className='py-10 max-w-5xl mx-auto Profile-table'>
           <form action="">
             <div>
-              <div className="grid grid-cols-2 gap-8 mb-10">
+              <div className="grid grid-cols-2 gap-8 mb-10 Profile-form">
                 <div className='space-y-8'>
                   <div className='in4-box'>
                     <label htmlFor="" className='block text-start font-normal text-lg'>Mã người dùng</label>
@@ -105,7 +105,7 @@ const Profile = () => {
         <div className='font-bold space-x-[5rem] my-8'>
           <button className='in4Active border rounded-full py-2 w-[13rem] text-black'>Tài khoản của tôi</button>
         </div>
-        <div className='pt-5 max-w-2xl mx-auto'>
+        <div className='pt-5 max-w-2xl mx-auto Profile-2-form'>
           <form action="" onSubmit={handleSubmit(onSubmit)}>
             <div className="input-box hidden">
               <input type="text" value={user?.user_code} {...register('user_code')} name="user_code" />

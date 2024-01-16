@@ -1,404 +1,668 @@
-
-
-.Screen-tablet{
-    display: none!important;
-}
-.Screen-mobile{
-    display: none!important;
+.Screen-tablet {
+    display: none !important;
 }
 
-@media (max-width: 1440px){
-    *{
+.Screen-mobile {
+    display: none !important;
+}
+
+@media (max-width: 1440px) {
+    * {
         overflow-x: none;
     }
-    .menu-mobile{
+
+    .menu-mobile {
         display: none;
     }
-    .menu{
-        padding: 0 40px!important;
+
+    .menu {
+        padding: 0 40px !important;
     }
-    .drop-have-user{
-        right: 0%!important;
+
+    .drop-have-user {
+        right: 0% !important;
     }
-    .drop-have-user li{
+
+    .drop-have-user li {
         padding: 20px;
     }
-    .All-movies, .Showing-movies, .Coming-soon-movies{
+
+    .All-movies,
+    .Showing-movies,
+    .Coming-soon-movies {
         width: 90%;
-        grid-template-columns: 1fr 1fr 1fr 1fr!important;
+        grid-template-columns: 1fr 1fr 1fr 1fr !important;
     }
-    .Showing-film-page{
-        grid-template-columns: 1fr 1fr 1fr 1fr!important;
+
+    .Showing-film-page {
+        grid-template-columns: 1fr 1fr 1fr 1fr !important;
     }
-    .comingSoon-film-page{
-        grid-template-columns: 1fr 1fr 1fr 1fr!important;
+
+    .comingSoon-film-page {
+        grid-template-columns: 1fr 1fr 1fr 1fr !important;
     }
-    iframe{
+
+    iframe {
         height: 600px;
     }
-    .menu-film{
-        margin-top: 3rem!important;
+
+    .menu-film {
+        margin-top: 3rem !important;
         width: 90%;
     }
-    .loading-home{
-        width: 100%!important;
+
+    .loading-home {
+        width: 100% !important;
     }
-    footer>div{
-        padding: 1rem 0!important;
+
+    footer>div {
+        padding: 1rem 0 !important;
     }
-    footer .logo img{
+
+    footer .logo img {
         width: 8%;
     }
-    footer .logo h2{
+
+    footer .logo h2 {
         font-size: 22px;
+    }
+
+    .booking {
+        width: 90%;
+        margin: auto 0;
+    }
+
+    .Combo-list {
+        gap: 1.5rem !important;
+    }
+
+    .combo-quantity input {
+        width: 130px;
+    }
+
+    .ThanhToanBtn {
+        width: 80% !important;
+    }
+
+    .booking-seat-person {
+        gap: 0rem !important;
+    }
+
+    .no-content {
+        padding: 0 30px 0 20px;
+    }
+
+    .no-content-fixed {
+        width: 25%;
+    }
+
+    .choose-seat {
+        margin-top: 4rem !important;
+    }
+
+    .choose-seat .screen {
+        margin-bottom: 2rem !important;
     }
 }
 
-@media (max-width: 1024px){
-    *, .ticket-price{
+
+@media (max-width: 1024px) {
+
+    *,
+    .ticket-price {
         overflow-x: none;
     }
-    .ticket-price{
+
+    .ticket-price {
         overflow-x: none;
     }
-    .menu{
-        padding: 0 20px!important;
+
+    .menu {
+        padding: 0 20px !important;
     }
-    .menu .logo-web img{
+
+    .menu .logo-web img {
         height: 70px;
         width: 90px;
     }
+
     .menu-content li {
         padding: 15px 20px;
         font-size: 16px;
     }
-    .menu-content .have-user{
+
+    .menu-content .have-user {
         align-items: center;
     }
-    .menu-content .have-user svg{
+
+    .menu-content .have-user svg {
         height: 20px;
         width: 20px;
     }
-    .menu-content .have-user a{
+
+    .menu-content .have-user a {
         font-size: 16px;
     }
-    .drop-have-user{
-        width: 180px!important;
-        transform: translateY(4.1rem)!important;
-        right: 1.5%!important;
+
+    .drop-have-user {
+        width: 180px !important;
+        transform: translateY(4.1rem) !important;
+        right: 1.5% !important;
     }
-    .drop-have-user li{
+
+    .drop-have-user li {
         font-size: 14px;
         padding: 8px;
     }
-    .drop-none-user{
-        transform: translateY(3.9rem)!important;
-        right: 0rem!important;
-        width: 150px!important;
+
+    .drop-none-user {
+        transform: translateY(3.9rem) !important;
+        right: 0rem !important;
+        width: 150px !important;
     }
-    .All-movies, .Showing-movies, .Coming-soon-movies{
+
+    .All-movies,
+    .Showing-movies,
+    .Coming-soon-movies {
         width: 90%;
-        grid-template-columns: 1fr 1fr 1fr 1fr!important;
-        gap: 25px!important;
+        grid-template-columns: 1fr 1fr 1fr 1fr !important;
+        gap: 25px !important;
     }
-    .Showing-film-page-text h1{
+
+    .Showing-film-page-text h1 {
         font-size: 16px;
     }
-    .comingSoon-film-page-text h1{
+
+    .comingSoon-film-page-text h1 {
         font-size: 16px;
     }
-    .movie-item img{
+
+    .movie-item img {
         height: 270px;
     }
-    iframe{
+
+    iframe {
         height: 600px;
     }
-    .menu-film{
-        margin-top: 3rem!important;
+
+    .menu-film {
+        margin-top: 3rem !important;
     }
-    .menu-film .title{
+
+    .menu-film .title {
         padding-bottom: 0.7rem;
         margin-bottom: 0.75rem;
     }
-    .menu-film .title h2{
+
+    .menu-film .title h2 {
         font-size: 24px;
     }
-    .menu-film .title .SearchInput{
+
+    .menu-film .title .SearchInput {
         width: 200px;
     }
-    .menu-film .btn-movie{
-        margin-bottom: 20px!important;
+
+    .menu-film .btn-movie {
+        margin-bottom: 20px !important;
     }
-    .menu-film .btn-movie button{
+
+    .menu-film .btn-movie button {
         width: 150px;
         font-size: 16px;
     }
-    footer>div{
-        padding: 1rem 0!important;
+
+    footer>div {
+        padding: 1rem 0 !important;
     }
-    footer nav ul li{
+
+    footer nav ul li {
         font-size: 15px;
     }
-    footer .logo img{
+
+    footer .logo img {
         width: 8%;
     }
-    footer .logo h2{
+
+    footer .logo h2 {
         font-size: 18px;
     }
-    .icon-fb{
-        width: 45px!important;
+
+    .icon-fb {
+        width: 45px !important;
     }
-    .icon-yt{
-        width: 35px!important;
+
+    .icon-yt {
+        width: 35px !important;
     }
-    .icon-zl{
-        width: 30px!important;
-        height: 30px!important;
+
+    .icon-zl {
+        width: 30px !important;
+        height: 30px !important;
     }
-    .address-footer{
+
+    .address-footer {
         font-size: 15px;
     }
-    .ticket-price-content, .film2D, .film3D, .ticket-price-describe{
-        width: 90%!important;
+
+    .ticket-price-content,
+    .film2D,
+    .film3D,
+    .ticket-price-describe {
+        width: 90% !important;
         margin: 0 auto;
     }
-    .ticket-price-table{
-        width: 100%!important;
+
+    .ticket-price-table {
+        width: 100% !important;
         margin: 0;
     }
-    .ticket-price-table th, .ticket-price-table tr{
-        font-size: 15px!important;
+
+    .ticket-price-table th,
+    .ticket-price-table tr {
+        font-size: 15px !important;
     }
-    .ticket-price-table tr{
-        height: 50px!important;
+
+    .ticket-price-table tr {
+        height: 50px !important;
     }
-    .ticket-price-title h1{
-        font-size: 25px!important;
+
+    .ticket-price-title h1 {
+        font-size: 25px !important;
     }
-    .ticket-price-title p{
-        font-size: 18px!important;
+
+    .ticket-price-title p {
+        font-size: 18px !important;
     }
-    .film2D h2, .film3D h2{
-        font-size: 18px!important;
+
+    .film2D h2,
+    .film3D h2 {
+        font-size: 18px !important;
     }
-    .ticket-price-describe{
+
+    .ticket-price-describe {
         font-size: 15px;
     }
-    .Profile-table{
+
+    .Profile-table {
         width: 80%;
-        padding: 20px 0!important;
+        padding: 20px 0 !important;
     }
-    .Profile-1 h1, .Profile-2 h1{
+
+    .Profile-1 h1,
+    .Profile-2 h1 {
         font-size: 24px;
     }
-    .Profile-2 .in4Active, .Profile-1 .in4Active{
-        width: 10rem!important;
+
+    .Profile-2 .in4Active,
+    .Profile-1 .in4Active {
+        width: 10rem !important;
         font-size: 15px;
     }
-    .Profile-2 .in4-box input, .Profile-1 .in4-box input{
+
+    .Profile-2 .in4-box input,
+    .Profile-1 .in4-box input {
         height: 40px;
     }
-    .Profile-2 .in4-box label, .Profile-1 .in4-box label{
+
+    .Profile-2 .in4-box label,
+    .Profile-1 .in4-box label {
         font-size: 16px;
     }
-    .Profile-action button, .Profile-2-action button{
+
+    .Profile-action button,
+    .Profile-2-action button {
         font-size: 15px;
         width: 120px;
         padding-left: 0;
     }
+
     .FormSignin {
-        width: 350px!important;
-        padding: 20px 25px!important;
+        width: 350px !important;
+        padding: 20px 25px !important;
     }
+
     .FormSignin h1 {
-        font-size: 24px!important;
+        font-size: 24px !important;
     }
+
     .FormSignin .input-box {
-        height: 35px!important;
-        margin-top: 25px!important;
+        height: 35px !important;
+        margin-top: 25px !important;
     }
+
     .FormSignin .register-link {
-        font-size: 12.5px!important;
-        margin: 13px 0px 0px!important;
+        font-size: 12.5px !important;
+        margin: 13px 0px 0px !important;
     }
+
     .FormSignin .btn {
-        font-size: 14px!important;
-       height: 35px!important;
+        font-size: 14px !important;
+        height: 35px !important;
     }
+
     .FormSignin .input-box input {
-        font-size: 14px!important;
-      }
+        font-size: 14px !important;
+    }
+
     .FormSignin .forgot-password a p {
-        font-size: 12px!important;
-      }
+        font-size: 12px !important;
+    }
+
     .Form {
-        width: 550px!important;
-        padding: 20px 25px!important;
+        width: 550px !important;
+        padding: 20px 25px !important;
     }
+
     .Form h1 {
-        font-size: 24px!important;
+        font-size: 24px !important;
     }
+
     .Form .input-box {
-        height: 35px!important;
-        margin-top: 25px!important;
+        height: 35px !important;
+        margin-top: 25px !important;
     }
+
     .Form form>div {
-       gap: 2rem;
+        gap: 2rem;
     }
+
     .Form .btn {
-        font-size: 15px!important;
-       height: 35px!important;
+        font-size: 15px !important;
+        height: 35px !important;
     }
-    .Form .register-link{
-        font-size: 14px!important;
-        margin: 15px 0px 0px!important;
+
+    .Form .register-link {
+        font-size: 14px !important;
+        margin: 15px 0px 0px !important;
     }
+
     .Form .input-box input {
-        font-size: 14px!important;
-      }
+        font-size: 14px !important;
+    }
+
+    .no-content {
+        padding: 0 !important
+    }
+
+    .seat-group {
+        gap: 0.5rem;
+    }
+
+    .seat-group .relative svg {
+        width: 55px;
+    }
+
+    .seat-group .relative>div {
+        right: 1.1rem;
+        top: 1.2rem;
+    }
+
+    .booking-seat-person {
+        grid-template-columns: 220px 1fr !important;
+        gap: 1rem !important;
+    }
+
+    .image-film-left-content {
+        width: 150px !important;
+    }
+
+    .all-seat .seat {
+        padding: 0 !important;
+    }
+
+    .no-content>div h3 {
+        font-size: 18px;
+        padding-right: 40px;
+        width: 220px;
+    }
+
+    .no-content-total-money {
+        padding-right: 40px;
+        width: 220px;
+    }
+
+    .classify {
+        gap: 2rem;
+        margin: 3rem 0 !important;
+    }
+
+    .classify .seat p {
+        font-size: 14px !important;
+    }
+
+    .Booking-combo>div {
+        margin: 4rem 0;
+    }
+
+    .Combo {
+        padding: 0.5rem !important;
+        gap: 1rem !important;
+    }
+
+    .Combo img {
+        height: 60%;
+    }
+
+    .Combo h1 {
+        font-size: 16px;
+    }
+
+    .Combo p {
+        font-size: 13px;
+    }
+
+    .combo-quantity input {
+        width: 90px;
+    }
+
+    .ThanhToanBtn {
+        width: 100% !important;
+    }
+
+    .ModalVoucher {
+        width: 40% !important;
+    }
+
+    .ModalVoucher h3 {
+        font-size: 24px;
+    }
+
+    .Bills {
+        width: 87%;
+    }
+
+    .Bills .Ticket {
+        grid-template-columns: 340px 1fr 20px;
+    }
+
+    .billImage {
+        gap: 10px;
+    }
 }
 
-@media (max-width: 768px){
-    iframe{
+@media (max-width: 768px) {
+    iframe {
         height: 450px;
     }
-    .menu-film{
+
+    .menu-film {
         display: none;
     }
+
     .menu-content li {
         font-size: 14px;
     }
-    .menu-content .have-user svg{
+
+    .menu-content .have-user svg {
         height: 15px;
         width: 15px;
     }
-    .menu-content .have-user a{
+
+    .menu-content .have-user a {
         font-size: 14px;
     }
-    .drop-none-user{
-        transform: translateY(3.9rem)!important;
-        right: 0.5rem!important;
-        width: 120px!important;
+
+    .drop-none-user {
+        transform: translateY(3.9rem) !important;
+        right: 0.5rem !important;
+        width: 120px !important;
     }
-    .Screen-tablet{
-        display: block!important;
+
+    .Screen-tablet {
+        display: block !important;
         margin-top: 3rem;
     }
-    .All-movies, .Showing-movies, .Coming-soon-movies{
-        display: none!important;
+
+    .All-movies,
+    .Showing-movies,
+    .Coming-soon-movies {
+        display: none !important;
     }
-    .Showing-film-page{
-        grid-template-columns: 1fr 1fr 1fr!important;
+
+    .Showing-film-page {
+        grid-template-columns: 1fr 1fr 1fr !important;
     }
-    .comingSoon-film-page{
-        grid-template-columns: 1fr 1fr 1fr!important;
+
+    .comingSoon-film-page {
+        grid-template-columns: 1fr 1fr 1fr !important;
     }
-    .Showing-film-page img{
+
+    .Showing-film-page img {
         height: 170px;
     }
-    .comingSoon-film-page img{
+
+    .comingSoon-film-page img {
         height: 170px;
     }
-    .Showing-film-page-text h1{
+
+    .Showing-film-page-text h1 {
         font-size: 14px;
     }
-    .Showing-film-page-text p{
+
+    .Showing-film-page-text p {
         font-size: 12px;
     }
-    .Showing-film-section{
-        padding: 7rem 0!important;
+
+    .Showing-film-section {
+        padding: 7rem 0 !important;
     }
-    .comingSoon-film-page-text h1{
+
+    .comingSoon-film-page-text h1 {
         font-size: 14px;
     }
-    .comingSoon-film-page-text p{
+
+    .comingSoon-film-page-text p {
         font-size: 12px;
     }
-    .comingSoon-film-section{
-        padding: 7rem 0!important;
+
+    .comingSoon-film-section {
+        padding: 7rem 0 !important;
     }
-    .Detail-in4-film-content{
-        display: block!important;
+
+    .Detail-in4-film-content {
+        display: block !important;
     }
-    .Detail-in4-film{
-        width: 100%!important;
-        display: flex!important;
+
+    .Detail-in4-film {
+        width: 100% !important;
+        display: flex !important;
         justify-content: space-between;
     }
-    .Detail-in4-film-time{
-        display: block!important;
+
+    .Detail-in4-film-time {
+        display: block !important;
     }
-    .Detail-in4-film-img{
+
+    .Detail-in4-film-img {
         display: none;
     }
-    .Detail-in4-film-date{
-        width: 80px!important;
+
+    .Detail-in4-film-date {
+        width: 80px !important;
     }
-    .Detail-in4-film-date span{
+
+    .Detail-in4-film-date span {
         font-size: 18px;
     }
-    .detail-time{
-        width: 80px!important;
-        height: 35px!important;
+
+    .detail-time {
+        width: 80px !important;
+        height: 35px !important;
     }
-    .Detail-in4-film-titleDes{
+
+    .Detail-in4-film-titleDes {
         margin-top: 3rem;
-        font-size: 18px!important;
+        font-size: 18px !important;
     }
-    .Detail-in4-film-titleDes .text{
+
+    .Detail-in4-film-titleDes .text {
         width: 50%;
         text-align: end;
     }
-    .Detail-in4-film-Des-left{
-        font-size: 14px!important;
-        width: 65%!important;
-        padding-right: 30px!important;
+
+    .Detail-in4-film-Des-left {
+        font-size: 14px !important;
+        width: 65% !important;
+        padding-right: 30px !important;
     }
-    .Detail-in4-film-Des-right{
+
+    .Detail-in4-film-Des-right {
         width: 35%;
-        font-size: 14px!important;
+        font-size: 14px !important;
     }
+
     .FormSignin {
-        width: 320px!important;
-        padding: 18px 20px!important;
+        width: 320px !important;
+        padding: 18px 20px !important;
     }
+
     .FormSignin h1 {
-        font-size: 24px!important;
+        font-size: 24px !important;
     }
+
     .FormSignin .input-box {
-        height: 35px!important;
-        margin-top: 25px!important;
+        height: 35px !important;
+        margin-top: 25px !important;
     }
+
     .FormSignin .register-link {
-        font-size: 12.5px!important;
-        margin: 13px 0px 15px!important;
+        font-size: 12.5px !important;
+        margin: 13px 0px 15px !important;
     }
+
     .Form {
-        width: 450px!important;
-        padding: 15px 20px!important;
+        width: 450px !important;
+        padding: 15px 20px !important;
     }
+
     .Form h1 {
-        font-size: 24px!important;
+        font-size: 24px !important;
     }
+
     .Form .input-box {
-        height: 35px!important;
-        margin-top: 25px!important;
+        height: 35px !important;
+        margin-top: 25px !important;
     }
+
     .Form form>div {
-       gap: 1rem;
+        gap: 1rem;
     }
+
     .Form .btn {
-        font-size: 14px!important;
-       height: 35px!important;
+        font-size: 14px !important;
+        height: 35px !important;
     }
+
     .Form .input-box input {
-      font-size: 13px!important;
+        font-size: 13px !important;
     }
-    .Form .register-link{
-        font-size: 14px!important;
-        margin: 15px 0px 0px!important;
+
+    .Form .register-link {
+        font-size: 14px !important;
+        margin: 15px 0px 0px !important;
     }
-    .Slider  {
+
+    .Slider {
         position: relative;
         height: 50%;
         display: flex;
@@ -407,27 +671,31 @@
         border: none;
         width: 90%;
         margin: 0 auto;
-      }
-      .Slider .slick-list {
+    }
+
+    .Slider .slick-list {
         position: relative;
         display: block !important;
         overflow: hidden;
         padding: 70px 90px !important;
         width: 100%;
-      }
-      .Slider .slick-track {
+    }
+
+    .Slider .slick-track {
         position: relative;
         top: 0;
         left: 0;
         display: flex;
-      }
-      .Slider.slick-slide div {
+    }
+
+    .Slider.slick-slide div {
         display: flex !important;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-      }
-      .Slider .slick-slide div div span {
+    }
+
+    .Slider .slick-slide div div span {
         margin-top: 10px;
         width: inherit;
         text-align: center;
@@ -436,54 +704,62 @@
         font-weight: 600;
         text-transform: uppercase;
         color: #111;
-      }
-      
-      .Slider  .slick-slide:not(.slick-active) {
+    }
+
+    .Slider .slick-slide:not(.slick-active) {
         position: relative;
         z-index: 997;
         opacity: 0.3;
-      }
-      .Slider .slick-slide.slick-active:not(.slick-current) {
+    }
+
+    .Slider .slick-slide.slick-active:not(.slick-current) {
         position: relative;
         z-index: 998;
         transform: scale(1.3);
         transition: 0.25s;
         opacity: 0.7;
-      }
-      .Slider  .slick-slide.slick-active.slick-current {
+    }
+
+    .Slider .slick-slide.slick-active.slick-current {
         position: relative;
         z-index: 999;
         transform: scale(1.6);
         transition: 0.25s;
-      }
-      .Slider .slick-slide.slick-active:not(.slick-current) .image,
-      .Slider .slick-slide.slick-active.slick-current .image,
-      .Slider .slick-slide:not(.slick-active) .image {
+    }
+
+    .Slider .slick-slide.slick-active:not(.slick-current) .image,
+    .Slider .slick-slide.slick-active.slick-current .image,
+    .Slider .slick-slide:not(.slick-active) .image {
         width: 100% !important;
-      }
-      .Slider .slick-prev,
-      .Slider .slick-next {
+    }
+
+    .Slider .slick-prev,
+    .Slider .slick-next {
         display: none !important;
-      }
-      .Slider .custom-prevArrow,
-      .Slider .custom-nextArrow {
+    }
+
+    .Slider .custom-prevArrow,
+    .Slider .custom-nextArrow {
         position: relative;
         z-index: 99999;
         top: -10px;
-      }
-      .Slider .custom-prevArrow {
+    }
+
+    .Slider .custom-prevArrow {
         left: -10px;
-      }
-      .Slider .custom-nextArrow {
+    }
+
+    .Slider .custom-nextArrow {
         right: -10px;
-      }
-      .Slider .custom-prevArrow:hover,
-      .Slider .custom-nextArrow:hover {
+    }
+
+    .Slider .custom-prevArrow:hover,
+    .Slider .custom-nextArrow:hover {
         fill: red;
         cursor: pointer;
-      }
+    }
 
-    .Slider-ComingSon-film  {
+    .Slider-ComingSon-film {
         position: relative;
         height: 50%;
         display: flex;
@@ -492,28 +768,31 @@
         border: none;
         width: 90%;
         margin: 0 auto;
-      }
-       .Slider-ComingSon-film .slick-list {
+    }
+
+    .Slider-ComingSon-film .slick-list {
         position: relative;
         display: block !important;
         overflow: hidden;
         padding: 70px 90px !important;
         width: 100%;
-      }
-      .Slider-ComingSon-film .slick-track {
+    }
+
+    .Slider-ComingSon-film .slick-track {
         position: relative;
         top: 0;
         left: 0;
         display: flex;
-      }
-      .Slider-ComingSon-film.slick-slide div {
+    }
+
+    .Slider-ComingSon-film.slick-slide div {
         display: flex !important;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-      }
-    
-      .Slider-ComingSon-film .slick-slide div div span {
+    }
+
+    .Slider-ComingSon-film .slick-slide div div span {
         margin-top: 10px;
         width: inherit;
         text-align: center;
@@ -522,42 +801,218 @@
         font-weight: 600;
         text-transform: uppercase;
         color: #111;
-      }
-      .Slider-ComingSon-film .slick-list {
+    }
+
+    .Slider-ComingSon-film .slick-list {
         position: relative;
         display: block !important;
         overflow: hidden;
         padding: 0 !important;
         width: 100%;
-      }
-      .Slider-ComingSon-film .slick-prev,
-      .Slider-ComingSon-film .slick-next {
+    }
+
+    .Slider-ComingSon-film .slick-prev,
+    .Slider-ComingSon-film .slick-next {
         display: none !important;
-      }
+    }
+
+    .Private-Policy {
+        padding: 7rem 0 !important;
+    }
+
+    .Policy-title h1 {
+        font-size: 24px;
+    }
+
+    .Policy-content {
+        font-size: 15px;
+    }
+
+    .booking-seat-person {
+        display: block !important;
+    }
+
+    .no-content-fixed {
+        position: static !important;
+        top: 40%;
+        width: 100%;
+    }
+
+    .no-content>div {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .in4-film-left-content {
+        width: 70%;
+    }
+
+    .image-film-left-content {
+        width: 200px !important;
+    }
+
+    .no-content>div h3 {
+        margin-top: 0;
+        padding-right: 0;
+        width: 100%;
+    }
+
+    .no-content-fixed>div {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .no-content-fixed .in4-film-left-content {
+        width: 70%;
+    }
+
+    .no-content-fixed .image-film-left-content {
+        width: 200px !important;
+    }
+
+    .no-content-fixed>div h3 {
+        margin-top: 0;
+        padding-right: 0;
+        width: 100%;
+    }
+
+    .no-content-total-money {
+        padding-right: 0;
+        width: 100%;
+    }
+
+    .seat-group .relative svg {
+        width: 50px;
+    }
+
+    .seat-group .relative>div {
+        right: 0.9rem;
+        top: 1.3rem;
+    }
+
+    .content-right {
+        width: 92% !important;
+        margin: 5rem auto;
+    }
+
+    .combo-quantity input {
+        width: 120px;
+    }
+
+    .Combo img {
+        height: 65%;
+    }
+
+    .ModalVoucher {
+        width: 40% !important;
+    }
+
+    .ModalVoucher h3 {
+        font-size: 20px;
+    }
+
+    .ModalVoucher .ant-modal-content {
+        padding: 10px;
+    }
+
+    .Bills {
+        padding: 15px !important;
+    }
+
+    .Bills .Ticket {
+        grid-template-columns: 250px 1fr 20px;
+    }
+
+    .billImage {
+        grid-template-columns: 1fr 1fr 1fr !important;
+    }
+
+    .Bills-film-in4 {
+        grid-column: span 2 / span 2 !important;
+    }
+
+    .Bills-film-in4 h1,
+    .Bills-film-in4>div p,
+    .billUser {
+        font-size: 14px;
+    }
+
+    .Bills-film-in4>div svg {
+        width: 14px;
+    }
+
+    .billUserTotalMoney {
+        font-size: 15px !important;
+    }
+
+    .Bills .circle-1::before {
+        left: 40.2% !important;
+    }
+
+    .Bills .circle-1::after {
+        left: 40.2% !important;
+    }
+
+    .Bills .circle-2::before {
+        right: 6% !important;
+    }
+
+    .Bills .circle-2::after {
+        right: 6% !important;
+    }
+
+    .Bills .Rectangle-1::before {
+        left: 30.5% !important;
+        top: 105px !important;
+        width: 23.5% !important;
+    }
+
+    .Bills .Rectangle-1::after {
+        right: -4% !important;
+        top: 105px !important;
+        width: 23.5% !important;
+    }
+    .bill-logo {
+        right: -6%!important;
+    }
 }
 
-@media (max-width: 600px){
-    .menu{
-        display: none!important;
+@media (max-width: 600px) {
+    .Bills {
+        display: none !important;
     }
-    .Screen-tablet{
-        display: none!important;
+
+    .Bills-mobile {
+        display: block !important;
     }
-    .Screen-mobile{
-        display: block!important;
+
+    .menu {
+        display: none !important;
     }
-    .menu-mobile{
-        display: flex!important;
-        
+
+    .Screen-tablet {
+        display: none !important;
     }
-    iframe{
+
+    .Screen-mobile {
+        display: block !important;
+    }
+
+    .menu-mobile {
+        display: flex !important;
+
+    }
+
+    iframe {
         height: 300px;
     }
-    .Menu-drop-mobile{
+
+    .Menu-drop-mobile {
         display: grid;
         grid-template-columns: 50px 1fr;
     }
-    .Slider-mobile  {
+
+    .Slider-mobile {
         position: relative;
         height: 50%;
         display: flex;
@@ -566,27 +1021,31 @@
         border: none;
         width: 85%;
         margin: 0 auto;
-      }
-      .Slider-mobile .slick-list {
+    }
+
+    .Slider-mobile .slick-list {
         position: relative;
         display: block !important;
         overflow: hidden;
         padding: 70px 100px !important;
         width: 100%;
-      }
-      .Slider-mobile .slick-track {
+    }
+
+    .Slider-mobile .slick-track {
         position: relative;
         top: 0;
         left: 0;
         display: flex;
-      }
-      .Slider-mobile.slick-slide div {
+    }
+
+    .Slider-mobile.slick-slide div {
         display: flex !important;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-      }
-      .Slider-mobile .slick-slide div div span {
+    }
+
+    .Slider-mobile .slick-slide div div span {
         margin-top: 10px;
         width: inherit;
         text-align: center;
@@ -595,54 +1054,479 @@
         font-weight: 600;
         text-transform: uppercase;
         color: #111;
-      }
-      
-      .Slider-mobile  .slick-slide:not(.slick-active) {
+    }
+
+    .Slider-mobile .slick-slide:not(.slick-active) {
         position: relative;
         z-index: 997;
         opacity: 0.3;
-      }
-      .Slider-mobile .slick-slide.slick-active:not(.slick-current) {
+    }
+
+    .Slider-mobile .slick-slide.slick-active:not(.slick-current) {
         position: relative;
         z-index: 998;
         transform: scale(1.3);
         transition: 0.25s;
         opacity: 0.7;
-      }
-      .Slider-mobile  .slick-slide.slick-active.slick-current {
+    }
+
+    .Slider-mobile .slick-slide.slick-active.slick-current {
         position: relative;
         z-index: 999;
         transform: scale(1.5);
         transition: 0.25s;
-      }
-      .Slider-mobile .slick-slide.slick-active:not(.slick-current) .image,
-      .Slider-mobile .slick-slide.slick-active.slick-current .image,
-      .Slider-mobile .slick-slide:not(.slick-active) .image {
+    }
+
+    .Slider-mobile .slick-slide.slick-active:not(.slick-current) .image,
+    .Slider-mobile .slick-slide.slick-active.slick-current .image,
+    .Slider-mobile .slick-slide:not(.slick-active) .image {
         width: 100% !important;
-      }
-      .Slider-mobile .slick-prev,
-      .Slider-mobile .slick-next {
+    }
+
+    .Slider-mobile .slick-prev,
+    .Slider-mobile .slick-next {
         display: none !important;
-      }
-      .Slider-mobile .custom-prevArrow,
-      .Slider-mobile .custom-nextArrow {
+    }
+
+    .Slider-mobile .custom-prevArrow,
+    .Slider-mobile .custom-nextArrow {
         position: relative;
         z-index: 99999;
         top: -10px;
-      }
-      .Slider-mobile .custom-prevArrow {
+    }
+
+    .Slider-mobile .custom-prevArrow {
         left: -10px;
-      }
-      .Slider-mobile .custom-nextArrow {
+    }
+
+    .Slider-mobile .custom-nextArrow {
         right: -10px;
-      }
-      .Slider-mobile .custom-prevArrow:hover,
-      .Slider-mobile .custom-nextArrow:hover {
+    }
+
+    .Slider-mobile .custom-prevArrow:hover,
+    .Slider-mobile .custom-nextArrow:hover {
         fill: red;
         cursor: pointer;
-      }
+    }
+
+
+    footer ul li {
+        margin-left: 10px !important;
+        font-size: 13px !important;
+    }
+
+    footer .logo img {
+        width: 12%;
+    }
+
+    .icon-fb {
+        width: 30px !important;
+    }
+
+    .icon-zl {
+        width: 23px !important;
+        height: 23px !important;
+    }
+
+    .icon-yt {
+        width: 30px !important;
+    }
+
+    .address-footer p {
+        font-size: 11px !important;
+    }
+
+    .address-footer {
+        margin: 0.75rem 1.2rem 0 1.2rem;
+    }
+
+    .Showing-film-page,
+    .comingSoon-film-page {
+        gap: 20px !important;
+    }
+
+    .Showing-film-page-text,
+    .comingSoon-film-page-text {
+        padding: 0 !important;
+    }
+
+    .Showing-film-page-text h1,
+    .comingSoon-film-page-text h1 {
+        font-size: 10px;
+        line-height: 17px;
+        margin-top: 5px;
+    }
+
+    .Showing-film-page-text>div p,
+    .comingSoon-film-page-text>div p {
+        font-size: 8px !important;
+    }
+
+    .Showing-film-section,
+    .comingSoon-film-section {
+        padding: 5rem 0 !important;
+    }
+
+    .ticket-price-title h1 {
+        font-size: 20px !important;
+    }
+
+    .ticket-price-title p {
+        font-size: 15px !important;
+    }
+
+    .film2D h2,
+    .film3D h2 {
+        font-size: 16px !important;
+    }
+
+    .ticket-price-table th,
+    .ticket-price-table tr {
+        font-size: 12px !important;
+    }
+
+    .film2D {
+        margin-bottom: 2rem !important;
+    }
+
+    .ticket-price-describe {
+        font-size: 13px;
+    }
+
+    .ticket-price-title {
+        margin-top: 0 !important;
+    }
+
+    .ShowDayMovie {
+        gap: 2.3rem !important;
+    }
+
+    .Detail-in4-film-name span,
+    .Detail-in4-film-time span {
+        font-size: 15px;
+    }
+
+    .btn-date>div,
+    .detail-time {
+        width: 60px !important;
+    }
+
+    .Detail-in4-film-date span {
+        font-size: 15px;
+    }
+
+    .ShowTimeMovie {
+        gap: 2.8rem !important;
+    }
+
+    .Detail-in4-film-Des-left {
+        padding-right: 10px !important;
+    }
+
+    .Detail-film-container {
+        margin-top: 10%;
+        margin-bottom: 20% !important;
+    }
+
+    .Private-Policy {
+        padding: 5rem 0 !important;
+    }
+
+    .Policy-title h1 {
+        font-size: 20px;
+    }
+
+    .Policy-content {
+        font-size: 12px;
+    }
+
+    .Policy-content h2 {
+        font-size: 13px;
+    }
+
+    .backdrop img {
+        height: 300px;
+    }
+
+    .no-content>div {
+        gap: 15px;
+    }
+
+    .image-film-left-content {
+        width: 150px !important;
+    }
+
+    .no-content>div h3 {
+        font-size: 14px;
+    }
+
+    .content-right {
+        width: 87% !important;
+    }
+
+    .seat-group {
+        gap: 0.3rem !important;
+    }
+
+    .seat-group .relative svg {
+        width: 30px;
+    }
+
+    .seat-group .relative>div {
+        right: 0.6rem;
+        top: 1.5rem;
+        font-size: 9px;
+    }
+
+    .choose-seat {
+        margin-top: 2rem !important;
+    }
+
+    .classify {
+        gap: 1rem;
+        margin: 1.5rem 0 !important;
+    }
+
+    .classify .seat {
+        text-align: center;
+        display: block !important;
+    }
+
+    .classify .seat>div {
+        justify-content: center;
+        display: flex !important;
+    }
+
+    .classify .seat>div svg {
+        width: 30px;
+    }
+
+    .classify .seat p {
+        font-size: 9px !important;
+    }
+
+    .content-right .taskbar ul li {
+        font-size: 10px;
+    }
+
+    .CheckTimeChooseSeat {
+        font-size: 13px;
+        width: 200px !important;
+    }
+
+    .Combo-list {
+        display: block !important;
+    }
+
+    .Combo {
+        margin-bottom: 1rem;
+    }
+
+    .combo-quantity input {
+        width: 130px;
+    }
+
+    .Combo img {
+        height: 70%;
+    }
+
+    .Combo h1 {
+        font-size: 14px;
+    }
+
+    .Combo {
+        padding: 0.2rem !important;
+        gap: 1rem !important;
+        padding: 1rem;
+    }
+
+    .no-content-food-name {
+        font-size: 14px;
+    }
+
+    .ButtonEvent {
+        margin: 1.5rem 0 !important;
+    }
+
+    .BackButton,
+    .NextButton {
+        padding: 3px 10px !important;
+        font-size: 14px;
+    }
+
+    .Payment-taskbar {
+        width: 85% !important;
+    }
+
+    .Payment-taskbar .taskbar ul li {
+        font-size: 10px;
+    }
+
+    .Payment-content {
+        display: block !important;
+    }
+
+    .Payment-film-image {
+        width: 100% !important;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+
+    .sale-code p {
+        font-size: 14px;
+    }
+
+    .info-card>div {
+        font-size: 14px;
+    }
+
+    .voucher-button span {
+        font-size: 10px;
+    }
+
+    .ModalVoucher {
+        width: 60% !important;
+    }
+
+    .ModalVoucher h3 {
+        font-size: 18px;
+    }
+
+    .Profile-1 h1,
+    .Profile-2 h1 {
+        font-size: 20px;
+        margin: 1rem 0;
+    }
+
+    .Profile-2 .in4Active,
+    .Profile-1 .in4Active {
+        font-size: 13px;
+    }
+
+    .Profile-form {
+        gap: 0.5rem !important;
+    }
+
+    .Profile-form .in4-box label {
+        font-size: 14px;
+    }
+
+    .Profile-table {
+        width: 87%;
+        padding: 20px 0 !important;
+    }
+
+    .Profile-2 .in4-box input,
+    .Profile-1 .in4-box input,
+    .Profile-action button,
+    .Profile-2-action button {
+        font-size: 12px;
+    }
+
+    .Profile-2-form {
+        width: 87%;
+    }
+
+    .Profile-2-form .in4-box label {
+        font-size: 14px;
+    }
+
+    .NoneTicketBackground h1 {
+        font-size: 18px;
+        left: 18%;
+    }
+    footer nav ul li {
+        font-size: 12px!important;
+    }
 }
-@media (max-width: 375px){}
-@media (max-width: 320px){}
 
+@media (max-width: 375px) {
+    footer nav ul li {
+        font-size: 10px!important;
+    }
+}
 
+@media (max-width: 320px) {
+    .combo-quantity input {
+        width: 90px;
+    }
+    .voucher-button span {
+        font-size: 7px;
+    }
+    .ModalVoucher {
+        width: 80% !important;
+    }
+    .Payment-taskbar .taskbar ul li {
+        text-align: end;
+    }
+    .Bills-menu-content{
+        padding: 0.8rem!important;
+    }
+    .information h1{
+        font-size: 12px;
+    }
+    .Bills-mobile .circle-1::before{
+        content: "";
+        position: absolute;
+        left: -5%;
+        top: 32.1%!important;
+        background: black;
+        width: 22px!important;
+        height: 22px!important;
+      }
+      .Bills-mobile .circle-1::after{
+        content: "";
+        position: absolute;
+        left: -5%!important;
+        bottom: 10%!important;
+        background: black;
+        width: 22px!important;
+        height: 22px!important;
+        border-radius: 50%;
+      }
+      .Bills-mobile .circle-2::before{
+        content: "";
+        position: absolute;
+        right: -4%;
+        top: 32.1%!important;
+        background: black;
+        width: 22px!important;
+        height: 22px!important;
+        border-radius: 50%;
+      }
+      .Bills-mobile .circle-2::after{
+        content: "";
+        position: absolute;
+        right: -4%;
+        bottom: 10%!important;
+        background: black;
+        width: 22px!important;
+        height: 22px!important;
+        border-radius: 50%;
+      }
+      .Bills-mobile .Rectangle-1::before{
+        content: "";
+        position: absolute;
+        left: 10%;
+        top: 35%!important;
+        background: #fff;
+        width: 80%;
+        border-bottom: 2px dashed;
+      }
+      .Bills-mobile .Rectangle-1::after{
+          top: 87%!important;
+          left: 10%;
+          background: #fff;
+          width: 80%;
+          border-bottom: 2px dashed;
+      }
+      .seat-group .relative svg {
+        width: 25px!important;
+    }
+    .seat-group .relative>div {
+        right: 0.5rem;
+        top: 1.6rem;
+        font-size: 8px;
+    }
+}

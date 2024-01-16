@@ -24,7 +24,7 @@ const TicketHistory = () => {
 
     const timeoutId = setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 200);
 
     return () => {
       clearTimeout(timeoutId);
@@ -42,6 +42,7 @@ const TicketHistory = () => {
           await ticketHistory(newData).unwrap()
             .then((data: any) =>
               setData(data)
+
             )
         } else {
           message.error('Không tìm thấy mã người dùng');
@@ -67,7 +68,7 @@ const TicketHistory = () => {
         ) : (
           <div className='h-full'>
             {data.length === 0 ? (
-              <div className='h-screen'>
+              <div className='h-screen NoneTicketBackground'>
                 <h1 className='text-3xl absolute text-white font-semibold uppercase left-[32%] top-[52%]' style={{ textShadow: "rgb(255, 255, 255) -1px -2px 0.7em" }}>Chưa có lịch sử đặt vé nào</h1>
                 <img src={background} alt="" className='h-[100%] w-full' />
               </div>
@@ -85,7 +86,7 @@ const TicketHistory = () => {
                                 <div className='flex justify-center items-center'>
                                   <img src={item?.image} alt="" className='w-[80px] h-[150px]' />
                                 </div>
-                                <div className='col-span-3 my-auto'>
+                                <div className='col-span-3 my-auto Bills-film-in4'>
                                   <h1 className='text-black text-[16px] font-semibold overflow-wrap break-all'>{item?.movie_name}</h1>
                                   <div className='mt-5'>
                                     <div className='flex items-center gap-2'>
@@ -111,6 +112,10 @@ const TicketHistory = () => {
                               </div>
                               <div className='billUser space-y-1'>
                                 <div className='flex justify-between border-b '>
+                                  <p>Mã hóa đơn</p>
+                                  <p>{item?.bill_code}</p>
+                                </div>
+                                <div className='flex justify-between border-b '>
                                   <p>{item?.user_code}</p>
                                   <p>{item?.user_name}</p>
                                 </div>
@@ -135,12 +140,92 @@ const TicketHistory = () => {
                                   <p className='font-semibold'>{item?.additional_fee || "0đ"}</p>
                                 </div>
                                 <div className='flex justify-between'>
-                                  <p className='text-lg'>Tổng tiền</p>
-                                  <p className='font-semibold text-lg'>{item?.total_money} đ</p>
+                                  <p className='text-lg billUserTotalMoney'>Tổng tiền</p>
+                                  <p className='font-semibold text-lg billUserTotalMoney'>{item?.total_money} đ</p>
                                 </div>
                               </div>
-                              <div className='rotate-90 absolute right-[-28px] top-[43%]'>
+                              <div className='rotate-90 absolute right-[-28px] top-[43%] bill-logo'>
                                 <p className=' text-[#1ACAAC] font-semibold text-md w-[140px]'>Wonder Cinema</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    : ""
+                ))}
+                {data?.map((item: any) => (
+
+                  item?.payment_status === "Đã thanh toán" ?
+                    <div key={item?.id} className='Bills-mobile hidden bg-white rounded-md w-[75%] mx-auto'>
+                      <div className='circle-1'>
+                        <div className='circle-2'>
+                          <div className='Rectangle-1'>
+                            <div className='Bills-menu-content p-5'>
+                              <div className='Bill-mobile-in4 grid grid-cols-3 gap-3 mb-8'>
+                                <div className='information col-span-2'>
+                                  <h1 className='text-black text-[14px] font-semibold overflow-wrap break-all'>{item?.movie_name}</h1>
+                                  <div className='mt-3'>
+                                    <div className='flex items-center gap-2'>
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" className="bi bi-calendar-event-fill" viewBox="0 0 16 16">
+                                        <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2m-3.5-7h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5" />
+                                      </svg>
+                                      <p className='text-[14px]'>{item?.show_date}</p>
+                                    </div>
+                                    <div className='flex items-center gap-2'>
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" className="bi bi-clock-fill" viewBox="0 0 16 16">
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z" />
+                                      </svg>
+                                      <p className='text-[14px]'>{item?.show_time}</p>
+                                    </div>
+                                    <div className='flex items-center gap-2'>
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" className="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                                        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
+                                      </svg>
+                                      <p className='text-[14px]'>Wonder Cinema</p>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className='image flex items-center justify-center'>
+                                  <img src={item?.image} alt="" className='w-[50px]' />
+                                </div>
+                              </div>
+                              <div className='Bill-mobile-user mt-3 mb-8'>
+                                <div className='flex justify-between border-b '>
+                                  <p className='text-[13px]'>Mã hóa đơn</p>
+                                  <p className='text-[13px]'>{item?.bill_code}</p>
+                                </div>
+                                <div className='flex justify-between border-b '>
+                                  <p className='text-[13px]'>{item?.user_code}</p>
+                                  <p className='text-[13px]'>{item?.user_name}</p>
+                                </div>
+                                <div className='flex justify-between'>
+                                  <div>
+                                    <p className='text-[13px]'>Ghế</p>
+                                    <p className='font-semibold text-[13px]'>{item?.seat_code}</p>
+                                  </div>
+                                  <div className='text-right'>
+                                    <p className='text-[13px]'>Phòng</p>
+                                    <p className='font-semibold text-[13px]'>{item?.room_name}</p>
+                                  </div>
+                                </div>
+                                <div className='flex justify-between  border-b '>
+                                  <div className='flex gap-2 items-center'>
+                                    <p className='text-[13px]'>Bắp nước:</p>
+                                    <p className='font-semibold text-[13px]'>{item?.food_name || "Không có"}</p>
+                                  </div>
+                                </div>
+                                <div className='flex justify-between'>
+                                  <p className='text-[13px]'>Phí phụ thu</p>
+                                  <p className='font-semibold text-[13px]'>{item?.additional_fee || "0đ"}</p>
+                                </div>
+                                <div className='flex justify-between'>
+                                  <p className='text-lg billUserTotalMoney'>Tổng tiền</p>
+                                  <p className='font-semibold text-lg billUserTotalMoney'>{item?.total_money} đ</p>
+                                </div>
+                              </div>
+                              <div className='bill-mobile-logo text-center'>
+                                <p className=' text-[#1ACAAC] font-semibold text-sm'>Wonder Cinema</p>
                               </div>
                             </div>
                           </div>
@@ -155,11 +240,11 @@ const TicketHistory = () => {
         )}
       </div>
 
-        <footer className='text-white'>
+      <footer className='text-white'>
         <Footer />
       </footer>
-      </div>
-       )
-      }
-      
-      export default TicketHistory
+    </div>
+  )
+}
+
+export default TicketHistory
