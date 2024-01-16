@@ -25,9 +25,9 @@ const EditQlSp: React.FC<Props> = ({ projects }: Props) => {
         label: food?.name,
     }));
     const onFinish = (values: any) => {
-        console.log(values);
-
         putFood({ body: values, id: projects }).then((data: any) => {
+            console.log(data);
+
             if (data?.data?.food_name) {
                 message.error(data?.data?.food_name[0])
             } else {

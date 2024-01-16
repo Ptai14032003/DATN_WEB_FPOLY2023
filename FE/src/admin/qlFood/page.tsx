@@ -10,7 +10,7 @@ import Fuse from 'fuse.js';
 import { Waveform } from '@uiball/loaders';
 const { Column } = Table;
 
-export interface QlFoodCreateQlFood {
+export interface QlFood {
     key: string;
     food_name: string,
     name: string,
