@@ -4,6 +4,7 @@ import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
 import { QlPhim } from './page';
 import { useAddMoviesMutation } from '../../rtk/movies/movies';
+import { useFetchMovieTypeQuery } from '../../rtk/movie_type/page';
 const { TextArea } = Input;
 export interface QlGenre {
     id: string;
@@ -11,13 +12,13 @@ export interface QlGenre {
 }
 const CreateQlPhim: React.FC = () => {
     const [addMovies] = useAddMoviesMutation()
+    const { data: movie_type } = useFetchMovieTypeQuery()
     const [checkApi, setCheckApi] = useState(true)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
-    const typeMovies = ["2D", "3D"];
-    const typeOptions = typeMovies.map((type) => ({
-        value: type,
-        label: type,
+    const typeOptions = movie_type?.data?.map((type: any) => ({
+        value: type?.id,
+        label: type?.type_name,
     }));
     const onFinish = (values: any) => {
         if (checkApi) {

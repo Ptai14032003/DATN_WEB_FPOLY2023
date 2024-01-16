@@ -21,8 +21,8 @@ const Booking = () => {
     const [isFixed, setIsFixed] = useState(false);
     const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
     const [idGhe, setidGhe] = useState<any[]>([])
-    const [room, setRoom] = useState<any>()
     const [combo, setCombo] = useState<[]>([]);
+    const [room, setRoom] = useState<any>()
     const [priceFood, setPriceFood] = useState(0)
     const [money, setMoney] = useState<number>(0);
     const [groupSeats, setGroupSeats] = useState<any>();
@@ -36,6 +36,7 @@ const Booking = () => {
     const [minute, setMinute] = useState<number>(10);
     const [second, setSecond] = useState<number>(0)
     const navigate = useNavigate();
+
     useEffect(() => {
         if (seats) {
             const groupedSeats = seats.reduce((acc: any, seat: any) => {

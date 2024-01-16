@@ -63,18 +63,18 @@ const ThongKe = () => {
                         total_money_ticket: 0,
                         total_money_food: 0
                     })
-                    if (typeSearch === "month") {
-                        setDataChart(fetchdata?.data?.dailyRevenue)
-                    } else {
-                        setDataChart(fetchdata?.data?.monthlyRevenue)
-                    }
+                    setDataChart(
+                        typeSearch === 'month'
+                            ? fetchdata?.data?.dailyRevenue
+                            : fetchdata?.data?.monthlyRevenue
+                    );
                 } else {
                     setData(fetchdata?.data)
-                    if (typeSearch === "month") {
-                        setDataChart(fetchdata?.data?.dailyRevenue)
-                    } else {
-                        setDataChart(fetchdata?.data?.monthlyRevenue)
-                    }
+                    setDataChart(
+                        typeSearch === 'month'
+                            ? fetchdata?.data?.dailyRevenue
+                            : fetchdata?.data?.monthlyRevenue
+                    );
                 }
 
             })
@@ -101,18 +101,19 @@ const ThongKe = () => {
                             total_money_ticket: 0,
                             total_money_food: 0
                         })
-                        if (newData?.timeline === "day") {
-                            setDataChart(fetchdata?.data?.dailyRevenue)
-                        } else {
-                            setDataChart(fetchdata?.data?.monthlyRevenue)
-                        }
+                        setType("month")
+                        setDataChart(
+                            newData.timeline === 'day'
+                                ? fetchdata?.data?.dailyRevenue
+                                : fetchdata?.data?.monthlyRevenue
+                        );
                     } else {
-                        setData(fetchdata?.data)
-                        if (newData?.timeline === "day") {
-                            setDataChart(fetchdata?.data?.dailyRevenue)
-                        } else {
-                            setDataChart(fetchdata?.data?.monthlyRevenue)
-                        }
+                        setType("month")
+                        setDataChart(
+                            newData.timeline === 'day'
+                                ? fetchdata?.data?.dailyRevenue
+                                : fetchdata?.data?.monthlyRevenue
+                        );
                     }
                 })
             }
@@ -266,7 +267,7 @@ const ThongKe = () => {
                         }}
                     >
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey={`${tbTime.chuKi === "year" ? "month" : "date"}`} tickFormatter={(value) => `${tbTime.chuKi === "year" ? `Tháng ${value}` : `Ngày ${moment(value).format("DD-MM-YYYY")}`}`} />
+                        <XAxis dataKey={`${tbTime.chuKi === "year" ? "month" : "date"}`} tickFormatter={(value) => `${tbTime.chuKi === "year" ? `Tháng ${value}` : `${value}`}`} />
                         <YAxis axisLine={false} domain={[0, Number(data?.total_money_ticket)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
                         <Tooltip content={<ContentRechart />} />
                         <Legend content={<DataName />} />

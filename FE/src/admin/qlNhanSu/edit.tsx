@@ -40,7 +40,7 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
         updateNhanSu({ body: values, id: projects }).then((data: any) => {
             if (!data?.data.message) {
                 setDataError(data?.data)
-            } else { setIsModalOpen(false); setIsModalOpen(false), setDataError(data?.data); formRef.current?.resetFields(); message.success("Sửa nhân sự thành công") }
+            } else { setIsModalOpen(false); setIsModalOpen(false), setDataError(data?.data); message.success("Sửa nhân sự thành công") }
         })
     };
 
@@ -144,6 +144,11 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
                                 style={{ width: 200 }}
                                 options={RoleOptions}
                             />
+                        </Form.Item>
+                        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                            <Button htmlType="submit">
+                                Sửa
+                            </Button>
                         </Form.Item>
                     </Form>
                 ) : (

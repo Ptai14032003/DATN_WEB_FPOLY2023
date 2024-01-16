@@ -4,6 +4,7 @@ import { Button, Form, Image, Input, InputNumber, Modal, Select, Upload, message
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
 import { useFetchMovieIdQuery, useUpdateMoviesMutation } from '../../rtk/movies/movies';
+import { useFetchMovieTypeQuery } from '../../rtk/movie_type/page';
 const { TextArea } = Input;
 type Props = {
     projects: string
@@ -15,7 +16,7 @@ type QlPhimEdit = {
     country_name: string;
     producer_name: string;
     actor_name: string;
-    type_name: string;
+    movie_type_id: string;
     genre: string;
     director: string;
     image: string;
@@ -27,6 +28,7 @@ type QlPhimEdit = {
 }
 const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
     const { data: dataMovies } = useFetchMovieIdQuery(projects);
+    const { data: movie_type } = useFetchMovieTypeQuery()
     useEffect(() => {
         if (dataMovies) {
             const newData: QlPhimEdit = {
@@ -35,7 +37,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                 country_name: dataMovies?.country_name,
                 producer_name: dataMovies?.producer_name,
                 actor_name: dataMovies?.actor_name,
-                type_name: dataMovies?.type_name,
+                movie_type_id: dataMovies?.type_name,
                 genre: dataMovies?.genre,
                 director: dataMovies?.director,
                 movie_time: dataMovies?.movie_time,
@@ -53,15 +55,15 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
     const [putMovie] = useUpdateMoviesMutation();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
-    const typeMovies = ["2D", "3D"];
-
-    const typeOptions = typeMovies.map((type) => ({
-        value: type,
-        label: type,
+    const typeOptions = movie_type?.data?.map((type: any) => ({
+        value: type?.id,
+        label: type?.type_name,
     }));
     const onFinish = (values: any) => {
         console.log(values);
         putMovie({ body: values, id: projects }).then((data: any) => {
+            console.log(data);
+
             if (data?.data?.start_date) {
                 message.error(data?.data?.start_date[0]);
             } else if (data?.data?.end_date) {
@@ -71,7 +73,6 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
             } else {
                 setIsModalOpen(false);
                 message.success("Sửa thành công");
-                formRef.current?.resetFields();
             }
         })
 
@@ -121,7 +122,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
                         </Form.Item>
                         <Form.Item<QlPhimEdit>
                             label="Dạng phim"
-                            name="type_name"
+                            name="movie_type_id"
                             rules={[{ required: true, message: 'Vui lòng nhập dạng phim !' }]}
                         >
                             <Select className='ml-[-72px]'

@@ -143,7 +143,7 @@ const AdminQlBill: React.FC = () => {
                     color="black"
                 />
             ) : (
-                <Table dataSource={dataTable} pagination={{ pageSize: 4, }}>
+                <Table dataSource={dataTable} pagination={{ pageSize: 10 }}>
                     <Column title="Mã hoá đơn " dataIndex="bill_code" key="bill_code" />
                     <Column title="Mã người dùng " dataIndex="user_code" key="user_code" />
                     <Column title="Tên người dùng " dataIndex="user_name" key="user_name" />

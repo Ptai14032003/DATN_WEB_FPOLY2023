@@ -7,6 +7,13 @@ import { useFetchFoodIDQuery, useFetchTypeFoodsQuery, useUpdateFoodMutation } fr
 type Props = {
     projects: string
 }
+export interface QlFoodCreate {
+    key: string;
+    food_name: string,
+    food_type_id: string,
+    price: number,
+    image: string,
+}
 const EditQlSp: React.FC<Props> = ({ projects }: Props) => {
     const { data: dataTypeFood } = useFetchTypeFoodsQuery()
     const { data } = useFetchFoodIDQuery(projects)
@@ -24,8 +31,10 @@ const EditQlSp: React.FC<Props> = ({ projects }: Props) => {
             if (data?.data?.food_name) {
                 message.error(data?.data?.food_name[0])
             } else {
-                setIsModalOpen(false), message.success("Sửa thành công");
-                formRef.current?.resetFields();
+                message.success("Sửa thành công");
+                setTimeout(() => {
+                    setIsModalOpen(false)
+                }, 3000)
             }
         })
     };
@@ -59,7 +68,7 @@ const EditQlSp: React.FC<Props> = ({ projects }: Props) => {
                         autoComplete="off"
                         initialValues={data}
                     >
-                        <Form.Item<QlFood>
+                        <Form.Item<QlFoodCreate>
                             label="Sản phẩm"
                             name="food_name"
                             rules={[{ required: true, message: 'Vui lòng nhập tên sản phẩm !' }]}
@@ -67,16 +76,16 @@ const EditQlSp: React.FC<Props> = ({ projects }: Props) => {
                             <Input />
                         </Form.Item>
 
-                        <Form.Item<QlFood>
+                        <Form.Item<QlFoodCreate>
                             label="Giá"
                             name="price"
                             rules={[{ required: true, message: 'Vui lòng nhập giá sản phẩm !' }]}
                         >
                             <InputNumber min={0} style={{ width: 150 }} />
                         </Form.Item>
-                        <Form.Item<QlFood>
+                        <Form.Item<QlFoodCreate>
                             label="Loại sản phẩm"
-                            name="name"
+                            name="food_type_id"
                             rules={[{ required: true, message: 'Vui lòng nhập loại sản phẩm !' }]}
                         >
                             <Select className='ml-[-72px]'
@@ -85,13 +94,13 @@ const EditQlSp: React.FC<Props> = ({ projects }: Props) => {
                                 options={selectTypeFood}
                             />
                         </Form.Item>
-                        <Form.Item<QlFood>>
+                        <Form.Item<QlFoodCreate>>
                             <div className='mx-[60%]'>
                                 <Image className='' width={150}
                                     src={data?.image} />
                             </div>
                         </Form.Item>
-                        <Form.Item<QlFood>
+                        <Form.Item<QlFoodCreate>
                             label="Ảnh"
                             name="image"
                             rules={[{ required: true, message: 'Vui lòng nhập ảnh !' }]}

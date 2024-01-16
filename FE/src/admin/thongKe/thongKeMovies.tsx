@@ -40,8 +40,6 @@ const ThongKeMovies = () => {
                         start: date_start,
                         end: date_end
                     }
-                    console.log(newData);
-
                     revenueMovies(newData).then((data: any) => {
                         if (data?.data?.message) {
                             message.error(data?.data?.message);
@@ -92,18 +90,8 @@ const ThongKeMovies = () => {
                         </div>
                     </Space>
                     <div className="flex justify-around gap-20">
-                        {isLoading && (
-                            <div
-                                className="inline-block mt-[50px] h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                                role="status">
-                                <span
-                                    className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
-                                >Loading...</span>
-                            </div>
-                        )
-                        }
-                        {data && (
-                            <div className="overflow-x-auto rounded-lg border border-gray-200">
+                        {data && data.length > 0 && (
+                            <div className="overflow-x-auto rounded-lg border border-gray-200 w-[80%] mt-[50px]">
                                 <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
                                     <thead className="ltr:text-left rtl:text-right">
                                         <tr>
@@ -112,14 +100,16 @@ const ThongKeMovies = () => {
                                             <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Ngày bắt đầu chiếu</th>
                                         </tr>
                                     </thead>
-
                                     <tbody className="divide-y divide-gray-200">
-                                        <tr>
-                                            <td className="whitespace-nowrap px-4 py-2 text-gray-900">{(Number(data?.total_revenue))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ</td>
-                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">{(Number(data?.total_tickets_sold))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ</td>
-                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700"> {data?.start_date !== undefined ? `${moment(data?.start_date).format("DD-MM-YYYY")}}` : ""}</td>
-                                        </tr>
+                                        {data?.map((item: any) => (
+                                            <tr>
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-900">{(Number(item?.total_revenue))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ</td>
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">{item?.total_tickets_sold}</td>
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700"> {item?.start_date !== undefined ? `${moment(item?.start_date).format("DD-MM-YYYY")}` : ""}</td>
+                                            </tr>
+                                        ))}
                                     </tbody>
+
                                 </table>
                             </div>
                         )}
