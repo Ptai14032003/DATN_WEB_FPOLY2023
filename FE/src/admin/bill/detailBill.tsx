@@ -70,14 +70,18 @@ const DetailBill: React.FC<Props> = ({ projects }: Props) => {
                                         <div>{dataBill?.bill?.room_name}</div>
                                     </div>
                                     <div className="">
-                                        <div>Ngày chiếu :</div>
-                                        <div>{dataBill?.bill?.user_name}</div>
+                                        <div>Ngày đặt vé :</div>
+                                        <div>{dataBill?.bill?.booking_date}</div>
                                     </div>
                                     <div className="py-5">
-                                        <div>Giờ chiếu :</div>
+                                        <div>Ngày chiếu :</div>
                                         <div>{dataBill?.bill?.show_date}</div>
                                     </div>
                                     <div className="">
+                                        <div>Giờ chiếu :</div>
+                                        <div>{dataBill?.bill?.show_time}</div>
+                                    </div>
+                                    <div className="py-5">
                                         <div>Trạng thái vé :</div>
                                         <div>{dataBill?.bill?.payment_status}</div>
                                     </div>
