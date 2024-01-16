@@ -304,7 +304,7 @@ class BillController extends Controller
         }
         if ($bill->export_ticket == 0) {
             $bills = Bill::where('id', $bill_id)->update(['export_ticket' => 1]);
-            if($request->personnel_code){
+            if ($request->personnel_code) {
                 $bills = Bill::where('id', $bill_id)->update(['personnel_code' => $request->personnel_code]);
             }
             return response()->json(['message' => "Xuất vé thành công"]);
@@ -315,13 +315,15 @@ class BillController extends Controller
 
     //chi tiết hóa đơn
 
-    public function bill_detail(Request $request){
+    public function bill_detail(Request $request)
+    {
         $bill_id = $request->bill_id;
         $bill_detail = Bill::leftjoin('users', 'users.user_code', '=', 'bills.user_code')
             ->leftjoin('personnels', 'personnels.personnel_code', '=', 'bills.personnel_code')
             ->join('tickets', 'tickets.bill_id', '=', 'bills.id')
             ->join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
             ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
+            ->join('rooms', 'rooms.id', '=', 'showtimes.room_id')
             ->where('bills.id', $bill_id)
             ->select(
                 'bills.id',
@@ -336,6 +338,7 @@ class BillController extends Controller
                 'bills.total_money',
                 'movies.movie_name',
                 'movies.image',
+                'rooms.name as room_name',
                 DB::raw('DATE_FORMAT(bills.created_at, "%d-%m-%Y") as booking_date'),
                 DB::raw('DATE_FORMAT(showtimes.show_date, "%d-%m-%Y") as show_date'),
                 DB::raw('CASE 
@@ -357,19 +360,20 @@ class BillController extends Controller
                 'bills.total_money',
                 'movies.movie_name',
                 'movies.image',
+                'room_name',
                 'booking_date',
                 'show_date',
                 'payment_status'
             )
             ->orderBy('bills.id', 'desc')
             ->get();
-            $tickets = Ticket::join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
+        $tickets = Ticket::join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
             ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
             ->join('rooms', 'rooms.id', '=', 'showtimes.room_id')
             ->join('seats', 'seats.id', '=', 'tickets.id_seat')
             ->where('bill_id', $bill_id)
-            ->select('movies.movie_name', 'showtimes.show_date as date', 'showtimes.show_time as time', 'rooms.name as room_name', 'seats.seat_code', 'tickets.price')
-            ->groupBy('movie_name', 'date', 'time', 'room_name', 'seat_code', 'tickets.price')
+            ->select('seats.seat_code', 'tickets.price')
+            ->groupBy('seat_code', 'tickets.price')
             ->get();
         $ticket_foods = Ticket_Food::join('foods', 'foods.id', '=', 'ticket_foods.food_id')
             ->where('bill_id', $bill_id)
@@ -381,6 +385,6 @@ class BillController extends Controller
             ->groupBy('foods.food_name', 'ticket_foods.quantity')
             ->get();
 
-        return response()->json(['bill'=>$bill_detail,'tickets' => $tickets, 'ticket_foods' => $ticket_foods]);
+        return response()->json(['bill' => $bill_detail, 'tickets' => $tickets, 'ticket_foods' => $ticket_foods]);
     }
 }
