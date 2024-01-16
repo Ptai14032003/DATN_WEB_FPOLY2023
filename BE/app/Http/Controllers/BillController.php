@@ -147,7 +147,7 @@ class BillController extends Controller
             ->leftJoin('ticket_foods', 'ticket_foods.bill_id', '=', 'bills.id')
             ->leftJoin('foods', 'foods.id', '=', 'ticket_foods.food_id')
             ->select(
-                'bills.id',
+                'bills.bill_code',
                 DB::raw('IFNULL(bills.user_code, "Không có") as user_code'),
                 DB::raw('IFNULL(users.name, "Không có") as user_name'),
                 DB::raw('IFNULL(bills.personnel_code, "Không có") as personnel_code'),
@@ -173,7 +173,7 @@ class BillController extends Controller
                 DB::raw('GROUP_CONCAT(DISTINCT IFNULL(CONCAT(ticket_foods.quantity, " - ", foods.food_name), " ")) as food_name')
             )
             ->groupBy(
-                'bills.id',
+                'bills.bill_code',
                 'user_code',
                 'user_name',
                 'personnel_code',
@@ -200,8 +200,8 @@ class BillController extends Controller
     public function get_list_bill_export(Request $request)
     {
         $data = $request->all();
-        $user = User::where('user_code', $data['user_code'])->first();
-        if ($user) {
+        // $user = User::where('user_code', $data['user_code'])->first();
+        
             $bills = Bill::leftjoin('users', 'users.user_code', '=', 'bills.user_code')
                 ->leftjoin('personnels', 'personnels.personnel_code', '=', 'bills.personnel_code')
                 ->join('tickets', 'tickets.bill_id', '=', 'bills.id')
@@ -209,9 +209,9 @@ class BillController extends Controller
                 ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
                 ->where('bills.status', '=', 1)
                 ->where('bills.export_ticket', '=', 0)
-                ->where('bills.user_code', $user->user_code)
+                ->where('bills.bill_code', $data['bill_code'])
                 ->select(
-                    'bills.id',
+                    'bills.bill_code',
                     'bills.user_code',
                     'users.name as user_name',
                     'bills.personnel_code',
@@ -231,7 +231,7 @@ class BillController extends Controller
                 END as payment_status')
                 )
                 ->groupBy(
-                    'bills.id',
+                    'bills.bill_code',
                     'bills.user_code',
                     'users.name',
                     'bills.personnel_code',
@@ -248,17 +248,18 @@ class BillController extends Controller
                 )
                 ->orderBy('bills.id', 'desc')
                 ->get();
-
+        if ($bills) {
             return response()->json($bills);
         } else {
-            return response()->json(['error' => "Mã người dùng không tồn tại"], 404);
+            return response()->json(['error' => "Mã hóa đơn không tồn tại"], 404);
         }
     }
 
     public function get_bill_export(Request $request)
     {
-        $bill_id = $request->bill_id;
-        $bill = Bill::find($bill_id);
+        $bill_code = $request->bill_code;
+        $bill = Bill::where('bill_code',$bill_code)->first();
+        $bill_id=$bill->id;
         if (!$bill) {
             return response()->json(['error' => "Hóa đơn không tồn tại"]);
         }
@@ -289,8 +290,9 @@ class BillController extends Controller
 
     public function export(Request $request)
     {
-        $bill_id = $request->bill_id;
-        $bill = Bill::find($bill_id);
+        $bill_code = $request->bill_code;
+        $bill = Bill::where('bill_code',$bill_code)->first();
+        $bill_id=$bill->id;
         if (!$bill) {
             return response()->json(['error' => "Hóa đơn không tồn tại"]);
         }
