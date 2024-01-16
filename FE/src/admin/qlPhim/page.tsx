@@ -178,7 +178,7 @@ const AdminQlPhim: React.FC = () => {
                     color="black"
                 />
             ) : (
-                <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
+                <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 8, }}>
                     <Column title="Phim " dataIndex="movie_name" key="movie_name" />
                     <Column title="Nước Sản Xuất " dataIndex="country_name" key="country_name" />
                     <Column title="Dạng Phim" dataIndex="type_name" key="type_name" />
