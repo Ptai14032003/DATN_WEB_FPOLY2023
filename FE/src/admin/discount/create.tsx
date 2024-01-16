@@ -10,15 +10,29 @@ const CreateQlDiscount: React.FC = () => {
     const [addDiscount] = useAddDiscountMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
+    const [checkApi, setCheckApi] = useState(true)
+    const [messageApi, contextHolder] = message.useMessage();
     const onFinish = (values: any) => {
-
-        addDiscount(values).then((data: any) => { setIsModalOpen(false); message.success("Thêm thành công") })
+        addDiscount(values).then((data: any) => {
+            if (data?.error?.status === 400) {
+                if (data?.error?.data?.message?.start) {
+                    message.error(data?.error?.data?.message?.start[0]);
+                } else
+                    if (data?.error?.data?.message?.end) {
+                        message.error(data?.error?.data?.message?.end[0]);
+                    }
+            } else {
+                setCheckApi(false)
+                setIsModalOpen(false); message.success("Thêm thành công")
+            }
+        }).catch(() => { })
 
     };
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
     };
     const showModal = () => {
+        setCheckApi(true)
         setIsModalOpen(true);
     };
     const handleCancel = () => {
@@ -27,6 +41,7 @@ const CreateQlDiscount: React.FC = () => {
     };
     return (
         <ConfigProvider locale={viVN}>
+            {contextHolder}
             <Button onClick={showModal}>Thêm mã khuyến mãi</Button>
             <Modal title="Thêm mã khuyến mãi" open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
                 <Form className='mr-[60px]'

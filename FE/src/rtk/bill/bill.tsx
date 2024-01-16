@@ -10,6 +10,13 @@ const billApi = createApi({
             query: () => `admin/history_bills/`,
             providesTags: ["bill"]
         }),
+        getBillDeital: builder.query<any, any>({
+            query: (id) => ({
+                url: `/admin/bill_detail/${id}`,
+                method: "GET",
+            }),
+            providesTags: ["bill"]
+        }),
         setBill: builder.mutation<any, any>({
             query: (body) => ({
                 url: `/Payment`,
@@ -37,5 +44,5 @@ const billApi = createApi({
 
     })
 })
-export const { useSetBillMutation, useCheckBillMutation, useSendMailMutation,useFetchBillAdminQuery } = billApi
+export const { useSetBillMutation, useCheckBillMutation, useSendMailMutation, useFetchBillAdminQuery, useGetBillDeitalQuery } = billApi
 export default billApi

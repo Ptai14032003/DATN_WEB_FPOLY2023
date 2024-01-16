@@ -30,7 +30,7 @@ const foodsApi = createApi({
         }),
         deleteMultipleFood: builder.mutation<void, any>({
             query: (body) => ({
-                url: `/deleteMultipleFood`,
+                url: `/destroyMultipleFood`,
                 method: "POST",
                 body
             }),

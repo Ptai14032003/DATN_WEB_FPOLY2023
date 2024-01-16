@@ -6,6 +6,7 @@ use App\Models\Bill;
 use App\Models\Ticket;
 use App\Models\Ticket_Food;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -169,6 +170,7 @@ class BillController extends Controller
                 DB::raw('CASE 
         WHEN bills.export_ticket = 0 THEN "Chờ xuất vé" 
         WHEN bills.export_ticket = 1 THEN "Đã xuất vé" 
+        WHEN bills.export_ticket = 2 THEN "Quá hạn xuất vé" 
         END as export_ticket'),
                 DB::raw('GROUP_CONCAT(DISTINCT seats.seat_code) as seat_code'),
                 DB::raw('GROUP_CONCAT(DISTINCT IFNULL(CONCAT(ticket_foods.quantity, " - ", foods.food_name), " ")) as food_name')
@@ -208,6 +210,8 @@ class BillController extends Controller
             return response()->json(['error' => "Mã hóa đơn không tồn tại"], 404);
         } elseif ($bill->export_ticket == 1) {
             return response()->json(['error' => "Hóa đơn đã xuất vé rồi"]);
+        } elseif ($bill->export_ticket == 2) {
+            return response()->json(['error' => "Hóa đơn đã quá hạn xuất vé"]);
         } elseif ($bill->status == 0) {
             return response()->json(['error' => "Hóa đơn chưa được thanh toán"]);
         } elseif ($bill->status == 2) {
@@ -317,16 +321,15 @@ class BillController extends Controller
 
     //chi tiết hóa đơn
 
-    public function bill_detail(Request $request)
+    public function bill_detail(Request $request, $id)
     {
-        $bill_id = $request->bill_id;
         $bill_detail = Bill::leftjoin('users', 'users.user_code', '=', 'bills.user_code')
             ->leftjoin('personnels', 'personnels.personnel_code', '=', 'bills.personnel_code')
             ->join('tickets', 'tickets.bill_id', '=', 'bills.id')
             ->join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
             ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
             ->join('rooms', 'rooms.id', '=', 'showtimes.room_id')
-            ->where('bills.id', $bill_id)
+            ->where('bills.id', $id)
             ->select(
                 'bills.id',
                 'bills.bill_code',
@@ -370,17 +373,17 @@ class BillController extends Controller
                 'payment_status'
             )
             ->orderBy('bills.id', 'desc')
-            ->get();
+            ->first();
         $tickets = Ticket::join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
             ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
             ->join('rooms', 'rooms.id', '=', 'showtimes.room_id')
             ->join('seats', 'seats.id', '=', 'tickets.id_seat')
-            ->where('bill_id', $bill_id)
+            ->where('bill_id', $id)
             ->select('seats.seat_code', 'tickets.price')
             ->groupBy('seat_code', 'tickets.price')
             ->get();
         $ticket_foods = Ticket_Food::join('foods', 'foods.id', '=', 'ticket_foods.food_id')
-            ->where('bill_id', $bill_id)
+            ->where('bill_id', $id)
             ->select(
                 'foods.food_name',
                 'ticket_foods.quantity',
@@ -389,6 +392,28 @@ class BillController extends Controller
             ->groupBy('foods.food_name', 'ticket_foods.quantity')
             ->get();
 
-        return response()->json(['bill' => $bill_detail, 'tickets' => $tickets, 'ticket_foods' => $ticket_foods]);
+        return response()->json([
+            'bill' => [
+                'id' => $bill_detail->id,
+                'bill_code' => $bill_detail->bill_code,
+                'user_code' => $bill_detail->user_code,
+                'user_name' => $bill_detail->user_name,
+                'personnel_code' => $bill_detail->personnel_code,
+                'personnel_name' => $bill_detail->personnel_name,
+                'total_ticket' => $bill_detail->total_ticket,
+                'total_combo' => $bill_detail->total_combo,
+                'additional_fee' => $bill_detail->additional_fee,
+                'total_money' => $bill_detail->total_money,
+                'movie_name' => $bill_detail->movie_name,
+                'image' => $bill_detail->image,
+                'room_name' => $bill_detail->room_name,
+                'booking_date' => $bill_detail->booking_date,
+                'show_date' => $bill_detail->show_date,
+                'show_time' => $bill_detail->show_time,
+                'payment_status' => $bill_detail->payment_status,
+            ],
+            'tickets' => $tickets,
+            'ticket_foods' => $ticket_foods
+        ]);
     }
 }

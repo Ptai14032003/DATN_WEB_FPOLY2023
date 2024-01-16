@@ -34,7 +34,6 @@ const AdminQlPhim: React.FC = () => {
     const [deleteMultiple] = useDeleteMultipleMovieMutation()
     const navigate = useNavigate();
     const status = error?.status;
-    //checkApiStatus(status);
     const [deleteMovie] = useDeleteMoviesMutation()
     const [dataTable, setDataTable] = useState<QlPhim[]>([])
     const [searchTerm, setSearchTerm] = useState('');
@@ -47,9 +46,11 @@ const AdminQlPhim: React.FC = () => {
         const data = {
             ids: selectedRowKeys
         }
-        // deleteMultiple(data).then(() => {
-        //     message.success("Xóa thành công");
-        // })
+        deleteMultiple(data).then((req: any) => {
+            if (req?.data?.data?.success) {
+                message.success(req?.data?.data?.success);
+            }
+        })
 
     }
     const rowSelection = {
@@ -208,8 +209,8 @@ const AdminQlPhim: React.FC = () => {
                                 <a><EditQlPhim key={record.key} projects={record.key} /></a>
                                 <a>
                                     <Popconfirm
-                                        title="Delete the task"
-                                        description="Are you sure to delete this task?"
+                                        title="Xoá"
+                                        description="Bạn có muốn xoá không?"
                                         onConfirm={() => {
                                             deleteOne(record.key);
                                         }}

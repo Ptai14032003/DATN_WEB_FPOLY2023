@@ -10,7 +10,7 @@ import Fuse from 'fuse.js';
 import { Waveform } from '@uiball/loaders';
 const { Column } = Table;
 
-export interface QlFoodCreateQlFood {
+export interface QlFood {
     key: string;
     food_name: string,
     name: string,
@@ -43,9 +43,11 @@ const AdminQlSp: React.FC = () => {
         const data = {
             ids: selectedRowKeys
         }
-        // deleteMultiple(data).then(() => {
-        //     message.success("Xóa thành công");
-        // })
+        deleteMultiple(data).then((req: any) => {
+            if (req?.data?.data?.success) {
+                message.success(req?.data?.data?.success);
+            }
+        })
     }
     const rowSelection = {
         selectedRowKeys,

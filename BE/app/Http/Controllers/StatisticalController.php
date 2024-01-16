@@ -32,8 +32,8 @@ class StatisticalController extends Controller
             ->join("bills", "bills.id", "=", "tickets.bill_id")
             ->where("movies.movie_name", $data['movie_name'])
             ->where(function ($query) use ($start, $end) {
-                $query->whereRaw("CONVERT_TZ(bills.updated_at, '+00:00', '+07:00') BETWEEN ? AND ?", [$start, $end])
-                    ->orWhereDate(DB::raw("CONVERT_TZ(bills.updated_at, '+00:00', '+07:00')"), $start);
+                $query->whereRaw("CONVERT_TZ(bills.created_at, '+00:00', '+07:00') BETWEEN ? AND ?", [$start, $end])
+                    ->orWhereDate(DB::raw("CONVERT_TZ(bills.created_at, '+00:00', '+07:00')"), $start);
             })
             ->where("bills.status", 1)
             ->select(
@@ -82,11 +82,11 @@ class StatisticalController extends Controller
         $billsQuery = Bill::where('status', 1);
 
         if ($data['timeline'] == 'year') {
-            $billsQuery->whereYear("updated_at", $data['year']);
+            $billsQuery->whereYear("created_at", $data['year']);
         } elseif ($data['timeline'] == 'month') {
-            $billsQuery->whereYear("updated_at", $data['year'])->whereMonth("updated_at", $data['month']);
+            $billsQuery->whereYear("created_at", $data['year'])->whereMonth("created_at", $data['month']);
         } elseif ($data['timeline'] == 'day') {
-            $billsQuery->whereBetween("updated_at", [$start, $end]);
+            $billsQuery->whereBetween("created_at", [$start, $end]);
         }
 
         $bills = $billsQuery->select(
@@ -99,11 +99,11 @@ class StatisticalController extends Controller
 
         $ticketAndFoodQuery = function ($query) use ($data, $start, $end) {
             if ($data['timeline'] == 'year') {
-                $query->whereYear("bills.updated_at", $data['year']);
+                $query->whereYear("bills.created_at", $data['year']);
             } elseif ($data['timeline'] == 'month') {
-                $query->whereYear("bills.updated_at", $data['year'])->whereMonth("bills.updated_at", $data['month']);
+                $query->whereYear("bills.created_at", $data['year'])->whereMonth("bills.created_at", $data['month']);
             } elseif ($data['timeline'] == 'day') {
-                $query->whereBetween("bills.updated_at", [$start, $end]);
+                $query->whereBetween("bills.created_at", [$start, $end]);
             }
         };
 
@@ -148,7 +148,7 @@ class StatisticalController extends Controller
             $dailyRevenue = [];
 
             while ($start <= $end) {
-                $dailySum = Bill::whereDate('updated_at', $start)->where('status', 1)->sum('total_money');
+                $dailySum = Bill::whereDate('created_at', $start)->where('status', 1)->sum('total_money');
                 $dailyRevenue[] = ['date' => Carbon::parse($start)->format('d-m-Y'), 'total_money' => $dailySum];
                 $start = Carbon::parse($start)->addDay()->format('Y-m-d');
             }
@@ -162,7 +162,7 @@ class StatisticalController extends Controller
                 $firstDay = Carbon::create($data['year'], $month, 1);
                 $lastDay = $firstDay->copy()->endOfMonth();
 
-                $sum = Bill::whereBetween('updated_at', [$firstDay, $lastDay])->where('status', 1)
+                $sum = Bill::whereBetween('created_at', [$firstDay, $lastDay])->where('status', 1)
                     ->select(DB::raw('COALESCE(SUM(total_money), 0) as total_money'))
                     ->value('total_money');
 
@@ -181,7 +181,7 @@ class StatisticalController extends Controller
             $dailyRevenue = [];
 
             while ($firstDay->lte($lastDay) && $firstDay->month == $data['month']) {
-                $dailySum = Bill::whereDate('updated_at', $firstDay)->where('status', 1)->sum('total_money');
+                $dailySum = Bill::whereDate('created_at', $firstDay)->where('status', 1)->sum('total_money');
                 $dailyRevenue[] = ['date' => $firstDay->format('d-m-Y'), 'total_money' => $dailySum];
                 $firstDay->addDay();
             }
@@ -218,10 +218,10 @@ class StatisticalController extends Controller
 
         if ($timeline == 'month') {
             $month = $data['month'];
-            $movies->whereMonth("bills.updated_at", $month)
-                ->whereYear("bills.updated_at", $year);
+            $movies->whereMonth("bills.created_at", $month)
+                ->whereYear("bills.created_at", $year);
         } elseif ($timeline == 'year') {
-            $movies->whereYear("bills.updated_at", $year);
+            $movies->whereYear("bills.created_at", $year);
         }
 
         $result = $movies->select(
@@ -260,10 +260,10 @@ class StatisticalController extends Controller
 
         if ($timeline == 'month') {
             $month = $data['month'];
-            $foods->whereMonth("bills.updated_at", $month)
-                ->whereYear("bills.updated_at", $year);
+            $foods->whereMonth("bills.created_at", $month)
+                ->whereYear("bills.created_at", $year);
         } elseif ($timeline == 'year') {
-            $foods->whereYear("bills.updated_at", $year);
+            $foods->whereYear("bills.created_at", $year);
         }
 
         $result = $foods->select(
@@ -301,10 +301,10 @@ class StatisticalController extends Controller
 
         if ($timeline == 'month') {
             $month = $data['month'];
-            $users->whereMonth("bills.updated_at", $month)
-                ->whereYear("bills.updated_at", $year);
+            $users->whereMonth("bills.created_at", $month)
+                ->whereYear("bills.created_at", $year);
         } elseif ($timeline == 'year') {
-            $users->whereYear("bills.updated_at", $year);
+            $users->whereYear("bills.created_at", $year);
         }
 
         $result = $users->select(
@@ -343,10 +343,10 @@ class StatisticalController extends Controller
 
         if ($timeline == 'month') {
             $month = $data['month'];
-            $users->whereMonth("bills.updated_at", $month)
-                ->whereYear("bills.updated_at", $year);
+            $users->whereMonth("bills.created_at", $month)
+                ->whereYear("bills.created_at", $year);
         } elseif ($timeline == 'year') {
-            $users->whereYear("bills.updated_at", $year);
+            $users->whereYear("bills.created_at", $year);
         }
 
         $result = $users->select(
@@ -357,10 +357,11 @@ class StatisticalController extends Controller
             DB::raw("SUM(bills.total_ticket) as total_ticket"),
             DB::raw("SUM(bills.total_money) as total_spent")
         )
-            ->groupBy("personnels.name", "personnels.personnel_code", "personnels.email", "personnels.phone_number", "total_ticket")
+            ->groupBy("personnels.name", "personnels.personnel_code", "personnels.email", "personnels.phone_number")
             ->orderByDesc("total_spent")
             ->take(5)
             ->get();
+
 
         if (count($result) == 0) {
             if ($data['timeline'] == 'year') {

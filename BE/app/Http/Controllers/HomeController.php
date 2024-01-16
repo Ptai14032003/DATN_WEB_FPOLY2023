@@ -70,27 +70,31 @@ class HomeController extends Controller
     public function show_time_movie(string $id)
     {
         $movie = Movie::find($id);
-
+        $currentTime = Carbon::now('Asia/Ho_Chi_Minh'); // Sử dụng múi giờ VN
         // Check if the movie is still in the "coming soon" phase
         if ($movie && $movie->start_date > Carbon::now()) {
             // return response()->json(['messages' => 'Phim này đang trong giai đoạn "Sắp chiếu"'], 404);
             return response()->json(['movie' => $movie, 'st_movie' => []]);
         }
         $st_movie = Movie::join('showtimes', 'showtimes.movie_id', '=', 'movies.id')
-            ->join('rooms', 'showtimes.room_id', '=', 'rooms.id')
-            ->join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
-            ->select(
-                'showtimes.show_date',
-                'showtimes.show_time',
-                'rooms.name as room',
-                'showtimes.id as showtime_id'
-            )
-            ->where('movies.id', $id)
-            ->get();
+        ->join('rooms', 'showtimes.room_id', '=', 'rooms.id')
+        ->join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
+        ->select(
+            'showtimes.show_date',
+            'showtimes.show_time',
+            'rooms.name as room',
+            'showtimes.id as showtime_id'
+        )
+        ->where('movies.id', $id)
+        ->whereDate('showtimes.show_date', '>=', $currentTime->toDateString())
+        ->whereTime('showtimes.show_time', '>=', $currentTime->format('H:i'))
+        ->orderby('showtimes.show_date','asc')
+        ->orderby('showtimes.show_time', 'asc')
+        ->get();
+
         $movies = Movie::join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
             ->where('movies.id', $id)->select('movies.*', 'movie_types.type_name')->first();
         $movies->makeHidden(['movie_type_id']);
-        date_default_timezone_set('Asia/Ho_Chi_Minh');
         foreach ($st_movie as $movie) {
 
             date_default_timezone_set('Asia/Ho_Chi_Minh');
@@ -134,7 +138,9 @@ class HomeController extends Controller
                 }
                 // Ẩn trường show_date trong các suất chiếu
                 $showtimes->makeHidden(['show_date', 'weekday']);
-
+                // if (Carbon::now()->gt(Carbon::parse($showtime->show_date . ' ' . $showtime->show_time))) {
+                //     continue;
+                // }
                 $result[] = [
                     'date' => Carbon::parse($date)->format('d-m'),
                     'weekday' => $weekday,
