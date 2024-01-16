@@ -107,11 +107,6 @@ public function showingAdmin(){
             ];
             Movie::create($data); 
             return response()->json([$data,'message' => 'Thêm phim thành công']);
-
-        // }
-        // }else{
-        //     return $this->returnError(202, 'file is required');
-        // }
        
     }
 }
