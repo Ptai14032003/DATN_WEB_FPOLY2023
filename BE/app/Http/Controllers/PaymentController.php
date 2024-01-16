@@ -255,7 +255,7 @@ class PaymentController extends Controller
         $total_money = $request->total_money;
         $user_code = $request->user_code ?? null;
         $personnel_code = $request->personnel_code;
-        $additional_fee = $request->additional_fee ?? 0;
+        $additional_fee = count($seat)*10000;
         $payment_method = $request->payment_method;
         $fee = true;
         if ($user_code != null) {

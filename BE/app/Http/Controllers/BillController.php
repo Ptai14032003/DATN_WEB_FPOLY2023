@@ -6,6 +6,7 @@ use App\Models\Bill;
 use App\Models\Ticket;
 use App\Models\Ticket_Food;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -169,6 +170,7 @@ class BillController extends Controller
                 DB::raw('CASE 
         WHEN bills.export_ticket = 0 THEN "Chờ xuất vé" 
         WHEN bills.export_ticket = 1 THEN "Đã xuất vé" 
+        WHEN bills.export_ticket = 2 THEN "Quá hạn xuất vé" 
         END as export_ticket'),
                 DB::raw('GROUP_CONCAT(DISTINCT seats.seat_code) as seat_code'),
                 DB::raw('GROUP_CONCAT(DISTINCT IFNULL(CONCAT(ticket_foods.quantity, " - ", foods.food_name), " ")) as food_name')
@@ -208,6 +210,8 @@ class BillController extends Controller
             return response()->json(['error' => "Mã hóa đơn không tồn tại"], 404);
         } elseif ($bill->export_ticket == 1) {
             return response()->json(['error' => "Hóa đơn đã xuất vé rồi"]);
+        } elseif ($bill->export_ticket == 2) {
+            return response()->json(['error' => "Hóa đơn đã quá hạn xuất vé"]);
         } elseif ($bill->status == 0) {
             return response()->json(['error' => "Hóa đơn chưa được thanh toán"]);
         } elseif ($bill->status == 2) {
@@ -317,9 +321,8 @@ class BillController extends Controller
 
     //chi tiết hóa đơn
 
-    public function bill_detail(Request $request,$id)
+    public function bill_detail(Request $request, $id)
     {
-       
         $bill_detail = Bill::leftjoin('users', 'users.user_code', '=', 'bills.user_code')
             ->leftjoin('personnels', 'personnels.personnel_code', '=', 'bills.personnel_code')
             ->join('tickets', 'tickets.bill_id', '=', 'bills.id')
