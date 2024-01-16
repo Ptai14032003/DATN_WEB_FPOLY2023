@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PromotionResource;
 use App\Models\Promotion;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
 class ApiPromotionController extends Controller
 {
     /**
@@ -25,9 +25,25 @@ class ApiPromotionController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = Validator::make(
+            $request->all(),
+            [  
+                'start' => 'after:today',
+                'end' => 'after:start',
+              
+            ],
+            [
+                'start.after' => "Ngày bắt đầu không được nhỏ hơn ngày hiện tại",
+                'end.after' => "Ngày kết thúc không được nhỏ hơn ngày bát đầu"
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json($validator->messages());
+        } else {
         $promotion = Promotion::create($request->all());
         return response()->json($promotion);
     }
+}
 
     /**
      * Display the specified resource.
@@ -50,6 +66,19 @@ class ApiPromotionController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $validator = Validator::make(
+            $request->all(),
+            [  
+                'end_date' => 'after:start_date',
+              
+            ],
+            [
+                'end_date.after' => "Ngày kết thúc không được nhỏ hơn ngày bát đầu"
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json($validator->messages());
+        } else {
         $promotion = Promotion::find($id);
         if($promotion){
             $promotion->update($request->all());
@@ -57,6 +86,7 @@ class ApiPromotionController extends Controller
             return  response()->json(['message'=>'Không tồn tại'], 404);
         }
     }
+}
 
     /**
      * Remove the specified resource from storage.
