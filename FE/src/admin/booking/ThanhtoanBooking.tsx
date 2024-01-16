@@ -129,8 +129,6 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
             bill_code: id
         }
         sumbitQR(newData).then((data: any) => {
-            console.log(data);
-
             if (data?.data?.bill_code) {
                 message.success(data?.data?.message);
                 setNewBillIdQR(data?.data?.bill_id)

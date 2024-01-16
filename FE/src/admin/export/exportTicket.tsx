@@ -66,8 +66,11 @@ const ExportTicket = () => {
         })
     }
     const ExportBill = async (values: any) => {
+        const checkLocal = localStorage.getItem("user");
+        const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
         const newData = {
-            bill_code: values.bill_code
+            bill_code: values.bill_code,
+            personnel_code: checkUser?.personnel_code
         }
         await exportBill(newData)
             .then((req: any) => {
