@@ -27,28 +27,16 @@ class ShowtimeApiController extends Controller
 
     public function store(Request $request)
     {
+        $flag = false;
         $validator = Validator::make(
             $request->all(),
             [
                 'show_date' => 'after:today',
-                'show_time' => [
-                    Rule::unique('showtimes')->where(function ($query) use ($request) {
-                        return $query->where([
-                            'room_id' => $request->input('room_id'),
-                            'show_date' => $request->input('show_date'),
-                        ]);
-                    }),
-                ],
             ],
-            [
-                'show_date.after' => "Ngày suất chiếu phải trước ngày hiện tại",
-                'show_time.unique' => 'Suất chiếu đã tồn tại cho thời gian và ngày đã chọn'
-            ]
         );
         if ($validator->fails()) {
             return response()->json(['flag' => false, 'message' => "Ngày suất chiếu phải trước ngày hiện tại"]);
         }
-        $flag = false;
         $existingShowtime = Showtime::join('movies', 'showtimes.movie_id', '=', 'movies.id')
             ->join('rooms', 'showtimes.room_id', '=', 'rooms.id')
             ->where('room_id', $request->input('room_id'))
