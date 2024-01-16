@@ -146,10 +146,10 @@ const AdminQlBill: React.FC = () => {
                 <Table dataSource={dataTable} pagination={{ pageSize: 10 }}>
                     <Column title="Mã hoá đơn " dataIndex="bill_code" key="bill_code" />
                     <Column title="Mã người dùng " dataIndex="user_code" key="user_code" />
-                    <Column title="Tên người dùng " dataIndex="user_name" key="user_name" />
+                    <Column title="Mã nhân viên " dataIndex="personnel_code" key="personnel_code" />
                     <Column title="Phim " dataIndex="movie_name" key="movie_name" />
-                    <Column title="Tổng vé" dataIndex="total_ticket" key="total_ticket" />
-                    <Column title="Tổng combo" dataIndex="total_combo" key="total_combo" />
+                    <Column title="Ngày đặt vé " dataIndex="booking_date" key="booking_date" />
+                    <Column title="Ngày chiếu " dataIndex="show_date" key="show_date" />
                     <Column title="Tổng tiền" dataIndex="total_money" key="total_money" render={(price: any) => `${(Number(price))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ `} />
                     <Column title="Trạng thái vé" dataIndex="export_ticket" key="export_ticket" />
                     <Column title="Action"
