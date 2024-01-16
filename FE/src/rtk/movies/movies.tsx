@@ -21,6 +21,10 @@ const moviesApi = createApi({
             query: () => "/movies/",
             providesTags: ["movies"]
         }),
+        fetchAdminBookingMovies: builder.query<any, void>({
+            query: () => "/showingAdmin/",
+            providesTags: ["movies"]
+        }),
         addMovies: builder.mutation<void, any>({
             query: (body) => ({
                 url: "/movies/",
@@ -56,7 +60,8 @@ const moviesApi = createApi({
             }),
             invalidatesTags: ["movies"]
         })
+
     })
 })
-export const { useFetchMoviesQuery, useFetchMovieIdQuery, useAddMoviesMutation, useUpdateMoviesMutation, useDeleteMoviesMutation, useDeleteMultipleMovieMutation } = moviesApi
+export const { useFetchMoviesQuery, useFetchMovieIdQuery, useAddMoviesMutation, useUpdateMoviesMutation, useDeleteMoviesMutation, useDeleteMultipleMovieMutation ,useFetchAdminBookingMoviesQuery} = moviesApi
 export default moviesApi

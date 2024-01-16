@@ -3,7 +3,7 @@ import "./ThanhToan.css"
 import { Button, Input, Modal, Select, message } from 'antd'
 import { usePaymentAdminMutation } from '../../rtk/payment_admin/payment_admin';
 import ExportTicketAdmin from './exportTicket';
-import { useExportBillMutation, useSumbitQRPaymentMutation } from '../../rtk/booking/booking';
+import { useSumbitQRPaymentMutation } from '../../rtk/booking/booking';
 type Props = {
     data: {
         selectedSeats: string[]
@@ -42,7 +42,7 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
     const [user_code, setUser] = useState("")
     const [typeThanhToan, getTypeThanhToan] = useState<number>()
     const [linkQR, setQR] = useState("")
-    const [newBillId, setNewBillId] = useState(null)
+    const [newBillCode, setNewBillCode] = useState(null)
     const [newBillIdQR, setNewBillIdQR] = useState(null)
     const [isExportTicketVisible, setIsExportTicketVisible] = useState(false);
     const handleCancel = () => {
@@ -88,7 +88,9 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
             if (data?.error?.data?.error) {
                 message.error(data?.error?.data?.error)
             } else {
-                setNewBillId(data?.data?.bill_id);
+                console.log(data);
+
+                setNewBillCode(data?.data?.bill_code);
                 if (data?.data?.link) {
                     setQR(data?.data?.link);
                     showModal()
@@ -110,7 +112,6 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
                     ...dataBill,
                     additionnal_fee: 0
                 }
-                console.log(newData);
                 PostPayment(newData)
             }
         } else {
@@ -120,15 +121,18 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
     }
     const CheckQR = (id: any) => {
         const newData = {
-            bill_id: id
+            bill_code: id
         }
-        console.log(newData);
-
         sumbitQR(newData).then((data: any) => {
-            if (data?.data?.bill_id) {
-                setIsExportTicketVisible(true);
-                setIsModalOpen(false);
+            console.log(data);
+
+            if (data?.data?.bill_code) {
+                message.success(data?.data?.message);
                 setNewBillIdQR(data?.data?.bill_id)
+                setIsExportTicketVisible(true);
+                setTimeout(() => {
+                    setIsModalOpen(false);
+                }, 1000);
             }
 
         })
@@ -221,22 +225,22 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
             >
                 Thanh toán
             </Button>
-            {typeThanhToan === 1 && newBillId !== null && (
-                <ExportTicketAdmin data={newBillId} />
+            {typeThanhToan === 1 && newBillCode !== null && (
+                <ExportTicketAdmin data={newBillCode} />
             )}
-            {typeThanhToan === 0 && newBillId !== null && (
+            {typeThanhToan === 0 && newBillCode !== null && (
 
                 <Modal open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className='ModalTicket'>
                     <iframe src={`${linkQR}`} />
                     <div className='flex justify-end'>
-                        <button type="submit" onClick={() => CheckQR(newBillId)} className='border border-blue-500 rounded-md px-3 py-1 hover:bg-blue-200'>
+                        <button type="submit" onClick={() => CheckQR(newBillCode)} className='border border-blue-500 rounded-md px-3 py-1 hover:bg-blue-200'>
                             Xác nhận
                         </button>
                     </div>
                 </Modal>
             )}
-            {newBillIdQR !== null && newBillId !== null && typeThanhToan === 0 && isExportTicketVisible && (
-                <ExportTicketAdmin data={newBillId} />
+            {newBillIdQR !== null && newBillCode !== null && typeThanhToan === 0 && isExportTicketVisible && (
+                <ExportTicketAdmin data={newBillCode} />
             )}
         </>
     )

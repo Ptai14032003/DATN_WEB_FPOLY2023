@@ -7,6 +7,7 @@ import { Modal } from 'antd';
 import logoweb from "/Wonder-logo-1.png"
 import "./export.css"
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
 
 interface Form {
     bill_code: string
@@ -40,8 +41,11 @@ const ExportTicket = () => {
         await listBill(newData)
             .then((data: any) => {
                 console.log(data?.data);
-
-                setData(data?.data)
+                if (data?.data?.error) {
+                    message.error(data?.data?.error)
+                } else {
+                    setData(data?.data)
+                }
             }
             )
     };
@@ -52,7 +56,7 @@ const ExportTicket = () => {
     };
     const GetBillId = (values: any) => {
         const newData = {
-            bill_id: values
+            bill_code: values
         }
         showModal();
         getBillId(newData).then((data: any) => {
@@ -63,19 +67,22 @@ const ExportTicket = () => {
     }
     const ExportBill = async (values: any) => {
         const newData = {
-            bill_id: values.bill_id
+            bill_code: values.bill_code
         }
-        await exportBill(newData).unwrap()
+        await exportBill(newData)
             .then((req: any) => {
-                if (req?.message) {
-                    message.success(req?.message);
+                if (req?.data?.message) {
+                    message.success(req?.data?.message);
                     setTimeout(() => {
                         window.location.reload();
                     }, 1000);
 
                 }
-                if (req?.error) {
-                    message.success(req?.error)
+                if (req?.data?.error) {
+                    message.error(req?.data?.error)
+                    setTimeout(() => {
+                        setIsModalOpen(false);
+                    }, 1000);
                 }
             }
             )
@@ -108,7 +115,7 @@ const ExportTicket = () => {
                             <Modal open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className='ModalTicket'>
                                 <div className='grid grid-cols-2 gap-5'>
                                     {billData?.map((item: any) => (
-                                        <div key={item.id} className='w-full h-[215px] flex mb-5'>
+                                        <div key={item?.id} className='w-full h-[215px] flex mb-5'>
                                             <div className='w-[65%] bg-red-700 p-3 rounded-l-md left-bill'>
                                                 <div>
                                                     <h1 className='text-2xl text-amber-100 font-bold text-center mt-1'>VÉ XEM PHIM</h1>
@@ -120,7 +127,7 @@ const ExportTicket = () => {
                                                     <div className='grid grid-cols-2 gap-3 text-amber-100'>
                                                         <div className='flex'>
                                                             <p className='font-medium pr-2'>Suất chiếu:</p>
-                                                            <p>{item?.date}</p>
+                                                            <p>{moment(item?.date).format("DD-MM-YYYY")}</p>
                                                         </div>
                                                         <div className='flex'>
                                                             <p className='font-medium pr-2'>Phòng:</p>
@@ -139,7 +146,7 @@ const ExportTicket = () => {
                                                     </div>
                                                     <div className='flex text-amber-100'>
                                                         <p className='font-medium pr-2'>Giá vé:</p>
-                                                        <p>{(Number(item?.total_money))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ</p>
+                                                        <p>{(Number(item?.price))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -150,7 +157,7 @@ const ExportTicket = () => {
                                                 <div>
                                                     <div className='flex ml-2'>
                                                         <p className='pr-2'>Suất chiếu:</p>
-                                                        <p>{item?.date}</p>
+                                                        <p>{moment(item?.date).format("DD-MM-YYYY")} </p>
                                                     </div>
                                                     <div className='flex ml-2'>
                                                         <p className='pr-2'>Giờ chiếu:</p>
@@ -194,7 +201,7 @@ const ExportTicket = () => {
                                                 </div>
                                                 <div className='flex text-amber-100'>
                                                     <p className='font-medium pr-2'>Giá:</p>
-                                                    <p>{item?.price}</p>
+                                                    <p>{(Number(item?.total_money))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ</p>
                                                 </div>
                                             </div>
                                             <div className='w-[35%] bg-amber-100 rounded-r-md p-3'>

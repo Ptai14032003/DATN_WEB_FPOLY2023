@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useExportBillMutation, useGetBillIdMutation } from '../../rtk/booking/booking';
 import logoweb from "/Wonder-logo-1.png";
 import "./export.css";
+import moment from 'moment';
 
 type Props = {
     data: any;
@@ -19,7 +20,7 @@ const ExportTicketAdmin = ({ data }: Props) => {
     };
     useEffect(() => {
         const newData = {
-            bill_id: data
+            bill_code: data
         };
 
         getBillId(newData).then((data: any) => {
@@ -31,7 +32,7 @@ const ExportTicketAdmin = ({ data }: Props) => {
     }, [data])
     const ExportBill = async () => {
         const newData = {
-            bill_id: data
+            bill_code: data
         }
         await exportBill(newData).unwrap()
             .then((req: any) => {
@@ -65,7 +66,7 @@ const ExportTicketAdmin = ({ data }: Props) => {
                                     <div className='grid grid-cols-2 gap-3 text-amber-100'>
                                         <div className='flex'>
                                             <p className='font-medium pr-2'>Suất chiếu:</p>
-                                            <p>{item?.date}</p>
+                                            <p>{moment(item?.date).format("DD-MM-YYYY")}</p>
                                         </div>
                                         <div className='flex'>
                                             <p className='font-medium pr-2'>Phòng:</p>
@@ -84,7 +85,7 @@ const ExportTicketAdmin = ({ data }: Props) => {
                                     </div>
                                     <div className='flex text-amber-100'>
                                         <p className='font-medium pr-2'>Giá vé:</p>
-                                        <p>{item?.total_money}</p>
+                                        <p>{(Number(item?.total_money))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ</p>
                                     </div>
                                 </div>
                             </div>
@@ -95,7 +96,7 @@ const ExportTicketAdmin = ({ data }: Props) => {
                                 <div>
                                     <div className='flex ml-2'>
                                         <p className='pr-2'>Suất chiếu:</p>
-                                        <p>{item?.date}</p>
+                                        <p>{moment(item?.date).format("DD-MM-YYYY")}</p>
                                     </div>
                                     <div className='flex ml-2'>
                                         <p className='pr-2'>Giờ chiếu:</p>
@@ -139,7 +140,7 @@ const ExportTicketAdmin = ({ data }: Props) => {
                                 </div>
                                 <div className='flex text-amber-100'>
                                     <p className='font-medium pr-2'>Giá:</p>
-                                    <p>{item?.price}</p>
+                                    <p>{(Number(item?.price))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ</p>
                                 </div>
                             </div>
                             <div className='w-[35%] bg-amber-100 rounded-r-md p-3'>
