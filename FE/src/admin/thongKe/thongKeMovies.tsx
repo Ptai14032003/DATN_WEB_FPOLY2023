@@ -7,7 +7,7 @@ import { useFetchMoviesPersonQuery } from '../../rtk/moviesPerson/moviesPerson';
 import moment from 'moment';
 const { Option } = Select;
 const ThongKeMovies = () => {
-    const [revenueMovies] = useRevenueMoviesAPIMutation()
+    const [revenueMovies, isLoading] = useRevenueMoviesAPIMutation()
     const [data, setData] = useState<any>()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [messageApi, contextHolder] = message.useMessage()
@@ -26,13 +26,13 @@ const ThongKeMovies = () => {
         setDateEnd(dateString)
     };
     const handleSelect = () => {
-        if (nameMovies.length < 0) {
+        if (!nameMovies) {
             messageApi.error("Vui lòng chọn tên phim !")
         } else
-            if (date_start.length < 0) {
+            if (!date_start) {
                 messageApi.error("Vui lòng chọn ngày bắt đầu !")
             } else
-                if (date_end.length < 0) {
+                if (!date_end) {
                     messageApi.error("Vui lòng chọn ngày kết thúc !")
                 } else {
                     const newData = {
@@ -92,27 +92,37 @@ const ThongKeMovies = () => {
                         </div>
                     </Space>
                     <div className="flex justify-around gap-20">
-                        <div className="py-5 text-left">
-                            <div className="text-2xl font-bold">Doanh thu phim</div>
-                            <div className="py-5">
-                                <div>Tổng doanh thu :</div>
-                                <div>{data?.total_revenue}</div>
+                        {isLoading && (
+                            <div
+                                className="inline-block mt-[50px] h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                                role="status">
+                                <span
+                                    className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+                                >Loading...</span>
                             </div>
-                            <div className="">
-                                <div>Tổng vé : </div>
-                                <div>{data?.total_tickets_sold}</div>
+                        )
+                        }
+                        {data && (
+                            <div className="overflow-x-auto rounded-lg border border-gray-200">
+                                <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
+                                    <thead className="ltr:text-left rtl:text-right">
+                                        <tr>
+                                            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Tổng doanh thu</th>
+                                            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Tổng vé </th>
+                                            <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Ngày bắt đầu chiếu</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody className="divide-y divide-gray-200">
+                                        <tr>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-900">{(Number(data?.total_revenue))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ</td>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">{(Number(data?.total_tickets_sold))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ</td>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700"> {data?.start_date !== undefined ? `${moment(data?.start_date).format("DD-MM-YYYY")}}` : ""}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                            <div className="py-5">
-                                <div>Ngày bắt đầu chiếu :</div>
-                                <div>
-                                    {data?.start_date !== undefined ? `${moment(data?.start_date).format("DD-MM-YYYY")}}` : ""}</div>
-                            </div>
-                            <div>
-                                <div className="py-2">Thời gian : {date_start !== "" && date_end !== "" ? `${moment(date_start).format("DD-MM-YYYY")} đến ${moment(date_end).format("DD-MM-YYYY")}` : ""} </div>
-                            </div>
-                        </div>
-                        <div className="mt-[50px]">
-                        </div>
+                        )}
                     </div>
                 </div>
             </Modal>

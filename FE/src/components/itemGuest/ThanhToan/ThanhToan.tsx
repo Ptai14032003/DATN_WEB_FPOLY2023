@@ -19,13 +19,14 @@ type Props = {
             id: string,
             price: number
         }[],
-        show_time: any
+        show_time: any,
+        room: any
     }
 }
-const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, show_time, movieBooking, idGhe } }: Props) => {
+const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, show_time, movieBooking, idGhe, room } }: Props) => {
     const [data] = useSetBillMutation();
     const { data: voucher } = useFetchVoucherQuery();
-    
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [VoucherCode, setVoucherCode] = useState("");
     const [DiscountPercent, setDiscountPercent] = useState(0);
@@ -57,7 +58,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
         total_money: totalAmount,
         user_code: userCode,
         discount_code: VoucherCode
-    }    
+    }
     const setThanhToan = () => {
         data(dataBill)
             .then((response) => {
@@ -86,7 +87,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
         setIsModalOpen(false);
     };
 
-    const handleSelectVoucher = (voucherCode: any, percent: any, id:any) => {
+    const handleSelectVoucher = (voucherCode: any, percent: any, id: any) => {
         setSelectedVoucher(id);
         setVoucherCode(voucherCode);
         setDiscountPercent(percent)
@@ -112,7 +113,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                     </div>
                     <div className='item-card flex order-b-2 gap-[30px] border-b-2'>
                         <div className='flex flex-col-reverse w-[95px]'>
-                            <dd className="text-sm text-white">1</dd>
+                            <dd className="text-sm text-white">{room}</dd>
                             <dt className="text-xs text-gray-500">Phòng chiếu</dt>
                         </div>
                         <div className='flex flex-col-reverse'>
@@ -164,11 +165,11 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                                     {voucher?.map((item: any) => (
                                         <button className={
                                             selectedVoucher === item.id
-                                              ? 'block bg-teal-400 text-black w-full rounded-md py-3'
-                                              : 'block bg-[#a9aead] text-black w-full rounded-md py-3'
-                                          }
-                                          id={item.id}
-                                          onClick={() => handleSelectVoucher(item?.discount_code, item?.discount_percent, item?.id)}
+                                                ? 'block bg-teal-400 text-black w-full rounded-md py-3'
+                                                : 'block bg-[#a9aead] text-black w-full rounded-md py-3'
+                                        }
+                                            id={item.id}
+                                            onClick={() => handleSelectVoucher(item?.discount_code, item?.discount_percent, item?.id)}
                                         >
                                             <h3 className='text-3xl font-medium'>{item.discount_code}</h3>
                                             <p>Nhân dịp {item?.event}</p>

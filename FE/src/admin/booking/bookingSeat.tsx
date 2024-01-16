@@ -18,6 +18,7 @@ const BookingSeatAdmin = () => {
     const [activeTab, setActiveTab] = useState(1);
     const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
     const [idGhe, setidGhe] = useState<any[]>([])
+    const [room, setRoom] = useState<any>()
     const [combo, setCombo] = useState<[]>([]);
     const [priceFood, setPriceFood] = useState(0)
     const [money, setMoney] = useState<number>(0);
@@ -46,6 +47,9 @@ const BookingSeatAdmin = () => {
             }, {});
             const groupedSeatsArray = Object.values(groupedSeats);
             setGroupSeats(groupedSeatsArray)
+        }
+        if (seatBooking) {
+            setRoom(seatBooking?.seats[0]?.room_name)
         }
     }, [seats])
     const handleClick = (tabNumber: number) => {
@@ -364,29 +368,11 @@ const BookingSeatAdmin = () => {
                 <div className="booking-seat">
                     {/* Dữ liệu form */}
                     <div className="no-content mt-5">
-                        <div className="flex justify-between">
-                            <div className='flex gap-5'>
-                                <div className="w-[190px]"><img width="190" height="240" src={movieBooking?.image} alt="" /></div>
-
-                                <div className="max-w-sm ">
-                                    <h3 className=" text-lg font-bold sm:text-xl">
-                                        {movieBooking?.movie_name}
-                                    </h3>
-                                    <h1 className='mt-3 text-sm'>Số ghế đã chọn : {selectedSeats.map(seatId => seatId + ' ').join('')}</h1>
-                                    <h1 className='mt-3 text-sm'>Combo :</h1>
-                                    {combo.map((item: any) => (
-                                        <div key={item.food_name} className='flex gap-[100px]'>
-                                            <div className='w-[80%]'>{item.food_name}</div>
-                                            <div>x{item.soLuong}</div>
-                                        </div>
-                                    ))}
-                                    <h1 className='mt-3 text-sm'>Tổng tiền : {dataTong} đ</h1>
-                                </div>
-                            </div>
+                        <div className="flex ml-[15%]">
                             <div className="w-[200px] h-[42px] border-[2px] rounded-md px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
                         </div>
                     </div>
-                    <div className="content-right">
+                    <div className="content-right border-2 py-[40px]">
                         <form action="" method='POST'>
 
                             <div className={`Booking-content ${activeTab === 1 ? "" : "hidden"}`}>
@@ -480,7 +466,7 @@ const BookingSeatAdmin = () => {
                             </div>
                         </div>
                         <div className={`${activeTab === 3 ? "ThanhToan" : "hidden"}`}>
-                            <ThanhToanBooking data={{ selectedSeats, priceTong, movieBooking, combo, idGhe, show_time }} key={`1`} />
+                            <ThanhToanBooking data={{ selectedSeats, priceTong, movieBooking, combo, idGhe, show_time, room }} key={`1`} />
                         </div>
                     </div>
                 </div>

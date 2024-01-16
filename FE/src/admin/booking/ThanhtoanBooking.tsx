@@ -3,7 +3,7 @@ import "./ThanhToan.css"
 import { Button, Input, Modal, Select, message } from 'antd'
 import { usePaymentAdminMutation } from '../../rtk/payment_admin/payment_admin';
 import ExportTicketAdmin from './exportTicket';
-import { useExportBillMutation, useSumbitQRPaymentMutation } from '../../rtk/booking/booking';
+import { useSumbitQRPaymentMutation } from '../../rtk/booking/booking';
 type Props = {
     data: {
         selectedSeats: string[]
@@ -20,7 +20,8 @@ type Props = {
             id: string,
             price: number
         }[],
-        show_time: any
+        show_time: any,
+        room: string
     }
 }
 const typeThanhToan = [{
@@ -35,15 +36,16 @@ const typeOptions = typeThanhToan.map((type: any) => ({
     value: type.value,
     label: type.label,
 }));
-const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, show_time, movieBooking, idGhe } }: Props) => {
+const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, show_time, movieBooking, idGhe, room } }: Props) => {
     const [Payment] = usePaymentAdminMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [sumbitQR] = useSumbitQRPaymentMutation()
     const [user_code, setUser] = useState("")
     const [typeThanhToan, getTypeThanhToan] = useState<number>()
     const [linkQR, setQR] = useState("")
-    const [newBillId, setNewBillId] = useState(null)
+    const [newBillCode, setNewBillCode] = useState(null)
     const [newBillIdQR, setNewBillIdQR] = useState(null)
+    const [priceAll, setPriceAll] = useState<String>("")
     const [isExportTicketVisible, setIsExportTicketVisible] = useState(false);
     const handleCancel = () => {
         setIsModalOpen(false);
@@ -88,10 +90,16 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
             if (data?.error?.data?.error) {
                 message.error(data?.error?.data?.error)
             } else {
-                setNewBillId(data?.data?.bill_id);
+                setNewBillCode(data?.data?.bill_code);
                 if (data?.data?.link) {
                     setQR(data?.data?.link);
                     showModal()
+                    if (newData.additionnal_fee === 0) {
+                        setPriceAll((Number((Number(selectedSeats?.length) * 10000) + Number(priceTong)))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
+
+                    } else {
+                        setPriceAll((Number(Number(priceTong)))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
+                    }
                 }
             }
         })
@@ -102,7 +110,6 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
                 const newData = {
                     ...dataBill,
                 }
-                console.log(newData);
                 PostPayment(newData)
 
             } else {
@@ -110,7 +117,6 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
                     ...dataBill,
                     additionnal_fee: 0
                 }
-                console.log(newData);
                 PostPayment(newData)
             }
         } else {
@@ -120,15 +126,18 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
     }
     const CheckQR = (id: any) => {
         const newData = {
-            bill_id: id
+            bill_code: id
         }
-        console.log(newData);
-
         sumbitQR(newData).then((data: any) => {
-            if (data?.data?.bill_id) {
-                setIsExportTicketVisible(true);
-                setIsModalOpen(false);
+            console.log(data);
+
+            if (data?.data?.bill_code) {
+                message.success(data?.data?.message);
                 setNewBillIdQR(data?.data?.bill_id)
+                setIsExportTicketVisible(true);
+                setTimeout(() => {
+                    setIsModalOpen(false);
+                }, 1000);
             }
 
         })
@@ -149,7 +158,7 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
                     </div>
                     <div className='item-card flex order-b-2 gap-[30px] border-b-2'>
                         <div className='flex flex-col-reverse w-[95px]'>
-                            <dd className="text-sm">1</dd>
+                            <dd className="text-sm">{room}</dd>
                             <dt className="text-xs text-gray-500">Phòng chiếu</dt>
                         </div>
                         <div className='flex flex-col-reverse'>
@@ -216,27 +225,74 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
                 </div >
             </div >
             <Button
-                className="w-[82%] rounded bg-teal-400text-base h-[42px] border-0 bg-[#1ACAAC]"
+                className="w-[80%] mx-[10%] rounded bg-teal-400text-base h-[42px] border-0 bg-[#1ACAAC]"
                 onClick={handlePayment}
             >
                 Thanh toán
             </Button>
-            {typeThanhToan === 1 && newBillId !== null && (
-                <ExportTicketAdmin data={newBillId} />
+            {typeThanhToan === 1 && newBillCode !== null && (
+                <ExportTicketAdmin data={newBillCode} />
             )}
-            {typeThanhToan === 0 && newBillId !== null && (
+            {typeThanhToan === 0 && newBillCode !== null && (
 
                 <Modal open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className='ModalTicket'>
-                    <iframe src={`${linkQR}`} />
+                    <div className='flex justify-center'>
+                        <iframe src={`${linkQR}`} />
+                        <div>
+                            <div className='item-card border-b-2'>
+                                <div className='flex flex-col-reverse'>
+                                    <dd className="text-smtext-left">{movieBooking?.movie_name}</dd>
+                                    <dt className="text-xs text-gray-500 text-left">Tên phim</dt>
+                                </div>
+                            </div>
+                            <div className='item-card flex order-b-2 gap-[30px] border-b-2'>
+                                <div className='flex flex-col-reverse w-[95px]'>
+                                    <dd className="text-sm">{room}</dd>
+                                    <dt className="text-xs text-gray-500">Phòng chiếu</dt>
+                                </div>
+                                <div className='flex flex-col-reverse'>
+                                    <dd className="text-smw-[95px]">{selectedSeats?.length}</dd>
+
+                                    <dt className="text-xs text-gray-500">Số vé</dt>
+                                </div>
+                                <div className='flex flex-col-reverse w-[125px]'>
+                                    <dd className="text-sm flex gap-1 max-w-[80px]">{selectedSeats.map((item: any) => (
+                                        <div key={item}>{item}</div>
+                                    ))}</dd>
+                                    <dt className="text-xs text-gray-500">Số ghế</dt>
+                                </div>
+                            </div>
+                            <div className='item-card border-b-2'>
+                                <div>
+                                    <div className='flex justify-between'>
+                                        <span className="text-xs text-gray-500 text-left">Combo</span>
+                                        <span className="text-xs text-gray-500">Số lượng</span>
+                                    </div>
+                                    {combo.map((item: any) => (
+                                        <div key={item.food_name} className='flex justify-between'>
+                                            <span className="text-sm ">{item?.food_name}</span>
+                                            <span className="text-smw-[50px] text-center">{item?.soLuong}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className='block my-3'>
+                                <div className='info-card'>
+                                    <div>Tổng tiền :</div>
+                                    <div className='item-info-card'>{priceAll} đ</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div className='flex justify-end'>
-                        <button type="submit" onClick={() => CheckQR(newBillId)} className='border border-blue-500 rounded-md px-3 py-1 hover:bg-blue-200'>
+                        <button type="submit" onClick={() => CheckQR(newBillCode)} className='border border-blue-500 rounded-md px-3 py-1 hover:bg-blue-200'>
                             Xác nhận
                         </button>
                     </div>
                 </Modal>
             )}
-            {newBillIdQR !== null && newBillId !== null && typeThanhToan === 0 && isExportTicketVisible && (
-                <ExportTicketAdmin data={newBillId} />
+            {newBillIdQR !== null && newBillCode !== null && typeThanhToan === 0 && isExportTicketVisible && (
+                <ExportTicketAdmin data={newBillCode} />
             )}
         </>
     )
