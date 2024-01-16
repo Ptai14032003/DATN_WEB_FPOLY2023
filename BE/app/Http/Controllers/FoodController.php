@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Cloudinary\Cloudinary;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+
 class FoodController extends Controller
 {
     /**
@@ -32,6 +34,7 @@ class FoodController extends Controller
             $request->all(),
             [  
                 'food_name' => "unique:foods,food_name",
+                 Rule::unique('foods')->ignore($this->food_name)
                
             ],
             [
@@ -101,7 +104,9 @@ class FoodController extends Controller
         $validator = Validator::make(
             $request->all(),
             [  
+                
                 'food_name' => "unique:foods,food_name",
+                Rule::unique('foods')->ignore($this->id)
                
             ],
             [

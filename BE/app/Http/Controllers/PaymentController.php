@@ -363,11 +363,11 @@ class PaymentController extends Controller
 
                 curl_close($curl);
                 $response = json_decode($response);
-                return response()->json(['bill_id' => $bill_add->id, 'link' => $response->link]);
+                return response()->json(['bill_code' => $bill_add->bill_code, 'link' => $response->link]);
                 break;
             case 1:
                 Bill::where('id', $bill_add->id)->update(['status' => 1]);
-                return response()->json(['message' => "Thành công. Vui lòng xuất vé", 'bill_id' => $bill_add->id]);
+                return response()->json(['message' => "Thành công. Vui lòng xuất vé", 'bill_code' => $bill_add->bill_code]);
                 break;
             default:
                 break;
@@ -377,7 +377,7 @@ class PaymentController extends Controller
     public function confirm_qr(Request $request)
     {
         $data = $request->all();
-        Bill::where('id', $data['bill_id'])->update(['status' => 1]);
-        return response()->json(['message' => "Thành công. Vui lòng xuất vé", 'bill_id' => $data['bill_id']]);
+        Bill::where('bill_code', $data['bill_code'])->update(['status' => 1]);
+        return response()->json(['message' => "Thành công. Vui lòng xuất vé", 'bill_code' => $data['bill_code']]);
     }
 }

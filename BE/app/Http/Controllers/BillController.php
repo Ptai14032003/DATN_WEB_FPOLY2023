@@ -199,67 +199,73 @@ class BillController extends Controller
     //lấy danh sách vé chưa xuất
     public function get_list_bill_export(Request $request)
     {
-        $data = $request->all();
+        $bill_code = $request->bill_code;
         // $user = User::where('user_code', $data['user_code'])->first();
-        
-            $bills = Bill::leftjoin('users', 'users.user_code', '=', 'bills.user_code')
-                ->leftjoin('personnels', 'personnels.personnel_code', '=', 'bills.personnel_code')
-                ->join('tickets', 'tickets.bill_id', '=', 'bills.id')
-                ->join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
-                ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
-                ->where('bills.status', '=', 1)
-                ->where('bills.export_ticket', '=', 0)
-                ->where('bills.bill_code', $data['bill_code'])
-                ->select(
-                    'bills.bill_code',
-                    'bills.user_code',
-                    'users.name as user_name',
-                    'bills.personnel_code',
-                    'personnels.name as personnel_name',
-                    'bills.total_ticket',
-                    'bills.total_combo',
-                    'bills.additional_fee',
-                    'bills.total_money',
-                    'movies.movie_name',
-                    'movies.image',
-                    DB::raw('DATE_FORMAT(bills.created_at, "%d-%m-%Y") as booking_date'),
-                    DB::raw('DATE_FORMAT(showtimes.show_date, "%d-%m-%Y") as show_date'),
-                    DB::raw('CASE 
+        $bill = Bill::where('bill_code', $bill_code)->first();
+        if (!$bill) {
+            return response()->json(['error' => "Mã hóa đơn không tồn tại"], 404);
+        } elseif ($bill->export_ticket == 1) {
+            return response()->json(['error' => "Hóa đơn đã xuất vé rồi"]);
+        } elseif ($bill->status == 0) {
+            return response()->json(['error' => "Hóa đơn chưa được thanh toán"]);
+        } elseif ($bill->status == 2) {
+            return response()->json(['error' => "Hóa đơn thanh toán lỗi/ hủy"]);
+        }
+        $bills = Bill::leftjoin('users', 'users.user_code', '=', 'bills.user_code')
+            ->leftjoin('personnels', 'personnels.personnel_code', '=', 'bills.personnel_code')
+            ->join('tickets', 'tickets.bill_id', '=', 'bills.id')
+            ->join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
+            ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
+            ->where('bills.bill_code', $bill_code)
+            ->select(
+                'bills.id',
+                'bills.bill_code',
+                'bills.user_code',
+                'users.name as user_name',
+                'bills.personnel_code',
+                'personnels.name as personnel_name',
+                'bills.total_ticket',
+                'bills.total_combo',
+                'bills.additional_fee',
+                'bills.total_money',
+                'movies.movie_name',
+                'movies.image',
+                DB::raw('DATE_FORMAT(bills.created_at, "%d-%m-%Y") as booking_date'),
+                DB::raw('DATE_FORMAT(showtimes.show_date, "%d-%m-%Y") as show_date'),
+                DB::raw('CASE 
                 WHEN bills.status = 0 THEN "Đang chờ thanh toán" 
                 WHEN bills.status = 1 THEN "Đã thanh toán" 
                 WHEN bills.status = 2 THEN "Đã hủy" 
                 END as payment_status')
-                )
-                ->groupBy(
-                    'bills.bill_code',
-                    'bills.user_code',
-                    'users.name',
-                    'bills.personnel_code',
-                    'personnels.name',
-                    'bills.total_ticket',
-                    'bills.total_combo',
-                    'bills.additional_fee',
-                    'bills.total_money',
-                    'movies.movie_name',
-                    'movies.image',
-                    'booking_date',
-                    'show_date',
-                    'payment_status'
-                )
-                ->orderBy('bills.id', 'desc')
-                ->get();
-        if ($bills) {
-            return response()->json($bills);
-        } else {
-            return response()->json(['error' => "Mã hóa đơn không tồn tại"], 404);
-        }
+            )
+            ->groupBy(
+                'bills.id',
+                'bills.bill_code',
+                'bills.user_code',
+                'users.name',
+                'bills.personnel_code',
+                'personnels.name',
+                'bills.total_ticket',
+                'bills.total_combo',
+                'bills.additional_fee',
+                'bills.total_money',
+                'movies.movie_name',
+                'movies.image',
+                'booking_date',
+                'show_date',
+                'payment_status'
+            )
+            ->orderBy('bills.id', 'desc')
+            ->get();
+
+        return response()->json($bills);
     }
 
     public function get_bill_export(Request $request)
     {
         $bill_code = $request->bill_code;
-        $bill = Bill::where('bill_code',$bill_code)->first();
-        $bill_id=$bill->id;
+        $bill = Bill::where('bill_code', $bill_code)->first();
+        $bill_id = $bill->id;
         if (!$bill) {
             return response()->json(['error' => "Hóa đơn không tồn tại"]);
         }
@@ -291,8 +297,8 @@ class BillController extends Controller
     public function export(Request $request)
     {
         $bill_code = $request->bill_code;
-        $bill = Bill::where('bill_code',$bill_code)->first();
-        $bill_id=$bill->id;
+        $bill = Bill::where('bill_code', $bill_code)->first();
+        $bill_id = $bill->id;
         if (!$bill) {
             return response()->json(['error' => "Hóa đơn không tồn tại"]);
         }
