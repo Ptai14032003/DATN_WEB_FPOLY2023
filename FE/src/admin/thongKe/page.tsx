@@ -267,7 +267,7 @@ const ThongKe = () => {
                         }}
                     >
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey={`${tbTime.chuKi === "year" ? "month" : "date"}`} tickFormatter={(value) => `${tbTime.chuKi === "year" ? `Tháng ${value}` : `Ngày ${moment(value).format("DD-MM-YYYY")}`}`} />
+                        <XAxis dataKey={`${tbTime.chuKi === "year" ? "month" : "date"}`} tickFormatter={(value) => `${tbTime.chuKi === "year" ? `Tháng ${value}` : `${value}`}`} />
                         <YAxis axisLine={false} domain={[0, Number(data?.total_money_ticket)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
                         <Tooltip content={<ContentRechart />} />
                         <Legend content={<DataName />} />

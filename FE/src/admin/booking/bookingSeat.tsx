@@ -392,11 +392,6 @@ const BookingSeatAdmin = () => {
                             <div className="w-[200px] h-[42px] border-[2px] rounded-md px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
                         </div>
                     </div>
-                    <div className="no-content mt-5">
-                        <div className="flex ml-[15%]">
-                            <div className="w-[200px] h-[42px] border-[2px] rounded-md px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
-                        </div>
-                    </div>
                     <div className="content-right border-2 py-[40px]">
                         <form action="" method='POST'>
 
