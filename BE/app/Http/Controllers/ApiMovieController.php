@@ -135,43 +135,32 @@ public function showingAdmin(){
     
     public function update(Request $request, string $id) {
         $movie = Movie::find($id);
-
-        $validator = Validator::make(
-            $request->all(),
-            [  
-                'end_date' => 'after:start_date'
-            ],
-            [
-                'end_date.after' => "Ngày kết thúc không được nhỏ hơn ngày bát đầu"
-            ]
-        );
-        if ($validator->fails()) {
-            return response()->json($validator->messages());
-        } else {
-        // Update other fields based on the request
+        if (!$movie) {
+            return response()->json(['messages' => 'Phim không tồn tại'], 404);
+        }
+     
         $movie->update($request->except('image'));
     
-        // Handle image upload if a new image is provided in the request
-        // if ($request->input('image')['fileList']) {
-        //     $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
-        //     $elements = explode(',', $fileData);
-        //     $elementsAfterComma = array_slice($elements, 1);
-        //     $decodedData = base64_decode($elementsAfterComma[0]);
-        //     $uniqueFileName = uniqid('file_');
-        //     $filePath = storage_path('app/' . $uniqueFileName);
-        //     file_put_contents($filePath, $decodedData);
-        //     $imagePath = cloudinary()->upload($filePath)->getSecurePath();
+        if ($request->input('image')['fileList']) {
+            $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
+            $elements = explode(',', $fileData);
+            $elementsAfterComma = array_slice($elements, 1);
+            $decodedData = base64_decode($elementsAfterComma[0]);
+            $uniqueFileName = uniqid('file_');
+            $filePath = storage_path('app/' . $uniqueFileName);
+            file_put_contents($filePath, $decodedData);
+            $imagePath = cloudinary()->upload($filePath)->getSecurePath();
     
-        //     // Save the new image path to the movie record
-        //     $movie->image = $imagePath;
-        //     $movie->save();
-        // }else{
-        //     $movie->image = $request->image;
-        // }
+            // Save the new image path to the movie record
+            $movie->image = $imagePath;
+            $movie->save();
+
+        }else{
+            $movie->image = $request->image;
+        }
     
-        return response()->json(['message' => 'Phim đã được cập nhật thành công'], 200);
+        return response()->json(['message' => 'Sản phẩm đã được cập nhật thành công'], 200);
     }
-}
 
     public function destroy(string $id){
         $movie = Movie::find($id);
