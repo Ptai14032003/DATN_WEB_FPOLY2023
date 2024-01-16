@@ -94,7 +94,7 @@ const ExportTicket = () => {
         <div className=''>
             <form action="" className='flex gap-3' onSubmit={handleSubmit(onSubmit)}>
                 <div className=''>
-                    <input type="text" placeholder='Nhập mã người dùng' className='border border-gray-500 rounded-md p-2'  {...register('bill_code')} name='bill_code' />
+                    <input type="text" placeholder='Nhập mã hoá đơn' className='border border-gray-500 rounded-md p-2'  {...register('bill_code')} name='bill_code' />
                 </div>
                 <button className='border rounded-md py-1 w-[100px] font-normal text-lg  bg-[#1ACAAC] '>Submit</button>
             </form>
