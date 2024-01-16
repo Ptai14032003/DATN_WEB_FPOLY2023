@@ -88,6 +88,8 @@ class HomeController extends Controller
         ->where('movies.id', $id)
         ->whereDate('showtimes.show_date', '>=', $currentTime->toDateString())
         ->whereTime('showtimes.show_time', '>=', $currentTime->format('H:i'))
+        ->orderby('showtimes.show_date','asc')
+        ->orderby('showtimes.show_time', 'asc')
         ->get();
 
         $movies = Movie::join('movie_types', 'movie_types.id', '=', 'movies.movie_type_id')
