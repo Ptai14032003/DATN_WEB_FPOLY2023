@@ -42,7 +42,7 @@ class PaymentController extends Controller
             "status" => 0,
             "discount_code" => $discount_code,
             "personnel_code" => null,
-            "additional_fee"=>0
+            "additional_fee" => 0
         ];
         $bill_add = Bill::create($bill);
 
@@ -188,7 +188,7 @@ class PaymentController extends Controller
                 //Việc kiểm tra trạng thái của đơn hàng giúp hệ thống không xử lý trùng lặp, xử lý nhiều lần một giao dịch
                 //Giả sử: $bill = mysqli_fetch_assoc($result);   
                 $bill = Bill::where('bill_code', $bill_code)->first();
-                $bill_id = $bill->bill_id;
+                $bill_id = $bill->id;
                 // $bill = Bill::find($bill_id);
                 if ($bill != NULL) {
                     if ($bill["total_money"] == $vnp_Amount) //Kiểm tra số tiền thanh toán của giao dịch: giả sử số tiền kiểm tra là đúng. //$bill["Amount"] == $vnp_Amount
@@ -246,41 +246,6 @@ class PaymentController extends Controller
         //Trả lại VNPAY theo định dạng JSON
         return response()->json($returnData);
     }
-
-
-    //QR code 
-    // public function payment_QR_Code(Request $request)
-    // {
-    //     $data = $request->all();
-    //     $curl = curl_init();
-
-    //     curl_setopt_array($curl, array(
-    //         CURLOPT_URL => "https://bio.ziller.vn/api/qr/add",
-    //         CURLOPT_RETURNTRANSFER => true,
-    //         CURLOPT_ENCODING => "",
-    //         CURLOPT_MAXREDIRS => 2,
-    //         CURLOPT_TIMEOUT => 10,
-    //         CURLOPT_FOLLOWLOCATION => true,
-    //         CURLOPT_CUSTOMREQUEST => "POST",
-    //         CURLOPT_HTTPHEADER => array(
-    //             "Authorization: Bearer 33d5533a1270abc08e5f2e530735b916",
-    //             "Content-Type: application/json",
-    //         ),
-    //         CURLOPT_POSTFIELDS => json_encode(array(
-    //             'type' => 'text',
-    //             'data' => '2|99|' . '0923896715' . '|Wonder Cinema||0|0|' . $data['total_money'] . '|Thanh toán hóa đơn đặt vé xem phim|transfer_myqr',
-    //             'background' => 'rgb(255,255,255)',
-    //             'foreground' => 'rgb(0,0,0)',
-    //             'logo' => 'C:\xampp\htdocs\datn_web_fpoly2023\FE\public\Wonder-logo-1.png',
-    //         )),
-    //     ));
-
-    //     $response = curl_exec($curl);
-
-    //     curl_close($curl);
-    //     $response = json_decode($response);
-    //     return response()->json($response);
-    // }
 
     public function payment_admin(Request $request)
     {
