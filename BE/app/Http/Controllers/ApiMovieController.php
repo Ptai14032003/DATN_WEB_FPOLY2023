@@ -106,7 +106,7 @@ public function showingAdmin(){
                 'describe' => $describe
             ];
             Movie::create($data); 
-            return response()->json($data);
+            return response()->json([$data, 'message' => 'Phim đã được thêm thành công'], 201);
 
         // }
         // }else{
