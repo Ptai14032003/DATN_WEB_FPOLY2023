@@ -31,12 +31,15 @@ const HomeAdmin = () => {
     const [maxChartMovies, setMaxChartMovies] = useState<number>()
     const [maxChartUser, setMaxChartUser] = useState<number>()
     const [maxChartNhanSu, setMaxChartNhanSu] = useState<number>()
-    const [traCuu, setTraCuu] = useState<any>()
+    const [traCuuFood, setTraCuuFood] = useState<any>()
+    const [traCuuMovies, setTraCuuMovies] = useState<any>()
+    const [traCuuUsers, setTraCuuUsers] = useState<any>()
+    const [traCuuNhanSu, setTraCuuNhanSu] = useState<any>()
     const [convert, setConvert] = useState<any>(0)
     const [convert1, setConvert1] = useState<any>(0)
     const onChangeFood: DatePickerProps['onChange'] = (date, dateString) => {
         setValueDateFood(dateString)
-        setTraCuu({
+        setTraCuuFood({
             timeline: typeSearchFood,
             year: date?.year(),
             month: Number(date?.month()) + 1,
@@ -44,7 +47,7 @@ const HomeAdmin = () => {
     };
     const onChangeMovies: DatePickerProps['onChange'] = (date, dateString) => {
         setValueDateMovie(dateString)
-        setTraCuu({
+        setTraCuuMovies({
             timeline: typeSearchMovies,
             year: date?.year(),
             month: Number(date?.month()) + 1,
@@ -52,7 +55,7 @@ const HomeAdmin = () => {
     };
     const onChangeUser: DatePickerProps['onChange'] = (date, dateString) => {
         setValueDateUser(dateString)
-        setTraCuu({
+        setTraCuuUsers({
             timeline: typeSearchUser,
             year: date?.year(),
             month: Number(date?.month()) + 1,
@@ -60,7 +63,7 @@ const HomeAdmin = () => {
     };
     const onChangeNhanSu: DatePickerProps['onChange'] = (date, dateString) => {
         setValueDateNhanSu(dateString)
-        setTraCuu({
+        setTraCuuNhanSu({
             timeline: typeSearchFood,
             year: date?.year(),
             month: Number(date?.month()) + 1,
@@ -71,8 +74,8 @@ const HomeAdmin = () => {
             message.error("Vui lòng nhập lại thời gian khi thay đổi trạng thái");
             return;
         }
-        if (traCuu) {
-            Top5Foods(traCuu).then((fetchdata: any) => {
+        if (traCuuFood) {
+            Top5Foods(traCuuFood).then((fetchdata: any) => {
                 if (fetchdata?.data?.message) {
                     message.error(fetchdata?.data?.message)
                     setDataFoods({
@@ -94,8 +97,8 @@ const HomeAdmin = () => {
             message.error("Vui lòng nhập lại thời gian khi thay đổi trạng thái");
             return;
         }
-        if (traCuu) {
-            Top5Movies(traCuu).then((fetchdata: any) => {
+        if (traCuuMovies) {
+            Top5Movies(traCuuMovies).then((fetchdata: any) => {
                 console.log(fetchdata);
 
                 if (fetchdata?.data?.error) {
@@ -119,8 +122,8 @@ const HomeAdmin = () => {
             message.error("Vui lòng nhập lại thời gian khi thay đổi trạng thái");
             return;
         }
-        if (traCuu) {
-            Top5Users(traCuu).then((fetchdata: any) => {
+        if (traCuuUsers) {
+            Top5Users(traCuuUsers).then((fetchdata: any) => {
                 if (fetchdata?.data?.error) {
                     message.error(fetchdata?.data?.message)
                     setDataUsers({
@@ -144,8 +147,8 @@ const HomeAdmin = () => {
             message.error("Vui lòng nhập lại thời gian khi thay đổi trạng thái");
             return;
         }
-        if (traCuu) {
-            Top5NhanSu(traCuu).then((fetchdata: any) => {
+        if (traCuuNhanSu) {
+            Top5NhanSu(traCuuNhanSu).then((fetchdata: any) => {
                 if (fetchdata?.data?.error) {
                     message.error(fetchdata?.data?.message)
                     setDataNhanSu({
@@ -226,7 +229,7 @@ const HomeAdmin = () => {
             })
         }
         if (!dataNhanSu) {
-            Top5NhanSu(traCuu).then((fetchdata: any) => {
+            Top5NhanSu(dateData).then((fetchdata: any) => {
                 if (fetchdata?.data?.error) {
                     message.error(fetchdata?.data?.message)
                     setDataNhanSu({

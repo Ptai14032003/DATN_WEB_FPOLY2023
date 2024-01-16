@@ -145,6 +145,11 @@ const EditQlNhanSu: React.FC<Props> = ({ projects }: Props) => {
                                 options={RoleOptions}
                             />
                         </Form.Item>
+                        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                            <Button htmlType="submit">
+                                Sửa
+                            </Button>
+                        </Form.Item>
                     </Form>
                 ) : (
                     <div className="flex justify-center">Đang lấy dữ liệu</div>

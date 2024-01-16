@@ -101,12 +101,14 @@ const ThongKe = () => {
                             total_money_ticket: 0,
                             total_money_food: 0
                         })
+                        setType("month")
                         setDataChart(
                             newData.timeline === 'day'
                                 ? fetchdata?.data?.dailyRevenue
                                 : fetchdata?.data?.monthlyRevenue
                         );
                     } else {
+                        setType("month")
                         setDataChart(
                             newData.timeline === 'day'
                                 ? fetchdata?.data?.dailyRevenue
