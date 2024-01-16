@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Fuse from 'fuse.js';
 import { useFetchBillAdminQuery } from '../../rtk/bill/bill';
 import moment from 'moment';
+import DetailBill from './detailBill';
 
 const { Column } = Table;
 
@@ -16,20 +17,16 @@ export type QlPhim = {
     user_code: string;
     user_name: string;
     personnel_code: string;
-    personnel_name: string;
-    total_ticket: number;
-    total_combo: number;
-    additional_fee: string;
     total_money: number;
     movie_name: string
-    image: string;
     booking_date: string;
     show_date: string;
-    payment_status: string
     export_ticket: string
 }
 const AdminQlBill: React.FC = () => {
     const { data: dataBill, isLoading, error } = useFetchBillAdminQuery()
+    console.log(dataBill);
+
     const navigate = useNavigate();
     const status = error?.status;
     const [dataTable, setDataTable] = useState<QlPhim[]>([])
@@ -58,16 +55,10 @@ const AdminQlBill: React.FC = () => {
                 user_code: item.user_code,
                 user_name: item.user_name,
                 personnel_code: item.personnel_code,
-                personnel_name: item.personnel_name,
-                total_ticket: item.total_ticket,
-                total_combo: item.total_combo,
-                additional_fee: item.additional_fee,
                 total_money: item.total_money,
                 movie_name: item.movie_name,
-                image: item.image,
                 booking_date: item.booking_date,
                 show_date: item.show_date,
-                payment_status: item.payment_status,
                 export_ticket: item?.export_ticket
             }))
             setDataTable(mapMovies)
@@ -88,16 +79,10 @@ const AdminQlBill: React.FC = () => {
                     user_code: item.user_code,
                     user_name: item.user_name,
                     personnel_code: item.personnel_code,
-                    personnel_name: item.personnel_name,
-                    total_ticket: item.total_ticket,
-                    total_combo: item.total_combo,
-                    additional_fee: item.additional_fee,
                     total_money: item.total_money,
                     movie_name: item.movie_name,
-                    image: item.image,
                     booking_date: item.booking_date,
                     show_date: item.show_date,
-                    payment_status: item.payment_status,
                     export_ticket: item?.export_ticket
                 }))
                 setDataTable(mapMovies)
@@ -111,16 +96,10 @@ const AdminQlBill: React.FC = () => {
                     user_code: item.user_code,
                     user_name: item.user_name,
                     personnel_code: item.personnel_code,
-                    personnel_name: item.personnel_name,
-                    total_ticket: item.total_ticket,
-                    total_combo: item.total_combo,
-                    additional_fee: item.additional_fee,
                     total_money: item.total_money,
                     movie_name: item.movie_name,
-                    image: item.image,
                     booking_date: item.booking_date,
                     show_date: item.show_date,
-                    payment_status: item.payment_status,
                     export_ticket: item?.export_ticket
                 }))
                 setDataTable(mapMovies)
@@ -157,7 +136,7 @@ const AdminQlBill: React.FC = () => {
                         render={(_: any, record: any) => (
                             <Space size="middle">
                                 <a>
-                                    <Button>Chi tiết hoá đơn</Button>
+                                    <DetailBill projects={record.key} />
                                 </a>
                             </Space>
                         )} />
