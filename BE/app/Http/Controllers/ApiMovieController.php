@@ -148,7 +148,6 @@ public function showingAdmin(){
             ],
             [
                 'movie_name.unique' => "Tên phim đã tồn tại",
-                'start_date.after' => "Ngày bắt đầu không được nhỏ hơn ngày hiện tại",
                 'end_date.after' => "Ngày kết thúc không được nhỏ hơn ngày bát đầu"
             ]
         );
