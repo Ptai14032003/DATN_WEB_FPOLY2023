@@ -4,15 +4,23 @@ import logoweb from "/Wonder-logo-1.png"
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { FaUserCircle } from "react-icons/fa";
 import { message } from 'antd';
+import "../../../personPage/responsive.css"
 const Menu = () => {
 
   const [dropDown, setDropDown] = useState(false);
+  const [dropDown2, setDropDown2] = useState(false);
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
 
   const homeLink = 'http://localhost:5173/'
   const handleClick = () => {
     setDropDown(!dropDown)
+  }
+  const handleClick2 = () => {
+    setDropDown2(!dropDown2)
+  }
+  const handleClickClose = () => {
+    setDropDown2(false)
   }
 
   const userString = localStorage.getItem('user');
@@ -29,53 +37,117 @@ const Menu = () => {
     });
   }
   return (
-    <div className="menu flex items-center justify-between px-16 fixed z-10 w-full">
+    <div className="">
       {contextHolder}
-      <div className="logo-web">
-        <img src={logoweb} alt="" className='w-[100px] h-[80px]' />
-      </div>
-      <nav>
-        <ul className='menu-content flex text-white'>
-        <a href={homeLink}><li>Trang chủ</li></a>
-        <a href={homeLink + 'ticket-price'}><li>Giá vé</li></a>
-        <a href={homeLink}> <li>Giới thiệu</li></a>
-          {!user && (
-            <><li onClick={handleClick}><a>Tài khoản</a></li>
-              {dropDown ?
-                <ul className="dropdown-content absolute translate-y-[4.8rem] right-6 w-[160px] text-center drop-none-user">
-                  <a href={homeLink + 'signin'} className='block'><li>Đăng nhập</li></a>
-                  <a href={homeLink + 'signup'} className='block'><li>Đăng kí</li></a>
-                </ul>
-                : ""
-              }
-            </>
-          )}
-          {user && (
-            <><li onClick={handleClick} className='have-user flex space-x-2'>
-              <FaUserCircle size={30} />
-              <a className='text-xl'>
-                {user?.name}</a>
-            </li>
-              {dropDown ?
-                <ul className="dropdown-content absolute translate-y-[5.1rem] -translate-x-[2rem] right-6 w-[250px] text-center drop-have-user">
-                  {user.role === 'Admin' && (
-                    <a href={homeLink + "admin"}>
-                    <li>
-                      Admin
-                    </li>
-                    </a>
-                  )}
-                  <a href={homeLink + 'profile'} className='block'><li>Thông tin cá nhân</li></a>
-                  <a href={homeLink + 'ticket-history'}><li>Lịch sử đặt vé</li></a>
-                  <li onClick={() => Logout()}><div className='block'>Đăng xuất</div></li>
-                </ul>
-                : ""
-              }
-            </>
-          )}
+      <div className='menu flex items-center justify-between px-16 fixed z-10 w-full'>
+        <div className="logo-web">
+          <img src={logoweb} alt="" className='w-[100px] h-[80px]' />
+        </div>
+        <nav>
+          <ul className='menu-content flex text-white'>
+            <a href={homeLink}><li>Trang chủ</li></a>
+            <a href={homeLink + 'ticket-price'}><li>Giá vé</li></a>
+            <a href={homeLink}> <li>Giới thiệu</li></a>
+            {!user && (
+              <><li onClick={handleClick}><a>Tài khoản</a></li>
+                {dropDown ?
+                  <ul className="dropdown-content absolute translate-y-[4.8rem] right-6 w-[160px] text-center drop-none-user">
+                    <a href={homeLink + 'signin'} className='block'><li>Đăng nhập</li></a>
+                    <a href={homeLink + 'signup'} className='block'><li>Đăng kí</li></a>
+                  </ul>
+                  : ""
+                }
+              </>
+            )}
+            {user && (
+              <><li onClick={handleClick} className='have-user flex space-x-2'>
+                <FaUserCircle size={30} />
+                <a className='text-xl'>
+                  {user?.name}</a>
+              </li>
+                {dropDown ?
+                  <ul className="dropdown-content absolute translate-y-[5.1rem] -translate-x-[2rem] right-6 w-[250px] text-center drop-have-user">
+                    {user.role === 'Admin' && (
+                      <a href={homeLink + "admin"}>
+                        <li>
+                          Admin
+                        </li>
+                      </a>
+                    )}
+                    <a href={homeLink + 'profile'} className='block'><li>Thông tin cá nhân</li></a>
+                    <a href={homeLink + 'ticket-history'}><li>Lịch sử đặt vé</li></a>
+                    <li onClick={() => Logout()}><div className='block'>Đăng xuất</div></li>
+                  </ul>
+                  : ""
+                }
+              </>
+            )}
 
-        </ul>
-      </nav>
+          </ul>
+        </nav>
+      </div>
+      <div className='menu-mobile fixed z-10 w-full items-center justify-between h-[50px] hidden' style={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}>
+        <div className="logo-web ml-3">
+          <img src={logoweb} alt="" className='w-[50px] h-[50px]' />
+        </div>
+        <div className='mr-3' onClick={handleClick2}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" className="bi bi-list" viewBox="0 0 16 16">
+            <path fillRule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+          </svg>
+        </div>
+        {dropDown2 ?
+
+          <div className='absolute h-[200vh] w-full pb-10 Menu-drop-mobile' style={{ backgroundColor: "rgba(0, 0, 0, 0.9)" }}>
+            <div className='translate-y-[40.2rem] ml-3' onClick={handleClickClose}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white" className="bi bi-x-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+              </svg>
+            </div>
+            <div>
+              <ul className=" text-white text-end translate-y-[40.5rem]">
+                <a href={homeLink}><li className='pr-5 mb-3'>Trang chủ</li></a>
+                <a href={homeLink + 'ticket-price'}><li className='pr-5  mb-3'>Giá vé</li></a>
+                <a href={homeLink}> <li className='pr-5  mb-3'>Giới thiệu</li></a>
+                {!user && (
+                  <><li onClick={handleClick} className='pr-5  mb-3'><a>Tài khoản</a></li>
+                    {dropDown ?
+                      <ul className="absolute translate-y-[rem] translate-x-[2.5rem] right-6 w-[160px] text-end">
+                        <a href={homeLink + 'signin'}><li className='mb-3 text-[#1ACAAC]'>Đăng nhập</li></a>
+                        <a href={homeLink + 'signup'}><li className='text-[#1ACAAC]'>Đăng kí</li></a>
+                      </ul>
+                      : ""
+                    }
+                  </>
+                )}
+                {user && (
+                  <><li onClick={handleClick} className=' flex space-x-2 items-center justify-end mr-5'>
+                    <a className='text-md'>
+                      {user?.name}</a>
+                    <FaUserCircle size={20} />
+                  </li>
+                    {dropDown ?
+                      <ul className=" absolute translate-y-[0.7rem] -translate-x-[-0.3rem] right-6 w-[250px] text-end">
+                        {user.role === 'Admin' && (
+                          <a href={homeLink + "admin"}>
+                            <li className='text-[#1ACAAC] mb-3'>
+                              Admin
+                            </li>
+                          </a>
+                        )}
+                        <a href={homeLink + 'profile'} ><li className='text-[#1ACAAC] mb-3'>Thông tin cá nhân</li></a>
+                        <a href={homeLink + 'ticket-history'}><li className='text-[#1ACAAC] mb-3'>Lịch sử đặt vé</li></a>
+                        <li onClick={() => Logout()} className='text-[#1ACAAC]'><div>Đăng xuất</div></li>
+                      </ul>
+                      : ""
+                    }
+                  </>
+                )}
+              </ul>
+            </div>
+          </div>
+          : ""}
+      </div>
     </div>
   )
 

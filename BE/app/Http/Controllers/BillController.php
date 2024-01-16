@@ -249,20 +249,28 @@ class BillController extends Controller
     {
         $bill_id = $request->bill_id;
         $bill = Bill::find($bill_id);
+        if (!$bill) {
+            return response()->json(['error' => "Hóa đơn không tồn tại"]);
+        }
         if ($bill->export_ticket == 0) {
             $tickets = Ticket::join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
                 ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
                 ->join('rooms', 'rooms.id', '=', 'showtimes.room_id')
                 ->join('seats', 'seats.id', '=', 'tickets.id_seat')
                 ->where('bill_id', $bill_id)
-                ->select('movies.movie_name', 'showtimes.show_date as date', 'showtimes.show_time as time', 'rooms.name as room_name', 'seats.seat_code')
-                ->groupBy('movie_name', 'date', 'time', 'room_name', 'seat_code')
+                ->select('movies.movie_name', 'showtimes.show_date as date', 'showtimes.show_time as time', 'rooms.name as room_name', 'seats.seat_code', 'tickets.price')
+                ->groupBy('movie_name', 'date', 'time', 'room_name', 'seat_code', 'tickets.price')
                 ->get();
-            $ticket_foods = Ticket_Food::join('foods', 'foods.id', '=', 'ticket_foods.food_id')
+                $ticket_foods = Ticket_Food::join('foods', 'foods.id', '=', 'ticket_foods.food_id')
                 ->where('bill_id', $bill_id)
-                ->select('foods.food_name', 'ticket_foods.quantity')
+                ->select(
+                    'foods.food_name',
+                    'ticket_foods.quantity',
+                    DB::raw('SUM(ticket_foods.total_money) as total_money')
+                )
                 ->groupBy('foods.food_name', 'ticket_foods.quantity')
                 ->get();
+            
             return response()->json(['tickets' => $tickets, 'ticket_foods' => $ticket_foods]);
         } else {
             return response()->json(['error' => "Vé đã được xuất rồi"]);
@@ -273,6 +281,9 @@ class BillController extends Controller
     {
         $bill_id = $request->bill_id;
         $bill = Bill::find($bill_id);
+        if (!$bill) {
+            return response()->json(['error' => "Hóa đơn không tồn tại"]);
+        }
         if ($bill->export_ticket == 0) {
             $bills = Bill::where('id', $bill_id)->update(['export_ticket' => 1]);
             return response()->json(['message' => "Xuất vé thành công"]);

@@ -4,6 +4,7 @@ import Menu from '../components/layouts/layoutGuest/menu'
 import { useTicketHistoryMutation } from '../rtk/booking/booking'
 import { message } from 'antd'
 import "./personPage.css"
+import background from "/noneTicketHistory.png"
 
 const TicketHistory = () => {
   const [ticketHistory] = useTicketHistoryMutation();
@@ -27,8 +28,6 @@ const TicketHistory = () => {
           await ticketHistory(newData).unwrap()
             .then((data: any) =>
               setData(data)
-              // console.log(data)
-
             )
         } else {
           message.error('Không tìm thấy mã người dùng');
@@ -46,8 +45,15 @@ const TicketHistory = () => {
         <Menu />
       </div>
       <div className='h-screen'>
-        <div className='h-full text-black space-y-10 my-20'>
-          {data?.map((item: any) => (
+        
+          {data.length === 0 ? (
+               <div className='h-[100%]'>
+                <h1 className='text-3xl absolute text-white font-semibold uppercase left-[32%] top-[52%]' style={{textShadow: "rgb(255, 255, 255) -1px -2px 0.7em"}}>Chưa có lịch sử đặt vé nào</h1>
+                <img src={background} alt="" className='h-[100%] w-full'/>
+               </div>
+          ) : (
+            <div className='h-full text-black space-y-10 my-20'>
+            {data?.map((item: any) => (
             
               item?.payment_status === "Đã thanh toán" ?  
                 <div key={item?.id} className='max-w-5xl mx-auto bg-white px-8 py-5 rounded-md Bills'>
@@ -123,7 +129,9 @@ const TicketHistory = () => {
             </div>
             : ""
           ))}
-        </div>
+          </div>
+          )}
+      
       </div>
       <footer className='text-white'>
         <Footer />

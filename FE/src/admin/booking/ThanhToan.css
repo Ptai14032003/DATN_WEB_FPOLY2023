@@ -1,0 +1,31 @@
+.ant-modal-content{
+  background-color: black;
+}
+:where(.css-dev-only-do-not-override-18iikkb).ant-modal .ant-modal-content {
+    background-color: black;
+}
+.ant-modal-close{
+display: none;
+}
+.ant-modal-close-x{
+    color: white;
+}
+.item-card{
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+}
+.info-card{
+    margin-bottom:5px;
+    display: flex;
+    justify-content: space-between;
+}
+.item-info-card{
+   color: #1ACAAC;
+   font-weight: 600;
+}
+.ModalVoucher .ant-btn-primary{
+    background-color: #1ACAAC!important;
+}
+.ModalVoucher .ant-btn-default{
+    display: none!important;
+}

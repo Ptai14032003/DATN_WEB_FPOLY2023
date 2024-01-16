@@ -10,6 +10,8 @@ import * as Yup from 'yup';
 const formSchema = Yup.object({
   password: Yup.string().min(8, "Password cần tối thiểu 8 kí tự, có chữ in hoa, có chữ thường, có số và có kí tự đặc biệt",
   ).required(),
+  old_password: Yup.string().min(8, "Password cần tối thiểu 8 kí tự, có chữ in hoa, có chữ thường, có số và có kí tự đặc biệt",
+  ).required(),
   password_confirmation: Yup.string().oneOf([Yup.ref('password')], "Mật khẩu không khớp")
     .required('Vui lòng xác nhận lại mật khẩu')
 });
@@ -91,14 +93,14 @@ const Profile = () => {
                 </div>
               </div>
             </div>
-            <div className='flex justify-end space-x-5 my-5'>
+            <div className='Profile-action flex justify-end space-x-5 my-5'>
               <button className='border rounded-md py-1 w-[150px] font-normal text-lg text-center' onClick={() => handleClick(2)} type='button'>Đổi mật khẩu</button>
               <button className='border rounded-md py-1 w-[150px] font-normal text-lg text-center bg-[#1ACAAC] pl-3'>Lưu thay đổi</button>
             </div>
           </form>
         </div>
       </div>
-      <div className={`${activeTab === 2 ? "text-white text-center" : "hidden"}`}>
+      <div className={`${activeTab === 2 ? "text-white text-center Profile-2" : "hidden"}`}>
         <h1 className='text-3xl font-bold my-10'>Đổi mật khẩu</h1>
         <div className='font-bold space-x-[5rem] my-8'>
           <button className='in4Active border rounded-full py-2 w-[13rem] text-black'>Tài khoản của tôi</button>
@@ -122,7 +124,7 @@ const Profile = () => {
               <input type="password" className='w-full h-[50px] bg-zinc-800 border rounded-md pl-3' placeholder='Xác nhận lại mật khẩu mới' {...register('password_confirmation')} name='password_confirmation' />
               <p className='text-red-500'>{errors.password_confirmation && <p>{errors.password_confirmation?.message}</p>}</p>
             </div>
-            <div className='flex justify-end mt-8'>
+            <div className='Profile-2-action flex justify-end mt-8'>
               <button className='border rounded-md py-1 w-[200px] font-normal text-lg  bg-[#1ACAAC] '>Đổi mật khẩu</button>
             </div>
           </form>

@@ -495,12 +495,12 @@ const Booking = () => {
                                 <div className='grid grid-cols-2 gap-12'>
                                     {Foods?.map((item: any) => (
                                         <div className='Combo grid grid-cols-3 border-2 border-white rounded-md bg-[#2f9c8a] p-3 gap-5' key={item?.id}>
-                                            <img src={item?.image} alt="" className='col-span-1 h-full w-full rounded-md' />
+                                            <img src={item?.image} alt="" className='col-span-1 h-[70%] w-full rounded-md my-auto' />
                                             <div className="col-span-2 flex flex-col justify-between">
                                                 <h1 className='text-xl font-semibold'>{item?.food_name} - {item?.price.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}</h1>
-                                                <p className='description'>01 nước siêu lớn + 01 bắp lớn + 01 xúc xích lốc xoáy</p>
-                                                <p className='description'>* Nhận ngay trong ngày xem phim</p>
-                                                <p className='description'>** Miễn phí đổi vị bắp Caramel</p>
+                                                <p className='description'>** Hương vị tuyệt vời</p>
+                                                <p className='description'>** Thỏa mãn vị giác</p>
+                                                <p className='description'>*** Nhận ngay tại quầy</p>
                                                 <div className='flex justify-between mt-2'>
                                                     <div className='combo-quantity h-[30px] flex'>
                                                         <button className='bg-white rounded-tl-md rounded-bl-md h-full flex items-center justify-center' onClick={() => handleDecrease(item?.food_name, item?.price)}>

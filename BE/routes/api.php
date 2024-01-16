@@ -51,7 +51,6 @@ Route::post('/update_new_pass', [UserController::class, 'update_new_pass'])->nam
 Route::post('/update_profile', [UserController::class, 'update_profile'])->name('update_profile');
 Route::post('/update_password', [UserController::class, 'update_password'])->name('update_password');
 
-Route::post('/payment_QR_Code', [PaymentController::class, 'payment_QR_Code'])->name('payment_QR_Code');
 
 //lịch sử đặt vé người dùng
 Route::post('/booking_history', [HomeController::class, 'booking_history'])->name('booking_history')->middleware('auth:sanctum');
@@ -69,6 +68,9 @@ Route::prefix('admin')->group(function () {
     //lịch sử đặt vé trang admin
     Route::get('/history_bills', [BillController::class, "history"])->name('history_bills');
 
+    //thanh toán admin
+    Route::post('/payment_admin', [PaymentController::class, 'payment_admin'])->name('payment_admin');
+    Route::post('/confirm_qr', [PaymentController::class, 'confirm_qr'])->name('confirm_qr');
     //phần xuất vé
     Route::post('/get_list_bill_export',[BillController::class,"get_list_bill_export"])->name('get_list_bill_export');
     Route::post('/get_bill_export',[BillController::class,"get_bill_export"])->name('get_bill_export');
@@ -96,7 +98,7 @@ Route::prefix('admin')->group(function () {
     Route::delete('/destroyMultipleMovie', [ApiMovieController::class, 'destroyMultipleMovie']);
     Route::delete('/destroyMultiplePromotion', [ApiPromotionController::class, 'destroyMultiplePromotion']);
     Route::delete('/destroyMultipleFood', [FoodController::class, 'destroyMultipleFood']);
-
+    Route::delete('/destroyMultipleRoom',[RoomApiController::class,'destroyMultipleRoom']);
     Route::get('/showingAdmin', [ApiMovieController::class, "showingAdmin"])->name('showingAdmin');
     Route::prefix('movie_type')->group(function () {
         Route::get('/', [ApiMovieTypeController::class, 'index']);

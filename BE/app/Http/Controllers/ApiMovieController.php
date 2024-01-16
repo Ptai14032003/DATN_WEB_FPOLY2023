@@ -20,18 +20,6 @@ class ApiMovieController extends Controller
         ->orderBy('movies.id', 'desc')
         ->get();
 
-    // // foreach ($movies as $movie) {
-    // //     $id = $movie->id;
-    // //     $genres = DB::table('list_genres')
-    // //         ->join('movie_genres', 'movie_genres.list_genre_id', '=', 'list_genres.id') 
-    // //         ->join('movies', 'movies.id', '=', 'movie_genres.movie_id')
-    // //         ->where('movie_genres.movie_id', $id)
-    // //         ->select('genre')
-    // //         ->get();
-
-    // //     $movie->genre = $genres->pluck('genre')->toArray();
-    //     
-    // }
     $movies->makeHidden([ 'movie_type_id']);
     return response()->json($movies);
 }
@@ -70,6 +58,19 @@ public function showingAdmin(){
         file_put_contents($filePath, $decodedData);
         $response = cloudinary()->upload($filePath)->getSecurePath();
 
+            // Kiểm tra start_date không được nhỏ hơn ngày hôm nay
+            
+        // $start_date = Carbon::parse($request->get('start_date'));
+        // if ($start_date->isBefore(Carbon::now())) {
+        //     return response()->json(['error' => 'Ngày bắt đầu không thể nhỏ hơn ngày hôm nay.'], 400);
+        // }
+
+        // // Kiểm tra end_date không được nhỏ hơn start_date
+        // $end_date = Carbon::parse($request->get('end_date'));
+        // if ($end_date->isBefore($start_date)) {
+        //     return response()->json(['error' => 'Ngày kết thúc không thể nhỏ hơn ngày bắt đầu.'], 400);
+        // }
+
             $type_name = $request->get('type_name');
             $movie_type = Movie_Type::where('type_name',$type_name)->first();
 
@@ -91,12 +92,12 @@ public function showingAdmin(){
                 'genre' => $genre,
                 'director' => $director,
                 'actor_name' => $actor_name,
-                'start_date' => '2024-01-10',    
-                'end_date' => '2024-01-15',
+                'start_date' => $start_date,    
+                'end_date' =>  $end_date,
                 'movie_time'=> $movie_time,
                 'image' => $response,
                 'trailer' => $trailer,
-                'describe' => ''
+                'describe' => $describe
             ];
             Movie::create($data); 
             return response()->json($data);
@@ -117,14 +118,7 @@ public function showingAdmin(){
             ->where('movies.id', $id)
             ->whereNull('movies.deleted_at')
             ->first();
-    
-            //  
-            //     $genres = DB::table('list_genres')
-            //         ->join('movie_genres', 'movie_genres.list_genre_id', '=', 'list_genres.id')
-            //         ->where('movie_genres.movie_id', $id)
-            //         ->pluck('genre')
-            //         ->toArray();
-            //     $movie->genres = $genres;    
+ 
             if ($movie){
             return response()->json($movie);
         } else {
@@ -138,48 +132,56 @@ public function showingAdmin(){
         if (!$movie) {
             return response()->json(['messages' => 'Phim không tồn tại'], 404);
         }
+
+        $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
     
-        // Initialize the $data array
-        $data = [];
+        $elements = explode(',', $fileData);
+
+        // Lấy tất cả các phần tử sau dấu ','
+        $elementsAfterComma = array_slice($elements, 1);
+        // Giải mã dữ liệu base64
+        $decodedData = base64_decode($elementsAfterComma[0]);
+
+        // Tạo một tên tệp tin duy nhất
+        $uniqueFileName = uniqid('file_');
+
+        // Lưu dữ liệu vào tệp tin mới tạo
+        $filePath = storage_path('app/' . $uniqueFileName);
+        file_put_contents($filePath, $decodedData);
+        $response = cloudinary()->upload($filePath)->getSecurePath();
     
         // Update the movie data
-        $movie->update($request->all());
+   
+        $data['image'] = $response;
+        $movie->update($data);
     
         if ($request->hasFile('image')) {
-            // Upload the new image to Cloudinary
-            $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
-    
-            $elements = explode(',', $fileData);
-    
-            // Lấy tất cả các phần tử sau dấu ','
-            $elementsAfterComma = array_slice($elements, 1);
-            // Giải mã dữ liệu base64
-            $decodedData = base64_decode($elementsAfterComma[0]);
-    
-            // Tạo một tên tệp tin duy nhất
-            $uniqueFileName = uniqid('file_');
-    
-            // Lưu dữ liệu vào tệp tin mới tạo
-            $filePath = storage_path('app/' . $uniqueFileName);
-            file_put_contents($filePath, $decodedData);
-            $response = cloudinary()->upload($filePath)->getSecurePath();
-    
-            // Delete old image from Cloudinary
-            $oldImage = $movie->image;
-            if ($oldImage) {
-                $publicId = cloudinary()->getPublicIdFromPath($oldImage);
+            // Xóa ảnh cũ trên Cloudinary
+            if ($movie->image) {
+                $publicId = pathinfo($movie->image)['filename'];
                 cloudinary()->destroy($publicId);
             }
     
-            // Update the image link in the $data array
-            $data['image'] = $response;
+            // Upload ảnh mới lên Cloudinary
+            $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
+            $elements = explode(',', $fileData);
+            $elementsAfterComma = array_slice($elements, 1);
+            $decodedData = base64_decode($elementsAfterComma[0]);
     
-            // Update the movie record with the new image link
-            $movie->update($data);
+            $uniqueFileName = uniqid('file_');
+            $filePath = storage_path('app/' . $uniqueFileName);
+            file_put_contents($filePath, $decodedData);
+    
+            $response = cloudinary()->upload($filePath)->getSecurePath();
+    
+            
+            // Xóa ảnh tạm trên local storage
+            unlink($filePath);
         }
     
         return response()->json(['messages' => 'Cập nhật phim thành công'], 202);
     }
+    
     
     
     public function destroy(string $id){

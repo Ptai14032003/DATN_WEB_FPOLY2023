@@ -55,30 +55,25 @@ const ExportTicket = () => {
     const handleCancel = () => {
         setIsModalOpen(false);
     };
-    const GetBillId = async (values: any) => {
+    const GetBillId = (values: any) => {
         const newData = {
-            bill_id: values.bill_id
+            bill_id: values
         }
-        console.log(newData);
-        
-        await getBillId(newData).unwrap()
-            .then((data: any) =>
-                // setBillData(data)
-                setBillData(data?.tickets)
-            )
-        await getBillId(newData).unwrap()
-            .then((data: any) =>
-                // setBillData(data)
-                setBillFoodData(data?.ticket_foods)
-            )
-    };
+        showModal();
+        getBillId(newData).then((data: any) => {
+            console.log(data);
+            setBillFoodData(data?.data?.ticket_foods)
+            setBillData(data?.data?.tickets)
+        })
+    }
+    console.log(billFoodData);
+
     const ExportBill = async (values: any) => {
         const newData = {
             bill_id: values.bill_id
         }
         await exportBill(newData).unwrap()
             .then((req: any) => {
-                // setBillData(data)
                 if (req?.message) {
                     message.success(req?.message);
                     setTimeout(() => {
@@ -105,24 +100,16 @@ const ExportTicket = () => {
                 <Column title="ID " dataIndex="id" key="id" />
                 <Column title="Tên Phim " dataIndex="movie_name" key="movie_name" />
                 <Column title="Số lượng vé" dataIndex="total_ticket" key="total_ticket" />
-                <Column title="số lượng combo" dataIndex="total_combo" key="total_combo" />
+                <Column title="Số lượng combo" dataIndex="total_combo" key="total_combo" />
                 <Column title="Tổng tiền" dataIndex="total_money" key="total_money" />
                 <Column
                     title="Action"
                     key="action"
                     render={(_: any, record: DataType) => (
                         <Space size="middle">
-                            {/* <Button type="primary" onClick={showModal}>
+                            <button onClick={() => GetBillId(record?.id)}>
                                 Xuất vé
-                            </Button> */}
-                            <form action="" onSubmit={handleSubmit(GetBillId)} className='Button-Export'>
-                                <div className=''>
-                                    <input type="number" value={record.id} {...register('bill_id')} name='bill_id' />
-                                </div>
-                                <button type="submit" onClick={showModal}>
-                                    Xuất vé
-                                </button>
-                            </form>
+                            </button>
                             <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel} className='ModalTicket'>
                                 <div className='grid grid-cols-2 gap-5'>
                                     {billData?.map((item: any) => (
@@ -157,7 +144,7 @@ const ExportTicket = () => {
                                                     </div>
                                                     <div className='flex text-amber-100'>
                                                         <p className='font-medium pr-2'>Giá vé:</p>
-                                                        <p>150.000 đ</p>
+                                                        <p>{item?.total_money}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -211,9 +198,9 @@ const ExportTicket = () => {
                                                     </div>
                                                 </div>
                                                 <div className='flex text-amber-100'>
-                                                        <p className='font-medium pr-2'>Giá:</p>
-                                                        <p>30.000 đ</p>
-                                                    </div>
+                                                    <p className='font-medium pr-2'>Giá:</p>
+                                                    <p>{item?.price}</p>
+                                                </div>
                                             </div>
                                             <div className='w-[35%] bg-amber-100 rounded-r-md p-3'>
                                                 <div className='flex justify-center'>
@@ -238,7 +225,7 @@ const ExportTicket = () => {
                                         <input type="number" value={record.id} {...register('bill_id')} name='bill_id' />
                                     </div>
                                     <div className='flex justify-end'>
-                                        <button type="submit" onClick={showModal} className='border border-2 border-blue-500 rounded-md px-3 py-1 hover:bg-blue-200'>
+                                        <button type="submit" onClick={showModal} className='border border-blue-500 rounded-md px-3 py-1 hover:bg-blue-200'>
                                             Xuất vé
                                         </button>
                                     </div>

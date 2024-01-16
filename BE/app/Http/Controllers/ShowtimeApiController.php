@@ -8,6 +8,7 @@ use App\Http\Resources\ShowtimeResource;
 use App\Models\Movie;
 use App\Models\Showtime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ShowtimeApiController extends Controller
 {
@@ -23,10 +24,22 @@ class ShowtimeApiController extends Controller
 
     public function store(Request $request)
     {
-
-        $show_time = Showtime::create($request->all());
-        if($show_time){
-            return response()->json(['messages' => 'Thêm Suất chiếu thành công']);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'show_date' => 'after:today'
+            ],
+            [
+                'show_date.after' => "Ngày suất chiếu phải trước ngày hiện tại"
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json($validator->messages());
+        } else {
+            $show_time = Showtime::create($request->all());
+            if ($show_time) {
+                return response()->json(['message' => 'Thêm Suất chiếu thành công']);
+            }
         }
     }
     public function show(string $id)
@@ -38,7 +51,7 @@ class ShowtimeApiController extends Controller
         if ($show_time) {
             return new ShowtimeResource($show_time);
         } else {
-            return response()->json(['messages' => 'Suất chiếu không tồn tại'], 404);
+            return response()->json(['message' => 'Suất chiếu không tồn tại'], 404);
         }
     }
 

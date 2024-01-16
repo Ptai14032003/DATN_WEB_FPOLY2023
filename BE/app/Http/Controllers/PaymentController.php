@@ -9,6 +9,7 @@ use App\Models\Seat;
 use App\Models\Showtime;
 use App\Models\Ticket;
 use App\Models\Ticket_Food;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -205,7 +206,7 @@ class PaymentController extends Controller
                             } else {
                                 $Status = 2; // Trạng thái thanh toán thất bại / lỗi
                                 $returnData['RspCode'] = '99';
-                                $returnData['Message'] = 'Thanh toán thất bại / lỗi';
+                                $returnData['error'] = 'Thanh toán thất bại / lỗi';
                             }
                             //Cài đặt Code cập nhật kết quả thanh toán, tình trạng đơn hàng vào DB
                             Bill::where('id', $bill_id)->update(['status' => $Status]);
@@ -216,24 +217,24 @@ class PaymentController extends Controller
                             // Trạng thái thanh toán thất bại / lỗi
                             Bill::where('id', $bill_id)->update(['status' => 2]);
                             $returnData['RspCode'] = '99';
-                            $returnData['Message'] = 'Thanh toán thất bại / lỗi';
+                            $returnData['error'] = 'Thanh toán thất bại / lỗi';
                         }
                     } else {
                         Bill::where('id', $bill_id)->update(['status' => 2]);
                         $returnData['RspCode'] = '04';
-                        $returnData['Message'] = 'Số tiền không hợp lệ';
+                        $returnData['error'] = 'Số tiền không hợp lệ';
                     }
                 } else {
                     $returnData['RspCode'] = '01';
-                    $returnData['Message'] = 'Không tìm thấy đơn hàng';
+                    $returnData['error'] = 'Không tìm thấy đơn hàng';
                 }
             } else {
                 $returnData['RspCode'] = '97';
-                $returnData['Message'] = 'Chữ ký không hợp lệ';
+                $returnData['error'] = 'Chữ ký không hợp lệ';
             }
         } catch (Exception $e) {
             $returnData['RspCode'] = '99';
-            $returnData['Message'] = 'Unknow error';
+            $returnData['error'] = 'Unknow error';
         }
 
         //Trả lại VNPAY theo định dạng JSON
@@ -242,36 +243,134 @@ class PaymentController extends Controller
 
 
     //QR code 
-    public function payment_QR_Code(Request $request)
+    // public function payment_QR_Code(Request $request)
+    // {
+    //     $data = $request->all();
+    //     $curl = curl_init();
+
+    //     curl_setopt_array($curl, array(
+    //         CURLOPT_URL => "https://bio.ziller.vn/api/qr/add",
+    //         CURLOPT_RETURNTRANSFER => true,
+    //         CURLOPT_ENCODING => "",
+    //         CURLOPT_MAXREDIRS => 2,
+    //         CURLOPT_TIMEOUT => 10,
+    //         CURLOPT_FOLLOWLOCATION => true,
+    //         CURLOPT_CUSTOMREQUEST => "POST",
+    //         CURLOPT_HTTPHEADER => array(
+    //             "Authorization: Bearer 33d5533a1270abc08e5f2e530735b916",
+    //             "Content-Type: application/json",
+    //         ),
+    //         CURLOPT_POSTFIELDS => json_encode(array(
+    //             'type' => 'text',
+    //             'data' => '2|99|' . '0923896715' . '|Wonder Cinema||0|0|' . $data['total_money'] . '|Thanh toán hóa đơn đặt vé xem phim|transfer_myqr',
+    //             'background' => 'rgb(255,255,255)',
+    //             'foreground' => 'rgb(0,0,0)',
+    //             'logo' => 'C:\xampp\htdocs\datn_web_fpoly2023\FE\public\Wonder-logo-1.png',
+    //         )),
+    //     ));
+
+    //     $response = curl_exec($curl);
+
+    //     curl_close($curl);
+    //     $response = json_decode($response);
+    //     return response()->json($response);
+    // }
+
+    public function payment_admin(Request $request)
+    {
+        $showtime_id = $request->showtime_id;
+        $seat = $request->seat;
+        $combo = $request->combo;
+        $total_money = $request->total_money;
+        $user_code = $request->user_code ?? null;
+        $personnel_code = $request->user_code;
+        $additional_fee = $request->additional_fee ?? 0;
+        $payment_method = $request->payment_method;
+        $fee = true;
+        if ($user_code != null) {
+            $user = User::where('user_code', $user_code)->first();
+            if (!$user) {
+                return response()->json(['error' => "Mã người dùng không tồn tại"], 404);
+            }
+            $fee = false;
+        }
+        $bill = [
+            "user_code" => $user_code ?? null,
+            "total_ticket" => count($seat),
+            "total_combo" => count($combo),
+            "total_money" => $total_money,
+            "payment_time" => date("Y-m-d H:i:s"),
+            "status" => 0,
+            "personnel_code" => $personnel_code,
+            "additional_fee" => $fee == true ? $additional_fee : 0,
+        ];
+        $bill_add = Bill::create($bill);
+        for ($i = 0; $i < count($seat); $i++) {
+            $type_seat = Seat::join("type_seats", "type_seats.id", "=", "seats.type_seat_id")->where("seats.id", $seat[$i]['id'])->first();
+            $ticket = [
+                'id_seat' => $seat[$i]['id'],
+                'showtime_id' => $showtime_id,
+                'bill_id' => $bill_add->id,
+                'price' => $type_seat->type_name == "Đôi" ? ($seat[$i]['price'] / 2) : $seat[$i]['price']
+            ];
+
+            Ticket::create($ticket);
+        }
+
+        for ($i = 0; $i < count($combo); $i++) {
+            $food = Food::where('food_name', 'like', $combo[$i]['name'])->first();
+
+            $food = [
+                'quantity' => $combo[$i]['quantity'],
+                'total_money' => ($food->price * $combo[$i]['quantity']),
+                'food_id' => $food->id,
+                'bill_id' => $bill_add->id
+            ];
+            Ticket_Food::create($food);
+        }
+        switch ($payment_method) {
+            case 0:
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => "https://bio.ziller.vn/api/qr/add",
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => "",
+                    CURLOPT_MAXREDIRS => 2,
+                    CURLOPT_TIMEOUT => 10,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_CUSTOMREQUEST => "POST",
+                    CURLOPT_HTTPHEADER => array(
+                        "Authorization: Bearer 33d5533a1270abc08e5f2e530735b916",
+                        "Content-Type: application/json",
+                    ),
+                    CURLOPT_POSTFIELDS => json_encode(array(
+                        'type' => 'text',
+                        'data' => '2|99|' . '0923896715' . '|Wonder Cinema||0|0|' . $total_money . '|Thanh toán hóa đơn đặt vé xem phim|transfer_myqr',
+                        'background' => 'rgb(255,255,255)',
+                        'foreground' => 'rgb(0,0,0)',
+                        'logo' => 'C:\xampp\htdocs\datn_web_fpoly2023\FE\public\Wonder-logo-1.png',
+                    )),
+                ));
+
+                $response = curl_exec($curl);
+
+                curl_close($curl);
+                $response = json_decode($response);
+                return response()->json(['bill_id' => $bill_add->id, 'link' => $response->link]);
+                break;
+            case 1:
+                Bill::where('id', $bill_add->id)->update(['status' => 1]);
+                return response()->json(['message' => "Thành công. Vui lòng xuất vé", 'bill_id' => $bill_add->id]);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public function confirm_qr(Request $request)
     {
         $data = $request->all();
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://bio.ziller.vn/api/qr/add",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 2,
-            CURLOPT_TIMEOUT => 10,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_HTTPHEADER => array(
-                "Authorization: Bearer 33d5533a1270abc08e5f2e530735b916",
-                "Content-Type: application/json",
-            ),
-            CURLOPT_POSTFIELDS => json_encode(array(
-                'type' => 'text',
-                'data' => '2|99|' . $data['phone_number'] . '|Wonder Cinema||0|0|' . $data['total_money'] . '|Thanh toán hóa đơn đặt vé xem phim|transfer_myqr',
-                'background' => 'rgb(255,255,255)',
-                'foreground' => 'rgb(0,0,0)',
-                'logo' => 'C:\xampp\htdocs\datn_web_fpoly2023\FE\public\Wonder-logo-1.png',
-            )),
-        ));
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-        $response = json_decode($response);
-        return response()->json($response);
+        Bill::where('id', $data['bill_id'])->update(['status' => 1]);
+        return response()->json(['message' => "Thành công. Vui lòng xuất vé", 'bill_id' => $data['bill_id']]);
     }
 }
