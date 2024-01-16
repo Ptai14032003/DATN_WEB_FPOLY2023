@@ -98,10 +98,10 @@ Route::prefix('admin')->group(function () {
         Route::put('/{id}', [ApiMovieController::class, 'update']);
         Route::delete('/{id}', [ApiMovieController::class, 'destroy']);
     });
-    Route::delete('/destroyMultipleMovie', [ApiMovieController::class, 'destroyMultipleMovie']);
-    Route::delete('/destroyMultiplePromotion', [ApiPromotionController::class, 'destroyMultiplePromotion']);
-    Route::delete('/destroyMultipleFood', [FoodController::class, 'destroyMultipleFood']);
-    Route::delete('/destroyMultipleRoom', [RoomApiController::class, 'destroyMultipleRoom']);
+    Route::post('/destroyMultipleMovie', [ApiMovieController::class, 'destroyMultipleMovie']);
+    Route::post('/destroyMultiplePromotion', [ApiPromotionController::class, 'destroyMultiplePromotion']);
+    Route::post('/destroyMultipleFood', [FoodController::class, 'destroyMultipleFood']);
+    Route::post('/destroyMultipleRoom', [RoomApiController::class, 'destroyMultipleRoom']);
     Route::get('/showingAdmin', [ApiMovieController::class, "showingAdmin"])->name('showingAdmin');
     Route::prefix('movie_type')->group(function () {
         Route::get('/', [ApiMovieTypeController::class, 'index']);
