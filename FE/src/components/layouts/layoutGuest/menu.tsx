@@ -25,6 +25,7 @@ const Menu = () => {
 
   const userString = localStorage.getItem('user');
   const user = userString ? JSON.parse(userString) : null;
+  
 
 
   const Logout = async () => {
@@ -67,15 +68,13 @@ const Menu = () => {
               </li>
                 {dropDown ?
                   <ul className="dropdown-content absolute translate-y-[5.1rem] -translate-x-[2rem] right-6 w-[250px] text-center drop-have-user">
-                    {user.role === 'Admin' && (
+                    {(user.role === 'Admin' || user.role === 'Nhân Viên') && (
                       <a href={homeLink + "admin"}>
                         <li>
                           Admin
                         </li>
                       </a>
                     )}
-                    <a href={homeLink + 'profile'} className='block'><li>Thông tin cá nhân</li></a>
-                    <a href={homeLink + 'ticket-history'}><li>Lịch sử đặt vé</li></a>
                     <li onClick={() => Logout()}><div className='block'>Đăng xuất</div></li>
                   </ul>
                   : ""
@@ -128,15 +127,13 @@ const Menu = () => {
                   </li>
                     {dropDown ?
                       <ul className=" absolute translate-y-[0.7rem] -translate-x-[-0.3rem] right-6 w-[250px] text-end">
-                        {user.role === 'Admin' && (
+                        {(user.role === 'Admin' || user.role === 'Nhân Viên') && (
                           <a href={homeLink + "admin"}>
                             <li className='text-[#1ACAAC] mb-3'>
                               Admin
                             </li>
                           </a>
                         )}
-                        <a href={homeLink + 'profile'} ><li className='text-[#1ACAAC] mb-3'>Thông tin cá nhân</li></a>
-                        <a href={homeLink + 'ticket-history'}><li className='text-[#1ACAAC] mb-3'>Lịch sử đặt vé</li></a>
                         <li onClick={() => Logout()} className='text-[#1ACAAC]'><div>Đăng xuất</div></li>
                       </ul>
                       : ""

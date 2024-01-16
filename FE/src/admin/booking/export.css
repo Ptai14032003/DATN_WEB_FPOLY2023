@@ -2,7 +2,7 @@
     width: 1100px!important;
     margin: 0 auto;
 }
-.ModalTicket .ant-modal-content{
+.ant-modal-content{
     background-color: white!important;
 }
 .Button-Export .ant-btn-default, .Button-Export .ant-btn-primary{
