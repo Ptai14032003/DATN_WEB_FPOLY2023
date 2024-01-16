@@ -25,8 +25,6 @@ const DetailBill: React.FC<Props> = ({ projects }: Props) => {
         setIsModalOpen(false);
         setData(undefined);
     };
-    console.log(dataBill);
-
     return (
         <>
             <Button onClick={() => { showModal() }}>Chi tiết hoá đơn</Button>
@@ -34,28 +32,24 @@ const DetailBill: React.FC<Props> = ({ projects }: Props) => {
                 <div className={`${dataBill && dataBill.tickets && dataBill.tickets.length > 0 ? "flex" : ""}`}>
 
                     <div>
-                        {dataBill && dataBill.tickets && dataBill.tickets.length > 0 ? (
+                        {dataBill && dataBill.tickets && dataBill.tickets.length > 0 && (
                             <div className="py-5">
-                                {dataBill?.tickets?.map((item: any, index: number) => (
-                                    <div key={index}>
-                                        <div className="text-2xl font-bold">Hoá đơn</div>
-                                        <div className="py-5">
-                                            <div>Mã hoá đơn :</div>
-                                            <div>{item?.bill_code}</div>
-                                        </div>
-                                        <div className="">
-                                            <div>Mã người dùng :</div>
-                                            <div>{item?.user_code}</div>
-                                        </div>
-                                        <div className="py-5">
-                                            <div>Người dùng</div>
-                                            <div>{item?.user_name}</div>
-                                        </div>
+                                <div>
+                                    <div className="text-2xl font-bold">Hoá đơn</div>
+                                    <div className="py-5">
+                                        <div>Mã hoá đơn :</div>
+                                        <div>{item?.bill_code}</div>
                                     </div>
-                                ))}
+                                    <div className="">
+                                        <div>Mã người dùng :</div>
+                                        <div>{item?.user_code}</div>
+                                    </div>
+                                    <div className="py-5">
+                                        <div>Người dùng</div>
+                                        <div>{item?.user_name}</div>
+                                    </div>
+                                </div>
                             </div>
-                        ) : (
-                            <div className="text-[16px] font-bold">Trống</div>
                         )}
                     </div>
                     <div>
