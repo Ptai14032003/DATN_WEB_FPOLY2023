@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Cloudinary\Cloudinary;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ApiMovieController extends Controller
 { 
@@ -44,7 +45,8 @@ public function showingAdmin(){
             [  
                 'movie_name' => "unique:movies,movie_name",
                 'start_date' => 'after:today',
-                'end_date' => 'after:start_date'
+                'end_date' => 'after:start_date',
+              
             ],
             [
                 'movie_name.unique' => "Tên phim đã tồn tại",
@@ -137,7 +139,10 @@ public function showingAdmin(){
         $validator = Validator::make(
             $request->all(),
             [  
-                'movie_name' => "unique:movies,movie_name",
+                'movie_name' =>
+                [ "unique:movies,movie_name",
+                Rule::unique('movies')->ignore($this->id)
+                ],
                 'start_date' => 'after:today',
                 'end_date' => 'after:start_date'
             ],
