@@ -317,16 +317,16 @@ class BillController extends Controller
 
     //chi tiết hóa đơn
 
-    public function bill_detail(Request $request)
+    public function bill_detail(Request $request,$id)
     {
-        $bill_id = $request->bill_id;
+       
         $bill_detail = Bill::leftjoin('users', 'users.user_code', '=', 'bills.user_code')
             ->leftjoin('personnels', 'personnels.personnel_code', '=', 'bills.personnel_code')
             ->join('tickets', 'tickets.bill_id', '=', 'bills.id')
             ->join('showtimes', 'showtimes.id', '=', 'tickets.showtime_id')
             ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
             ->join('rooms', 'rooms.id', '=', 'showtimes.room_id')
-            ->where('bills.id', $bill_id)
+            ->where('bills.id', $id)
             ->select(
                 'bills.id',
                 'bills.bill_code',
@@ -375,12 +375,12 @@ class BillController extends Controller
             ->join('movies', 'movies.id', '=', 'showtimes.movie_id')
             ->join('rooms', 'rooms.id', '=', 'showtimes.room_id')
             ->join('seats', 'seats.id', '=', 'tickets.id_seat')
-            ->where('bill_id', $bill_id)
+            ->where('bill_id', $id)
             ->select('seats.seat_code', 'tickets.price')
             ->groupBy('seat_code', 'tickets.price')
             ->get();
         $ticket_foods = Ticket_Food::join('foods', 'foods.id', '=', 'ticket_foods.food_id')
-            ->where('bill_id', $bill_id)
+            ->where('bill_id', $id)
             ->select(
                 'foods.food_name',
                 'ticket_foods.quantity',
