@@ -109,36 +109,11 @@ const AdminQlGuest: React.FC = () => {
                     color="black"
                 />
             ) : (
-                <Table dataSource={dataTable} pagination={{ pageSize: 6, }}>
+                <Table dataSource={dataTable} pagination={{ pageSize: 10 }}>
                     <Column title="Mã khách hàng" dataIndex="user_code" key="user_code" />
                     <Column title="Tên khách hàng" dataIndex="name" key="name" />
                     <Column title="Email" dataIndex="email" key="email" />
                     <Column title="Số điện thoại" dataIndex="phone_number" key="phone_number" />
-                    {checkRoleAdmin && (
-                        <Column
-                            title="Action"
-                            key="action"
-                            render={(_: any, record: any) => (
-                                <Space size="middle">
-                                    <a>
-                                        <Popconfirm
-                                            title="Delete the task"
-                                            description="Are you sure to delete this task?"
-                                            onConfirm={() => {
-                                                deleteOne(record.key);
-                                            }}
-                                            okButtonProps={{
-                                                style: { backgroundColor: "#007bff" },
-                                            }}
-                                            okText="Yes"
-                                            cancelText="No"
-                                        >
-                                            <Button danger>Delete</Button>
-                                        </Popconfirm></a>
-                                </Space>
-                            )}
-                        />
-                    )}
                 </Table>
             )}
         </div>

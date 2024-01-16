@@ -46,7 +46,15 @@ const statisticsApi = createApi({
             }),
             invalidatesTags: ["statistics"]
         }),
+        Top5NhanSu: builder.mutation<any, any>({
+            query: (body) => ({
+                url: `/get_top5_personnel/`,
+                method: "POST",
+                body
+            }),
+            invalidatesTags: ["statistics"]
+        }),
     })
 })
-export const { useRevenueMoviesAPIMutation, useRevenueAllAPIMutation, useTop5FoodsMutation, useTop5MoviesMutation, useTop5UsersMutation } = statisticsApi
+export const { useRevenueMoviesAPIMutation, useRevenueAllAPIMutation, useTop5FoodsMutation, useTop5MoviesMutation, useTop5UsersMutation,useTop5NhanSuMutation } = statisticsApi
 export default statisticsApi
