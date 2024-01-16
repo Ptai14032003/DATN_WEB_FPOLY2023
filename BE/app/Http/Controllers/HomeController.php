@@ -274,6 +274,7 @@ class HomeController extends Controller
             ->where('bills.user_code', $request->user_code)
             ->select(
                 'bills.id',
+                'bills.bill_code',
                 'bills.user_code',
                 'users.name as user_name',
                 'bills.total_ticket',
@@ -296,6 +297,7 @@ class HomeController extends Controller
             )
             ->groupBy(
                 'bills.id',
+                'bills.bill_code',
                 'bills.user_code',
                 'users.name',
                 'bills.total_ticket',
@@ -317,7 +319,7 @@ class HomeController extends Controller
 
     public function send_mail(Request $request)
     {
-        $bill = Bill::where('id', $request->bill_id)->first();
+        $bill = Bill::where('bill_code', $request->bill_code)->first();
         //thông tin người nhận mail
         $user = User::where('user_code', $bill->user_code)->first();
 
@@ -328,8 +330,9 @@ class HomeController extends Controller
             ->join('rooms', 'rooms.id', '=', 'showtimes.room_id')
             ->leftJoin('ticket_foods', 'ticket_foods.bill_id', '=', 'bills.id')
             ->leftJoin('foods', 'foods.id', '=', 'ticket_foods.food_id')
-            ->where('bills.id', $request->bill_id)
+            ->where('bills.bill_code', $request->bill_code)
             ->select(
+                'bills.bill_code',
                 'showtimes.show_date as show_date',
                 'movies.movie_name as movie_name',
                 'rooms.name as room_name',
@@ -338,13 +341,14 @@ class HomeController extends Controller
                 DB::raw('GROUP_CONCAT(DISTINCT seats.seat_code) as seat'),
                 DB::raw('GROUP_CONCAT(DISTINCT IFNULL(CONCAT(ticket_foods.quantity, "-", foods.food_name), "")) as food')
             )
-            ->groupBy('show_date', 'movie_name', 'room_name', 'show_time', 'movie_time')
+            ->groupBy('bills.bill_code','show_date', 'movie_name', 'room_name', 'show_time', 'movie_time')
             ->first();
         // send mail
         $to_name = "Wonder Cenima"; //tên người gửi
         $to_email = $user->email;
 
         $data = array(
+            "bill_code"=>$movie->bill_code,
             "name" => $user->name,
             "movie_name" => $movie->movie_name,
             "show_date" => $movie->show_date,

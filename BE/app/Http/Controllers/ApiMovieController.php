@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Cloudinary\Cloudinary;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+
 class ApiMovieController extends Controller
 { 
    public function index(){
@@ -40,9 +42,11 @@ public function showingAdmin(){
     public function store(Request $request){
         $validator = Validator::make(
             $request->all(),
-            [   'movie_name' => "movie_name:unique",
+            [  
+                'movie_name' => "unique:movies,movie_name",
                 'start_date' => 'after:today',
-                'end_date' => 'after:start_date'
+                'end_date' => 'after:start_date',
+              
             ],
             [
                 'movie_name.unique' => "Tên phim đã tồn tại",
@@ -102,7 +106,7 @@ public function showingAdmin(){
                 'describe' => $describe
             ];
             Movie::create($data); 
-            return response()->json($data);
+            return response()->json([$data,'message' => 'Thêm phim thành công']);
 
         // }
         // }else{
@@ -131,28 +135,12 @@ public function showingAdmin(){
     
     public function update(Request $request, string $id) {
         $movie = Movie::find($id);
-
         if (!$movie) {
             return response()->json(['messages' => 'Phim không tồn tại'], 404);
         }
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'start_date' => 'after:today',
-                'end_date' => 'after:start_date'
-            ],
-            [
-                'start_date.after' => "Ngày bắt đầu không được nhỏ hơn ngày hiện tại",
-                'end_date.after' => "Ngày kết thúc không được nhỏ hơn ngày bát đầu"
-            ]
-        );
-        if ($validator->fails()) {
-            return response()->json($validator->messages());
-        } else {
-        // Update other fields based on the request
+     
         $movie->update($request->except('image'));
     
-        // Handle image upload if a new image is provided in the request
         if ($request->input('image')['fileList']) {
             $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
             $elements = explode(',', $fileData);
@@ -166,16 +154,14 @@ public function showingAdmin(){
             // Save the new image path to the movie record
             $movie->image = $imagePath;
             $movie->save();
+
         }else{
             $movie->image = $request->image;
         }
     
-        return response()->json(['message' => 'Phim đã được cập nhật thành công'], 200);
+        return response()->json(['message' => 'Sản phẩm đã được cập nhật thành công'], 200);
     }
-}
-    
-    
-    
+
     public function destroy(string $id){
         $movie = Movie::find($id);
 

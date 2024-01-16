@@ -11,6 +11,7 @@ class Bill extends Model
     use HasFactory,SoftDeletes;
     protected $table = 'bills';
     protected $fillable = [
+        'bill_code',
         'user_code',
         'personnel_id',
         'total_ticket',

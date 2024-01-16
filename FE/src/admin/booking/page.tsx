@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react'
-
-import { Image, Space, Table, message } from 'antd';
-import { useFetchMoviesQuery, useFetchShowingAdminQuery } from '../../rtk/movies/movies';
-import { useFetchMovieTypeQuery } from '../../rtk/movie_type/page';
+import { Image, Space, Table } from 'antd';
+import { useFetchAdminBookingMoviesQuery } from '../../rtk/movies/movies';
 import Column from 'antd/es/table/Column';
-import BookingAdminMovies from './booking';
 import { Link } from 'react-router-dom';
 
 interface DataType {
@@ -16,7 +13,7 @@ interface DataType {
 }
 
 const BookingAdmin = () => {
-    const { data: movies } = useFetchShowingAdminQuery();
+    const { data: movies } = useFetchAdminBookingMoviesQuery();
     const [data, setData] = useState<DataType[]>([]);
     useEffect(() => {
         if (Array.isArray(movies)) {

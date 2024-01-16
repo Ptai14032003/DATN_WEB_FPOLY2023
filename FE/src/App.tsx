@@ -20,7 +20,6 @@ import Seat from './components/itemAdmin/Seat/page.tsx'
 import TicketPrice from './personPage/TicketPrice.tsx'
 import Profile from './personPage/Profile.tsx'
 import CheckPay from './personPage/checkPay.tsx'
-import Payment from './personPage/Payment.tsx'
 import NotFound from './personPage/404.tsx'
 import TicketHistory from './personPage/TicketHistory.tsx'
 import ResetPassword from './personPage/ResetPassword.tsx'
@@ -73,7 +72,6 @@ function App() {
       <Route path="signup" element={<Signup />} />
       <Route path='movie_show_time/:id' element={<Detail />}></Route>
       <Route path='booking/:id' element={<Booking />} />
-      <Route path='payment' element={<Payment />} />
       <Route path="listvnp" element={<CheckPay />} />
       {checkRoleNhansu && (
         <Route path='/admin' element={<LayoutAdmin />}>

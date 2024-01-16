@@ -1,19 +1,42 @@
 import React, { useState } from 'react';
-import { Button, Form, Image, Input, InputNumber, Modal, Upload, message } from 'antd';
+import { Button, Form, Image, Input, InputNumber, Modal, Select, Upload, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
 import { QlFood } from './page';
-import { useFetchFoodIDQuery, useUpdateFoodMutation } from '../../rtk/qlSp/qlSp';
+import { useFetchFoodIDQuery, useFetchTypeFoodsQuery, useUpdateFoodMutation } from '../../rtk/qlSp/qlSp';
 type Props = {
     projects: string
 }
+export interface QlFoodCreate {
+    key: string;
+    food_name: string,
+    food_type_id: string,
+    price: number,
+    image: string,
+}
 const EditQlSp: React.FC<Props> = ({ projects }: Props) => {
+    const { data: dataTypeFood } = useFetchTypeFoodsQuery()
     const { data } = useFetchFoodIDQuery(projects)
     const [putFood] = useUpdateFoodMutation()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const formRef = React.useRef<FormInstance>(null);
+    const selectTypeFood = dataTypeFood?.map((food: any) => ({
+        value: food?.id,
+        label: food?.name,
+    }));
     const onFinish = (values: any) => {
-        putFood({ body: values, id: projects }).then(() => { setIsModalOpen(false), message.success("Sửa thành công") })
+        console.log(values);
+
+        putFood({ body: values, id: projects }).then((data: any) => {
+            if (data?.data?.food_name) {
+                message.error(data?.data?.food_name[0])
+            } else {
+                message.success("Sửa thành công");
+                setTimeout(() => {
+                    setIsModalOpen(false)
+                }, 3000)
+            }
+        })
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -32,7 +55,7 @@ const EditQlSp: React.FC<Props> = ({ projects }: Props) => {
         <>
 
             <Button onClick={showModal}>Sửa</Button>
-            <Modal title="Sua phim " open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
+            <Modal title="Sửa thông tin sản phẩm " open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
                 {data ? (
                     <Form className='mr-[60px]'
                         name='formLogin'
@@ -45,7 +68,7 @@ const EditQlSp: React.FC<Props> = ({ projects }: Props) => {
                         autoComplete="off"
                         initialValues={data}
                     >
-                        <Form.Item<QlFood>
+                        <Form.Item<QlFoodCreate>
                             label="Sản phẩm"
                             name="food_name"
                             rules={[{ required: true, message: 'Vui lòng nhập tên sản phẩm !' }]}
@@ -53,27 +76,31 @@ const EditQlSp: React.FC<Props> = ({ projects }: Props) => {
                             <Input />
                         </Form.Item>
 
-                        <Form.Item<QlFood>
+                        <Form.Item<QlFoodCreate>
                             label="Giá"
                             name="price"
                             rules={[{ required: true, message: 'Vui lòng nhập giá sản phẩm !' }]}
                         >
-                            <InputNumber min={0} />
+                            <InputNumber min={0} style={{ width: 150 }} />
                         </Form.Item>
-                        <Form.Item<QlFood>
+                        <Form.Item<QlFoodCreate>
                             label="Loại sản phẩm"
-                            name="name"
+                            name="food_type_id"
                             rules={[{ required: true, message: 'Vui lòng nhập loại sản phẩm !' }]}
                         >
-                            <Input />
+                            <Select className='ml-[-72px]'
+                                placeholder="Chọn loại sản phẩm"
+                                style={{ width: 200 }}
+                                options={selectTypeFood}
+                            />
                         </Form.Item>
-                        <Form.Item<QlFood>>
+                        <Form.Item<QlFoodCreate>>
                             <div className='mx-[60%]'>
                                 <Image className='' width={150}
                                     src={data?.image} />
                             </div>
                         </Form.Item>
-                        <Form.Item<QlFood>
+                        <Form.Item<QlFoodCreate>
                             label="Ảnh"
                             name="image"
                             rules={[{ required: true, message: 'Vui lòng nhập ảnh !' }]}

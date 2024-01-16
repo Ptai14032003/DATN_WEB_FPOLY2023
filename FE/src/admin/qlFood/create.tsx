@@ -21,7 +21,14 @@ const CreateQlSp: React.FC = () => {
     }));
     const onFinish = (values: any) => {
         if (checkApi) {
-            addFood(values).then(() => { setIsModalOpen(false); formRef.current?.resetFields(); message.success("Thêm thành công") })
+            addFood(values).then((data: any) => {
+                if (data?.data?.food_name) {
+                    message.error(data?.data?.food_name[0])
+                } else {
+                    setIsModalOpen(false), message.success("Thêm thành công");
+                    formRef.current?.resetFields();
+                }
+            })
             setCheckApi(false)
             return;
         }
@@ -37,7 +44,7 @@ const CreateQlSp: React.FC = () => {
     return (
         <>
             <Button onClick={showModal}>Thêm sản phẩm mới</Button>
-            <Modal title="Tạo phim mới" open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
+            <Modal title="Tạo sản phẩm mới" open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
                 <Form className='mr-[60px]'
                     name='formLogin'
                     ref={formRef}
@@ -61,7 +68,7 @@ const CreateQlSp: React.FC = () => {
                         name="price"
                         rules={[{ required: true, message: 'Vui lòng nhập giá sản phẩm !' }]}
                     >
-                        <InputNumber min={0} />
+                        <InputNumber min={0} style={{ width: 150 }} />
                     </Form.Item>
                     <Form.Item<QlFoodCreate>
                         label="Loại sản phẩm"

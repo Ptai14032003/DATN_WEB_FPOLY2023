@@ -22,6 +22,7 @@ const Booking = () => {
     const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
     const [idGhe, setidGhe] = useState<any[]>([])
     const [combo, setCombo] = useState<[]>([]);
+    const [room, setRoom] = useState<any>()
     const [priceFood, setPriceFood] = useState(0)
     const [money, setMoney] = useState<number>(0);
     const [groupSeats, setGroupSeats] = useState<any>();
@@ -48,6 +49,9 @@ const Booking = () => {
             }, {});
             const groupedSeatsArray = Object.values(groupedSeats);
             setGroupSeats(groupedSeatsArray)
+        }
+        if (seatBooking) {
+            setRoom(seatBooking?.seats[0]?.room_name)
         }
     }, [seats])
     const handleClick = (tabNumber: number) => {
@@ -363,14 +367,14 @@ const Booking = () => {
 
     useEffect(() => {
         const handleScroll = () => {
-          const scrollPosition = window.scrollY || window.pageYOffset;
-          const shouldFix = scrollPosition > (0.8 * window.innerHeight) && activeTab !== 3;
-          setIsFixed(shouldFix);
+            const scrollPosition = window.scrollY || window.pageYOffset;
+            const shouldFix = scrollPosition > (0.8 * window.innerHeight) && activeTab !== 3;
+            setIsFixed(shouldFix);
         };
-    
+
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
-      }, [activeTab]);
+    }, [activeTab]);
 
 
     return (
@@ -523,7 +527,7 @@ const Booking = () => {
                             </div>
                         </div>
                         <div className={`${activeTab === 3 ? "" : "hidden"}`}>
-                            <ThanhToan data={{ selectedSeats, priceTong, movieBooking, combo, idGhe, show_time }} key={`1`} />
+                            <ThanhToan data={{ selectedSeats, priceTong, movieBooking, combo, idGhe, show_time, room }} key={`1`} />
                         </div>
                     </div>
                 </div>

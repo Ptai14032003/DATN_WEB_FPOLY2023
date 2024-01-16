@@ -62,9 +62,13 @@ class StatisticalController extends Controller
         $data = $request->all();
         $currentYear = Carbon::now()->year;
         $currentMonth = Carbon::now()->month;
-        $start = Carbon::createFromFormat('d-m-Y', $data['start'])->format('Y-m-d');
-        $end = Carbon::createFromFormat('d-m-Y', $data['end'])->format('Y-m-d');
-
+        if ($data['timeline'] == "day") {
+            $start = Carbon::createFromFormat('d-m-Y', $data['start'])->format('Y-m-d');
+            $end = Carbon::createFromFormat('d-m-Y', $data['end'])->format('Y-m-d');
+        } else {
+            $start = now();
+            $end = now();
+        }
         // Kiểm tra nếu năm > hiện tại hoặc tháng > tháng hiện tại
         if (
             ($data['timeline'] == 'year' && $data['year'] > $currentYear) ||
@@ -145,7 +149,7 @@ class StatisticalController extends Controller
 
             while ($start <= $end) {
                 $dailySum = Bill::whereDate('updated_at', $start)->where('status', 1)->sum('total_money');
-                $dailyRevenue[] = ['date' => $start, 'total_money' => $dailySum];
+                $dailyRevenue[] = ['date' => Carbon::parse($start)->format('d-m-Y'), 'total_money' => $dailySum];
                 $start = Carbon::parse($start)->addDay()->format('Y-m-d');
             }
             $total_revenue['dailyRevenue'] = $dailyRevenue;
@@ -350,9 +354,10 @@ class StatisticalController extends Controller
             "personnels.personnel_code",
             "personnels.email",
             "personnels.phone_number",
+            DB::raw("SUM(bills.total_ticket) as total_ticket"),
             DB::raw("SUM(bills.total_money) as total_spent")
         )
-            ->groupBy("personnels.name", "personnels.personnel_code", "personnels.email", "personnels.phone_number")
+            ->groupBy("personnels.name", "personnels.personnel_code", "personnels.email", "personnels.phone_number", "total_ticket")
             ->orderByDesc("total_spent")
             ->take(5)
             ->get();

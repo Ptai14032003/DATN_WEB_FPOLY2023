@@ -6,7 +6,7 @@ const CheckPay = () => {
     const [sendEmail] = useSendMailMutation()
     const [checkRequest, setRequest] = useState(false)
     const [mess, setMess] = useState("")
-    const [checkPay, setCheckPay] = useState(false)
+    const [checkPay, setCheckPay] = useState<any>(null)
     const url = new URL(window.location.href);
     const urlSearchParams = new URLSearchParams(new URL(window.location.href).search);
     const vnp_Amount = urlSearchParams.get('vnp_Amount');
@@ -22,17 +22,13 @@ const CheckPay = () => {
     const vnp_TxnRef = urlSearchParams.get('vnp_TxnRef');
     const vnp_SecureHash = urlSearchParams.get('vnp_SecureHash');
     const dataSend_email = {
-        bill_id: vnp_TxnRef
+        bill_code: vnp_TxnRef
     }
     const sendEmailUser = async () => {
-        if (checkRequest === true) {
             sendEmail(dataSend_email)
-        }
     }
     useEffect(() => {
-        if (checkPay === false) {
             sendEmailUser()
-        }
     }, [])
     useEffect(() => {
         if (url.pathname === "/listvnp" && checkRequest === false) {
@@ -51,8 +47,6 @@ const CheckPay = () => {
                 vnp_CardType: vnp_CardType
             }
             checkBill(data).then((req: any) => {
-                console.log(req);
-
                 if (req?.data?.Message) {
                     setMess(req?.data?.Message);
                     setRequest(true)
@@ -79,7 +73,16 @@ const CheckPay = () => {
     const timePay = `${hour}:${mins}:${second} , ${day}/${month}/${year}`
     return (
         <div className='pay-success-screen h-screen grid place-content-center'>
-            {checkPay === true ? (
+            {!checkRequest && (
+                <div
+                    className="inline-block bg-gray-50 mt-[50px] h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                    role="status">
+                    <span
+                        className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+                    >Loading...</span>
+                </div>
+            )}
+            {checkPay === true && checkRequest && (
                 <div className='pay-success-box bg-white h-[500px] w-[600px] rounded-xl'>
                     <div className='check-icon text-center mt-10 space-y-3'>
                         <svg xmlns="http://www.w3.org/2000/svg" className="svg-success" viewBox="0 0 24 24">
@@ -103,7 +106,9 @@ const CheckPay = () => {
                         </div>
                     </div>
                 </div>
-            ) : (
+            )}
+
+            {checkPay === false && checkRequest && (
                 <div className='pay-success-box bg-white h-[500px] w-[600px] rounded-xl'>
                     <div className='check-icon text-center mt-10 space-y-3'>
                         <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="red" className="bi bi-exclamation-circle-fill mx-auto" viewBox="0 0 24 24">

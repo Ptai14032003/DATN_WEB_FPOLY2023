@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Cloudinary\Cloudinary;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class FoodController extends Controller
 {
@@ -28,7 +30,20 @@ class FoodController extends Controller
     }
 
     public function store(Request $request){
-        
+        $validator = Validator::make(
+            $request->all(),
+            [  
+                'food_name' => "unique:foods,food_name",
+               
+            ],
+            [
+                'food_name.unique' => "Tên sản phẩm đã tồn tại",
+              
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json($validator->messages());
+        } else {
 
     $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
     
@@ -59,16 +74,16 @@ class FoodController extends Controller
 
     Food::create($data);   
     // Đây là real path của tệp tin
-    return response()->json([$data]);
+    return response()->json([$data, 'message' => 'Sản phẩm đã được thêm thành công'], 200);
     }
-
+    }
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
         $food = Food::join('food_types', 'foods.food_type_id', '=', 'food_types.id')
-            ->select('foods.*', 'food_types.name')
+            ->select('foods.*', 'food_types.name', 'foods.food_type_id')
             ->where('foods.id', $id)
             ->whereNull('foods.deleted_at')
             ->first();
@@ -84,8 +99,27 @@ class FoodController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request,string $id){
-        $food = Food::find($id);
-    
+        
+        // $validator = Validator::make(
+        //     $request->all(),
+        //     [  
+        //         'food_name' => [
+        //             Rule::unique('foods')->ignore($id),
+        //             function ($attribute, $value, $fail) use ($id) {
+        //                 // Kiểm tra sự tồn tại trong users khi email thay đổi
+        //                 $name = Food::where('food_name', $value)->first();
+        //                 if ($name) {
+        //                     $fail('Tên đã tồn tại');
+        //                 }
+        //             },
+        //         ],
+               
+        //     ],
+        // );
+        // if ($validator->fails()) {
+        //     return response()->json($validator->messages());
+        // } else {
+            $food = Food::find($id);
         if (!$food) {
             return response()->json(['messages' => 'Đô ăn không tồn tại'], 404);
         }
@@ -112,6 +146,9 @@ class FoodController extends Controller
     
         return response()->json(['message' => 'Sản phẩm đã được cập nhật thành công'], 200);
     }
+// }
+
+
 
     /**
      * Remove the specified resource from storage.

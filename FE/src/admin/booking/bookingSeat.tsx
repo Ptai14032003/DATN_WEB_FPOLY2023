@@ -14,10 +14,12 @@ const BookingSeatAdmin = () => {
     const { id } = useParams();
     // const { data: Foods } = useFetchFoodsQuery()
     const { data: seatBooking } = useFetchSeatRoomIdQuery(show_time);
+    const [isFixed, setIsFixed] = useState(false);
     const { data: movie } = useFetchMovieIdPersonQuery(id);
     const [activeTab, setActiveTab] = useState(1);
     const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
     const [idGhe, setidGhe] = useState<any[]>([])
+    const [room, setRoom] = useState<any>()
     const [combo, setCombo] = useState<[]>([]);
     const [priceFood, setPriceFood] = useState(0)
     const [money, setMoney] = useState<number>(0);
@@ -32,6 +34,7 @@ const BookingSeatAdmin = () => {
     const [minute, setMinute] = useState<number>(10);
     const [second, setSecond] = useState<number>(0)
     const navigate = useNavigate();
+    console.log(movieBooking);
 
 
     useEffect(() => {
@@ -46,6 +49,9 @@ const BookingSeatAdmin = () => {
             }, {});
             const groupedSeatsArray = Object.values(groupedSeats);
             setGroupSeats(groupedSeatsArray)
+        }
+        if (seatBooking) {
+            setRoom(seatBooking?.seats[0]?.room_name)
         }
     }, [seats])
     const handleClick = (tabNumber: number) => {
@@ -386,7 +392,7 @@ const BookingSeatAdmin = () => {
                             <div className="w-[200px] h-[42px] border-[2px] rounded-md px-[8px] py-2 border-red-600">Thời gian chọn ghế : {formattedMinute}:{formattedSecond}</div>
                         </div>
                     </div>
-                    <div className="content-right">
+                    <div className="content-right border-2 py-[40px]">
                         <form action="" method='POST'>
 
                             <div className={`Booking-content ${activeTab === 1 ? "" : "hidden"}`}>
@@ -480,7 +486,7 @@ const BookingSeatAdmin = () => {
                             </div>
                         </div>
                         <div className={`${activeTab === 3 ? "ThanhToan" : "hidden"}`}>
-                            <ThanhToanBooking data={{ selectedSeats, priceTong, movieBooking, combo, idGhe, show_time }} key={`1`} />
+                            <ThanhToanBooking data={{ selectedSeats, priceTong, movieBooking, combo, idGhe, show_time, room }} key={`1`} />
                         </div>
                     </div>
                 </div>

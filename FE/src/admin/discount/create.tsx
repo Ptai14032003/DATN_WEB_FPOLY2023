@@ -12,9 +12,7 @@ const CreateQlDiscount: React.FC = () => {
     const formRef = React.useRef<FormInstance>(null);
     const onFinish = (values: any) => {
 
-        addDiscount(values).then(() => { setIsModalOpen(false); message.success("Thêm thành công") }).catch(() => {
-            message.error("Thêm không thành công. Vui lòng thử lại.");
-        });
+        addDiscount(values).then((data: any) => { setIsModalOpen(false); message.success("Thêm thành công") })
 
     };
     const onFinishFailed = (errorInfo: any) => {
