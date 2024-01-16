@@ -1,63 +1,90 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal } from 'antd';
-import { useGetBillDeitalMutation } from '../../rtk/bill/bill';
+import { Button, Image, Modal } from 'antd';
+import { useGetBillDeitalQuery } from '../../rtk/bill/bill';
 type Props = {
     projects: string
 }
 const DetailBill: React.FC<Props> = ({ projects }: Props) => {
-    const [fetch] = useGetBillDeitalMutation()
-    const [dataBill, setData] = useState<any>()
+    const { data: dataBill } = useGetBillDeitalQuery(projects)
     const [isModalOpen, setIsModalOpen] = useState(false);
-    useEffect(() => {
-        if (!dataBill) {
-            const newData = {
-                bill_id: projects
-            }
-            fetch(newData).then((data: any) => {
-                setData(data?.data)
-            })
-        }
-    }, [dataBill])
     const showModal = () => {
         setIsModalOpen(true);
     };
     const handleCancel = () => {
         setIsModalOpen(false);
-        setData(undefined);
     };
-    console.log(dataBill);
+    console.log(dataBill?.bill.length > 0);
 
     return (
         <>
             <Button onClick={() => { showModal() }}>Chi tiết hoá đơn</Button>
             <Modal title="Chi tiết hoá đơn" open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
-                <div className={`${dataBill && dataBill.tickets && dataBill.tickets.length > 0 ? "flex" : ""}`}>
-
-                    <div>
-                        {dataBill && dataBill.tickets && dataBill.tickets.length > 0 ? (
-                            <div className="py-5">
-                                {dataBill?.tickets?.map((item: any, index: number) => (
-                                    <div key={index}>
-                                        <div className="text-2xl font-bold">Hoá đơn</div>
-                                        <div className="py-5">
-                                            <div>Mã hoá đơn :</div>
-                                            <div>{item?.bill_code}</div>
-                                        </div>
-                                        <div className="">
-                                            <div>Mã người dùng :</div>
-                                            <div>{item?.user_code}</div>
-                                        </div>
-                                        <div className="py-5">
-                                            <div>Người dùng</div>
-                                            <div>{item?.user_name}</div>
-                                        </div>
+                <div className={`${dataBill && dataBill?.bill ? "" : ""}`}>
+                    {dataBill && dataBill?.bill && (
+                        <div className="py-5 mt-[-20px]">
+                            <div className="flex justify-around mx-[30px]">
+                                <div>
+                                    <div className="py-5">
+                                        <div>Mã hoá đơn :</div>
+                                        <div>{dataBill?.bill?.bill_code}</div>
                                     </div>
-                                ))}
+                                    <div className="">
+                                        <div>Mã người dùng :</div>
+                                        <div>{dataBill?.bill?.user_code}</div>
+                                    </div>
+                                    <div className="py-5">
+                                        <div>Người dùng :</div>
+                                        <div>{dataBill?.bill?.user_name}</div>
+                                    </div>
+                                    <div className="">
+                                        <div>Mã nhân viên :</div>
+                                        <div>{dataBill?.bill?.personnel_code}</div>
+                                    </div>
+                                    <div className="py-5">
+                                        <div>Nhân viên  :</div>
+                                        <div>{dataBill?.bill?.personnel_name}</div>
+                                    </div>
+                                    <div className="">
+                                        <div>Phụ phí :</div>
+                                        <div>{dataBill?.bill?.additional_fee}</div>
+                                    </div>
+                                    <div className="py-5">
+                                        <div>Tổng tiền :</div>
+                                        <div>{`${(Number(dataBill?.bill?.total_money))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ`}</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="py-5">
+                                        <div>Tên phim :</div>
+                                        <div>{dataBill?.bill?.movie_name}</div>
+                                    </div>
+                                    <div className="">
+                                        <div>Ảnh phim :</div>
+                                        <div><Image
+                                            width={100}
+                                            src={dataBill?.bill?.image}
+                                        /></div>
+                                    </div>
+                                    <div className="py-5">
+                                        <div>Phòng chiếu :</div>
+                                        <div>{dataBill?.bill?.room_name}</div>
+                                    </div>
+                                    <div className="">
+                                        <div>Ngày chiếu :</div>
+                                        <div>{dataBill?.bill?.user_name}</div>
+                                    </div>
+                                    <div className="py-5">
+                                        <div>Giờ chiếu :</div>
+                                        <div>{dataBill?.bill?.show_date}</div>
+                                    </div>
+                                    <div className="">
+                                        <div>Trạng thái vé :</div>
+                                        <div>{dataBill?.bill?.payment_status}</div>
+                                    </div>
+                                </div>
                             </div>
-                        ) : (
-                            <div className="text-[16px] font-bold">Trống</div>
-                        )}
-                    </div>
+                        </div>
+                    )}
                     <div>
                         <div className="overflow-x-auto rounded-lg border border-gray-200 my-[20px]">
                             <div className="text-[18px]">Ghế đã mua</div>

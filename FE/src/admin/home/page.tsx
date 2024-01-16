@@ -64,7 +64,7 @@ const HomeAdmin = () => {
     const onChangeNhanSu: DatePickerProps['onChange'] = (date, dateString) => {
         setValueDateNhanSu(dateString)
         setTraCuuNhanSu({
-            timeline: typeSearchFood,
+            timeline: typeSearchNhanSu,
             year: date?.year(),
             month: Number(date?.month()) + 1,
         })
@@ -101,7 +101,7 @@ const HomeAdmin = () => {
             Top5Movies(traCuuMovies).then((fetchdata: any) => {
                 console.log(fetchdata);
 
-                if (fetchdata?.data?.error) {
+                if (fetchdata?.data?.message) {
                     message.error(fetchdata?.data?.message)
                     setDataMovies({
                         moveie_name: "",
@@ -124,7 +124,7 @@ const HomeAdmin = () => {
         }
         if (traCuuUsers) {
             Top5Users(traCuuUsers).then((fetchdata: any) => {
-                if (fetchdata?.data?.error) {
+                if (fetchdata?.data?.message) {
                     message.error(fetchdata?.data?.message)
                     setDataUsers({
                         name: "",
@@ -148,8 +148,12 @@ const HomeAdmin = () => {
             return;
         }
         if (traCuuNhanSu) {
+            console.log(traCuuNhanSu);
+
             Top5NhanSu(traCuuNhanSu).then((fetchdata: any) => {
-                if (fetchdata?.data?.error) {
+                console.log(fetchdata);
+
+                if (fetchdata?.data?.message) {
                     message.error(fetchdata?.data?.message)
                     setDataNhanSu({
                         name: "",
@@ -175,7 +179,8 @@ const HomeAdmin = () => {
         }
         if (!dataFoods) {
             Top5Foods(dateData).then((fetchdata: any) => {
-                if (fetchdata?.data?.error) {
+                console.log(fetchdata);
+                if (fetchdata?.data?.message) {
                     message.error(fetchdata?.data?.message)
                     setDataFoods({
                         food_name: "",
@@ -193,7 +198,7 @@ const HomeAdmin = () => {
         }
         if (!dataMovies) {
             Top5Movies(dateData).then((fetchdata: any) => {
-                if (fetchdata?.data?.error) {
+                if (fetchdata?.data?.message) {
                     message.error(fetchdata?.data?.message)
                     setDataMovies({
                         moveie_name: "",
@@ -211,7 +216,7 @@ const HomeAdmin = () => {
         }
         if (!dataUsers) {
             Top5Users(dateData).then((fetchdata: any) => {
-                if (fetchdata?.data?.error) {
+                if (fetchdata?.data?.message) {
                     message.error(fetchdata?.data?.message)
                     setDataMovies({
                         name: "",
@@ -230,7 +235,7 @@ const HomeAdmin = () => {
         }
         if (!dataNhanSu) {
             Top5NhanSu(dateData).then((fetchdata: any) => {
-                if (fetchdata?.data?.error) {
+                if (fetchdata?.data?.message) {
                     message.error(fetchdata?.data?.message)
                     setDataNhanSu({
                         name: "",
