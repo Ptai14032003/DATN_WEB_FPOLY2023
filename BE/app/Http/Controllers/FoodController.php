@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Cloudinary\Cloudinary;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Facades\Validator;
 class FoodController extends Controller
 {
     /**
@@ -72,7 +72,7 @@ class FoodController extends Controller
 
     Food::create($data);   
     // Đây là real path của tệp tin
-    return response()->json([$data]);
+    return response()->json([$data, 'message' => 'Sản phẩm đã được thêm thành công'], 200);
     }
     }
     /**
