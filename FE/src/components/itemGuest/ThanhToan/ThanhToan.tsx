@@ -25,7 +25,6 @@ type Props = {
 const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, show_time, movieBooking, idGhe } }: Props) => {
     const [data] = useSetBillMutation();
     const { data: voucher } = useFetchVoucherQuery();
-    console.log(voucher);
     
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [VoucherCode, setVoucherCode] = useState("");
@@ -58,7 +57,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
         total_money: totalAmount,
         user_code: userCode,
         discount_code: VoucherCode
-    }
+    }    
     const setThanhToan = () => {
         data(dataBill)
             .then((response) => {

@@ -21,6 +21,7 @@
         <h1 style="text-align: center;">Kính chào quý khách <strong style="color:blue">{{ $name }}</strong></h1>
         <br>
         <h3>Cảm ơn quý khách đã đặt vé xem phim: <strong style="color:blue">{{ $movie_name }}</strong></h3>
+        <h3>Mã hóa đơn: {{ $bill_code }}</h3>
         <h3>Ngày chiếu: {{ $show_date }}</h3>
         <h3>Xuất chiếu: {{ $show_time }}</h3>
         <h3>Thời lượng: {{ $movie_time }} phút</h3>

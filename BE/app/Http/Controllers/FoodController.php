@@ -28,7 +28,20 @@ class FoodController extends Controller
     }
 
     public function store(Request $request){
-        
+        $validator = Validator::make(
+            $request->all(),
+            [  
+                'food_name' => "unique:foods,food_name",
+               
+            ],
+            [
+                'food_name.unique' => "Tên sản phẩm đã tồn tại",
+              
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json($validator->messages());
+        } else {
 
     $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
     
@@ -61,7 +74,7 @@ class FoodController extends Controller
     // Đây là real path của tệp tin
     return response()->json([$data]);
     }
-
+    }
     /**
      * Display the specified resource.
      */
@@ -85,31 +98,47 @@ class FoodController extends Controller
      */
     public function update(Request $request,string $id){
         $food = Food::find($id);
-    
+        $validator = Validator::make(
+            $request->all(),
+            [  
+                'food_name' => "unique:foods,food_name",
+               
+            ],
+            [
+                'food_name.unique' => "Tên sản phẩm đã tồn tại",
+              
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json($validator->messages());
+        } else {
         if (!$food) {
             return response()->json(['messages' => 'Đô ăn không tồn tại'], 404);
         }
-        // Update the movie data
-        $food->update($request->all());
+     
+        $food->update($request->except('image'));
     
-        if ($request->hasFile('image')) {
-            // Upload the new image to Cloudinary
-            $response = cloudinary()->upload($request->file('image')->getRealPath())->getSecurePath();
-            $data['image'] = $response;
-            // Delete old image from Cloudinary
-            $oldImage = $food->image;
-            if ($oldImage) {
-                $publicId = cloudinary()->getPublicIdFromPath($oldImage);
-                cloudinary()->destroy($publicId);
-            }
-        } else {
-            // If no new image is provided, keep the existing image
-            $data['image'] = $food->image;
-        }
-        $food->update($data);
-        return response()->json($food);
+        if ($request->input('image')['fileList']) {
+            $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
+            $elements = explode(',', $fileData);
+            $elementsAfterComma = array_slice($elements, 1);
+            $decodedData = base64_decode($elementsAfterComma[0]);
+            $uniqueFileName = uniqid('file_');
+            $filePath = storage_path('app/' . $uniqueFileName);
+            file_put_contents($filePath, $decodedData);
+            $imagePath = cloudinary()->upload($filePath)->getSecurePath();
+    
+            // Save the new image path to the movie record
+            $food->image = $imagePath;
+            $food->save();
 
+        }else{
+            $food->image = $request->image;
+        }
+    
+        return response()->json(['message' => 'Sản phẩm đã được cập nhật thành công'], 200);
     }
+}
 
     /**
      * Remove the specified resource from storage.

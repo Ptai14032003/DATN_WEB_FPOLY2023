@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import "./ThanhToan.css"
-import { Button, Input, Select } from 'antd'
-import { useSetBillMutation } from '../../rtk/bill/bill';
+import { Button, Input, Modal, Select, message } from 'antd'
+import { usePaymentAdminMutation } from '../../rtk/payment_admin/payment_admin';
+import ExportTicketAdmin from './exportTicket';
+import { useExportBillMutation, useSumbitQRPaymentMutation } from '../../rtk/booking/booking';
 type Props = {
     data: {
         selectedSeats: string[]
@@ -34,14 +36,24 @@ const typeOptions = typeThanhToan.map((type: any) => ({
     label: type.label,
 }));
 const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, show_time, movieBooking, idGhe } }: Props) => {
-    const [data] = useSetBillMutation();
+    const [Payment] = usePaymentAdminMutation()
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [sumbitQR] = useSumbitQRPaymentMutation()
     const [user_code, setUser] = useState("")
-    const [type, getTypeThanhToan] = useState("")
-    const checkLocal = localStorage.getItem("user");
-    const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
-    const userCode = checkUser?.user_code;
+    const [typeThanhToan, getTypeThanhToan] = useState<number>()
+    const [linkQR, setQR] = useState("")
+    const [newBillId, setNewBillId] = useState(null)
+    const [newBillIdQR, setNewBillIdQR] = useState(null)
+    const [isExportTicketVisible, setIsExportTicketVisible] = useState(false);
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
     const dataBill = {
-        show_time: show_time,
+        showtime_id: show_time,
         seat:
             idGhe.map((item: any) => (
                 {
@@ -59,8 +71,9 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
             ))
         ,
         total_money: priceTong,
-        payment_method: type,
-        user_code: userCode,
+        payment_method: typeThanhToan,
+        user_code: user_code || null,
+        additionnal_fee: Number(selectedSeats?.length) * 10000,
     }
     const onChange = (value: any) => {
         setUser(value)
@@ -70,12 +83,59 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
     }
     const dataPhuPhi = (Number(Number(selectedSeats?.length) * 10000))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     const dataTong = (Number(priceTong))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    const PostPayment = (newData: any) => {
+        Payment(newData).then((data: any) => {
+            if (data?.error?.data?.error) {
+                message.error(data?.error?.data?.error)
+            } else {
+                setNewBillId(data?.data?.bill_id);
+                if (data?.data?.link) {
+                    setQR(data?.data?.link);
+                    showModal()
+                }
+            }
+        })
+    }
     const handlePayment = () => {
+        if (typeThanhToan === 0 || typeThanhToan === 1) {
+            if (user_code.length > 0) {
+                const newData = {
+                    ...dataBill,
+                }
+                console.log(newData);
+                PostPayment(newData)
 
-     }
+            } else {
+                const newData = {
+                    ...dataBill,
+                    additionnal_fee: 0
+                }
+                console.log(newData);
+                PostPayment(newData)
+            }
+        } else {
+            message.error("Vui lòng nhập phương thức thanh toán !")
+        }
+
+    }
+    const CheckQR = (id: any) => {
+        const newData = {
+            bill_id: id
+        }
+        console.log(newData);
+
+        sumbitQR(newData).then((data: any) => {
+            if (data?.data?.bill_id) {
+                setIsExportTicketVisible(true);
+                setIsModalOpen(false);
+                setNewBillIdQR(data?.data?.bill_id)
+            }
+
+        })
+    }
     return (
         <>
-            <a href=""></a>
+
             <div className='my-[25px] flex gap-[30px] justify-center text-black'>
                 <div className='w-[25%]'>
                     <img src={movieBooking?.image} width={200} alt="" />
@@ -112,7 +172,7 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
                             </div>
                             {combo.map((item: any) => (
                                 <div key={item.food_name} className='flex justify-between'>
-                                    <span className="text-sm text-white">{item?.food_name}</span>
+                                    <span className="text-sm ">{item?.food_name}</span>
                                     <span className="text-smw-[50px] text-center">{item?.soLuong}</span>
                                 </div>
                             ))}
@@ -132,13 +192,13 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
                     </div>
                     <div className='block my-3'>
                         <div className='info-card'>
-                            <div>Giá gốc</div>
+                            <div>Giá gốc :</div>
                             <div className='item-info-card'>{dataTong} đ</div>
                         </div>
                     </div>
-                    <div className='block my-3'>
+                    <div className={`block my-3 ${user_code.length > 0 ? "hidden" : ""}`}>
                         <div className='info-card'>
-                            <div>Phụ phí</div>
+                            <div>Phụ phí :</div>
                             <div className='item-info-card'>{dataPhuPhi} đ</div>
                         </div>
                     </div>
@@ -161,6 +221,23 @@ const ThanhToanBooking: React.FC<Props> = ({ data: { selectedSeats, priceTong, c
             >
                 Thanh toán
             </Button>
+            {typeThanhToan === 1 && newBillId !== null && (
+                <ExportTicketAdmin data={newBillId} />
+            )}
+            {typeThanhToan === 0 && newBillId !== null && (
+
+                <Modal open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className='ModalTicket'>
+                    <iframe src={`${linkQR}`} />
+                    <div className='flex justify-end'>
+                        <button type="submit" onClick={() => CheckQR(newBillId)} className='border border-blue-500 rounded-md px-3 py-1 hover:bg-blue-200'>
+                            Xác nhận
+                        </button>
+                    </div>
+                </Modal>
+            )}
+            {newBillIdQR !== null && newBillId !== null && typeThanhToan === 0 && isExportTicketVisible && (
+                <ExportTicketAdmin data={newBillId} />
+            )}
         </>
     )
 };

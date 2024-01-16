@@ -4,6 +4,7 @@ import type { DatePickerProps } from 'antd';
 import { useRevenueAllAPIMutation } from '../../rtk/statistics/statistics';
 import { Space, DatePicker, DatePickerProps, Select, Button, message } from 'antd';
 import { useEffect, useState } from 'react';
+import ThongKeMovies from './thongKeMovies';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 interface TotalRevenue {
@@ -129,7 +130,7 @@ const ThongKe = () => {
             <div className="text-center mx-[42%] flex gap-4 w-[200px]">
                 <div className="pt-1">
                     <svg width="14" height="14" viewBox="0 0 32 32" >
-                        <path stroke-width="4" fill="none" stroke="#82ca9d" d="M0,16h10.666666666666666
+                        <path strokeWidth="4" fill="none" stroke="#82ca9d" d="M0,16h10.666666666666666
             A5.333333333333333,5.333333333333333,0,1,1,21.333333333333332,16
             H32M21.333333333333332,16
             A5.333333333333333,5.333333333333333,0,1,1,10.666666666666666,16">
@@ -148,7 +149,10 @@ const ThongKe = () => {
     }
     return (
         <>
-            <div className='mb-[25px] mt-[-30px] text-2xl' >Thống kê doanh thu</div>
+            <div className='mb-[25px] mt-[-30px] text-2xl' >Thống kê tổng doanh thu</div>
+            <div className="flex justify-end mr-[60px]">
+                <ThongKeMovies />
+            </div>
             <div className="flex gap-10 ml-[4%] mt-[5%]">
                 <div>
                     <Space direction="vertical" size={12}>
