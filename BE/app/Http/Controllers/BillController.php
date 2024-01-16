@@ -341,6 +341,7 @@ class BillController extends Controller
                 'rooms.name as room_name',
                 DB::raw('DATE_FORMAT(bills.created_at, "%d-%m-%Y") as booking_date'),
                 DB::raw('DATE_FORMAT(showtimes.show_date, "%d-%m-%Y") as show_date'),
+                'showtimes.show_time',
                 DB::raw('CASE 
                 WHEN bills.status = 0 THEN "Đang chờ thanh toán" 
                 WHEN bills.status = 1 THEN "Đã thanh toán" 
@@ -363,6 +364,7 @@ class BillController extends Controller
                 'room_name',
                 'booking_date',
                 'show_date',
+                'show_time',
                 'payment_status'
             )
             ->orderBy('bills.id', 'desc')
