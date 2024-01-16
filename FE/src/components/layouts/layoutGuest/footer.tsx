@@ -29,7 +29,7 @@ const Footer = () => {
           <img src={yt} alt=""  className='w-[50px] icon-yt'/>
         </div>
         <div className="address-footer text-center mt-3">
-          <p className='mb-2'>Địa chỉ: Phố Trịnh Văn Bô, Phường Phương Canh, Quận Nam Từ Liêm, Tp. Hà Nội - Điện thoại: 024.35141791</p>
+          <p className='mb-2'>Địa chỉ: Phố Trịnh Văn Bô, Phường Phương Canh, Quận Nam Từ Liêm, Tp. Hà Nội - Điện thoại: 0398658438</p>
           <p className='uppercase'>Copyright 2023. Wonder Cinema. All Rights Reservered</p>
         </div>
       </div>

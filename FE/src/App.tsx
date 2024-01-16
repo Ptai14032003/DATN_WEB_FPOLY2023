@@ -33,6 +33,7 @@ import ShowingFilm from './personPage/showingFilm.tsx'
 import ComingSoonFilm from './personPage/comingSoonFilm.tsx'
 import ForgotPassword from './personPage/ForgotPassword.tsx'
 import AdminQlSc from './admin/qlSc/page.tsx'
+import PrivacyPolicy from './personPage/privacyPolicy.tsx'
 
 function App() {
   const checkLocal = localStorage.getItem("user");
@@ -59,6 +60,7 @@ function App() {
         <Route path="seat" element={<Seat />} />
       </Route>
       <Route path="showing-film" element={<ShowingFilm />} />
+      <Route path="privacy-policy" element={<PrivacyPolicy />} />
       <Route path="coming-soon-film" element={<ComingSoonFilm />} />
       <Route path="ticket-price" element={<TicketPrice />} />
       <Route path="ticket-history" element={<TicketHistory />} />

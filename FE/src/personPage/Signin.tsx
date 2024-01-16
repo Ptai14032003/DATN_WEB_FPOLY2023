@@ -57,7 +57,7 @@ const Signin = () => {
           <div className="input-box">
             <input type="password" placeholder="Mật khẩu" {...register("password", { required: true })} required />
           </div>
-          <div className='float-right text-sm my-3 underline'>
+          <div className='float-right text-sm my-3 underline forgot-password'>
             <a href="forgot-password"><p>Quên mật khẩu?</p></a>
           </div>
           <button type="submit" className="btn">Đăng nhập</button>

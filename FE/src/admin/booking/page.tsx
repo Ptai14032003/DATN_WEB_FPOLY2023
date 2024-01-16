@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-
 import { Image, Space, Table } from 'antd';
 import { useFetchAdminBookingMoviesQuery } from '../../rtk/movies/movies';
 import Column from 'antd/es/table/Column';

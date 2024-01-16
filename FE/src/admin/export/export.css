@@ -5,8 +5,8 @@
 .ModalTicket .ant-modal-content{
     background-color: white!important;
 }
-.Button-Export .ant-btn-default, .Button-Export .ant-btn-primary{
-    display: none;
+.Button-Export .ant-modal-footer{
+    display: none!important;
 }
 .left-bill {
     position: relative;

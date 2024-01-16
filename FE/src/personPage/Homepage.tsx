@@ -78,8 +78,17 @@ const HomePage = () => {
     centerMode: true,
     focusOnSelect: true,
     infinite: true,
-    centerPadding: '80px', // Thay đổi giá trị centerPadding thành một giá trị đủ lớn
+    centerPadding: '80px',
     slidesToShow: 3,
+    speed: 500
+  };
+  const settingsMobile = {
+    className: 'center',
+    centerMode: true,
+    focusOnSelect: true,
+    infinite: true,
+    centerPadding: '80px', 
+    slidesToShow: 1,
     speed: 500
   };
 
@@ -100,7 +109,7 @@ const HomePage = () => {
       {
         breakpoint: 767,
         settings: {
-          slidesToShow: 1,
+          slidesToShow: 2,
         }
       }
     ]
@@ -121,7 +130,7 @@ const HomePage = () => {
       </div>
       {/*  */}
       {loading ? (
-        <div className="loading-home">
+        <div className="loading-home h-screen">
           <Loading />
         </div>
       ) : (
@@ -209,6 +218,62 @@ const HomePage = () => {
             {/* ComingSoon-film-tablet */}
             <div className='ComingSoon-film-tablet mb-20'>
               <div className='menu-film-tablet flex justify-between w-[90%] mx-auto mb-5 p-5'>
+                <div className='flex items-center'>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" className="bi bi-circle-fill" viewBox="0 0 16 16">
+                    <circle cx="8" cy="8" r="8" />
+                  </svg>
+                  <h1 className='Movie text-lg font-bold ml-3'>Phim sắp chiếu</h1>
+                </div>
+                <a href="/coming-soon-film" className='text-[15px] underline text-[#1ACAAC]'>Xem tất cả</a>
+              </div>
+              <div>
+                <Slider {...settings2} className="Slider-ComingSon-film">
+                  {comingSoon?.map((item: any) => (
+                    <div key={item.id} className='rounded-md outline-none px-2'>
+                      <img src={item.image} alt="" className='h-[150px] w-full rounded-t-md' />
+                      <div className="text px-3 bg-gray-900 w-full m-0 rounded-b-md">
+                        <h1 className='text-[10px] font-semibold my-2 text-center truncate'>{item.movie_name}</h1>
+                        <div className="font-semibold text-black mb-2 text-[8px]">
+                          <Link to={'/movie_show_time/' + item?.id}><button className='w-full bg-[#1ACAAC] rounded-sm py-1'>Đặt vé ngay</button></Link>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </Slider>
+              </div>
+            </div>
+          </div>
+          <div className='Screen-mobile mt-10'>
+            {/* Showing-movie-tablet */}
+            <div className='Showing-film-tablet mb-20'>
+              <div className='menu-film-tablet flex justify-between w-[90%] mx-auto mb-5 p-2'>
+                <div className='flex items-center'>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" className="bi bi-circle-fill" viewBox="0 0 16 16">
+                    <circle cx="8" cy="8" r="8" />
+                  </svg>
+                  <h1 className='Movie text-lg font-bold ml-3'>Phim đang chiếu</h1>
+                </div>
+                <a href="/showing-film" className='text-[15px] underline text-[#1ACAAC]'>Xem tất cả</a>
+              </div>
+              <div>
+                <Slider {...settingsMobile} className="Slider-mobile">
+                  {showing?.map((item: any) => (
+                    <div key={item.id} className='rounded-md'>
+                      <img src={item.image} alt="" className='h-[120px] w-[85%] rounded-t-md' />
+                      <div className="text px-3 bg-gray-900  w-[85%] m-0 rounded-b-md">
+                        <h1 className='text-[10px] font-semibold my-2 text-center'>{item.movie_name}</h1>
+                        <div className="font-semibold text-black mb-2 text-[8px]">
+                          <Link to={'/movie_show_time/' + item?.id}><button className='w-full bg-[#1ACAAC] rounded-sm py-1'>Đặt vé ngay</button></Link>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </Slider>
+              </div>
+            </div>
+            {/* ComingSoon-film-tablet */}
+            <div className='ComingSoon-film-tablet mb-20'>
+              <div className='menu-film-tablet flex justify-between w-[90%] mx-auto mb-5 p-2'>
                 <div className='flex items-center'>
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" className="bi bi-circle-fill" viewBox="0 0 16 16">
                     <circle cx="8" cy="8" r="8" />
