@@ -9,18 +9,18 @@ import "./export.css"
 import { useNavigate } from 'react-router-dom';
 
 interface Form {
-    user_code: string,
-    bill_id: number
+    bill_code: string
 }
 interface DataType {
     id: number,
+    bill_code: string
     movie_name: string,
     total_combo: number,
     total_ticket: number,
     total_money: string
 }
 interface BillData {
-    bill_id: number
+    bill_code: string
 }
 
 const ExportTicket = () => {
@@ -35,11 +35,14 @@ const ExportTicket = () => {
 
     const onSubmit = async (values: any) => {
         const newData = {
-            user_code: values.user_code
+            bill_code: values.bill_code
         }
-        await listBill(newData).unwrap()
-            .then((data: any) =>
-                setData(data)
+        await listBill(newData)
+            .then((data: any) => {
+                console.log(data?.data);
+
+                setData(data?.data)
+            }
             )
     };
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -84,22 +87,22 @@ const ExportTicket = () => {
         <div className=''>
             <form action="" className='flex gap-3' onSubmit={handleSubmit(onSubmit)}>
                 <div className=''>
-                    <input type="text" placeholder='Nhập mã người dùng' className='border border-gray-500 rounded-md p-2'  {...register('user_code')} name='user_code' />
+                    <input type="text" placeholder='Nhập mã người dùng' className='border border-gray-500 rounded-md p-2'  {...register('bill_code')} name='bill_code' />
                 </div>
                 <button className='border rounded-md py-1 w-[100px] font-normal text-lg  bg-[#1ACAAC] '>Submit</button>
             </form>
             <Table dataSource={Data} pagination={{ pageSize: 6, }}>
-                <Column title="ID " dataIndex="id" key="id" />
+                <Column title="Mã đơn hàng " dataIndex="bill_code" key="bill_code" />
                 <Column title="Tên Phim " dataIndex="movie_name" key="movie_name" />
                 <Column title="Số lượng vé" dataIndex="total_ticket" key="total_ticket" />
                 <Column title="Số lượng combo" dataIndex="total_combo" key="total_combo" />
-                <Column title="Tổng tiền" dataIndex="total_money" key="total_money" />
+                <Column title="Tổng tiền" dataIndex="total_money" key="total_money" render={(item: any) => `${(Number(item))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ`} />
                 <Column
                     title="Action"
                     key="action"
                     render={(_: any, record: DataType) => (
                         <Space size="middle">
-                            <button onClick={() => GetBillId(record?.id)}>
+                            <button onClick={() => GetBillId(record?.bill_code)}>
                                 Xuất vé
                             </button>
                             <Modal open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className='ModalTicket'>
@@ -136,7 +139,7 @@ const ExportTicket = () => {
                                                     </div>
                                                     <div className='flex text-amber-100'>
                                                         <p className='font-medium pr-2'>Giá vé:</p>
-                                                        <p>{item?.total_money}</p>
+                                                        <p>{(Number(item?.total_money))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -169,7 +172,7 @@ const ExportTicket = () => {
                                 </div>
                                 <div className='grid grid-cols-2 gap-5'>
                                     {billFoodData?.map((item: any) => (
-                                        <div key={item.id} className='w-full h-[130px] flex mb-5'>
+                                        <div key={item?.movie_name} className='w-full h-[130px] flex mb-5'>
                                             <div className='w-[65%] bg-red-700 p-3 rounded-l-md left-combo'>
                                                 <div>
                                                     <h1 className='text-2xl text-amber-100 font-bold text-center mt-1'>VÉ BỎNG-NƯỚC</h1>
@@ -214,7 +217,7 @@ const ExportTicket = () => {
                                 </div>
                                 <form action="" onSubmit={handleSubmit(ExportBill)}>
                                     <div className='hidden'>
-                                        <input type="number" value={record.id} {...register('bill_id')} name='bill_id' />
+                                        <input type="number" value={record.id} {...register('bill_code')} name='bill_code' />
                                     </div>
                                     <div className='flex justify-end'>
                                         <button type="submit" onClick={showModal} className='border border-blue-500 rounded-md px-3 py-1 hover:bg-blue-200'>

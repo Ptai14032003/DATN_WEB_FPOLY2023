@@ -12,6 +12,7 @@ const { Column } = Table;
 
 export type QlPhim = {
     key: string;
+    bill_code: string
     user_code: string;
     user_name: string;
     personnel_code: string;
@@ -25,6 +26,7 @@ export type QlPhim = {
     booking_date: string;
     show_date: string;
     payment_status: string
+    export_ticket: string
 }
 const AdminQlBill: React.FC = () => {
     const { data: dataBill, isLoading, error } = useFetchBillAdminQuery()
@@ -38,7 +40,7 @@ const AdminQlBill: React.FC = () => {
         isCaseSensitive: true,
         findAllMatches: true,
         useExtendedSearch: true,
-        keys: ["user_code", "user_name", "payment_status"]
+        keys: ["user_code", "user_name", "payment_status", "bill_code"]
     }
 
     const fuse = new Fuse(dataBill, fuseOptions)
@@ -52,6 +54,7 @@ const AdminQlBill: React.FC = () => {
         if (Array.isArray(dataBill)) {
             const mapMovies = dataBill.map((item: any) => ({
                 key: item.id,
+                bill_code: item?.bill_code,
                 user_code: item.user_code,
                 user_name: item.user_name,
                 personnel_code: item.personnel_code,
@@ -65,6 +68,7 @@ const AdminQlBill: React.FC = () => {
                 booking_date: item.booking_date,
                 show_date: item.show_date,
                 payment_status: item.payment_status,
+                export_ticket: item?.export_ticket
             }))
             setDataTable(mapMovies)
         }
@@ -80,6 +84,7 @@ const AdminQlBill: React.FC = () => {
             if (Array.isArray(newData)) {
                 const mapMovies = newData.map((item: any) => ({
                     key: item.id,
+                    bill_code: item?.bill_code,
                     user_code: item.user_code,
                     user_name: item.user_name,
                     personnel_code: item.personnel_code,
@@ -93,6 +98,7 @@ const AdminQlBill: React.FC = () => {
                     booking_date: item.booking_date,
                     show_date: item.show_date,
                     payment_status: item.payment_status,
+                    export_ticket: item?.export_ticket
                 }))
                 setDataTable(mapMovies)
             }
@@ -101,6 +107,7 @@ const AdminQlBill: React.FC = () => {
             if (Array.isArray(dataBill)) {
                 const mapMovies = dataBill.map((item: any) => ({
                     key: item.id,
+                    bill_code: item?.bill_code,
                     user_code: item.user_code,
                     user_name: item.user_name,
                     personnel_code: item.personnel_code,
@@ -114,13 +121,12 @@ const AdminQlBill: React.FC = () => {
                     booking_date: item.booking_date,
                     show_date: item.show_date,
                     payment_status: item.payment_status,
+                    export_ticket: item?.export_ticket
                 }))
                 setDataTable(mapMovies)
             }
         }
     }, [searchTerm, dataBill])
-    console.log(dataTable);
-
     return (
         <div>
             <div className='mb-[25px] mt-[-30px] text-2xl' >Danh sách Bill</div>
@@ -138,21 +144,23 @@ const AdminQlBill: React.FC = () => {
                 />
             ) : (
                 <Table dataSource={dataTable} pagination={{ pageSize: 4, }}>
+                    <Column title="Mã hoá đơn " dataIndex="bill_code" key="bill_code" />
                     <Column title="Mã người dùng " dataIndex="user_code" key="user_code" />
                     <Column title="Tên người dùng " dataIndex="user_name" key="user_name" />
                     <Column title="Phim " dataIndex="movie_name" key="movie_name" />
-                    <Column title="Poster " dataIndex="image" key="image" render={(image: any) => (
-                        <Image
-                            width={100}
-                            src={image}
-                        />
-                    )} />
                     <Column title="Tổng vé" dataIndex="total_ticket" key="total_ticket" />
                     <Column title="Tổng combo" dataIndex="total_combo" key="total_combo" />
                     <Column title="Tổng tiền" dataIndex="total_money" key="total_money" render={(price: any) => `${(Number(price))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ `} />
-                    <Column title="Tổng vé" dataIndex="total_ticket" key="total_ticket" />
-                    <Column title="Ngày chiếu" dataIndex="show_date" key="show_date" />
-                    <Column title="Ngày đặt" dataIndex="booking_date" key="booking_date" />
+                    <Column title="Trạng thái vé" dataIndex="export_ticket" key="export_ticket" />
+                    <Column title="Action"
+                        key="action"
+                        render={(_: any, record: any) => (
+                            <Space size="middle">
+                                <a>
+                                    <Button>Chi tiết hoá đơn</Button>
+                                </a>
+                            </Space>
+                        )} />
                 </Table>
             )}
         </div>
