@@ -46,7 +46,7 @@ const EditQlSp: React.FC<Props> = ({ projects }: Props) => {
         <>
 
             <Button onClick={showModal}>Sửa</Button>
-            <Modal title="Sua phim " open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
+            <Modal title="Sửa thông tin sản phẩm " open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
                 {data ? (
                     <Form className='mr-[60px]'
                         name='formLogin'

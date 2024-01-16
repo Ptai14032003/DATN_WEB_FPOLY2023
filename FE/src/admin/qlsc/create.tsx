@@ -39,7 +39,7 @@ const CreateQlSc: React.FC = () => {
         if (checkApi) {
             addSc(newData).then((data: any) => {
                 console.log(data);
-                if (data?.data?.flag === true ) {
+                if (data?.data?.flag === true) {
                     setIsModalOpen(false); setCheckApi(false); formRef.current?.resetFields(); message.success("Thêm thành công");
                 } else
                     if (data?.data?.message) {
@@ -63,7 +63,7 @@ const CreateQlSc: React.FC = () => {
     return (
         <>
             <Button onClick={showModal}>Thêm suất chiếu mới</Button>
-            <Modal title="Tạo phim mới" open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
+            <Modal title="Tạo suất chiếu mới" open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
                 <Form className='mr-[60px]'
                     name='formLogin'
                     ref={formRef}

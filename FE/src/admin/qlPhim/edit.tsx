@@ -90,7 +90,7 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
     return (
         <>
             <Button onClick={showModal}>Sửa</Button>
-            <Modal title="Sửa phim " open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
+            <Modal title="Sửa thông tin phim" open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
                 {newData ? (
 
                     <Form className='mr-[60px]'

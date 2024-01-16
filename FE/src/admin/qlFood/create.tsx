@@ -44,7 +44,7 @@ const CreateQlSp: React.FC = () => {
     return (
         <>
             <Button onClick={showModal}>Thêm sản phẩm mới</Button>
-            <Modal title="Tạo phim mới" open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
+            <Modal title="Tạo sản phẩm mới" open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} className="text-center">
                 <Form className='mr-[60px]'
                     name='formLogin'
                     ref={formRef}

@@ -262,7 +262,7 @@ const EditQlPhongChieu: React.FC<Props> = ({ projects }: Props) => {
         <>
             {contextHolder}
             <Button onClick={showModal}>Sửa</Button>
-            <Modal title="Sửa phòng chiếu " open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} width={1200} className="text-center">
+            <Modal title="Sửa thông tin phòng chiếu " open={isModalOpen} onCancel={handleCancel} okButtonProps={{ hidden: true }} cancelButtonProps={{ hidden: true }} width={1200} className="text-center">
 
                 {theaters ? (
                     <Form className='mr-[60px]'
