@@ -354,9 +354,10 @@ class StatisticalController extends Controller
             "personnels.personnel_code",
             "personnels.email",
             "personnels.phone_number",
+            DB::raw("SUM(bills.total_ticket) as total_ticket"),
             DB::raw("SUM(bills.total_money) as total_spent")
         )
-            ->groupBy("personnels.name", "personnels.personnel_code", "personnels.email", "personnels.phone_number")
+            ->groupBy("personnels.name", "personnels.personnel_code", "personnels.email", "personnels.phone_number", "total_ticket")
             ->orderByDesc("total_spent")
             ->take(5)
             ->get();
