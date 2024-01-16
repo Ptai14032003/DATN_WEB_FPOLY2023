@@ -1,10 +1,12 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import dayjs from 'dayjs';
+import type { Dayjs } from 'dayjs';
 import type { DatePickerProps } from 'antd';
 import { useRevenueAllAPIMutation } from '../../rtk/statistics/statistics';
 import { Space, DatePicker, DatePickerProps, Select, Button, message } from 'antd';
 import { useEffect, useState } from 'react';
 import ThongKeMovies from './thongKeMovies';
+import moment from 'moment';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 interface TotalRevenue {
@@ -77,6 +79,43 @@ const ThongKe = () => {
 
             })
         }
+    }
+    const handleSelectDay = () => {
+        if (!date_start) {
+            message.error("Vui lòng chọn ngày bắt đầu !")
+        } else
+            if (!date_end) {
+                message.error("Vui lòng chọn ngày kết thúc !")
+            } else {
+                const newData = {
+                    timeline: "day",
+                    start: date_start,
+                    end: date_end
+                }
+                getRevenueAll(newData).then((fetchdata: any) => {
+                    if (fetchdata?.data?.error) {
+                        message.error(fetchdata?.data?.error)
+                        setData({
+                            quantity_bill: 0,
+                            total_money: 0,
+                            total_money_ticket: 0,
+                            total_money_food: 0
+                        })
+                        if (newData?.timeline === "day") {
+                            setDataChart(fetchdata?.data?.dailyRevenue)
+                        } else {
+                            setDataChart(fetchdata?.data?.monthlyRevenue)
+                        }
+                    } else {
+                        setData(fetchdata?.data)
+                        if (newData?.timeline === "day") {
+                            setDataChart(fetchdata?.data?.dailyRevenue)
+                        } else {
+                            setDataChart(fetchdata?.data?.monthlyRevenue)
+                        }
+                    }
+                })
+            }
     }
     useEffect(() => {
         const currentTime = new Date()
@@ -179,7 +218,7 @@ const ThongKe = () => {
                         format={"DD-MM-YYYY"}
                     />
                 </div>
-                <Button onClick={() => handleSelect()}>Tra cứu</Button>
+                <Button onClick={() => handleSelectDay()}>Tra cứu</Button>
             </div>
             <div className="flex gap-10 ml-[4%] mt-[5%]">
                 <div>
@@ -227,11 +266,11 @@ const ThongKe = () => {
                         }}
                     >
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey={`${tbTime.chuKi === "month" ? "date" : "month"}`} tickFormatter={(value) => `${tbTime.chuKi === "month" ? `Ngày ${value}` : `Tháng ${value}`}`} />
+                        <XAxis dataKey={`${tbTime.chuKi === "year" ? "month" : "date"}`} tickFormatter={(value) => `${tbTime.chuKi === "year" ? `Tháng ${value}` : `Ngày ${moment(value).format("DD-MM-YYYY")}`}`} />
                         <YAxis axisLine={false} domain={[0, Number(data?.total_money_ticket)]} tickCount={20} tickSize={0} height={600} tickFormatter={(value) => `${(Number(value))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`} padding={{}} />
                         <Tooltip content={<ContentRechart />} />
                         <Legend content={<DataName />} />
-                        <Line type="monotone" dataKey="total_money" stroke="#82ca9d" format="ngu" />
+                        <Line type="monotone" dataKey="total_money" stroke="#82ca9d" />
                     </LineChart>
                 </div>
             </div>
