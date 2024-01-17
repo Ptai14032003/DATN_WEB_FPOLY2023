@@ -17,7 +17,7 @@ export default function Detail() {
     const checkLocal = localStorage.getItem("user");
     const checkUser = checkLocal ? JSON.parse(checkLocal) : null;
     const checkRole = checkUser?.role
-    console.log(checkRole);
+    console.log(movieBooking);
     
     const redirectToLink = (link: any) => {
         navigate(link);

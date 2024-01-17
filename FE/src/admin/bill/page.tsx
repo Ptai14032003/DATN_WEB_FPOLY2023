@@ -31,11 +31,10 @@ const AdminQlBill: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const fuseOptions = {
         includeScore: true,
-        includeMatches: true,
+        useExtendedSearch: true,
         isCaseSensitive: true,
         findAllMatches: true,
-        useExtendedSearch: true,
-        keys: ["user_code", "user_name", "payment_status", "bill_code"]
+        keys: ["bill_code"]
     }
 
     const fuse = new Fuse(dataBill, fuseOptions)
