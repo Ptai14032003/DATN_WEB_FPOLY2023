@@ -13,8 +13,6 @@ const DetailBill: React.FC<Props> = ({ projects }: Props) => {
     const handleCancel = () => {
         setIsModalOpen(false);
     };
-    console.log(dataBill?.bill.length > 0);
-
     return (
         <>
             <Button onClick={() => { showModal() }}>Chi tiết hoá đơn</Button>
