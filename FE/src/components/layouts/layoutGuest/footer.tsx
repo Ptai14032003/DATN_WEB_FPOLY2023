@@ -6,16 +6,15 @@ import zl from "/zalo-icon.png"
 import "../../../personPage/responsive.css"
 
 const Footer = () => {
+  const homeLink = 'http://localhost:5173/'
   return (
     <div className='bg-[#0B0D13] py-8'>
       <nav>
         <ul className='flex justify-center space-x-10 text-lg'>
-          <li><a href="">Chính sách</a></li>
-          <li><a href="">Lịch chiếu</a></li>
-          <li><a href="">Tin tức</a></li>
-          <li><a href="">Giá vé</a></li>
-          <li><a href="">Hỏi đáp</a></li>
-          <li><a href="">Liên hệ</a></li>
+        <a href="{homeLink}"><li>Trang chủ</li></a>
+          <a href={homeLink + 'privacy-policy'}><li>Chính sách</li></a>
+          <a href={homeLink + 'ticket-price'}><li>Giá vé</li></a>
+          <a href={homeLink + 'contact'}><li>Liên hệ</li></a>
         </ul>
       </nav>
       <div className='logo flex justify-center space-x-5 items-center my-1'>

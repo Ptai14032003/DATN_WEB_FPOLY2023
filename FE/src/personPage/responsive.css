@@ -10,7 +10,9 @@
     * {
         overflow-x: none;
     }
-
+    .Web-map iframe{
+        height: 240px;
+    }
     .menu-mobile {
         display: none;
     }
@@ -113,6 +115,12 @@
         overflow-x: none;
     }
 
+    .Web-address h2, .Web-contact h2{
+        font-size: 16px;
+    }
+    .Web-address p, .Web-contact p{
+        font-size: 14px;
+    }
     .ticket-price {
         overflow-x: none;
     }
@@ -484,7 +492,12 @@
     iframe {
         height: 450px;
     }
-
+    .Contact-content{
+        grid-template-columns: 1fr 1fr!important;
+    }
+    .Web-map{
+        grid-column: span 1/span 1!important;
+    }
     .menu-film {
         display: none;
     }
@@ -981,7 +994,21 @@
     .Bills {
         display: none !important;
     }
-
+    .Contact-content {
+        display: block!important;
+    }
+    .Web-contact{
+        margin-bottom: 1.25rem;
+    }
+    .Contact-title h1{
+        font-size: 20px;
+    }
+    .Web-address h2, .Web-contact h2{
+        font-size: 14px;
+    }
+    .Web-address p, .Web-contact p{
+        font-size: 12px;
+    }
     .Bills-mobile {
         display: block !important;
     }

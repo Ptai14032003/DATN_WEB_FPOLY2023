@@ -48,7 +48,7 @@ const Menu = () => {
           <ul className='menu-content flex text-white'>
             <a href={homeLink}><li>Trang chủ</li></a>
             <a href={homeLink + 'ticket-price'}><li>Giá vé</li></a>
-            <a href={homeLink}> <li>Giới thiệu</li></a>
+            <a href={homeLink + 'privacy-policy'}> <li>Chính sách</li></a>
             {!user && (
               <><li onClick={handleClick}><a>Tài khoản</a></li>
                 {dropDown ?
