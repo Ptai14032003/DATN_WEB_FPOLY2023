@@ -563,6 +563,7 @@ const HomeAdmin = () => {
                                                 <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">STT</th>
                                                 <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Nhân viên</th>
                                                 <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Mã nhân viên</th>
+                                                <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Email</th>
                                                 <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Số điện thoại</th>
                                                 <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Doanh thu (VNĐ)</th>
                                             </tr>
