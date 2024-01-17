@@ -98,7 +98,7 @@ const CheckPay = () => {
                     <div className='pay-content text-center mt-10 space-y-3'>
                         <p>Thời gian giao dịch: <span className=' font-medium'>{timePay}</span>.</p>
                         <p>Mã giao dịch của bạn là <span className='text-[#81c038] font-medium'>{vnp_TxnRef}</span>.</p>
-                        <p>Xem chi tiết thông tin vé tại đây <a href="" className='text-blue-500'>Ticket Infomation</a>.</p>
+                        <p>Xem chi tiết thông tin vé tại đây <a href="/ticket-history" className='text-blue-500'>Ticket Infomation</a>.</p>
                         <div className='pt-5'>
                             <Link to="/">
                                 <button className='bg-blue-500 text-white text-lg font-medium rounded-lg p-4'>Quay về trang chủ</button>
