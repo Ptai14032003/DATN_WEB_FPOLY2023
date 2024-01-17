@@ -102,7 +102,7 @@ public function showingAdmin(){
                 'start_date' => $start_date,    
                 'end_date' =>  $end_date,
                 'movie_time'=> $movie_time,
-                 'image' => '',
+                 'image' => $response,
                 'trailer' => $trailer,
                 'describe' => $describe
             ];
