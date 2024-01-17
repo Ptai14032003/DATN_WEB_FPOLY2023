@@ -34,8 +34,6 @@ const BookingSeatAdmin = () => {
     const [minute, setMinute] = useState<number>(10);
     const [second, setSecond] = useState<number>(0)
     const navigate = useNavigate();
-    console.log(movieBooking);
-
 
     useEffect(() => {
         if (seats) {

@@ -62,24 +62,25 @@ const EditQlPhim: React.FC<Props> = ({ projects }: Props) => {
     const onFinish = (values: any) => {
         console.log(values);
         putMovie({ body: values, id: projects }).then((req: any) => {
-            console.log(req);
 
-            if (req?.data?.start_date) {
-                message.error(req?.data?.start_date[0]);
-            } else if (req?.data?.end_date) {
-                message.error(req?.data?.end_date[0]);
-            } else if (req?.data?.movie_name) {
-                message.error(req?.data?.movie_name[0]);
+            if (req?.error?.data?.status === "error") {
+                if (req?.error?.data?.message?.movie_name) {
+                    message.error(req?.error?.data?.message?.movie_name[0]);
+                } else if (req?.error?.data?.message?.start_date) {
+                    message.error(req?.error?.data?.message?.start_date[0]);
+                } else if (req?.error?.data?.message?.end_date) {
+                    message.error(req?.error?.data?.message?.end[0])
+                }
             } else {
-                setIsModalOpen(false);
                 message.success("Sửa thành công");
+                setTimeout(() => {
+                    setIsModalOpen(false);
+                }, 1000)
             }
         })
-
     };
 
     const onFinishFailed = (errorInfo: any) => {
-        console.log('Failed:', errorInfo);
     };
     const showModal = () => {
         setIsModalOpen(true);

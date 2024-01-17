@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Space, Table, Input, Button, message, Popconfirm } from 'antd';
+import { Table, Input } from 'antd';
 import CreateQlSc from './create';
-import { useDeleteSuatChieuMutation, useFetchSuatChieuQuery } from '../../rtk/qlSc/qlSc';
+import {useFetchSuatChieuQuery } from '../../rtk/qlSc/qlSc';
 import "./page.css"
 import { Waveform } from '@uiball/loaders';
 import Fuse from 'fuse.js';
@@ -23,24 +23,8 @@ const AdminQlSc: React.FC = () => {
     const { data: dataSuatChieu, isLoading, error } = useFetchSuatChieuQuery()
     const navigate = useNavigate();
     const status = error?.status;
-    const [deleteSuatChieu] = useDeleteSuatChieuMutation()
     const [dataTable, setDataTable] = useState<QlSuatChieu[]>([])
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-        console.log('', newSelectedRowKeys);
-        setSelectedRowKeys(newSelectedRowKeys);
-    };
-    const DeleteAll = () => {
-        console.log(selectedRowKeys);
-        message.success("Xóa thành công");
-    }
-    const rowSelection = {
-        selectedRowKeys,
-        onChange: onSelectChange,
-    };
-    const hasSelected = selectedRowKeys.length > 0;
-
     const fuseOptions = {
         includeScore: true,
         useExtendedSearch: true,
@@ -53,9 +37,6 @@ const AdminQlSc: React.FC = () => {
         console.log(value);
         setSearchTerm(value);
     };
-    const deleteOne = (key: string) => {
-        deleteSuatChieu(key).then(() => message.success("Xóa thành công"))
-    }
     useEffect(() => {
         const dataMap = dataSuatChieu?.data
         if (Array.isArray(dataMap)) {
@@ -112,27 +93,6 @@ const AdminQlSc: React.FC = () => {
                     onChange={(e) => searchProject(e.target.value)} />
                 <CreateQlSc />
             </div>
-            <span style={{ marginLeft: 8 }}>
-                {hasSelected ? (
-                    <Popconfirm
-                        title="Delete the task"
-                        description={`Bạn có chắc muốn xóa ${selectedRowKeys.length} mục ?`}
-                        onConfirm={() => {
-                            DeleteAll();
-                        }}
-                        okButtonProps={{
-                            style: { backgroundColor: "#007bff" },
-                        }}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <Button danger>
-                            {`Delete ${selectedRowKeys.length} items`}
-                        </Button>
-                    </Popconfirm>) : (
-                    <div></div>
-                )}
-            </span>
             {isLoading ? (
                 <Waveform
                     size={40}
@@ -141,34 +101,11 @@ const AdminQlSc: React.FC = () => {
                     color="black"
                 />
             ) : (
-                <Table dataSource={dataTable} rowSelection={rowSelection} pagination={{ pageSize: 6, }}>
+                <Table dataSource={dataTable} pagination={{ pageSize: 6, }}>
                     <Column title="Tên phim" dataIndex="movie_name" key="movie_name" />
                     <Column title="Tên phòng" dataIndex="room_name" key="room_name" />
                     <Column title="Ngày chiếu" dataIndex="show_date" key="show_date" render={(text) => moment(text).format("DD-MM-YYYY")} />
                     <Column title="Thời gian chiếu" dataIndex="show_time" key="show_time" />
-                    <Column
-                        title="Action"
-                        key="action"
-                        render={(_: any, record: QlSuatChieu) => (
-                            <Space size="middle">
-                                <a>
-                                    <Popconfirm
-                                        title="Delete the task"
-                                        description="Bạn có muốn xoá suất chiếu này không?"
-                                        onConfirm={() => {
-                                            deleteOne(record.key);
-                                        }}
-                                        okButtonProps={{
-                                            style: { backgroundColor: "#007bff" },
-                                        }}
-                                        okText="Yes"
-                                        cancelText="No"
-                                    >
-                                        <Button danger>Delete</Button>
-                                    </Popconfirm></a>
-                            </Space>
-                        )}
-                    />
                 </Table>
             )}
         </div>

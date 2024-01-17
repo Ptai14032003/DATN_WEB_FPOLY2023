@@ -61,7 +61,7 @@ const CheckPay = () => {
             )
             return;
         }
-    }, [])
+    }, [checkRequest])
     const moneny = (Number(vnp_Amount) / 100)?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     const date: Array<number> = vnp_PayDate?.split("").map(Number) as [];
     const year = date.slice(0, 4).join("");
@@ -98,8 +98,8 @@ const CheckPay = () => {
                     <div className='pay-content text-center mt-10 space-y-3'>
                         <p>Thời gian giao dịch: <span className=' font-medium'>{timePay}</span>.</p>
                         <p>Mã giao dịch của bạn là <span className='text-[#81c038] font-medium'>{vnp_TxnRef}</span>.</p>
-                        <p>Xem chi tiết thông tin vé tại đây <a href="/ticket-history" className='text-blue-500'>Ticket Infomation</a>.</p>
-                        <div className='pt-5'>
+                        <p>Xem chi tiết thông tin vé tại đây <a href="http://localhost:5173/ticket-history" className='text-blue-500'>Ticket Infomation</a>.</p>
+\                        <div className='pt-5'>
                             <Link to="/">
                                 <button className='bg-blue-500 text-white text-lg font-medium rounded-lg p-4'>Quay về trang chủ</button>
                             </Link>

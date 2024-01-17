@@ -32,9 +32,9 @@ import ExportTicket from './admin/export/exportTicket.tsx'
 import ShowingFilm from './personPage/showingFilm.tsx'
 import ComingSoonFilm from './personPage/comingSoonFilm.tsx'
 import ForgotPassword from './personPage/ForgotPassword.tsx'
-import AdminQlSc from './admin/qlSc/page.tsx'
 import PrivacyPolicy from './personPage/privacyPolicy.tsx'
 import Contact from './personPage/contact.tsx'
+import AdminQlSc from './admin/qlSc/page.tsx'
 
 function App() {
   const checkLocal = localStorage.getItem("user");
@@ -69,7 +69,6 @@ function App() {
       <Route path="profile" element={<Profile />} />
       <Route path="forgot-password" element={<ForgotPassword />} />
       <Route path="reset_password?" element={<ResetPassword />} />
-
       <Route path="signin" element={<Signin />} />
       <Route path="signup" element={<Signup />} />
       <Route path='movie_show_time/:id' element={<Detail />}></Route>

@@ -2,13 +2,23 @@ import React, { useState } from 'react';
 import { Button, Form, Input, InputNumber, Modal, Select, Upload, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { UploadOutlined } from '@ant-design/icons';
-import { QlPhim } from './page';
 import { useAddMoviesMutation } from '../../rtk/movies/movies';
 import { useFetchMovieTypeQuery } from '../../rtk/movie_type/page';
 const { TextArea } = Input;
-export interface QlGenre {
-    id: string;
-    genre: string
+export type QlPhimCreate = {
+    key: string;
+    movie_name: string;
+    country_name: string;
+    actor_name: string;
+    movie_type_id: string;
+    genre: string;
+    director: string;
+    image: string;
+    trailer: string;
+    describe: string;
+    movie_time: number
+    start_date: string,
+    end_date: string,
 }
 const CreateQlPhim: React.FC = () => {
     const [addMovies] = useAddMoviesMutation()
@@ -22,20 +32,24 @@ const CreateQlPhim: React.FC = () => {
     }));
     const onFinish = (values: any) => {
         if (checkApi) {
-            addMovies(values).then((data: any) => {
-                console.log(data);
+            console.log(values);
 
-                if (data?.data?.start_date) {
-                    message.error(data?.data?.start_date[0]);
-                } else if (data?.data?.end_date) {
-                    message.error(data?.data?.end_date[0]);
-                } else if (data?.data?.movie_name) {
-                    message.error(data?.data?.movie_name[0]);
+            addMovies(values).then((data: any) => {
+                if (data?.error?.data?.status === "error") {
+                    if (data?.error.data?.message?.movie_name) {
+                        message.error(data?.error.data?.message?.movie_name[0]);
+                    } else if (data?.error.data?.message?.start_date) {
+                        message.error(data?.error.data?.message?.start_date[0]);
+                    } else if (data?.error.data?.message?.end_date) {
+                        message.error(data?.error.data?.message?.end_date[0]);
+                    }
                 } else {
-                    setIsModalOpen(false);
-                    setCheckApi(false)
                     message.success("Thêm thành công");
+                    setCheckApi(false)
                     formRef.current?.resetFields();
+                    setTimeout(() => {
+                        setIsModalOpen(false);
+                    }, 1000)
                 }
             })
             return;
@@ -66,23 +80,23 @@ const CreateQlPhim: React.FC = () => {
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
                 >
-                    <Form.Item<QlPhim>
+                    <Form.Item<QlPhimCreate>
                         label="Tên phim"
                         name="movie_name"
                         rules={[{ required: true, message: 'Vui lòng nhập tên !' }]}
                     >
                         <Input />
                     </Form.Item>
-                    <Form.Item<QlPhim>
+                    <Form.Item<QlPhimCreate>
                         label="Thể loại"
                         name="genre"
                         rules={[{ required: true, message: 'Vui lòng nhập thể loại!' }]}
                     >
                         <Input />
                     </Form.Item>
-                    <Form.Item<QlPhim>
+                    <Form.Item<QlPhimCreate>
                         label="Dạng phim"
-                        name="type_name"
+                        name="movie_type_id"
                         rules={[{ required: true, message: 'Vui lòng nhập dạng phim !' }]}
                     >
                         <Select className='ml-[-72px]'
@@ -91,35 +105,35 @@ const CreateQlPhim: React.FC = () => {
                             options={typeOptions}
                         />
                     </Form.Item>
-                    <Form.Item<QlPhim>
+                    <Form.Item<QlPhimCreate>
                         label="Thời lượng (phút)"
                         name="movie_time"
                         rules={[{ required: true, message: 'Vui lòng nhập thời lượng !' }]}
                     >
                         <InputNumber min={0} />
                     </Form.Item>
-                    <Form.Item<QlPhim>
+                    <Form.Item<QlPhimCreate>
                         label="Nước sản xuất"
                         name="country_name"
                         rules={[{ required: true, message: 'Vui lòng nhập nước sản xuất !' }]}
                     >
                         <Input />
                     </Form.Item>
-                    <Form.Item<QlPhim>
+                    <Form.Item<QlPhimCreate>
                         label="Đạo diễn"
                         name="director"
                         rules={[{ required: true, message: 'Vui lòng nhập tên đạo diễn !' }]}
                     >
                         <Input />
                     </Form.Item>
-                    <Form.Item<QlPhim>
+                    <Form.Item<QlPhimCreate>
                         label="Diễn viên"
                         name="actor_name"
                         rules={[{ required: true, message: 'Vui lòng nhập tên các diễn viên !' }]}
                     >
                         <Input />
                     </Form.Item>
-                    <Form.Item<QlPhim>
+                    <Form.Item<QlPhimCreate>
                         label="Poster"
                         name="image"
                         rules={[{ required: true, message: 'Vui lòng nhập ảnh !' }]}
@@ -138,28 +152,28 @@ const CreateQlPhim: React.FC = () => {
                             <Button icon={<UploadOutlined />}>Click to Upload </Button>
                         </Upload>
                     </Form.Item>
-                    <Form.Item<QlPhim>
+                    <Form.Item<QlPhimCreate>
                         label="Trailer"
                         name="trailer"
                         rules={[{ required: true, message: 'Vui lòng nhập trailer !' }, { type: "url", message: 'Vui lòng nhập đúng định dạng !' }]}
                     >
                         <Input />
                     </Form.Item>
-                    <Form.Item<QlPhim>
+                    <Form.Item<QlPhimCreate>
                         label="Ngày bắt đầu"
                         name="start_date"
                         rules={[{ required: true, message: 'Vui lòng nhập ngày bắt đầu !' }]}
                     >
                         <Input type='date' style={{ width: 200, marginLeft: -70 }} />
                     </Form.Item>
-                    <Form.Item<QlPhim>
+                    <Form.Item<QlPhimCreate>
                         label="Ngày kết thúc"
                         name="end_date"
                         rules={[{ required: true, message: 'Vui lòng nhập ngày kết thúc !' }]}
                     >
                         <Input type='date' style={{ width: 200, marginLeft: -70 }} />
                     </Form.Item>
-                    <Form.Item<QlPhim>
+                    <Form.Item<QlPhimCreate>
                         label="Mô tả"
                         name="describe"
                         rules={[{ required: true, message: 'Vui lòng nhập mô tả phim !' }]}

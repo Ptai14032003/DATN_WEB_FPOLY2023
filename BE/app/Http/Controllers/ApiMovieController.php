@@ -44,21 +44,22 @@ public function showingAdmin(){
             $request->all(),
             [  
                 'movie_name' => "unique:movies,movie_name",
-                'start_date' => 'after:today',
+                'start_date' => 'date|after_or_equal:today',
                 'end_date' => 'after:start_date',
               
             ],
             [
                 'movie_name.unique' => "Tên phim đã tồn tại",
-                'start_date.after' => "Ngày bắt đầu không được nhỏ hơn ngày hiện tại",
+                'start_date.after_or_equal' => "Ngày bắt đầu không được nhỏ hơn ngày hiện tại",
                 'end_date.after' => "Ngày kết thúc không được nhỏ hơn ngày bát đầu"
             ]
         );
         if ($validator->fails()) {
-            return response()->json($validator->messages());
-        } else {
+            return response()->json(['status' => 'error', 'message' => $validator->messages()], 400);
+        }
+        try{
         // if($request->image){
-            // $result = cloudinary()->uploadApi()->upload($request->file);
+        //     $result = cloudinary()->uploadApi()->upload($request->file);
         $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
     
         $elements = explode(',', $fileData);
@@ -77,9 +78,9 @@ public function showingAdmin(){
         $response = cloudinary()->upload($filePath)->getSecurePath();
     
 
-            $type_name = $request->get('type_name');
-            $movie_type = Movie_Type::where('type_name',$type_name)->first();
-
+            // $type_name = $request->get('type_name');
+            // $movie_type = Movie_Type::where('type_name',$type_name)->first();
+            $movie_type_id = $request->get('movie_type_id');
             $movie_name = $request->get('movie_name');
             $producer_name = $request->get('producer_name');
             $country_name = $request->get('country_name');
@@ -94,21 +95,23 @@ public function showingAdmin(){
             $data = [
                 'movie_name' => $movie_name,
                 'country_name' => $country_name,
-                'movie_type_id' => $movie_type->id,
+                'movie_type_id' => $movie_type_id,
                 'genre' => $genre,
                 'director' => $director,
                 'actor_name' => $actor_name,
                 'start_date' => $start_date,    
                 'end_date' =>  $end_date,
                 'movie_time'=> $movie_time,
-                'image' => $response,
+                 'image' => $response,
                 'trailer' => $trailer,
                 'describe' => $describe
             ];
-            Movie::create($data); 
-            return response()->json([$data,'message' => 'Thêm phim thành công']);
-       
-    }
+        
+            $movie = Movie::create($data); 
+            return response()->json(['status' => 'success', 'message' => 'Thêm thành công'], 201);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
 }
 
     public function edit(string $id)
@@ -133,7 +136,26 @@ public function showingAdmin(){
         if (!$movie) {
             return response()->json(['messages' => 'Phim không tồn tại'], 404);
         }
-     
+        $validator = Validator::make(
+            $request->all(),
+            [  
+                'end_date' => 'after_or_equal:start_date',
+              
+            ],
+            [
+                'end_date.after' => "Ngày kết thúc không được nhỏ hơn ngày bát đầu"
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json(['status' => 'error', 'message' => $validator->messages()], 400);
+        }
+        try{
+            $start_date = new \DateTime($request->input('start_date'));
+            $end_date = new \DateTime($request->input('end_date'));
+    
+            if ($end_date < $start_date) {
+                return response()->json(['status' => 'error', 'message' => 'Ngày kết thúc không được nhỏ hơn ngày bắt đầu'], 400);
+            }
         $movie->update($request->except('image'));
     
         if ($request->input('image')['fileList']) {
@@ -153,8 +175,10 @@ public function showingAdmin(){
         }else{
             $movie->image = $request->image;
         }
-    
-        return response()->json(['message' => 'Sản phẩm đã được cập nhật thành công'], 200);
+        return response()->json(['status' => 'success', 'message' => 'Sửa thành công', 'data' => $movie], 200);
+    } catch (\Exception $e) {
+        return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+    }
     }
 
     public function destroy(string $id){

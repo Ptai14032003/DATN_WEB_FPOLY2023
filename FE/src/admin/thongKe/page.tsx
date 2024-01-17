@@ -105,6 +105,7 @@ const ThongKe = () => {
                                 : fetchdata?.data?.monthlyRevenue
                         );
                     } else {
+                        setData(fetchdata?.data)
                         setDataChart(
                             newData.timeline === 'day'
                                 ? fetchdata?.data?.dailyRevenue

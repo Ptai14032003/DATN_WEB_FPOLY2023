@@ -62,19 +62,26 @@ class StatisticalController extends Controller
         $data = $request->all();
         $currentYear = Carbon::now()->year;
         $currentMonth = Carbon::now()->month;
+
         if ($data['timeline'] == "day") {
             $start = Carbon::createFromFormat('d-m-Y', $data['start'])->format('Y-m-d');
             $end = Carbon::createFromFormat('d-m-Y', $data['end'])->format('Y-m-d');
+
+            // Kiểm tra nếu 'start' lớn hơn ngày hiện tại
+            if (Carbon::parse($start)->greaterThan(now())) {
+                return response()->json(['error' => 'Không thể xuất doanh thu với ngày bắt đầu trong tương lai.']);
+            }
         } else {
             $start = now();
             $end = now();
         }
+
         // Kiểm tra nếu năm > hiện tại hoặc tháng > tháng hiện tại
         if (
             ($data['timeline'] == 'year' && $data['year'] > $currentYear) ||
             ($data['timeline'] == 'month' && ($data['year'] > $currentYear || ($data['year'] == $currentYear && $data['month'] > $currentMonth)))
         ) {
-            return response()->json(['error' => 'Không thể xuất doanh thu.']);
+            return response()->json(['error' => 'Không thể xuất doanh thu với thời gian bắt đầu trong tương lai.']);
         }
 
         $total_revenue = [];
