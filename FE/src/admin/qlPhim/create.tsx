@@ -35,7 +35,7 @@ const CreateQlPhim: React.FC = () => {
             console.log(values);
 
             addMovies(values).then((data: any) => {
-                console.log(data?.error);
+                console.log(data);
 
                 if (data?.error?.data?.status === "error") {
                     if (data?.error.data?.message?.movie_name) {
