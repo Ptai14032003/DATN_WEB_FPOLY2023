@@ -85,9 +85,11 @@ class StatisticalController extends Controller
         }
 
         $total_revenue = [];
-
+        $endOfDay = Carbon::createFromFormat('d-m-Y', $data['end'])->endOfDay();
+        $end = $endOfDay->format('Y-m-d H:i:s');
+        
         $billsQuery = Bill::where('status', 1);
-
+        
         if ($data['timeline'] == 'year') {
             $billsQuery->whereYear("created_at", $data['year']);
         } elseif ($data['timeline'] == 'month') {
@@ -95,7 +97,7 @@ class StatisticalController extends Controller
         } elseif ($data['timeline'] == 'day') {
             $billsQuery->whereBetween("created_at", [$start, $end]);
         }
-
+        
         $bills = $billsQuery->select(
             DB::raw("SUM(total_money) as total"),
             DB::raw("COUNT(id) as quantity")
