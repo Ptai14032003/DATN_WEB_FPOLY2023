@@ -565,6 +565,7 @@ const HomeAdmin = () => {
                                                 <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Mã nhân viên</th>
                                                 <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Email</th>
                                                 <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Số điện thoại</th>
+                                                <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Số vé bán được</th>
                                                 <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Doanh thu (VNĐ)</th>
                                             </tr>
                                         </thead>
@@ -577,6 +578,7 @@ const HomeAdmin = () => {
                                                         <td className="whitespace-nowrap px-4 py-2 text-gray-700">{value?.personnel_code}</td>
                                                         <td className="whitespace-nowrap px-4 py-2 text-gray-900">{value?.email}</td>
                                                         <td className="whitespace-nowrap px-4 py-2 text-gray-700">{value?.phone_number}</td>
+                                                        <td className="whitespace-nowrap px-4 py-2 text-gray-700">{value?.total_ticket}</td>
                                                         <td className="whitespace-nowrap px-4 py-2 text-gray-700">{(Number(value?.total_spent))?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                                                     </tr>
                                                 ))}
