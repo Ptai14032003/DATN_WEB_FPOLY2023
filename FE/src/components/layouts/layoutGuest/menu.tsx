@@ -25,7 +25,7 @@ const Menu = () => {
 
   const userString = localStorage.getItem('user');
   const user = userString ? JSON.parse(userString) : null;
-  
+
 
 
   const Logout = async () => {
@@ -41,52 +41,55 @@ const Menu = () => {
     <div className="">
       {contextHolder}
       <div className='menu flex items-center justify-between px-16 fixed z-10 w-full'>
-      <div className="logo-web">
-        <img src={logoweb} alt="" className='w-[100px] h-[80px]' />
-      </div>
-      <nav>
-        <ul className='menu-content flex text-white'>
-          <a href={homeLink}><li>Trang chủ</li></a>
-          <a href={homeLink + 'ticket-price'}><li>Giá vé</li></a>
-          <a href={homeLink}> <li>Giới thiệu</li></a>
-          {!user && (
-            <><li onClick={handleClick}><a>Tài khoản</a></li>
-              {dropDown ?
-                <ul className="dropdown-content absolute translate-y-[4.8rem] right-6 w-[160px] text-center drop-none-user">
-                  <a href={homeLink + 'signin'} className='block'><li>Đăng nhập</li></a>
-                  <a href={homeLink + 'signup'} className='block'><li>Đăng kí</li></a>
-                </ul>
-                : ""
-              }
-            </>
-          )}
-          {user && (
-            <><li onClick={handleClick} className='have-user flex space-x-2'>
-              <FaUserCircle size={30} />
-              <a className='text-xl'>
-                {user?.name}</a>
-            </li>
-              {dropDown ?
-                <ul className="dropdown-content absolute translate-y-[5.1rem] -translate-x-[2rem] right-6 w-[250px] text-center drop-have-user">
-                  {user.role === 'Admin' || user.role === 'Nhân Viên' && (
-                    <a href={homeLink + "admin"}>
-                      <li>
-                        Admin
-                      </li>
-                    </a>
-                  )}
-                  {user.role !== 'Admin' && user.role !== 'Nhân Viên' && (
-                    <div>
-                      <a href={homeLink + 'profile'} className='block'><li>Thông tin cá nhân</li></a>
-                      <a href={homeLink + 'ticket-history'}><li>Lịch sử đặt vé</li></a>
-                    </div>
-                  )}
-                  <li onClick={() => Logout()}><div className='block'>Đăng xuất</div></li>
-                </ul>
-                : ""
-              }
-            </>
-          )}
+        <div className="logo-web">
+          <img src={logoweb} alt="" className='w-[100px] h-[80px]' />
+        </div>
+        <nav>
+          <ul className='menu-content flex text-white'>
+            <a href={homeLink}><li>Trang chủ</li></a>
+            <a href={homeLink + 'ticket-price'}><li>Giá vé</li></a>
+            <a href={homeLink}> <li>Giới thiệu</li></a>
+            {!user && (
+              <><li onClick={handleClick}><a>Tài khoản</a></li>
+                {dropDown ?
+                  <ul className="dropdown-content absolute translate-y-[4.8rem] right-6 w-[160px] text-center drop-none-user">
+                    <a href={homeLink + 'signin'} className='block'><li>Đăng nhập</li></a>
+                    <a href={homeLink + 'signup'} className='block'><li>Đăng kí</li></a>
+                  </ul>
+                  : ""
+                }
+              </>
+            )}
+            {user && (
+              <><li onClick={handleClick} className='have-user flex space-x-2'>
+                <FaUserCircle size={30} />
+                <a className='text-xl'>
+                  {user?.name}</a>
+              </li>
+                {dropDown ?
+                  <ul className="dropdown-content absolute translate-y-[5.1rem] -translate-x-[2rem] right-6 w-[250px] text-center drop-have-user">
+                    {(user.role === 'Admin' || user.role === 'Nhân Viên') && (
+                          <div>
+                            <a href={homeLink + "admin"} className='text-[#1ACAAC]'>
+                              <li>
+                                Admin
+                              </li>
+                            </a>
+                            <li onClick={() => Logout()}><div className='block text-[#1ACAAC]'>Đăng xuất</div></li>
+                          </div>
+                        )}
+                        {(user.role !== 'Admin' && user.role !== 'Nhân Viên') && (
+                          <div>
+                            <a href={homeLink + 'profile'} className='block text-[#1ACAAC]'><li>Thông tin cá nhân</li></a>
+                            <a href={homeLink + 'ticket-history'}><li className='text-[#1ACAAC]'>Lịch sử đặt vé</li></a>
+                            <li onClick={() => Logout()}><div className='block text-[#1ACAAC]'>Đăng xuất</div></li>
+                          </div>
+                        )}
+                  </ul>
+                  : ""
+                }
+              </>
+            )}
 
           </ul>
         </nav>
@@ -134,22 +137,22 @@ const Menu = () => {
                     {dropDown ?
                       <ul className=" absolute translate-y-[0.7rem] -translate-x-[-0.3rem] right-6 w-[250px] text-end">
                         {(user.role === 'Admin' || user.role === 'Nhân Viên') && (
-                     <div>
-                       <a href={homeLink + "admin"} className='text-[#1ACAAC]'>
-                        <li>
-                          Admin
-                        </li>
-                      </a>
-                      <li onClick={() => Logout()}><div className='block text-[#1ACAAC]'>Đăng xuất</div></li>
-                     </div>
-                    )}
-                    {(user.role !== 'Admin' && user.role !== 'Nhân Viên') && (
-                     <div>
-                      <a href={homeLink + 'profile'} className='block text-[#1ACAAC]'><li>Thông tin cá nhân</li></a>
-                  <a href={homeLink + 'ticket-history'}><li className='text-[#1ACAAC]'>Lịch sử đặt vé</li></a>
-                    <li onClick={() => Logout()}><div className='block text-[#1ACAAC]'>Đăng xuất</div></li>
-                     </div>
-                    )}
+                          <div>
+                            <a href={homeLink + "admin"} className='text-[#1ACAAC]'>
+                              <li>
+                                Admin
+                              </li>
+                            </a>
+                            <li onClick={() => Logout()}><div className='block text-[#1ACAAC]'>Đăng xuất</div></li>
+                          </div>
+                        )}
+                        {(user.role !== 'Admin' && user.role !== 'Nhân Viên') && (
+                          <div>
+                            <a href={homeLink + 'profile'} className='block text-[#1ACAAC]'><li>Thông tin cá nhân</li></a>
+                            <a href={homeLink + 'ticket-history'}><li className='text-[#1ACAAC]'>Lịch sử đặt vé</li></a>
+                            <li onClick={() => Logout()}><div className='block text-[#1ACAAC]'>Đăng xuất</div></li>
+                          </div>
+                        )}
                       </ul>
                       : ""
                     }
