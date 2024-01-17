@@ -61,7 +61,7 @@ const CheckPay = () => {
             )
             return;
         }
-    }, [])
+    }, [checkRequest])
     const moneny = (Number(vnp_Amount) / 100)?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     const date: Array<number> = vnp_PayDate?.split("").map(Number) as [];
     const year = date.slice(0, 4).join("");

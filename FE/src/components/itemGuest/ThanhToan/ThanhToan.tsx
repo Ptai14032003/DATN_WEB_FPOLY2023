@@ -153,7 +153,7 @@ const ThanhToan: React.FC<Props> = ({ data: { selectedSeats, priceTong, combo, s
                             <div className='grid grid-cols-3 space-x-2'>
                                 <input type="text" className='voucher-code cursor-not-allowed h-[30px] outline-none col-span-2 text-black pl-2 font-medium' value={VoucherCode} />
                                 <Button type="primary" onClick={showModal} className='bg-teal-400 mb-3 voucher-button'>
-                                    Choose discount
+                                    Mã giảm giá
                                 </Button>
                             </div>
                             <div className='flex justify-between mb-3'>
