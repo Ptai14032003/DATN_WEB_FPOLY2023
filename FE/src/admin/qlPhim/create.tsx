@@ -35,8 +35,6 @@ const CreateQlPhim: React.FC = () => {
             console.log(values);
 
             addMovies(values).then((data: any) => {
-                console.log(data);
-
                 if (data?.error?.data?.status === "error") {
                     if (data?.error.data?.message?.movie_name) {
                         message.error(data?.error.data?.message?.movie_name[0]);
@@ -48,9 +46,9 @@ const CreateQlPhim: React.FC = () => {
                 } else {
                     message.success("Thêm thành công");
                     setCheckApi(false)
-                    // formRef.current?.resetFields();
+                    formRef.current?.resetFields();
                     setTimeout(() => {
-                        // setIsModalOpen(false);
+                        setIsModalOpen(false);
                     }, 1000)
                 }
             })
