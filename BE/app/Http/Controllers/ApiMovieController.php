@@ -44,21 +44,22 @@ public function showingAdmin(){
             $request->all(),
             [  
                 'movie_name' => "unique:movies,movie_name",
-                'start_date' => 'after:today',
+                'start_date' => 'date|after_or_equal:today',
                 'end_date' => 'after:start_date',
               
             ],
             [
                 'movie_name.unique' => "Tên phim đã tồn tại",
-                'start_date.after' => "Ngày bắt đầu không được nhỏ hơn ngày hiện tại",
+                'start_date.after_or_equal' => "Ngày bắt đầu không được nhỏ hơn ngày hiện tại",
                 'end_date.after' => "Ngày kết thúc không được nhỏ hơn ngày bát đầu"
             ]
         );
         if ($validator->fails()) {
-            return response()->json($validator->messages());
-        } else {
+            return response()->json(['status' => 'error', 'message' => $validator->messages()], 400);
+        }
+        try{
         // if($request->image){
-            // $result = cloudinary()->uploadApi()->upload($request->file);
+        //     $result = cloudinary()->uploadApi()->upload($request->file);
         $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
     
         $elements = explode(',', $fileData);
@@ -105,10 +106,12 @@ public function showingAdmin(){
                 'trailer' => $trailer,
                 'describe' => $describe
             ];
+        
             Movie::create($data); 
-            return response()->json([$data,'message' => 'Thêm phim thành công']);
-       
-    }
+            return response()->json(['status' => 'success', 'message' => 'Thêm thành công', 'data' => $movie], 201);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
 }
 
     public function edit(string $id)
