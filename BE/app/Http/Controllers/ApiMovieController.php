@@ -78,9 +78,9 @@ public function showingAdmin(){
         $response = cloudinary()->upload($filePath)->getSecurePath();
     
 
-            $type_name = $request->get('type_name');
-            $movie_type = Movie_Type::where('type_name',$type_name)->first();
-
+            // $type_name = $request->get('type_name');
+            // $movie_type = Movie_Type::where('type_name',$type_name)->first();
+            $movie_type_id = $request->get('movie_type_id');
             $movie_name = $request->get('movie_name');
             $producer_name = $request->get('producer_name');
             $country_name = $request->get('country_name');
@@ -95,20 +95,20 @@ public function showingAdmin(){
             $data = [
                 'movie_name' => $movie_name,
                 'country_name' => $country_name,
-                'movie_type_id' => $movie_type->id,
+                'movie_type_id' => $movie_type_id,
                 'genre' => $genre,
                 'director' => $director,
                 'actor_name' => $actor_name,
                 'start_date' => $start_date,    
                 'end_date' =>  $end_date,
                 'movie_time'=> $movie_time,
-                'image' => $response,
+                 'image' => '',
                 'trailer' => $trailer,
                 'describe' => $describe
             ];
         
-            Movie::create($data); 
-            return response()->json(['status' => 'success', 'message' => 'Thêm thành công', 'data' => $movie], 201);
+            $movie = Movie::create($data); 
+            return response()->json(['status' => 'success', 'message' => 'Thêm thành công'], 201);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
