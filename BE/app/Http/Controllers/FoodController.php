@@ -42,8 +42,10 @@ class FoodController extends Controller
             ]
         );
         if ($validator->fails()) {
-            return response()->json($validator->messages());
-        } else {
+            return response()->json(['status' => 'error', 'message' => $validator->messages()], 400);
+        }
+    
+        try {
 
     $fileData = $request->input('image')['fileList'][0]['thumbUrl'];
     
@@ -74,7 +76,10 @@ class FoodController extends Controller
 
     Food::create($data);   
     // Đây là real path của tệp tin
-    return response()->json([$data, 'message' => 'Sản phẩm đã được thêm thành công'], 200);
+    return response()->json(['status' => 'success', 'message' => 'Sản phẩm đã được thêm thành công', 'data' => $data], 200);
+    } catch (\Exception $e) {
+        // Handle other exceptions
+        return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
     }
     }
     /**
