@@ -136,7 +136,26 @@ public function showingAdmin(){
         if (!$movie) {
             return response()->json(['messages' => 'Phim không tồn tại'], 404);
         }
-     
+        $validator = Validator::make(
+            $request->all(),
+            [  
+                'end_date' => 'after_or_equal:start_date',
+              
+            ],
+            [
+                'end_date.after' => "Ngày kết thúc không được nhỏ hơn ngày bát đầu"
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json(['status' => 'error', 'message' => $validator->messages()], 400);
+        }
+        try{
+            $start_date = new \DateTime($request->input('start_date'));
+            $end_date = new \DateTime($request->input('end_date'));
+    
+            if ($end_date < $start_date) {
+                return response()->json(['status' => 'error', 'message' => 'Ngày kết thúc không được nhỏ hơn ngày bắt đầu'], 400);
+            }
         $movie->update($request->except('image'));
     
         if ($request->input('image')['fileList']) {
@@ -156,8 +175,10 @@ public function showingAdmin(){
         }else{
             $movie->image = $request->image;
         }
-    
-        return response()->json(['message' => 'Sản phẩm đã được cập nhật thành công'], 200);
+        return response()->json(['status' => 'success', 'message' => 'Sửa thành công', 'data' => $movie], 200);
+    } catch (\Exception $e) {
+        return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+    }
     }
 
     public function destroy(string $id){
