@@ -26,15 +26,14 @@ const EditQlSp: React.FC<Props> = ({ projects }: Props) => {
     }));
     const onFinish = (values: any) => {
         putFood({ body: values, id: projects }).then((data: any) => {
-            console.log(data);
-
-            if (data?.data?.food_name) {
-                message.error(data?.data?.food_name[0])
+            if (data?.error?.data?.status === 'error') {
+                message.error(data?.error?.data?.message?.food_name[0])
             } else {
                 message.success("Sửa thành công");
+                formRef.current?.resetFields();
                 setTimeout(() => {
                     setIsModalOpen(false)
-                }, 3000)
+                }, 1000)
             }
         })
     };
